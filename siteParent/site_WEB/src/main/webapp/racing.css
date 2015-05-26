@@ -1,0 +1,12 @@
+body {background-color: #ffffff; height:660px; margin: 0; padding: 0;}
+
+h1 {color: #000000; font: arial;}
+h2 {color: #000000; font: arial;}
+p {color: #000000; font: arial;}
+
+div.track {background-color: lightblue; }
+div.trackalt {background-color: green; }
+
+img.car {position:relative;}
+
+div.inline{float:left; width: 100%}
