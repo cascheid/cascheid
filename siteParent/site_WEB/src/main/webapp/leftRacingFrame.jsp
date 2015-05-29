@@ -9,18 +9,67 @@
 </head>
 <body>
 	<jsp:useBean id="racingGame" class="site.racinggame.RacingGame" scope="session"/>
+	<script type="text/javascript">
+		function selectOption(selectedValue){
+			document.getElementById("raceLink").href="raceFrame.jsp?selected="+selectedValue;
+		}
+	</script>
 	<h1>Racing</h1>
+	<div class="inline">
+	<label>Racing Class</label>
+	<select onchange="selectOption(this.value)">
+  		<%
+  		if (racingGame.getRacingClass()=='E'){
+  			out.println("<option selected=\"selected\" value=\"E\">E</option>");
+  		} else {
+  			out.println("<option value=\"E\">E</option>");
+  		}
+  		if (racingGame.getRacingClass()=='S'||racingGame.getRacingClass()<='D'){
+  			if (racingGame.getRacingClass()=='D'){
+  	  			out.println("<option selected=\"selected\" value=\"D\">D</option>");
+  			} else {
+  				out.println("<option value=\"D\">D</option>");
+  			}
+  		}
+  		if (racingGame.getRacingClass()=='S'||racingGame.getRacingClass()<='C'){
+  			if (racingGame.getRacingClass()=='C'){
+  	  			out.println("<option selected=\"selected\" value=\"C\">C</option>");
+  			} else {
+  				out.println("<option value=\"C\">C</option>");
+  			}
+  		}
+  		if (racingGame.getRacingClass()=='S'||racingGame.getRacingClass()<='B'){
+  			if (racingGame.getRacingClass()=='B'){
+  	  			out.println("<option selected=\"selected\" value=\"B\">B</option>");
+  			} else {
+  				out.println("<option value=\"B\">B</option>");
+  			}
+  		}
+  		if (racingGame.getRacingClass()=='S'||racingGame.getRacingClass()=='A'){
+  			if (racingGame.getRacingClass()=='A'){
+  	  			out.println("<option selected=\"selected\" value=\"A\">A</option>");
+  			} else {
+  				out.println("<option value=\"A\">A</option>");
+  			}
+  		}
+  		if (racingGame.getRacingClass()=='S'){
+  	  		out.println("<option selected=\"selected\" value=\"S\">S</option>");
+  		}
+  		%>
+	</select> 
+	</div>
+	<hr/>
 	<div>
-	<a title="Buy New Cars" href="openRacingStore.html" target="mainRacingFrame">Buy New Cars</a>
+	<a title="Buy New Cars" href="openRacingStore.html?test=2" target="mainRacingFrame">Buy New Cars</a>
 	</div>
 	<div>
-	<a title="Upgrade Car" href="upgradeCarFrame.jsp" target="displayFrame">Upgrade Car</a>
+	<a title="Upgrade Car" href="openUpgradeStore.html" target="mainRacingFrame">Upgrade Car</a>
 	</div>
 	<div>
-	<a title="Garage" href="garageFrame.jsp" target="displayFrame">Garage</a>
+	<a title="Garage" href="garageFrame.jsp" target="mainRacingFrame">Garage</a>
 	</div>
 	<div>
-	<a title="Ready to Race" href="raceFrame.jsp" target="mainRacingFrame">Ready to Race</a>
+	<a id="raceLink" title="Ready to Race" href="raceFrame.jsp?selected=<%=racingGame.getRacingClass()%>" target="mainRacingFrame">Ready to Race</a>
 	</div>
 </body>
 </html>

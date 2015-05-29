@@ -8,13 +8,13 @@
 <link rel="stylesheet" type="text/css" href="textStyle.css"/>
 </head>
 <body>
-	<jsp:useBean id="identity" class="site.identity.Identity" scope="session"/>
 	<jsp:useBean id="racingGame" class="site.racinggame.RacingGame" scope="session"/>
-	<jsp:setProperty name="racingGame" property="*"/> 
-	<%
-		racingGame = RacingGameUtils.getRacingGameObject(identity.getRacingGameIdentifier());
-	%>
-	<iframe name="moneyFrame" width="100%" height="5%" src="raceMoneyFrame.jsp"></iframe>
-	<iframe name="mainRacingFrame" width="100%" height="95%" src="openRacingStore.html?test=2"></iframe>
+	<script>
+		window.open("leftRacingFrame.jsp", "leftFrame");
+	</script>
+	<div class="inline">
+		Money<input width="50px" value="<%=RacingGameUtils.formatMoney(racingGame.getAvailableCash())%>" readonly>
+		Class<input width="25px" value="<%=racingGame.getRacingClass()%>" readonly>
+	</div>
 </body>
 </html>

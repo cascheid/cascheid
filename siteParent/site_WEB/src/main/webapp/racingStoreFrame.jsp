@@ -7,8 +7,6 @@
 </head>
 <body>
 	<jsp:useBean id="racingGame" class="site.racinggame.RacingGame" scope="session"/>
-	<%out.println("identifier: " + racingGame.getRacingIdentifier()); %>
-	<%out.println("car ID: " + racingGame.getCarID()); %>
 	<a target="rightRacingFrame" href="carDisplayFrame.jsp?option=1"><h4>Car 1</h4></a>
 	<a target="rightRacingFrame" href="carDisplayFrame.jsp?option=2"><h4>Car 2</h4></a>
 	<a target="rightRacingFrame" href="carDisplayFrame.jsp?option=3"><h4>Car 3</h4></a>

@@ -11,13 +11,13 @@ public class RacingGame implements java.io.Serializable{
 	private Integer carID;
 	private double availableCash;
 	private char racingClass;
-	private List<Racecar> carList;
+	private List<UserRacecar> carList;
 	
 	public RacingGame(){
 		this.racingIdentifier = RacingGameUtils.getNewRacingGameIdentifier();
 		this.setCarID(1);
 		this.setAvailableCash(500.00);
-		this.setRacingClass('E');
+		this.setRacingClass('D');
 		this.addNewCar(RacingGameUtils.getRacecarByID(1));
 	}
 	
@@ -53,14 +53,14 @@ public class RacingGame implements java.io.Serializable{
 		this.racingClass = racingClass;
 	}
 	
-	public List<Racecar> getCarList(){
+	public List<UserRacecar> getCarList(){
 		return carList;
 	}
 	
 	public void addNewCar(Racecar car){
 		if (carList==null){
-			carList=new ArrayList<Racecar>();
+			carList=new ArrayList<UserRacecar>();
 		}
-		carList.add(car);
+		carList.add(new UserRacecar(car));
 	}
 }
