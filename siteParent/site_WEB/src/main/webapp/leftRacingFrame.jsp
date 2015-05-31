@@ -25,35 +25,39 @@
   			out.println("<option value=\"E\">E</option>");
   		}
   		if (racingGame.getRacingClass()=='S'||racingGame.getRacingClass()<='D'){
-  			if (racingGame.getRacingClass()=='D'){
+  			if (racingGame.getSelectedClass()=='D'){
   	  			out.println("<option selected=\"selected\" value=\"D\">D</option>");
   			} else {
   				out.println("<option value=\"D\">D</option>");
   			}
   		}
   		if (racingGame.getRacingClass()=='S'||racingGame.getRacingClass()<='C'){
-  			if (racingGame.getRacingClass()=='C'){
+  			if (racingGame.getSelectedClass()=='C'){
   	  			out.println("<option selected=\"selected\" value=\"C\">C</option>");
   			} else {
   				out.println("<option value=\"C\">C</option>");
   			}
   		}
   		if (racingGame.getRacingClass()=='S'||racingGame.getRacingClass()<='B'){
-  			if (racingGame.getRacingClass()=='B'){
+  			if (racingGame.getSelectedClass()=='B'){
   	  			out.println("<option selected=\"selected\" value=\"B\">B</option>");
   			} else {
   				out.println("<option value=\"B\">B</option>");
   			}
   		}
   		if (racingGame.getRacingClass()=='S'||racingGame.getRacingClass()=='A'){
-  			if (racingGame.getRacingClass()=='A'){
+  			if (racingGame.getSelectedClass()=='A'){
   	  			out.println("<option selected=\"selected\" value=\"A\">A</option>");
   			} else {
   				out.println("<option value=\"A\">A</option>");
   			}
   		}
   		if (racingGame.getRacingClass()=='S'){
-  	  		out.println("<option selected=\"selected\" value=\"S\">S</option>");
+  			if (racingGame.getSelectedClass()=='S'){
+  	  	  		out.println("<option selected=\"selected\" value=\"S\">S</option>");
+  			} else {
+  				out.println("<option value=\"S\">S</option>");
+  			}
   		}
   		%>
 	</select> 
@@ -69,7 +73,7 @@
 	<a title="Garage" href="garageFrame.jsp" target="mainRacingFrame">Garage</a>
 	</div>
 	<div>
-	<a id="raceLink" title="Ready to Race" href="raceFrame.jsp?selected=<%=racingGame.getRacingClass()%>" target="mainRacingFrame">Ready to Race</a>
+	<a id="raceLink" title="Ready to Race" href="raceFrame.jsp?selected=<%=racingGame.getSelectedClass()%>" target="mainRacingFrame">Ready to Race</a>
 	</div>
 </body>
 </html>

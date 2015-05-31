@@ -11,13 +11,15 @@ public class RacingGame implements java.io.Serializable{
 	private Integer carID;
 	private double availableCash;
 	private char racingClass;
+	private char selectedClass;
 	private List<UserRacecar> carList;
 	
 	public RacingGame(){
 		this.racingIdentifier = RacingGameUtils.getNewRacingGameIdentifier();
 		this.setCarID(1);
-		this.setAvailableCash(500.00);
-		this.setRacingClass('D');
+		this.setAvailableCash(100.00);
+		this.setRacingClass('E');
+		this.setSelectedClass('E');
 		this.addNewCar(RacingGameUtils.getRacecarByID(1));
 	}
 	
@@ -53,6 +55,14 @@ public class RacingGame implements java.io.Serializable{
 		this.racingClass = racingClass;
 	}
 	
+	public char getSelectedClass() {
+		return selectedClass;
+	}
+
+	public void setSelectedClass(char selectedClass) {
+		this.selectedClass = selectedClass;
+	}
+
 	public List<UserRacecar> getCarList(){
 		return carList;
 	}

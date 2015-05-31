@@ -57,5 +57,88 @@ public class UserRacecar extends Racecar implements java.io.Serializable{
 		this.upgrade5 = upgrade5;
 	}
 	
+	@Override
+	public double getTopSpeed(){
+		double dReturn = super.getTopSpeed();
+		if (upgrade1!=null&&upgrade1.getTopSpeedMod()!=0){
+			dReturn+=upgrade1.getTopSpeedMod();
+		}
+		if (upgrade2!=null&&upgrade2.getTopSpeedMod()!=0){
+			dReturn+=upgrade2.getTopSpeedMod();
+		}
+		if (upgrade3!=null&&upgrade3.getTopSpeedMod()!=0){
+			dReturn+=upgrade3.getTopSpeedMod();
+		}
+		if (upgrade4!=null&&upgrade4.getTopSpeedMod()!=0){
+			dReturn+=upgrade4.getTopSpeedMod();
+		}
+		if (upgrade5!=null&&upgrade5.getTopSpeedMod()!=0){
+			dReturn+=upgrade5.getTopSpeedMod();
+		}
+		return dReturn;
+	}
+	
+	@Override
+	public double getAcceleration(){
+		double dReturn = super.getAcceleration();
+		if (upgrade1!=null&&upgrade1.getAccelerationMod()!=0){
+			dReturn+=upgrade1.getAccelerationMod();
+		}
+		if (upgrade2!=null&&upgrade2.getAccelerationMod()!=0){
+			dReturn+=upgrade2.getAccelerationMod();
+		}
+		if (upgrade3!=null&&upgrade3.getAccelerationMod()!=0){
+			dReturn+=upgrade3.getAccelerationMod();
+		}
+		if (upgrade4!=null&&upgrade4.getAccelerationMod()!=0){
+			dReturn+=upgrade4.getAccelerationMod();
+		}
+		if (upgrade5!=null&&upgrade5.getAccelerationMod()!=0){
+			dReturn+=upgrade5.getAccelerationMod();
+		}
+		return dReturn;
+	}
+	
+	@Override
+	public double getReliability(){
+		double dReturn = super.getReliability();
+		if (upgrade1!=null&&upgrade1.getReliabilityMod()!=0){
+			dReturn+=upgrade1.getReliabilityMod();
+		}
+		if (upgrade2!=null&&upgrade2.getReliabilityMod()!=0){
+			dReturn+=upgrade2.getReliabilityMod();
+		}
+		if (upgrade3!=null&&upgrade3.getReliabilityMod()!=0){
+			dReturn+=upgrade3.getReliabilityMod();
+		}
+		if (upgrade4!=null&&upgrade4.getReliabilityMod()!=0){
+			dReturn+=upgrade4.getReliabilityMod();
+		}
+		if (upgrade5!=null&&upgrade5.getReliabilityMod()!=0){
+			dReturn+=upgrade5.getReliabilityMod();
+		}
+		return dReturn;
+	}
+	
+	@Override
+	public double getLapEfficiency(){
+		double dReturn = super.getLapEfficiency();
+		if (upgrade1!=null&&upgrade1.getEfficiencyMod()!=0){
+			dReturn+=upgrade1.getEfficiencyMod();
+		}
+		if (upgrade2!=null&&upgrade2.getEfficiencyMod()!=0){
+			dReturn+=upgrade2.getEfficiencyMod();
+		}
+		if (upgrade3!=null&&upgrade3.getEfficiencyMod()!=0){
+			dReturn+=upgrade3.getEfficiencyMod();
+		}
+		if (upgrade4!=null&&upgrade4.getEfficiencyMod()!=0){
+			dReturn+=upgrade4.getEfficiencyMod();
+		}
+		if (upgrade5!=null&&upgrade5.getEfficiencyMod()!=0){
+			dReturn+=upgrade5.getEfficiencyMod();
+		}
+		return dReturn;
+	}
 	
 }

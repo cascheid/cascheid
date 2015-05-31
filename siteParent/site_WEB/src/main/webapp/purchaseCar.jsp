@@ -14,7 +14,7 @@
 	racingGame.setAvailableCash(racingGame.getAvailableCash()-raceCar.getPrice());
 	racingGame.addNewCar(raceCar);
 	out.println("<h1>Purchase Successful!</h1>");
-	out.println("<img src=\"img/cars/"+raceCar.getModel()+".png\" width=\"400px\" height=\"200px\">");
+	out.println("<img src=\"img/cars/"+raceCar.getModel()+"\" width=\"400px\" height=\"200px\">");
 	out.println("<script>window.open('raceMoneyFrame.jsp', 'moneyFrame');</script>");
 	%>
 

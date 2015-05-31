@@ -1,6 +1,11 @@
 package site.racinggame;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.NumberFormat;
+import java.util.Properties;
 
 public class RacingGameUtils {
 	public static String getNewRacingGameIdentifier(){
@@ -18,29 +23,43 @@ public class RacingGameUtils {
 	}
 	
 	public static Racecar getRacecarByID(Integer carID){
-		Racecar car;
-		if (carID==1){
-			car=new Racecar(1, 'E', 100, 20, 0.7, 0.3, "silver_audi2", 1000);
-		} else if (carID==2){
-			car=new Racecar(2, 'E', 120, 18, 0.5, 0.35, "red_fer", 750);
-		} else if (carID==3){
-			car=new Racecar(3, 'E', 90, 18, 0.9, 0.5, "red_sedan", 400);
-		} else if (carID==4){
-			car=new Racecar(4, 'E', 150, 16, 0.35, 0.35, "black_lambo", 2000);
-		}else if (carID==5){
-			car=new Racecar(5, 'E', 130, 16, 0.65, 0.4, "silver_chevvy", 1500);
-		} else {
-			car=null;
+		Racecar car=null;
+		Properties prop=new Properties();
+		InputStream input=null;
+		try {
+			input=Thread.currentThread().getContextClassLoader().getResourceAsStream("CarList.properties");
+			prop.load(input);
+			char racingClass=prop.getProperty(carID+"Class").charAt(0);
+			double topSpeed=Double.parseDouble(prop.getProperty(carID+"TopSpeed"));
+			double accel=Double.parseDouble(prop.getProperty(carID+"Acceleration"));
+			double reliability=Double.parseDouble(prop.getProperty(carID+"Reliability"));
+			double lapEfficiency=Double.parseDouble(prop.getProperty(carID+"LapEfficiency"));
+			double price=Double.parseDouble(prop.getProperty(carID+"Price"));
+			String model = prop.getProperty(carID+"Model");
+			car = new Racecar(carID, racingClass, topSpeed, accel, reliability, lapEfficiency, model, price);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (input!=null){
+				try {
+					input.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		return car;
 	}
 	
 	public static Upgrade getUpgradeByID(Integer upgradeID, char carClass){
 		Upgrade upgrade = new Upgrade();
+		upgrade.setUpgradeID(upgradeID);
 		if (carClass=='E'){
-			upgrade.setPrice(500);
+			upgrade.setPrice(100);
 		} else if (carClass=='D'){
-			upgrade.setPrice(1000);
+			upgrade.setPrice(500);
 		} else if (carClass=='C'){
 			upgrade.setPrice(2000);
 		} else if (carClass=='B'){
@@ -66,13 +85,24 @@ public class RacingGameUtils {
 	}
 	
 	public static Racecar getRandomOponentByClass(char racingClass){
-		String model;
+		Racecar car=null;
 		if (racingClass=='E'){
-			model="red_sedan";
-		} else {
-			model="red_fer";
-		}
-		Racecar car=new Racecar(null, racingClass, 100*(1-(Math.random()/4)), 20*(1-(Math.random()/4)), .7*(1-(Math.random()/4)), .5*(1-(Math.random()/2)), model, 0);
+			car = getRacecarByID(1);
+		} else if (racingClass=='D'){
+			car = getRacecarByID(2);
+		} else if (racingClass=='C'){
+			car = getRacecarByID(3);
+		}  else if (racingClass=='B'){
+			car = getRacecarByID(4);
+		}  else if (racingClass=='A'){
+			car = getRacecarByID(5);
+		}  else if (racingClass=='S'){
+			car = getRacecarByID(6);
+		} 
+		car.setTopSpeed(car.getTopSpeed()*(1-(.5-Math.random())/2));
+		car.setAcceleration(car.getAcceleration()*(1-(.5-Math.random())/2));
+		car.setReliability(car.getReliability()*(1-(.5-Math.random())/2));
+		car.setLapEfficiency(car.getLapEfficiency()*(1-(.5-Math.random())/2));
 		return car;
 	}
 	

@@ -36,7 +36,7 @@
 	UserRacecar car = racingGame.getCarList().get(selectedGarage-1);
 	racingGame.setCarID(car.getCarID());
 	out.println("<h1>Racing Class: " + car.getRacingClass() +"</h2>");
-	out.println("<img src=\"img/cars/"+car.getModel()+".png\" width=\"400px\" height=\"200px\">");
+	out.println("<img src=\"img/cars/"+car.getModel()+"\" width=\"400px\" height=\"200px\">");
 	out.println("<div class=\"inline\">");
 	out.println("<label>Top Speed: " + car.getTopSpeed() + " mph</label>");
 	out.println("<div class=\"path\"><div id=\"speedDisplay\" class=\"displayBlock\"></div></div>");
@@ -56,8 +56,8 @@
 	%>
 	
 	<script>
-	document.getElementById("speedDisplay").style.width="<%=car.getTopSpeed()/5%>%";
-	document.getElementById("accelDisplay").style.width="<%=car.getAcceleration()/1.5%>%";
+	document.getElementById("speedDisplay").style.width="<%=car.getTopSpeed()/4%>%";
+	document.getElementById("accelDisplay").style.width="<%=car.getAcceleration()%>%";
 	document.getElementById("relDisplay").style.width="<%=car.getReliability()*100%>%";
 	document.getElementById("efflDisplay").style.width="<%=car.getLapEfficiency()*100%>%";
 	</script>

@@ -30,14 +30,19 @@ img{
 			if (raceResult.getRacingClass()==racingGame.getRacingClass()&&racingGame.getRacingClass()!='S'){
 				if (racingGame.getRacingClass()=='E'){
 					racingGame.setRacingClass('D');
+					racingGame.setSelectedClass('D');
 				} else if (racingGame.getRacingClass()=='D'){
 					racingGame.setRacingClass('C');
+					racingGame.setSelectedClass('C');
 				} else if (racingGame.getRacingClass()=='C'){
 					racingGame.setRacingClass('B');
+					racingGame.setSelectedClass('B');
 				}  else if (racingGame.getRacingClass()=='B'){
 					racingGame.setRacingClass('A');
+					racingGame.setSelectedClass('A');
 				}  else if (racingGame.getRacingClass()=='A'){
 					racingGame.setRacingClass('S');
+					racingGame.setSelectedClass('S');
 				}  
 				out.println("<h3>You now qualify to race in class "+racingGame.getRacingClass()+" races</h3>");
 			}

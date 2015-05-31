@@ -22,7 +22,7 @@
 		out.println("<h2>Acceleration: " + raceCar.getAcceleration() + " mph/s</h2>");
 		out.println("<h2>Reliability: " + raceCar.getReliability()*100 + "%</h2>");
 		out.println("<h2>Lap Efficiency: " + raceCar.getLapEfficiency()*100 + "%</h2>");
-		out.println("<img src=\"img/cars/"+raceCar.getModel()+".png\" width=\"400px\" height=\"200px\">");
+		out.println("<img src=\"img/cars/"+raceCar.getModel()+"\" width=\"400px\" height=\"200px\">");
 		out.println("<form method=\"POST\" id=\"buyForm\" action=\"purchaseCar.jsp\">");
 		out.println("<input id=\"carID\" type=\"hidden\" name=\"carID\"/>");
 		out.println("<input id=\"acceleration\" type=\"hidden\" name=\"acceleration\"/>");
