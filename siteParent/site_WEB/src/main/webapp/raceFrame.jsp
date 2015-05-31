@@ -30,6 +30,7 @@
 			break;
 		}
 	}
+	myCar=new UserRacecar(RacingGameUtils.getRandomOponentByClass(racingClass));
 	Racecar car2=RacingGameUtils.getRandomOponentByClass(racingClass);
 	Racecar car3=RacingGameUtils.getRandomOponentByClass(racingClass);
 	Racecar car4=RacingGameUtils.getRandomOponentByClass(racingClass);
