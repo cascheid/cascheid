@@ -3,61 +3,70 @@ package site.racinggame;
 public class Upgrade implements java.io.Serializable{
 	private static final long serialVersionUID = -40202005388083042L;
 	
-	private double upgradeID;
-	private double topSpeedMod;
-	private double accelerationMod;
-	private double reliabilityMod;
-	private double efficiencyMod;
-	private double price;
+	private Integer upgradeID;
+	private Integer topSpeedMod;
+	private char racingClass;
+	private Double accelerationMod;
+	private Double reliabilityMod;
+	private Double efficiencyMod;
+	private Double price;
 	
 	public Upgrade(){
 	}
 
-	public double getUpgradeID() {
+	public Integer getUpgradeID() {
 		return upgradeID;
 	}
 
-	public void setUpgradeID(double upgradeID) {
+	public void setUpgradeID(Integer upgradeID) {
 		this.upgradeID = upgradeID;
 	}
 
-	public double getTopSpeedMod() {
+	public char getRacingClass() {
+		return racingClass;
+	}
+
+	public void setRacingClass(char racingClass) {
+		this.racingClass = racingClass;
+	}
+
+	public Integer getTopSpeedMod() {
 		return topSpeedMod;
 	}
 
-	public void setTopSpeedMod(double topSpeedMod) {
+	public void setTopSpeedMod(Integer topSpeedMod) {
 		this.topSpeedMod = topSpeedMod;
 	}
 
-	public double getAccelerationMod() {
+	public Double getAccelerationMod() {
 		return accelerationMod;
 	}
 
-	public void setAccelerationMod(double accelerationMod) {
+	public void setAccelerationMod(Double accelerationMod) {
 		this.accelerationMod = accelerationMod;
 	}
 
-	public double getReliabilityMod() {
+	public Double getReliabilityMod() {
 		return reliabilityMod;
 	}
 
-	public void setReliabilityMod(double reliabilityMod) {
+	public void setReliabilityMod(Double reliabilityMod) {
 		this.reliabilityMod = reliabilityMod;
 	}
 
-	public double getEfficiencyMod() {
+	public Double getEfficiencyMod() {
 		return efficiencyMod;
 	}
 
-	public void setEfficiencyMod(double efficiencyMod) {
+	public void setEfficiencyMod(Double efficiencyMod) {
 		this.efficiencyMod = efficiencyMod;
 	}
 
-	public double getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(double price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 }

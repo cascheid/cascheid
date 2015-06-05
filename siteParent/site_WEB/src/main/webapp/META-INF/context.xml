@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Context>
+    <Resource
+        name="jdbc/mysite" type="javax.sql.DataSource"
+        maxActive="100" maxIdle="30" maxWait="10000" 
+        url="jdbc:mysql://localhost:3306/mysite"
+        driverClassName="com.mysql.jdbc.Driver"
+        username="webapp" password="w3b@pp!"
+    />
+    <ResourceLink name="jdbc/mysite"
+             global="jdbc/mysite"
+              type="javax.sql.DataSource" />
+</Context>

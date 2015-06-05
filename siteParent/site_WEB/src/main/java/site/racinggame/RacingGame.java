@@ -7,28 +7,27 @@ public class RacingGame implements java.io.Serializable{
 
 	private static final long serialVersionUID = -1729577202981441935L;
 	
-	private String racingIdentifier;
+	private Long racingIdentifier;
 	private Integer carID;
-	private double availableCash;
+	private UserRacecar selectedCar;
+	private Double availableCash;
 	private char racingClass;
 	private char selectedClass;
 	private List<UserRacecar> carList;
 	
 	public RacingGame(){
-		this.racingIdentifier = RacingGameUtils.getNewRacingGameIdentifier();
-		this.setCarID(1);
-		this.setAvailableCash(100.00);
-		this.setRacingClass('E');
-		this.setSelectedClass('E');
-		this.addNewCar(RacingGameUtils.getRacecarByID(1));
 	}
 	
-	public RacingGame(String racingIdentifier){
+	public RacingGame(Long racingIdentifier){
 		this.racingIdentifier=racingIdentifier;
 	}
 	
-	public String getRacingIdentifier(){
+	public Long getRacingIdentifier(){
 		return racingIdentifier;
+	}
+	
+	public void setRacingIdentifier(Long racingIdentifier){
+		this.racingIdentifier=racingIdentifier;
 	}
 
 	public Integer getCarID() {
@@ -39,11 +38,19 @@ public class RacingGame implements java.io.Serializable{
 		this.carID = carID;
 	}
 
-	public double getAvailableCash() {
+	public UserRacecar getSelectedCar() {
+		return selectedCar;
+	}
+
+	public void setSelectedCar(UserRacecar selectedCar) {
+		this.selectedCar = selectedCar;
+	}
+
+	public Double getAvailableCash() {
 		return availableCash;
 	}
 
-	public void setAvailableCash(double availableCash) {
+	public void setAvailableCash(Double availableCash) {
 		this.availableCash = availableCash;
 	}
 
@@ -65,6 +72,12 @@ public class RacingGame implements java.io.Serializable{
 
 	public List<UserRacecar> getCarList(){
 		return carList;
+	}
+	
+	public void setCarList(List<UserRacecar> carList){
+		if (carList!=null){
+			this.carList=carList;
+		}
 	}
 	
 	public void addNewCar(Racecar car){

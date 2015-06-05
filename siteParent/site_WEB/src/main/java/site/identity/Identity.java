@@ -13,7 +13,6 @@ public class Identity implements java.io.Serializable{
 	//private SnakeGame snakeGame;
 	
 	public Identity(){
-		this.identifier=IdentityUtils.getRandomIdentifier();
 	}
 	
 	public Identity(Long identifier){
@@ -22,14 +21,15 @@ public class Identity implements java.io.Serializable{
 	
 	public Identity(Long identifier, Long racingGameIdentifier){
 		this.identifier=identifier;
+		this.racingGameIdentifier=racingGameIdentifier;
 	}
 	
 	public Long getIdentifier(){
 		return identifier;
 	}
 	
-	public RacingGame getRacingGameObject(){
-		return RacingGameUtils.getRacingGameObject(racingGameIdentifier);
+	public void setIdentifier(Long identifier){
+		this.identifier=identifier;
 	}
 
 	public Long getRacingGameIdentifier() {

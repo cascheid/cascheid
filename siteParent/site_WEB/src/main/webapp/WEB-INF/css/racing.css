@@ -1,0 +1,21 @@
+body {background-color: #ffffff; height:660px; margin: 0; padding: 0;}
+
+h1 {color: #000000; font: arial;}
+h2 {color: #000000; font: arial;}
+p {color: #000000; font: arial;}
+
+div.tracklap1 {background-color: lightblue; background-image: url("../img/misc/one.png"); background-position:center; background-repeat: no-repeat; background-size:contain; }
+div.tracklap2 {background-color: seagreen; background-image: url("../img/misc/two.png"); background-position:center; background-repeat: no-repeat; background-size:contain; }
+div.tracklap3 {background-color: royalblue; background-image: url("../img/misc/three.png"); background-position:center; background-repeat: no-repeat; background-size:contain; }
+div.tracklap4 {background-color: lightsalmon; background-image: url("../img/misc/four.png"); background-position:center; background-repeat: no-repeat; background-size:contain; }
+div.tracklap5 {background-color: indianred; background-image: url("../img/misc/five.png"); background-position:center; background-repeat: no-repeat; background-size:contain; }
+
+img.car {position:relative;}
+
+button{
+	width: 150px;
+	padding: 10px;
+	box-shadow: -8px 8px 10px 3px rgba(0,0,0,0.2);
+	font-weight: bold;
+	text-decoration: none;
+}

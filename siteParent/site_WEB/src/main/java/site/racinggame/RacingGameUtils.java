@@ -1,160 +1,143 @@
 package site.racinggame;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.NumberFormat;
-import java.util.Properties;
+import java.util.List;
+
+import site.dao.RacingGameDao;
+import site.dao.RacingGameDaoImpl;
 
 public class RacingGameUtils {
-	public static String getNewRacingGameIdentifier(){
-		return "54321";
-	}
 	
-	public static RacingGame getRacingGameObject(Long racingGameIdentifier){
+	public static RacingGame getRacingGameObject(Long racingGameIdentifier, Long identifier){
 		RacingGame racingGame;
-		if (racingGameIdentifier==null){
+		RacingGameDao dao = new RacingGameDaoImpl();
+		if (racingGameIdentifier==null||racingGameIdentifier<=0){
 			racingGame=new RacingGame();
+			racingGame.setRacingClass('E');
+			racingGame.setSelectedClass('E');
+			racingGame.setAvailableCash(100.0);
+			racingGame.setCarID(1);
+			racingGame.addNewCar(getRacecarByID(1));
+			racingGame.setSelectedCar(racingGame.getCarList().get(0));
+			Long newID;
+			try{
+				newID=dao.insertNewRacingGame(racingGame, identifier);
+			} catch (Exception e){
+				throw new IllegalStateException("Failed to insert new Racing Game record.", e);
+			}
+			racingGame.setRacingIdentifier(newID);
 		} else {
-			racingGame=new RacingGame();//TODO, dao implementation
+			try{
+				racingGame=dao.getRacingGameByID(racingGameIdentifier);
+				racingGame.setCarID(racingGame.getCarList().get(0).getCarID());
+				racingGame.setSelectedCar(racingGame.getCarList().get(0));
+				racingGame.setSelectedClass(racingGame.getRacingClass());
+			} catch (Exception e){
+				throw new IllegalStateException("Failed to get Racing Game record for identifier: " + racingGameIdentifier, e);
+			}
 		}
 		return racingGame;
 	}
 	
 	public static Racecar getRacecarByID(Integer carID){
 		Racecar car=null;
-		Properties prop=new Properties();
-		InputStream input=null;
-		try {
-			input=Thread.currentThread().getContextClassLoader().getResourceAsStream("CarList.properties");
-			prop.load(input);
-			char racingClass=prop.getProperty(carID+"Class").charAt(0);
-			double topSpeed=Double.parseDouble(prop.getProperty(carID+"TopSpeed"));
-			double accel=Double.parseDouble(prop.getProperty(carID+"Acceleration"));
-			double reliability=Double.parseDouble(prop.getProperty(carID+"Reliability"));
-			double lapEfficiency=Double.parseDouble(prop.getProperty(carID+"LapEfficiency"));
-			double price=Double.parseDouble(prop.getProperty(carID+"Price"));
-			String model = prop.getProperty(carID+"Model");
-			car = new Racecar(carID, racingClass, topSpeed, accel, reliability, lapEfficiency, model, price);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (input!=null){
-				try {
-					input.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+		try{
+			RacingGameDao dao = new RacingGameDaoImpl();
+			car=dao.getRacecarByID(carID);
+		} catch (Exception e){
+			throw new IllegalStateException("Failed to get Racecar for ID: " + carID,e);
 		}
 		return car;
 	}
 	
-	public static Upgrade getUpgradeByID(Integer upgradeID, char carClass){
-		Upgrade upgrade = new Upgrade();
-		upgrade.setUpgradeID(upgradeID);
-		if (carClass=='E'){
-			upgrade.setPrice(100);
-		} else if (carClass=='D'){
-			upgrade.setPrice(500);
-		} else if (carClass=='C'){
-			upgrade.setPrice(2000);
-		} else if (carClass=='B'){
-			upgrade.setPrice(5000);
-		} else if (carClass=='A'){
-			upgrade.setPrice(15000);
-		} else if (carClass=='S'){
-			upgrade.setPrice(30000);
-		}
-		if (upgradeID==1){
-			upgrade.setTopSpeedMod(20);
-		} else if (upgradeID==2){
-			upgrade.setAccelerationMod(4);
-		} else if (upgradeID==3){
-			upgrade.setReliabilityMod(.1);
-		} else if (upgradeID==4){
-			upgrade.setEfficiencyMod(.075);
-		}else if (upgradeID==5){
-			upgrade.setTopSpeedMod(10);
-			upgrade.setAccelerationMod(2);
+	public static Upgrade getUpgradeByID(Integer upgradeID){
+		Upgrade upgrade = null;
+		try{
+			RacingGameDao dao = new RacingGameDaoImpl();
+			upgrade = dao.getUpgradeByID(upgradeID);
+		} catch (Exception e){
+			throw new IllegalStateException("Failed to get Upgrade for ID: " + upgradeID,e);
 		}
 		return upgrade;
 	}
 	
-	public static Racecar getRandomOponentByClass(char racingClass){
-		Racecar car=null;
-		if (racingClass=='E'){
-			car = getRacecarByID(1);
-		} else if (racingClass=='D'){
-			car = getRacecarByID(2);
-		} else if (racingClass=='C'){
-			car = getRacecarByID(3);
-		}  else if (racingClass=='B'){
-			car = getRacecarByID(4);
-		}  else if (racingClass=='A'){
-			car = getRacecarByID(5);
-		}  else if (racingClass=='S'){
-			car = getRacecarByID(6);
-		} 
-		car.setTopSpeed(car.getTopSpeed()*(1-(.5-Math.random())/2));
-		car.setAcceleration(car.getAcceleration()*(1-(.5-Math.random())/2));
-		car.setReliability(car.getReliability()*(1-(.5-Math.random())/2));
-		car.setLapEfficiency(car.getLapEfficiency()*(1-(.5-Math.random())/2));
-		return car;
+	public static List<Upgrade> getUpgradesByClass(char racingClass){
+		List<Upgrade> upgradeList;
+		try{
+			RacingGameDao dao = new RacingGameDaoImpl();
+			upgradeList = dao.getUpgradesByClass(racingClass);
+		} catch (Exception e){
+			throw new IllegalStateException("Failed to get Upgrades for racing class: " + racingClass,e);
+		}
+		return upgradeList;
 	}
 	
-	public static double getPurseByClass(char racingClass, Integer place){
-		double dReturn=0.0;
+	public static List<Racecar> getRandomOpponentsByClass(char racingClass){
+		List<Racecar> carList;
+		try{
+			RacingGameDao dao = new RacingGameDaoImpl();
+			carList = dao.getRandomOpponentsByClass(racingClass);
+		} catch (Exception e){
+			throw new IllegalStateException("Failed to get Opponents for racing class: " + racingClass,e);
+		}
+		for (Racecar car : carList){
+			car.setTopSpeed((int)Math.round(car.getTopSpeed()*(1-(.5-Math.random())/2)));
+			car.setAcceleration(car.getAcceleration()*(1-(.5-Math.random())/2));
+			car.setReliability(car.getReliability()*(1-(.5-Math.random())/2));
+			car.setLapEfficiency(car.getLapEfficiency()*(1-(.5-Math.random())/2));
+		}
+		return carList;
+	}
+	
+	public static Double getPurseByClass(char racingClass, Integer place){
+		Double dReturn=0.0;
 		if (racingClass=='E'){
 			if (place==1){
-				dReturn = 500;
+				dReturn = 500.0;
 			} else if (place==2){
-				dReturn = 250;
+				dReturn = 250.0;
 			} else if (place==3){
-				dReturn = 100;
+				dReturn = 100.0;
 			}
 		} else if (racingClass=='D'){
 			if (place==1){
-				dReturn = 1500;
+				dReturn = 1500.0;
 			} else if (place==2){
-				dReturn = 750;
+				dReturn = 750.0;
 			} else if (place==3){
-				dReturn = 300;
+				dReturn = 300.0;
 			}
 		} else if (racingClass=='C'){
 			if (place==1){
-				dReturn = 5000;
+				dReturn = 5000.0;
 			} else if (place==2){
-				dReturn = 2500;
+				dReturn = 2500.0;
 			} else if (place==3){
-				dReturn = 1000;
+				dReturn = 1000.0;
 			}
 		} else if (racingClass=='B'){
 			if (place==1){
-				dReturn = 10000;
+				dReturn = 10000.0;
 			} else if (place==2){
-				dReturn = 5000;
+				dReturn = 5000.0;
 			} else if (place==3){
-				dReturn = 2000;
+				dReturn = 2000.0;
 			}
 		} else if (racingClass=='A'){
 			if (place==1){
-				dReturn = 25000;
+				dReturn = 25000.0;
 			} else if (place==2){
-				dReturn = 12500;
+				dReturn = 12500.0;
 			} else if (place==3){
-				dReturn = 5000;
+				dReturn = 5000.0;
 			}
 		} else if (racingClass=='S'){
 			if (place==1){
-				dReturn = 100000;
+				dReturn = 100000.0;
 			} else if (place==2){
-				dReturn = 25000;
+				dReturn = 25000.0;
 			} else if (place==3){
-				dReturn = 10000;
+				dReturn = 10000.0;
 			}
 		}
 		return dReturn;
@@ -162,7 +145,7 @@ public class RacingGameUtils {
 	
 	public static Integer getNumberOfLaps(){
 		Integer iReturn;
-		double rand = Math.random();
+		Double rand = Math.random();
 		if (rand<.1){
 			iReturn=2;
 		} else if (rand<.5){
@@ -177,7 +160,7 @@ public class RacingGameUtils {
 	
 	public static Integer getLapDistanceByClass(char racingClass){
 		Integer iReturn=500;
-		double rand = Math.random();
+		Double rand = Math.random();
 		if (racingClass=='E'){
 			if (rand<.2){
 				iReturn=300;
@@ -254,8 +237,38 @@ public class RacingGameUtils {
 		return iReturn;
 	}
 	
-	public static String formatMoney(double value){
+	public static Long saveNewCar(Long racingGameIdentifier, Integer carID){
+		RacingGameDao dao = new RacingGameDaoImpl();
+		Long lReturn;
+		try{
+			lReturn=dao.addNewUserRacecar(racingGameIdentifier, carID);
+		}catch (Exception e){
+			e.printStackTrace();
+			throw new IllegalStateException("Failed to add car ID: " + carID + " to racing game: " +racingGameIdentifier, e);
+		}
+		return lReturn;
+	}
+	
+	public static void addNewUpgrade(UserRacecar userRacecar, Upgrade upgrade){
+		RacingGameDao dao = new RacingGameDaoImpl();
+		if (userRacecar.getRacingClass()!=upgrade.getRacingClass()){
+			throw new IllegalStateException("Cannot add upgrade of class " + upgrade.getRacingClass() + " to car of class " + userRacecar.getRacingClass());
+		}
+		try{
+			dao.addNewUpgrade(userRacecar.getUserRacecarID(), upgrade.getUpgradeID());
+		}catch (Exception e){
+			e.printStackTrace();
+			throw new IllegalStateException("Failed to add upgrade ID: " + upgrade.getUpgradeID() + " to user racecar id: " +userRacecar.getUserRacecarID(), e);
+		}
+	}
+	
+	public static String formatMoney(Double value){
 		NumberFormat formatter = NumberFormat.getCurrencyInstance();
 		return formatter.format(value);
+	}
+	
+	public static void updateRacingGame(Long racingGameIdentifier, Double availableCash, char racingClass){
+		RacingGameDao dao = new RacingGameDaoImpl();
+		dao.updateRacingGame(racingGameIdentifier, availableCash, racingClass);
 	}
 }
