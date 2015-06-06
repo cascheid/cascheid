@@ -218,6 +218,12 @@ public class RacingGameController {
 	public ModelAndView openUserRaceFrame(
 			@ModelAttribute("raceInfo") RaceInfo raceInfo){
 		ModelAndView mv; 
+		if (raceInfo==null){
+			raceInfo=new RaceInfo();
+		}
+		if (raceInfo.getRaceType()==null){
+			raceInfo.setRaceType("spectate");
+		}
 		if (raceInfo.getRaceType().equals("user")){
 			mv = new ModelAndView("userRaceFrame");
 		} else {
@@ -228,16 +234,19 @@ public class RacingGameController {
 		raceInfo.setLapDistance(RacingGameUtils.getLapDistanceByClass(raceInfo.getRacingClass()));
 		raceInfo.setNoLaps(RacingGameUtils.getNumberOfLaps());
 		mv.addObject("racecar", racingGame.getSelectedCar());
-		int i=1;//start with opponent2
+		int i=0;
+		if (raceInfo.getRaceType().equals("user")){
+			i++;//start with racer2
+		}
 		for (Racecar car : opponents){
 			i++;
-			mv.addObject("opponent"+i, car);
+			mv.addObject("racer"+i, car);
 		}
 		RaceResult raceResult = new RaceResult();
 		mv.addObject("raceInfo", raceInfo);
 		mv.addObject("raceResult", raceResult);
 		return mv;
-	}
+	}	
 	
 	@RequestMapping("/racingResults")
 	public ModelAndView racingResults(
