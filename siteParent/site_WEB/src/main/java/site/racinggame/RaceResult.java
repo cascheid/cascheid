@@ -6,6 +6,7 @@ public class RaceResult implements java.io.Serializable{
 	private static final long serialVersionUID = 7462149165977234290L;
 	
 	private char racingClass;
+	private String raceType;
 	private String place1;
 	private Double place1Time;
 	private String place2;
@@ -28,6 +29,14 @@ public class RaceResult implements java.io.Serializable{
 
 	public void setRacingClass(char racingClass) {
 		this.racingClass = racingClass;
+	}
+
+	public String getRaceType() {
+		return raceType;
+	}
+
+	public void setRaceType(String raceType) {
+		this.raceType = raceType;
 	}
 
 	public String getPlace1() {
