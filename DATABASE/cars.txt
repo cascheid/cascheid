@@ -1,6 +1,7 @@
 SS
 One1:1341 hp 273mph
 venom:1400 hp 290mph, lower laps
+egoista:fake
 
 S
 Bugatti Veyron: 268 mph, 1200 hp
@@ -10,6 +11,9 @@ P1: 217 mph, 647 bhp
 pagani huayra: 231 mph, 700 hp
 Porsche 918: 210
 Peugeot onyx:fake
+Saleen S7: 248 mph;
+Caparo t1: 205 mph, super accel
+saab phoenix:fake
 
 A
 Lamborghini murcielago: 210 mph, 572 hp
@@ -20,10 +24,38 @@ Bentley Continental GTC: 205mph, 626 hp
 Audi R8: 199mph
 Porsche 911: 193 mph
 Aston Martin V8: 190 mph
+Rolls Royce jonkheere: fake
 
 B
 BMW I8: 160 mph, 357 hp
-Tesla roadster: 125 mph, 400 hp
 spyker c8: 186
-coorvette: 181 mph
+corvette: 181 mph
 Jaguar F-Type: 173 mph, 550 hp
+Lotus esprit
+Maybach 62
+Mercedes benz f800
+
+C:
+Ford Mustang 160 mph
+Tesla roadster: 125 mph, 400 hp
+Dodge Challenger
+Infiniti q50
+Lincoln mks
+mazda miata
+mitsubishi eclipse
+
+D:
+acura tsx
+honda accord
+kia sorento
+nissan altima coupe
+renault twingo
+subaru xv
+toyota corolla
+
+E:
+buick regal
+chrysler 200
+fiat 500
+jeep grand cherokee
+volkswagen beetle
