@@ -16,7 +16,7 @@
 	div.middle {float:left; margin-left:0px; width:70px; height:600px; background-color: lightgreen; background-image: url("../img/misc/one.png"); background-position:center; background-repeat: no-repeat; background-size:contain; }
 	img.car {position:absolute;
 	bottom:0px;
-    -webkit-transform: rotate(270deg);
+	-webkit-transform: rotate(270deg);
     -moz-transform: rotate(270deg);
     -o-transform: rotate(270deg);
     -ms-transform: rotate(270deg);

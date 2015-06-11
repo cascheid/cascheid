@@ -14,7 +14,7 @@ public class UserRacecar extends Racecar implements java.io.Serializable{
 	}
 
 	public UserRacecar(Racecar car){
-		super(car.getCarID(), car.getRacingClass(), car.getTopSpeed(), car.getAcceleration(), car.getReliability(), car.getLapEfficiency(), car.getModel(), car.getPrice());
+		super(car.getCarID(), car.getRacingClass(), car.getTopSpeed(), car.getAcceleration(), car.getReliability(), car.getLapEfficiency(), car.getModel(), car.getPrice(), car.getName());
 	}
 
 	public Long getUserRacecarID() {
@@ -47,7 +47,7 @@ public class UserRacecar extends Racecar implements java.io.Serializable{
 				iReturn+=upgrade.getTopSpeedMod();
 			}
 		}
-		return iReturn;
+		return iReturn>400?400:iReturn;
 	}
 	
 	@Override
@@ -58,7 +58,7 @@ public class UserRacecar extends Racecar implements java.io.Serializable{
 				dReturn+=upgrade.getAccelerationMod();
 			}
 		}
-		return dReturn;
+		return dReturn>80?80:dReturn;
 	}
 	
 	@Override
@@ -80,7 +80,16 @@ public class UserRacecar extends Racecar implements java.io.Serializable{
 				dReturn+=upgrade.getEfficiencyMod();
 			}
 		}
-		return dReturn>1?1:dReturn;
+		return dReturn>.8?.8:dReturn;
+	}
+	
+	@Override
+	public String getRacingClass(){
+		if (super.getRacingClass().equals("SS")){
+			return "S";
+		} else {
+			return super.getRacingClass();
+		}
 	}
 	
 }

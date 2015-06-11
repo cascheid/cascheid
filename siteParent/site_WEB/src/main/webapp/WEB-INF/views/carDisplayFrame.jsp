@@ -6,26 +6,65 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<style>
+	h1 {
+		position:center;
+	}
+	div.inline{float:left; width: 100%; padding-bottom:5px;}
+	div.inlinesplit{float:left; width: 49%;}
+	
+	div.path{
+		float:left;
+		position:relative;
+		overflow:hidden;
+		width:49%;
+		height:20px;
+		border:3px solid #000;
+	}
+	div.displayBlock{
+		width:80%;
+		height:20px;
+		background-color:royalblue;
+	}
+	
+	label {font-size: 22px; font-weight:bold; display:inline-block; width:40%; float:left;}
+</style>
 </head>
 <body>
-	<h2>Top Speed: ${raceCar.topSpeed} mph</h2>
-	<h2>Acceleration: ${raceCar.acceleration} mph/s</h2>
-	<h2>Reliability: ${raceCar.reliability*100}%</h2>
-	<h2>Lap Efficiency: ${raceCar.lapEfficiency*100}%</h2>
-	<img src="img/cars/${raceCar.model}" width="400px" height="200px">
-	<!--<form method="POST" id="buyForm" action="purchaseCar.jsp">
-		<input id="carID" type="hidden" name="carID"/>
-		<input id="acceleration" type="hidden" name="acceleration"/>
-		<input id="topSpeed" type="hidden" name="topSpeed"/>
-		<input id="reliability" type="hidden" name="reliability"/>
-		<input id="lapEfficiency" type="hidden" name="lapEfficiency"/>
-		<input id="racingClass" type="hidden" name="racingClass"/>
-		<input id="price" type="hidden" name="price"/>
-		<input id="model" type="hidden" name="model"/>
-		</form>-->
+	<h1>Racing Class: ${raceCar.racingClass}</h1>
+	<img src="img/cars/${raceCar.model}" width="400px" height="200px" />
+	<div class="inline">
+		<label>Top Speed: ${raceCar.topSpeed} mph</label>
+		<div class="path">
+			<div id="speedDisplay" class="displayBlock"></div>
+		</div>
+	</div>
+	<div class="inline">
+		<label>Acceleration: ${raceCar.acceleration} mph/s</label>
+		<div class="path">
+			<div id="accelDisplay" class="displayBlock"></div>
+		</div>
+	</div>
+	<div class="inline">
+		<label>Reliability: ${raceCar.reliability*100}%</label>
+		<div class="path">
+			<div id="relDisplay" class="displayBlock"></div>
+		</div>
+	</div>
+	<div class="inline">
+		<label>Lap Efficiency: ${raceCar.lapEfficiency*100}%</label>
+		<div class="path">
+			<div id="efflDisplay" class="displayBlock"></div>
+		</div>
+	</div>
 	<h1>Price: $${raceCar.price}</h><button onclick='purchaseCar()'>Buy it now</button>
 	
 	<script>
+		document.getElementById("speedDisplay").style.width="${raceCar.topSpeed/4}%";
+		document.getElementById("accelDisplay").style.width="${raceCar.acceleration/0.8}%";
+		document.getElementById("relDisplay").style.width="${raceCar.reliability*100}%";
+		document.getElementById("efflDisplay").style.width="${(raceCar.lapEfficiency/0.8)*100}%";
+	
 		function purchaseCar(){
 			if (${raceCar.price}<=${availableCash}){
 				

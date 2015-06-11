@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.jdbc.core.PreparedStatementCreator;
@@ -30,24 +31,25 @@ public class RacingGameDaoImpl extends ParentDao implements RacingGameDao{
 				RacingGame racingGame=new RacingGame();
 				racingGame.setRacingIdentifier(rs.getLong("RACING_IDENTIFIER"));
 				racingGame.setAvailableCash(rs.getDouble("AVAILABLE_CASH"));
-				racingGame.setRacingClass(rs.getString("RACING_CLASS").charAt(0));
+				racingGame.setRacingClass(rs.getString("RACING_CLASS"));
 				List<UserRacecar> carList = jdbcTemplate.query("SELECT * FROM RACECARS RC INNER JOIN USER_RACECARS UR ON RC.CAR_ID=UR.CAR_ID WHERE UR.RACING_IDENTIFIER=?", new Object[]{identifier}, new RowMapper<UserRacecar>(){
 					public UserRacecar mapRow(ResultSet rs, int rowNum)	throws SQLException {
 						UserRacecar car = new UserRacecar();
 						car.setCarID(rs.getInt("CAR_ID"));
-						car.setRacingClass(rs.getString("RACING_CLASS").charAt(0));
+						car.setRacingClass(rs.getString("RACING_CLASS"));
 						car.setTopSpeed(rs.getInt("TOP_SPEED"));
 						car.setAcceleration(rs.getDouble("ACCELERATION"));
 						car.setReliability(rs.getDouble("RELIABILITY"));
 						car.setLapEfficiency(rs.getDouble("LAP_EFFICIENCY"));
 						car.setModel(rs.getString("MODEL"));
+						car.setName(rs.getString("NAME"));
 						car.setPrice(rs.getDouble("PRICE"));
 						car.setUserRacecarID(rs.getLong("USER_RACECAR_ID"));
 						List<Upgrade> upgradeList = jdbcTemplate.query("SELECT * FROM UPGRADES U INNER JOIN USER_RACECAR_UPGRADES RCU ON U.UPGRADE_ID=RCU.UPGRADE_ID WHERE RCU.USER_RACECAR_ID=?", new Object[]{rs.getLong("USER_RACECAR_ID")}, new RowMapper<Upgrade>(){
 							public Upgrade mapRow(ResultSet rs, int rowNum)	throws SQLException {
 								Upgrade upgrade = new Upgrade();
 								upgrade.setUpgradeID(rs.getInt("UPGRADE_ID"));
-								upgrade.setRacingClass(rs.getString("RACING_CLASS").charAt(0));
+								upgrade.setRacingClass(rs.getString("RACING_CLASS"));
 								upgrade.setTopSpeedMod(rs.getInt("TOP_SPEED_MOD"));
 								upgrade.setAccelerationMod(rs.getDouble("ACCELERATION_MOD"));
 								if (rs.wasNull()){
@@ -120,12 +122,13 @@ public class RacingGameDaoImpl extends ParentDao implements RacingGameDao{
 			public Racecar mapRow(ResultSet rs, int rowNum) throws SQLException {
 				Racecar car = new Racecar();
 				car.setCarID(rs.getInt("CAR_ID"));
-				car.setRacingClass(rs.getString("RACING_CLASS").charAt(0));
+				car.setRacingClass(rs.getString("RACING_CLASS"));
 				car.setTopSpeed(rs.getInt("TOP_SPEED"));
 				car.setAcceleration(rs.getDouble("ACCELERATION"));
 				car.setReliability(rs.getDouble("RELIABILITY"));
 				car.setLapEfficiency(rs.getDouble("LAP_EFFICIENCY"));
 				car.setModel(rs.getString("MODEL"));
+				car.setName(rs.getString("NAME"));
 				car.setPrice(rs.getDouble("PRICE"));
 				return car;
 			}
@@ -141,7 +144,7 @@ public class RacingGameDaoImpl extends ParentDao implements RacingGameDao{
 			public Upgrade mapRow(ResultSet rs, int rowNum)	throws SQLException {
 				Upgrade upgrade = new Upgrade();
 				upgrade.setUpgradeID(rs.getInt("UPGRADE_ID"));
-				upgrade.setRacingClass(rs.getString("RACING_CLASS").charAt(0));
+				upgrade.setRacingClass(rs.getString("RACING_CLASS"));
 				upgrade.setTopSpeedMod(rs.getInt("TOP_SPEED_MOD"));
 				upgrade.setAccelerationMod(rs.getDouble("ACCELERATION_MOD"));
 				if (rs.wasNull()){
@@ -162,7 +165,7 @@ public class RacingGameDaoImpl extends ParentDao implements RacingGameDao{
 		return upgrade;
 	}
 	
-	public List<Upgrade> getUpgradesByClass(char racingClass){
+	public List<Upgrade> getUpgradesByClass(String racingClass){
 		if (jdbcTemplate==null){
 			setDataSource(getDataSource());
 		}
@@ -170,7 +173,7 @@ public class RacingGameDaoImpl extends ParentDao implements RacingGameDao{
 			public Upgrade mapRow(ResultSet rs, int rowNum)	throws SQLException {
 				Upgrade upgrade = new Upgrade();
 				upgrade.setUpgradeID(rs.getInt("UPGRADE_ID"));
-				upgrade.setRacingClass(rs.getString("RACING_CLASS").charAt(0));
+				upgrade.setRacingClass(rs.getString("RACING_CLASS"));
 				upgrade.setTopSpeedMod(rs.getInt("TOP_SPEED_MOD"));
 				upgrade.setAccelerationMod(rs.getDouble("ACCELERATION_MOD"));
 				if (rs.wasNull()){
@@ -191,21 +194,84 @@ public class RacingGameDaoImpl extends ParentDao implements RacingGameDao{
 		return upgrades;
 	}
 
-	public List<Racecar> getRandomOpponentsByClass(char racingClass) {
+	public List<Racecar> getRandomOpponentsByClass(String racingClass) {
 		if (jdbcTemplate==null){
 			setDataSource(getDataSource());
 		}
-		List<Racecar> carList = jdbcTemplate.query("SELECT * FROM RACECARS WHERE RACING_CLASS=? ORDER BY RAND() LIMIT 5", new String[]{String.valueOf(racingClass)}, new RowMapper<Racecar>(){
+		String availableClasses=null;
+		if ("E".equals(racingClass)){
+			availableClasses="('E')";
+		}
+		if ("D".equals(racingClass)){
+			availableClasses="('D', 'C')";
+		}
+		if ("C".equals(racingClass)){
+			availableClasses="('C', 'B')";
+		}
+		if ("B".equals(racingClass)){
+			availableClasses="('B', 'A')";
+		}
+		if ("A".equals(racingClass)){
+			availableClasses="('A', 'S')";
+		}
+		if ("S".equals(racingClass)){
+			availableClasses="('S', 'SS')";
+		}
+		List<Racecar> carList = jdbcTemplate.query("SELECT * FROM RACECARS WHERE RACING_CLASS IN "+availableClasses+" ORDER BY RAND() LIMIT 5", new RowMapper<Racecar>(){
 			public Racecar mapRow(ResultSet rs, int rowNum) throws SQLException {
 				Racecar car = new Racecar();
 				car.setCarID(rs.getInt("CAR_ID"));
-				car.setRacingClass(rs.getString("RACING_CLASS").charAt(0));
+				car.setRacingClass(rs.getString("RACING_CLASS"));
 				car.setTopSpeed(rs.getInt("TOP_SPEED"));
 				car.setAcceleration(rs.getDouble("ACCELERATION"));
 				car.setReliability(rs.getDouble("RELIABILITY"));
 				car.setLapEfficiency(rs.getDouble("LAP_EFFICIENCY"));
 				car.setModel(rs.getString("MODEL"));
 				car.setPrice(rs.getDouble("PRICE"));
+				car.setName(rs.getString("NAME"));
+				return car;
+			}
+		});
+		return carList;
+	}
+
+	public List<Racecar> getAvailableCarsToPurchase(String racingClass, Long racingIdentifier) {
+		if (jdbcTemplate==null){
+			setDataSource(getDataSource());
+		}
+		String availableList = "('E'";
+		if (Arrays.asList("D", "C", "B", "A", "S", "SS").contains(racingClass)){
+			availableList+=", 'D'";
+		}
+		if (Arrays.asList("C", "B", "A", "S", "SS").contains(racingClass)){
+			availableList+=", 'C'";
+		}
+		if (Arrays.asList("B", "A", "S", "SS").contains(racingClass)){
+			availableList+=", 'B'";
+		}
+		if (Arrays.asList("A", "S", "SS").contains(racingClass)){
+			availableList+=", 'A'";
+		}
+		if (Arrays.asList("S", "SS").contains(racingClass)){
+			availableList+=", 'S'";
+		}
+		if ("SS".equals(racingClass)){
+			availableList+=", 'SS'";
+		}
+		availableList+=")";
+		String orderBy=" ORDER BY CASE WHEN RACING_CLASS='SS' THEN '1' WHEN RACING_CLASS='S' THEN '2' WHEN RACING_CLASS='A' THEN '3' WHEN RACING_CLASS='B' THEN '4' WHEN RACING_CLASS='C' THEN '5' WHEN RACING_CLASS='D' THEN '6' ELSE '7' END;";
+		List<Racecar> carList = jdbcTemplate.query("SELECT * FROM RACECARS WHERE RACING_CLASS IN "+availableList+" AND CAR_ID NOT IN (SELECT CAR_ID FROM USER_RACECARS WHERE RACING_IDENTIFIER=?)"+orderBy, new Object[]{racingIdentifier}, new RowMapper<Racecar>(){
+			public Racecar mapRow(ResultSet rs, int rowNum) throws SQLException {
+				Racecar car = new Racecar();
+				car.setCarID(rs.getInt("CAR_ID"));
+				car.setRacingClass(rs.getString("RACING_CLASS"));
+				car.setTopSpeed(rs.getInt("TOP_SPEED"));
+				car.setAcceleration(rs.getDouble("ACCELERATION"));
+				car.setReliability(rs.getDouble("RELIABILITY"));
+				car.setLapEfficiency(rs.getDouble("LAP_EFFICIENCY"));
+				car.setModel(rs.getString("MODEL"));
+				car.setPrice(rs.getDouble("PRICE"));
+				car.setName(rs.getString("NAME"));
 				return car;
 			}
 		});
@@ -241,7 +307,7 @@ public class RacingGameDaoImpl extends ParentDao implements RacingGameDao{
 	}
 
 	public void updateRacingGame(Long racingIdentifier, Double availableCash,
-			char racingClass) {
+			String racingClass) {
 		if (jdbcTemplate==null){
 			setDataSource(getDataSource());
 		}

@@ -46,7 +46,7 @@ public class RacingGameController {
 	public ModelAndView showMoneyFrame(){
 		ModelAndView mv = new ModelAndView("raceMoneyFrame");
 		mv.addObject("availableCash", racingGame.getAvailableCash());
-		mv.addObject("racingClass", racingGame.getRacingClass());
+		mv.addObject("racingClass", racingGame.getRacingClass().charAt(0));
 		return mv;
 	}
 	
@@ -93,22 +93,24 @@ public class RacingGameController {
 	@RequestMapping("/racingStoreFrame")
 	public ModelAndView showStoreFrame(){
 		ModelAndView mv = new ModelAndView("racingStoreFrame");
-		List<Racecar> carOptions = RacingGameUtils.getRandomOpponentsByClass(racingGame.getRacingClass());
-		int i=0;
-		for (Racecar car : carOptions){
-			i++;
-			mv.addObject("option"+i, car.getCarID());
-		}
+		List<Racecar> carOptions = RacingGameUtils.getAvailableCarsToPurchase(racingGame.getRacingClass(), racingGame.getRacingIdentifier());
+		mv.addObject("carOptions", carOptions);
 		return mv;
 	}
 	
 	@RequestMapping("/carDisplayFrame")
 	public ModelAndView showCarDisplay(
-			@RequestParam(value = "carID", required = true, defaultValue="1") Integer carID){
-		ModelAndView mv = new ModelAndView("carDisplayFrame");
-		Racecar car = RacingGameUtils.getRacecarByID(carID);
-		mv.addObject("raceCar", car);
-		mv.addObject("availableCash", racingGame.getAvailableCash());
+			@RequestParam(value = "carID", required = true, defaultValue="0") Integer carID){
+		ModelAndView mv;
+		if (carID==0){
+			mv = new ModelAndView("unselectedDisplayFrame");
+			mv.addObject("availableCash", racingGame.getAvailableCash());
+		}else {
+			mv = new ModelAndView("carDisplayFrame");
+			Racecar car = RacingGameUtils.getRacecarByID(carID);
+			mv.addObject("raceCar", car);
+			mv.addObject("availableCash", racingGame.getAvailableCash());
+		}
 		return mv;
 	}
 	
@@ -141,19 +143,32 @@ public class RacingGameController {
 	
 	@RequestMapping("/upgradeDisplayFrame")
 	public ModelAndView showUpgradeDisplay(
-			@RequestParam(value = "upgradeID", required = true, defaultValue="1") Integer upgradeID){
-		Upgrade upgrade = RacingGameUtils.getUpgradeByID(upgradeID);
-		Double price = upgrade.getPrice();
-		for (Upgrade owned : racingGame.getSelectedCar().getUpgradeList()){
-			if (owned.getUpgradeID()==upgradeID){
-				price=price*2;
+			@RequestParam(value = "upgradeID", required = true, defaultValue="0") Integer upgradeID){
+		ModelAndView mv;
+		if (upgradeID==0){
+			mv = new ModelAndView("unselectedDisplayFrame");
+			mv.addObject("availableCash", racingGame.getAvailableCash());
+		} else {
+			Upgrade upgrade = RacingGameUtils.getUpgradeByID(upgradeID);
+			Double price = upgrade.getPrice();
+			int numPurchases=0;
+			for (Upgrade owned : racingGame.getSelectedCar().getUpgradeList()){
+				if (owned.getUpgradeID()==upgradeID){
+					price=price*2;
+					numPurchases++;
+				}
 			}
+			if (numPurchases>=5){
+				upgrade.setPrice(null);
+				mv = new ModelAndView("upgradeDisplayFrame");//TODO display another frame
+			} else {
+				upgrade.setPrice(price);
+				mv = new ModelAndView("upgradeDisplayFrame");
+			}
+			mv.addObject("raceCar", racingGame.getSelectedCar());
+			mv.addObject("upgrade", upgrade);
+			mv.addObject("availableCash", racingGame.getAvailableCash());
 		}
-		upgrade.setPrice(price);
-		ModelAndView mv = new ModelAndView("upgradeDisplayFrame");
-		mv.addObject("raceCar", racingGame.getSelectedCar());
-		mv.addObject("upgrade", upgrade);
-		mv.addObject("availableCash", racingGame.getAvailableCash());
 		
 		return mv;
 	}
@@ -183,19 +198,19 @@ public class RacingGameController {
 		feeMap.put("A", 3000);
 		feeMap.put("S", 5000);
 		availableClasses.add("E");
-		if (racingGame.getRacingClass()!='E'){
+		if (!"E".equals(racingGame.getRacingClass())){
 			availableClasses.add("D");
 		}
-		if (Arrays.asList("C", "B", "A", "S").contains(String.valueOf(racingGame.getRacingClass()))){
+		if (Arrays.asList("C", "B", "A", "S", "SS").contains(racingGame.getRacingClass())){
 			availableClasses.add("C");
 		}
-		if (Arrays.asList("B", "A", "S").contains(String.valueOf(racingGame.getRacingClass()))){
+		if (Arrays.asList("B", "A", "S", "SS").contains(racingGame.getRacingClass())){
 			availableClasses.add("B");	
 		}
-		if (Arrays.asList("A", "S").contains(String.valueOf(racingGame.getRacingClass()))){
+		if (Arrays.asList("A", "S", "SS").contains(racingGame.getRacingClass())){
 			availableClasses.add("A");
 		}
-		if (racingGame.getRacingClass()=='S'){
+		if (Arrays.asList("S", "SS").contains(racingGame.getRacingClass())){
 			availableClasses.add("S");
 		}
 		List<String> availableCourses = new ArrayList<String>();
@@ -253,26 +268,28 @@ public class RacingGameController {
 			@ModelAttribute("userForm") RaceResult raceResult){
 		ModelAndView mv = new ModelAndView("racingResults");
 		Integer finish=6;
-		char newClass=' ';
+		String newClass=null;
 		if ("car1".equals(raceResult.getPlace1())){
 			finish=1;
-			if (raceResult.getRacingClass()==racingGame.getRacingClass()&&racingGame.getRacingClass()!='S'){
-				if (racingGame.getRacingClass()=='E'){
-					racingGame.setRacingClass('D');
-					racingGame.setSelectedClass('D');
-				} else if (racingGame.getRacingClass()=='D'){
-					racingGame.setRacingClass('C');
-					racingGame.setSelectedClass('C');
-				} else if (racingGame.getRacingClass()=='C'){
-					racingGame.setRacingClass('B');
-					racingGame.setSelectedClass('B');
-				}  else if (racingGame.getRacingClass()=='B'){
-					racingGame.setRacingClass('A');
-					racingGame.setSelectedClass('A');
-				}  else if (racingGame.getRacingClass()=='A'){
-					racingGame.setRacingClass('S');
-					racingGame.setSelectedClass('S');
-				}  
+			if (raceResult.getRacingClass().equals(racingGame.getRacingClass())&&!"SS".equals(racingGame.getRacingClass())){
+				if ("E".equals(racingGame.getRacingClass())){
+					racingGame.setRacingClass("D");
+					racingGame.setSelectedClass("D");
+				} else if ("D".equals(racingGame.getRacingClass())){
+					racingGame.setRacingClass("C");
+					racingGame.setSelectedClass("C");
+				} else if ("C".equals(racingGame.getRacingClass())){
+					racingGame.setRacingClass("B");
+					racingGame.setSelectedClass("B");
+				}  else if ("B".equals(racingGame.getRacingClass())){
+					racingGame.setRacingClass("A");
+					racingGame.setSelectedClass("A");
+				}  else if ("A".equals(racingGame.getRacingClass())){
+					racingGame.setRacingClass("S");
+					racingGame.setSelectedClass("S");
+				}  else if ("S".equals(racingGame.getRacingClass())){
+					racingGame.setRacingClass("SS");
+				}
 				newClass=racingGame.getRacingClass();
 			}
 			racingGame.setAvailableCash(racingGame.getAvailableCash()+RacingGameUtils.getPurseByClass(raceResult.getRacingClass(), 1));

@@ -1,0 +1,29 @@
+SS
+One1:1341 hp 273mph
+venom:1400 hp 290mph, lower laps
+
+S
+Bugatti Veyron: 268 mph, 1200 hp
+CCX: 248 mph, 900 bph
+Laferrari: 217 mph, 950 hp, faster laps
+P1: 217 mph, 647 bhp
+pagani huayra: 231 mph, 700 hp
+Porsche 918: 210
+Peugeot onyx:fake
+
+A
+Lamborghini murcielago: 210 mph, 572 hp
+Pagani Zonda Cinque: 208mph, 678 hp
+Maserati MC12: 205 mph
+Lexus LFA: 202 mph 553 hp
+Bentley Continental GTC: 205mph, 626 hp
+Audi R8: 199mph
+Porsche 911: 193 mph
+Aston Martin V8: 190 mph
+
+B
+BMW I8: 160 mph, 357 hp
+Tesla roadster: 125 mph, 400 hp
+spyker c8: 186
+coorvette: 181 mph
+Jaguar F-Type: 173 mph, 550 hp

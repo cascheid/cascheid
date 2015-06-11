@@ -29,7 +29,7 @@
 </style>
 </head>
 <body>
-	<h1>Racing Class: ${raceCar.racingClass}</h1>
+	<h1>Racing Class: ${raceCar.racingClass.charAt(0)}</h1>
 	<img src="img/cars/${raceCar.model}" width="400px" height="200px" />
 	<div class="inline">
 		<label>Top Speed: ${raceCar.topSpeed} mph</label>
@@ -58,9 +58,9 @@
 	
 	<script>
 	document.getElementById("speedDisplay").style.width="${raceCar.topSpeed/4}%";
-	document.getElementById("accelDisplay").style.width="${raceCar.acceleration}%";
+	document.getElementById("accelDisplay").style.width="${raceCar.acceleration/0.8}%";
 	document.getElementById("relDisplay").style.width="${raceCar.reliability*100}%";
-	document.getElementById("efflDisplay").style.width="${raceCar.lapEfficiency*100}%";
+	document.getElementById("efflDisplay").style.width="${(raceCar.lapEfficiency/0.8)*100}%";
 	</script>
 </body>
 </html>

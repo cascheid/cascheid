@@ -13,8 +13,8 @@ public class RacingGameUtils {
 		RacingGameDao dao = new RacingGameDaoImpl();
 		if (racingGameIdentifier==null||racingGameIdentifier<=0){
 			racingGame=new RacingGame();
-			racingGame.setRacingClass('E');
-			racingGame.setSelectedClass('E');
+			racingGame.setRacingClass("E");
+			racingGame.setSelectedClass("E");
 			racingGame.setAvailableCash(100.0);
 			racingGame.setCarID(1);
 			racingGame.addNewCar(getRacecarByID(1));
@@ -61,7 +61,7 @@ public class RacingGameUtils {
 		return upgrade;
 	}
 	
-	public static List<Upgrade> getUpgradesByClass(char racingClass){
+	public static List<Upgrade> getUpgradesByClass(String racingClass){
 		List<Upgrade> upgradeList;
 		try{
 			RacingGameDao dao = new RacingGameDaoImpl();
@@ -72,7 +72,7 @@ public class RacingGameUtils {
 		return upgradeList;
 	}
 	
-	public static List<Racecar> getRandomOpponentsByClass(char racingClass){
+	public static List<Racecar> getRandomOpponentsByClass(String racingClass){
 		List<Racecar> carList;
 		try{
 			RacingGameDao dao = new RacingGameDaoImpl();
@@ -89,9 +89,20 @@ public class RacingGameUtils {
 		return carList;
 	}
 	
-	public static Double getPurseByClass(char racingClass, Integer place){
+	public static List<Racecar> getAvailableCarsToPurchase(String racingClass, Long racingIdentifier){
+		List<Racecar> carList;
+		try{
+			RacingGameDao dao = new RacingGameDaoImpl();
+			carList = dao.getAvailableCarsToPurchase(racingClass, racingIdentifier);
+		} catch (Exception e){
+			throw new IllegalStateException("Failed to get Opponents for racing class: " + racingClass,e);
+		}
+		return carList;
+	}
+	
+	public static Double getPurseByClass(String racingClass, Integer place){
 		Double dReturn=0.0;
-		if (racingClass=='E'){
+		if ("E".equals(racingClass)){
 			if (place==1){
 				dReturn = 500.0;
 			} else if (place==2){
@@ -99,7 +110,7 @@ public class RacingGameUtils {
 			} else if (place==3){
 				dReturn = 100.0;
 			}
-		} else if (racingClass=='D'){
+		} else if ("D".equals(racingClass)){
 			if (place==1){
 				dReturn = 1500.0;
 			} else if (place==2){
@@ -107,7 +118,7 @@ public class RacingGameUtils {
 			} else if (place==3){
 				dReturn = 300.0;
 			}
-		} else if (racingClass=='C'){
+		} else if ("C".equals(racingClass)){
 			if (place==1){
 				dReturn = 5000.0;
 			} else if (place==2){
@@ -115,7 +126,7 @@ public class RacingGameUtils {
 			} else if (place==3){
 				dReturn = 1000.0;
 			}
-		} else if (racingClass=='B'){
+		} else if ("B".equals(racingClass)){
 			if (place==1){
 				dReturn = 10000.0;
 			} else if (place==2){
@@ -123,7 +134,7 @@ public class RacingGameUtils {
 			} else if (place==3){
 				dReturn = 2000.0;
 			}
-		} else if (racingClass=='A'){
+		} else if ("A".equals(racingClass)){
 			if (place==1){
 				dReturn = 25000.0;
 			} else if (place==2){
@@ -131,7 +142,7 @@ public class RacingGameUtils {
 			} else if (place==3){
 				dReturn = 5000.0;
 			}
-		} else if (racingClass=='S'){
+		} else if ("S".equals(racingClass)){
 			if (place==1){
 				dReturn = 100000.0;
 			} else if (place==2){
@@ -158,10 +169,10 @@ public class RacingGameUtils {
 		return iReturn;
 	}
 	
-	public static Integer getLapDistanceByClass(char racingClass){
+	public static Integer getLapDistanceByClass(String racingClass){
 		Integer iReturn=500;
 		Double rand = Math.random();
-		if (racingClass=='E'){
+		if ("E".equals(racingClass)){
 			if (rand<.2){
 				iReturn=300;
 			} else if (rand<.4){
@@ -173,7 +184,7 @@ public class RacingGameUtils {
 			} else {
 				iReturn=700;
 			}
-		} else if (racingClass=='D'){
+		} else if ("D".equals(racingClass)){
 			if (rand<.2){
 				iReturn=300;
 			} else if (rand<.4){
@@ -185,7 +196,7 @@ public class RacingGameUtils {
 			} else {
 				iReturn=700;
 			}	
-		} else if (racingClass=='C'){
+		} else if ("C".equals(racingClass)){
 			if (rand<.2){
 				iReturn=300;
 			} else if (rand<.4){
@@ -197,7 +208,7 @@ public class RacingGameUtils {
 			} else {
 				iReturn=700;
 			}	
-		} else if (racingClass=='B'){
+		} else if ("B".equals(racingClass)){
 			if (rand<.2){
 				iReturn=300;
 			} else if (rand<.4){
@@ -209,7 +220,7 @@ public class RacingGameUtils {
 			} else {
 				iReturn=700;
 			}	
-		} else if (racingClass=='A'){
+		} else if ("A".equals(racingClass)){
 			if (rand<.2){
 				iReturn=300;
 			} else if (rand<.4){
@@ -221,7 +232,7 @@ public class RacingGameUtils {
 			} else {
 				iReturn=700;
 			}	
-		} else if (racingClass=='S'){
+		} else if ("S".equals(racingClass)){
 			if (rand<.2){
 				iReturn=300;
 			} else if (rand<.4){
@@ -251,7 +262,7 @@ public class RacingGameUtils {
 	
 	public static void addNewUpgrade(UserRacecar userRacecar, Upgrade upgrade){
 		RacingGameDao dao = new RacingGameDaoImpl();
-		if (userRacecar.getRacingClass()!=upgrade.getRacingClass()){
+		if (!userRacecar.getRacingClass().equals(upgrade.getRacingClass())){
 			throw new IllegalStateException("Cannot add upgrade of class " + upgrade.getRacingClass() + " to car of class " + userRacecar.getRacingClass());
 		}
 		try{
@@ -267,7 +278,7 @@ public class RacingGameUtils {
 		return formatter.format(value);
 	}
 	
-	public static void updateRacingGame(Long racingGameIdentifier, Double availableCash, char racingClass){
+	public static void updateRacingGame(Long racingGameIdentifier, Double availableCash, String racingClass){
 		RacingGameDao dao = new RacingGameDaoImpl();
 		dao.updateRacingGame(racingGameIdentifier, availableCash, racingClass);
 	}

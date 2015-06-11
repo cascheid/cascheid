@@ -7,7 +7,7 @@ public class RaceInfo implements java.io.Serializable{
 	
 	private static final long serialVersionUID = 7462149165977234290L;
 	
-	private char racingClass;
+	private String racingClass;
 	private String courseType;
 	private String raceType;
 	private BigDecimal racingFee;
@@ -17,11 +17,11 @@ public class RaceInfo implements java.io.Serializable{
 	public RaceInfo(){
 	}
 	
-	public char getRacingClass() {
+	public String getRacingClass() {
 		return racingClass;
 	}
 
-	public void setRacingClass(char racingClass) {
+	public void setRacingClass(String racingClass) {
 		this.racingClass = racingClass;
 	}
 

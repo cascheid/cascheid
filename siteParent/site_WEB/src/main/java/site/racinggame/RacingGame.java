@@ -11,8 +11,8 @@ public class RacingGame implements java.io.Serializable{
 	private Integer carID;
 	private UserRacecar selectedCar;
 	private Double availableCash;
-	private char racingClass;
-	private char selectedClass;
+	private String racingClass;
+	private String selectedClass;
 	private List<UserRacecar> carList;
 	
 	public RacingGame(){
@@ -54,19 +54,19 @@ public class RacingGame implements java.io.Serializable{
 		this.availableCash = availableCash;
 	}
 
-	public char getRacingClass() {
+	public String getRacingClass() {
 		return racingClass;
 	}
 
-	public void setRacingClass(char racingClass) {
+	public void setRacingClass(String racingClass) {
 		this.racingClass = racingClass;
 	}
 	
-	public char getSelectedClass() {
+	public String getSelectedClass() {
 		return selectedClass;
 	}
 
-	public void setSelectedClass(char selectedClass) {
+	public void setSelectedClass(String selectedClass) {
 		this.selectedClass = selectedClass;
 	}
 

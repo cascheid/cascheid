@@ -5,7 +5,7 @@ public class Upgrade implements java.io.Serializable{
 	
 	private Integer upgradeID;
 	private Integer topSpeedMod;
-	private char racingClass;
+	private String racingClass;
 	private Double accelerationMod;
 	private Double reliabilityMod;
 	private Double efficiencyMod;
@@ -22,11 +22,11 @@ public class Upgrade implements java.io.Serializable{
 		this.upgradeID = upgradeID;
 	}
 
-	public char getRacingClass() {
+	public String getRacingClass() {
 		return racingClass;
 	}
 
-	public void setRacingClass(char racingClass) {
+	public void setRacingClass(String racingClass) {
 		this.racingClass = racingClass;
 	}
 
