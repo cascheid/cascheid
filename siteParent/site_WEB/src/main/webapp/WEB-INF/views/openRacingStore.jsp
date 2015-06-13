@@ -4,6 +4,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<style>
+	body{overflow:hidden;}
+</style>
 </head>
 <body>
 	<iframe name="centerRacingFrame" width="19%" height="500px" src="racingStoreFrame"></iframe>

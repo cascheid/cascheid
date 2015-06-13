@@ -1,5 +1,6 @@
 package site.dao;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -30,7 +31,7 @@ public class RacingGameDaoImpl extends ParentDao implements RacingGameDao{
 					throws SQLException {
 				RacingGame racingGame=new RacingGame();
 				racingGame.setRacingIdentifier(rs.getLong("RACING_IDENTIFIER"));
-				racingGame.setAvailableCash(rs.getDouble("AVAILABLE_CASH"));
+				racingGame.setAvailableCash(rs.getBigDecimal("AVAILABLE_CASH"));
 				racingGame.setRacingClass(rs.getString("RACING_CLASS"));
 				List<UserRacecar> carList = jdbcTemplate.query("SELECT * FROM RACECARS RC INNER JOIN USER_RACECARS UR ON RC.CAR_ID=UR.CAR_ID WHERE UR.RACING_IDENTIFIER=?", new Object[]{identifier}, new RowMapper<UserRacecar>(){
 					public UserRacecar mapRow(ResultSet rs, int rowNum)	throws SQLException {
@@ -38,12 +39,12 @@ public class RacingGameDaoImpl extends ParentDao implements RacingGameDao{
 						car.setCarID(rs.getInt("CAR_ID"));
 						car.setRacingClass(rs.getString("RACING_CLASS"));
 						car.setTopSpeed(rs.getInt("TOP_SPEED"));
-						car.setAcceleration(rs.getDouble("ACCELERATION"));
-						car.setReliability(rs.getDouble("RELIABILITY"));
-						car.setLapEfficiency(rs.getDouble("LAP_EFFICIENCY"));
+						car.setAcceleration(rs.getInt("ACCELERATION"));
+						car.setReliability(rs.getBigDecimal("RELIABILITY"));
+						car.setLapEfficiency(rs.getBigDecimal("LAP_EFFICIENCY"));
 						car.setModel(rs.getString("MODEL"));
 						car.setName(rs.getString("NAME"));
-						car.setPrice(rs.getDouble("PRICE"));
+						car.setPrice(rs.getBigDecimal("PRICE"));
 						car.setUserRacecarID(rs.getLong("USER_RACECAR_ID"));
 						List<Upgrade> upgradeList = jdbcTemplate.query("SELECT * FROM UPGRADES U INNER JOIN USER_RACECAR_UPGRADES RCU ON U.UPGRADE_ID=RCU.UPGRADE_ID WHERE RCU.USER_RACECAR_ID=?", new Object[]{rs.getLong("USER_RACECAR_ID")}, new RowMapper<Upgrade>(){
 							public Upgrade mapRow(ResultSet rs, int rowNum)	throws SQLException {
@@ -51,19 +52,19 @@ public class RacingGameDaoImpl extends ParentDao implements RacingGameDao{
 								upgrade.setUpgradeID(rs.getInt("UPGRADE_ID"));
 								upgrade.setRacingClass(rs.getString("RACING_CLASS"));
 								upgrade.setTopSpeedMod(rs.getInt("TOP_SPEED_MOD"));
-								upgrade.setAccelerationMod(rs.getDouble("ACCELERATION_MOD"));
+								upgrade.setAccelerationMod(rs.getInt("ACCELERATION_MOD"));
 								if (rs.wasNull()){
 									upgrade.setAccelerationMod(null);
 								}
-								upgrade.setReliabilityMod(rs.getDouble("RELIABILITY_MOD"));
+								upgrade.setReliabilityMod(rs.getBigDecimal("RELIABILITY_MOD"));
 								if (rs.wasNull()){
 									upgrade.setReliabilityMod(null);
 								}
-								upgrade.setEfficiencyMod(rs.getDouble("LAP_EFFICIENCY_MOD"));
+								upgrade.setEfficiencyMod(rs.getBigDecimal("LAP_EFFICIENCY_MOD"));
 								if (rs.wasNull()){
 									upgrade.setEfficiencyMod(null);
 								}
-								upgrade.setPrice(rs.getDouble("PRICE"));
+								upgrade.setPrice(rs.getBigDecimal("PRICE"));
 								return upgrade;
 							}
 						});
@@ -91,7 +92,7 @@ public class RacingGameDaoImpl extends ParentDao implements RacingGameDao{
 		            PreparedStatement ps =
 		                connection.prepareStatement("INSERT INTO RACING_GAME(RACING_IDENTIFIER, RACING_CLASS, AVAILABLE_CASH) VALUES (NULL, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 		            ps.setString(1, String.valueOf(racingGame.getRacingClass()));
-		            ps.setDouble(2, racingGame.getAvailableCash());
+		            ps.setBigDecimal(2, racingGame.getAvailableCash());
 		            return ps;
 		        }
 		    },
@@ -124,12 +125,12 @@ public class RacingGameDaoImpl extends ParentDao implements RacingGameDao{
 				car.setCarID(rs.getInt("CAR_ID"));
 				car.setRacingClass(rs.getString("RACING_CLASS"));
 				car.setTopSpeed(rs.getInt("TOP_SPEED"));
-				car.setAcceleration(rs.getDouble("ACCELERATION"));
-				car.setReliability(rs.getDouble("RELIABILITY"));
-				car.setLapEfficiency(rs.getDouble("LAP_EFFICIENCY"));
+				car.setAcceleration(rs.getInt("ACCELERATION"));
+				car.setReliability(rs.getBigDecimal("RELIABILITY"));
+				car.setLapEfficiency(rs.getBigDecimal("LAP_EFFICIENCY"));
 				car.setModel(rs.getString("MODEL"));
 				car.setName(rs.getString("NAME"));
-				car.setPrice(rs.getDouble("PRICE"));
+				car.setPrice(rs.getBigDecimal("PRICE"));
 				return car;
 			}
 		});
@@ -146,19 +147,19 @@ public class RacingGameDaoImpl extends ParentDao implements RacingGameDao{
 				upgrade.setUpgradeID(rs.getInt("UPGRADE_ID"));
 				upgrade.setRacingClass(rs.getString("RACING_CLASS"));
 				upgrade.setTopSpeedMod(rs.getInt("TOP_SPEED_MOD"));
-				upgrade.setAccelerationMod(rs.getDouble("ACCELERATION_MOD"));
+				upgrade.setAccelerationMod(rs.getInt("ACCELERATION_MOD"));
 				if (rs.wasNull()){
 					upgrade.setAccelerationMod(null);
 				}
-				upgrade.setReliabilityMod(rs.getDouble("RELIABILITY_MOD"));
+				upgrade.setReliabilityMod(rs.getBigDecimal("RELIABILITY_MOD"));
 				if (rs.wasNull()){
 					upgrade.setReliabilityMod(null);
 				}
-				upgrade.setEfficiencyMod(rs.getDouble("LAP_EFFICIENCY_MOD"));
+				upgrade.setEfficiencyMod(rs.getBigDecimal("LAP_EFFICIENCY_MOD"));
 				if (rs.wasNull()){
 					upgrade.setEfficiencyMod(null);
 				}
-				upgrade.setPrice(rs.getDouble("PRICE"));
+				upgrade.setPrice(rs.getBigDecimal("PRICE"));
 				return upgrade;
 			}
 		});
@@ -175,59 +176,40 @@ public class RacingGameDaoImpl extends ParentDao implements RacingGameDao{
 				upgrade.setUpgradeID(rs.getInt("UPGRADE_ID"));
 				upgrade.setRacingClass(rs.getString("RACING_CLASS"));
 				upgrade.setTopSpeedMod(rs.getInt("TOP_SPEED_MOD"));
-				upgrade.setAccelerationMod(rs.getDouble("ACCELERATION_MOD"));
+				upgrade.setAccelerationMod(rs.getInt("ACCELERATION_MOD"));
 				if (rs.wasNull()){
 					upgrade.setAccelerationMod(null);
 				}
-				upgrade.setReliabilityMod(rs.getDouble("RELIABILITY_MOD"));
+				upgrade.setReliabilityMod(rs.getBigDecimal("RELIABILITY_MOD"));
 				if (rs.wasNull()){
 					upgrade.setReliabilityMod(null);
 				}
-				upgrade.setEfficiencyMod(rs.getDouble("LAP_EFFICIENCY_MOD"));
+				upgrade.setEfficiencyMod(rs.getBigDecimal("LAP_EFFICIENCY_MOD"));
 				if (rs.wasNull()){
 					upgrade.setEfficiencyMod(null);
 				}
-				upgrade.setPrice(rs.getDouble("PRICE"));
+				upgrade.setPrice(rs.getBigDecimal("PRICE"));
 				return upgrade;
 			}
 		});
 		return upgrades;
 	}
 
-	public List<Racecar> getRandomOpponentsByClass(String racingClass) {
+	public List<Racecar> getRandomOpponentsByClass(String racingClass, Integer numberOfRacers) {
 		if (jdbcTemplate==null){
 			setDataSource(getDataSource());
 		}
-		String availableClasses=null;
-		if ("E".equals(racingClass)){
-			availableClasses="('E')";
-		}
-		if ("D".equals(racingClass)){
-			availableClasses="('D', 'C')";
-		}
-		if ("C".equals(racingClass)){
-			availableClasses="('C', 'B')";
-		}
-		if ("B".equals(racingClass)){
-			availableClasses="('B', 'A')";
-		}
-		if ("A".equals(racingClass)){
-			availableClasses="('A', 'S')";
-		}
-		if ("S".equals(racingClass)){
-			availableClasses="('S', 'SS')";
-		}
-		List<Racecar> carList = jdbcTemplate.query("SELECT * FROM RACECARS WHERE RACING_CLASS IN "+availableClasses+" ORDER BY RAND() LIMIT 5", new RowMapper<Racecar>(){
+		List<Racecar> carList = jdbcTemplate.query("SELECT * FROM RACECARS WHERE RACING_CLASS =? ORDER BY RAND() LIMIT ?", new Object[]{racingClass, numberOfRacers}, new RowMapper<Racecar>(){
 			public Racecar mapRow(ResultSet rs, int rowNum) throws SQLException {
 				Racecar car = new Racecar();
 				car.setCarID(rs.getInt("CAR_ID"));
 				car.setRacingClass(rs.getString("RACING_CLASS"));
 				car.setTopSpeed(rs.getInt("TOP_SPEED"));
-				car.setAcceleration(rs.getDouble("ACCELERATION"));
-				car.setReliability(rs.getDouble("RELIABILITY"));
-				car.setLapEfficiency(rs.getDouble("LAP_EFFICIENCY"));
+				car.setAcceleration(rs.getInt("ACCELERATION"));
+				car.setReliability(rs.getBigDecimal("RELIABILITY"));
+				car.setLapEfficiency(rs.getBigDecimal("LAP_EFFICIENCY"));
 				car.setModel(rs.getString("MODEL"));
-				car.setPrice(rs.getDouble("PRICE"));
+				car.setPrice(rs.getBigDecimal("PRICE"));
 				car.setName(rs.getString("NAME"));
 				return car;
 			}
@@ -266,11 +248,11 @@ public class RacingGameDaoImpl extends ParentDao implements RacingGameDao{
 				car.setCarID(rs.getInt("CAR_ID"));
 				car.setRacingClass(rs.getString("RACING_CLASS"));
 				car.setTopSpeed(rs.getInt("TOP_SPEED"));
-				car.setAcceleration(rs.getDouble("ACCELERATION"));
-				car.setReliability(rs.getDouble("RELIABILITY"));
-				car.setLapEfficiency(rs.getDouble("LAP_EFFICIENCY"));
+				car.setAcceleration(rs.getInt("ACCELERATION"));
+				car.setReliability(rs.getBigDecimal("RELIABILITY"));
+				car.setLapEfficiency(rs.getBigDecimal("LAP_EFFICIENCY"));
 				car.setModel(rs.getString("MODEL"));
-				car.setPrice(rs.getDouble("PRICE"));
+				car.setPrice(rs.getBigDecimal("PRICE"));
 				car.setName(rs.getString("NAME"));
 				return car;
 			}
@@ -306,7 +288,7 @@ public class RacingGameDaoImpl extends ParentDao implements RacingGameDao{
 		jdbcTemplate.update("INSERT INTO USER_RACECAR_UPGRADES (USER_RACECAR_ID, UPGRADE_ID) VALUES (?,?)", new Object[]{userRacecarID, upgradeID});
 	}
 
-	public void updateRacingGame(Long racingIdentifier, Double availableCash,
+	public void updateRacingGame(Long racingIdentifier, BigDecimal availableCash,
 			String racingClass) {
 		if (jdbcTemplate==null){
 			setDataSource(getDataSource());

@@ -50,19 +50,20 @@
 			<form:options items="${availableTypes}" />
 		</form:select>
 		</div>
-		<div class="inline">
+		<!-- <div class="inline">
 			<label class="large">Course Type: </label>
 		<form:select id="selectedCourse" path="courseType">
 			<form:options items="${availableCourses}" />
 		</form:select>
-		</div>
+		</div> -->
 		
 	</form:form>
 	</div>
 	<div class="panel">
 	<c:forEach items="${feeMap}" var="fee" varStatus="status">
-		<div>
-			<label id="fee${fee.key}">Class ${fee.key} Fee: ${fee.value}</label>
+		<div class="inline">
+			<label>Class ${fee.key} Fee: </label>
+			<label id="fee${fee.key}">${fee.value}</label>
 		</div>
 	</c:forEach>
 	</div>
@@ -71,8 +72,9 @@
 	<script>
 		function submitRace(){
 			var selectedRacingClass=document.getElementById('selectedRacingClass').value;
-			var fee=document.getElementById("fee"+selectedRacingClass).value;
-			if (fee>'${racingGame.availableCash}'){
+			var feeElem=document.getElementById("fee"+selectedRacingClass);
+			var fee=feeElem.textContent;
+			if (fee>${racingGame.availableCash}){
 				window.alert("Cannot afford entry fee!");
 			} else {
 				raceForm.submit();

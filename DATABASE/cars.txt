@@ -32,8 +32,8 @@ spyker c8: 186
 corvette: 181 mph
 Jaguar F-Type: 173 mph, 550 hp
 Lotus esprit
-Maybach 62
-Mercedes benz f800
+Maybach 62: 155
+Mercedes benz f800: 155 mph
 
 C:
 Ford Mustang 160 mph

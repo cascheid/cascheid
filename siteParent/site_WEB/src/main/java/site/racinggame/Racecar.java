@@ -1,5 +1,7 @@
 package site.racinggame;
 
+import java.math.BigDecimal;
+
 public class Racecar implements java.io.Serializable{
 	
 	private static final long serialVersionUID = -6448889763873084248L;
@@ -7,17 +9,17 @@ public class Racecar implements java.io.Serializable{
 	private Integer carID;
 	private String racingClass;
 	private Integer topSpeed;
-	private Double acceleration;
-	private Double reliability;
-	private Double lapEfficiency;
+	private Integer acceleration;
+	private BigDecimal reliability;
+	private BigDecimal lapEfficiency;
 	private String model;
-	private Double price;
+	private BigDecimal price;
 	private String name;
 	
 	public Racecar(){
 	}
 
-	public Racecar(Integer carID, String racingClass, Integer topSpeed, Double acceleration, Double reliability, Double lapEfficiency, String model, Double price, String name){
+	public Racecar(Integer carID, String racingClass, Integer topSpeed, Integer acceleration, BigDecimal reliability, BigDecimal lapEfficiency, String model, BigDecimal price, String name){
 		this.carID=carID;
 		this.racingClass=racingClass;
 		this.topSpeed=topSpeed;
@@ -53,27 +55,27 @@ public class Racecar implements java.io.Serializable{
 		this.topSpeed = topSpeed;
 	}
 
-	public Double getAcceleration() {
+	public Integer getAcceleration() {
 		return acceleration;
 	}
 
-	public void setAcceleration(Double acceleration) {
+	public void setAcceleration(Integer acceleration) {
 		this.acceleration = acceleration;
 	}
 
-	public Double getReliability() {
+	public BigDecimal getReliability() {
 		return reliability;
 	}
 
-	public void setReliability(Double reliability) {
+	public void setReliability(BigDecimal reliability) {
 		this.reliability = reliability;
 	}
 
-	public Double getLapEfficiency() {
+	public BigDecimal getLapEfficiency() {
 		return lapEfficiency;
 	}
 
-	public void setLapEfficiency(Double lapEfficiency) {
+	public void setLapEfficiency(BigDecimal lapEfficiency) {
 		this.lapEfficiency = lapEfficiency;
 	}
 
@@ -85,11 +87,11 @@ public class Racecar implements java.io.Serializable{
 		this.model = model;
 	}
 
-	public Double getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
 
-	public void setPrice(Double price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 

@@ -1,5 +1,6 @@
 package site.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import site.racinggame.Racecar;
@@ -12,9 +13,9 @@ public interface RacingGameDao {
 	public Racecar getRacecarByID(Integer carID);
 	public Upgrade getUpgradeByID(Integer upgradeID);
 	public List<Upgrade> getUpgradesByClass(String racingClass);
-	public List<Racecar> getRandomOpponentsByClass(String racingClass);
+	public List<Racecar> getRandomOpponentsByClass(String racingClass, Integer numberOfRacers);
 	public List<Racecar> getAvailableCarsToPurchase(String racingClass, Long racingIdentifier);
 	public Long addNewUserRacecar(Long racingIdentifier, Integer carID);
 	public void addNewUpgrade(Long userRacecarID, Integer upgradeID);
-	public void updateRacingGame(Long racingIdentifier, Double availableCash, String racingClass);
+	public void updateRacingGame(Long racingIdentifier, BigDecimal availableCash, String racingClass);
 }

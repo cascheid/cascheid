@@ -6,6 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" type="text/css" href="css/textStyle.css"/>
 <style>
+	body{overflow:hidden;}
 	h1 {
 		position:center;
 	}

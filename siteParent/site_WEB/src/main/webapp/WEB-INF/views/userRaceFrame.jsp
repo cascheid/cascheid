@@ -73,13 +73,13 @@
 					
 					if (car1Location >= distance) {
 						if (firstPlace == null) {
-							firstPlace = "car1";
+							firstPlace = "user";
 							document.getElementById("firstPlaceTimeForm").value=elapsedTime;
 						} else if (secondPlace == null) {
-							secondPlace = "car1";
+							secondPlace = "user";
 							document.getElementById("secondPlaceTimeForm").value=elapsedTime;
 						} else if (thirdPlace == null) {
-							thirdPlace = "car1";
+							thirdPlace = "user";
 							document.getElementById("thirdPlaceTimeForm").value=elapsedTime;
 							finishedRace = true;
 						}
@@ -118,13 +118,13 @@
 					
 					if (car2Location >= distance) {
 						if (firstPlace == null) {
-							firstPlace = "car2";
+							firstPlace = "${racer2.name}";
 							document.getElementById("firstPlaceTimeForm").value=elapsedTime;
 						} else if (secondPlace == null) {
-							secondPlace = "car2";
+							secondPlace = "${racer2.name}";
 							document.getElementById("secondPlaceTimeForm").value=elapsedTime;
 						} else if (thirdPlace == null) {
-							thirdPlace = "car2";
+							thirdPlace = "${racer2.name}";
 							document.getElementById("thirdPlaceTimeForm").value=elapsedTime;
 							finishedRace = true;
 						}
@@ -163,13 +163,13 @@
 					
 					if (car3Location >= distance) {
 						if (firstPlace == null) {
-							firstPlace = "car3";
+							firstPlace = "${racer3.name}";
 							document.getElementById("firstPlaceTimeForm").value=elapsedTime;
 						} else if (secondPlace == null) {
-							secondPlace = "car3";
+							secondPlace = "${racer3.name}";
 							document.getElementById("secondPlaceTimeForm").value=elapsedTime;
 						} else if (thirdPlace == null) {
-							thirdPlace = "car3";
+							thirdPlace = "${racer3.name}";
 							document.getElementById("thirdPlaceTimeForm").value=elapsedTime;
 							finishedRace = true;
 						}
@@ -208,13 +208,13 @@
 					
 					if (car4Location >= distance) {
 						if (firstPlace == null) {
-							firstPlace = "car4";
+							firstPlace = "${racer4.name}";
 							document.getElementById("firstPlaceTimeForm").value=elapsedTime;
 						} else if (secondPlace == null) {
-							secondPlace = "car4";
+							secondPlace = "${racer4.name}";
 							document.getElementById("secondPlaceTimeForm").value=elapsedTime;
 						} else if (thirdPlace == null) {
-							thirdPlace = "car4";
+							thirdPlace = "${racer4.name}";
 							document.getElementById("thirdPlaceTimeForm").value=elapsedTime;
 							finishedRace = true;
 						}
@@ -253,13 +253,13 @@
 					
 					if (car5Location >= distance) {
 						if (firstPlace == null) {
-							firstPlace = "car5";
+							firstPlace = "${racer5.name}";
 							document.getElementById("firstPlaceTimeForm").value=elapsedTime;
 						} else if (secondPlace == null) {
-							secondPlace = "car5";
+							secondPlace = "${racer5.name}";
 							document.getElementById("secondPlaceTimeForm").value=elapsedTime;
 						} else if (thirdPlace == null) {
-							thirdPlace = "car5";
+							thirdPlace = "${racer5.name}";
 							document.getElementById("thirdPlaceTimeForm").value=elapsedTime;
 							finishedRace = true;
 						}
@@ -298,13 +298,13 @@
 					
 					if (car6Location >= distance) {
 						if (firstPlace == null) {
-							firstPlace = "car6";
+							firstPlace = "${racer6.name}";
 							document.getElementById("firstPlaceTimeForm").value=elapsedTime;
 						} else if (secondPlace == null) {
-							secondPlace = "car6";
+							secondPlace = "${racer6.name}";
 							document.getElementById("secondPlaceTimeForm").value=elapsedTime;
 						} else if (thirdPlace == null) {
-							thirdPlace = "car6";
+							thirdPlace = "${racer6.name}";
 							document.getElementById("thirdPlaceTimeForm").value=elapsedTime;
 							finishedRace = true;
 						}

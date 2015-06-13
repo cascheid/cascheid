@@ -331,6 +331,7 @@
 				peachLoop++;
 				var peachElem = document.getElementById("peach");
 				if (peachLoop==1){
+					peachFail=false;
 					peachElem.style.visibility='';
 					peachElem.style.marginLeft='-50px';
 					peachElem.src='img/misc/peach-twirl-1.png';
@@ -367,7 +368,7 @@
 					peachElem.src='img/misc/peach-twirl-9.png';
 				} else if (peachLoop==15){
 					peachElem.src='img/misc/peach-twirl-10.png';
-					if (Math.random()<.5){
+					if (Math.random()<.25){
 						peachFail=true;
 					}
 				} else if (peachLoop==16){
@@ -628,7 +629,7 @@
 							carNum=4;
 						}
 					} else {
-						if (crabNum<=1){
+						if (crabNum<=2){
 							carNum=1;
 						} else if (crabNum<=4){
 							carNum=3;
@@ -669,7 +670,7 @@
 							carNum=4;
 						}
 					} else {
-						if (crabNum<=1){
+						if (crabNum<=2){
 							carNum=1;
 						} else if (crabNum<=4){
 							carNum=3;
@@ -1015,7 +1016,7 @@
 	</div>
 	<div class="middle">
 	</div>
-	<form:form method="POST" id="resultForm" action="racingResults" commandName="raceResult">
+	<form:form method="POST" id="resultForm" action="spectateResults" commandName="raceResult">
 		<form:input id="classForm" type="hidden" path="racingClass" value="${raceInfo.racingClass}"/>
 		<form:input id="raceType" type="hidden" path="raceType" value="spectate"/>
 		<form:input id="firstPlaceForm" type="hidden" path="place1"/>
@@ -1027,10 +1028,7 @@
 		<form:input id="fourthPlaceForm" type="hidden" path="place4"/>
 		<form:input id="fourthPlaceTimeForm" type="hidden" path="place4Time"/>
 	</form:form>
-	<button onclick="startAnimation()"> Start!</button>
 	<script>
-	//startRace();
-	function startAnimation(){
 		document.getElementById("crab1").style.bottom=375+Math.random()*125+'px';
 		document.getElementById("crab1").style.marginLeft='11px';
 		document.getElementById("crab2").style.bottom=150+(Math.random()*125)/2+'px';
@@ -1040,7 +1038,6 @@
 		document.getElementById("crab4").style.bottom=150+(Math.random()*125)/2+'px';
 		document.getElementById("crab4").style.marginLeft='11px';
 		startRace();
-	}
 	</script>
 </body>
 </html>

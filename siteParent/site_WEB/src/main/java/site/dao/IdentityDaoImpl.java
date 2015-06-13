@@ -50,4 +50,21 @@ public class IdentityDaoImpl extends ParentDao implements IdentityDao{
 		lReturn=(Long) keyHolder.getKey();
 		return lReturn;
 	}
+	
+	public void deleteRacingGame(Long identifier){
+		if (jdbcTemplate==null){
+			setDataSource(getDataSource());
+		}
+		Long racingIdentifier = jdbcTemplate.queryForObject("SELECT RACING_IDENTIFIER FROM IDENTITY WHERE IDENTIFIER=?", new Object[]{identifier}, Long.class);
+		if (racingIdentifier!=null&&racingIdentifier>0){
+			jdbcTemplate.query("SELECT * FROM USER_RACECARS WHERE RACING_IDENTIFIER=?", new Object[]{racingIdentifier}, new RowMapper<String>(){
+				public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+					jdbcTemplate.update("DELETE FROM USER_RACECAR_UPGRADES WHERE USER_RACECAR_ID=?", new Object[]{rs.getLong("USER_RACECAR_ID")});
+					return null;
+				}
+			});
+			jdbcTemplate.update("DELETE FROM USER_RACECARS WHERE RACING_IDENTIFIER=?", new Object[]{racingIdentifier});
+			jdbcTemplate.update("UPDATE IDENTITY SET RACING_IDENTIFIER=NULL WHERE IDENTIFIER=?", new Object[]{identifier});
+		}
+	}
 }

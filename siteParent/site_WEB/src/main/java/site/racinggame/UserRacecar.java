@@ -1,5 +1,6 @@
 package site.racinggame;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,8 +52,8 @@ public class UserRacecar extends Racecar implements java.io.Serializable{
 	}
 	
 	@Override
-	public Double getAcceleration(){
-		Double dReturn = super.getAcceleration();
+	public Integer getAcceleration(){
+		Integer dReturn = super.getAcceleration();
 		for (Upgrade upgrade : upgradeList){
 			if (upgrade.getAccelerationMod()!=null){
 				dReturn+=upgrade.getAccelerationMod();
@@ -62,25 +63,26 @@ public class UserRacecar extends Racecar implements java.io.Serializable{
 	}
 	
 	@Override
-	public Double getReliability(){
-		Double dReturn = super.getReliability();
+	public BigDecimal getReliability(){
+		BigDecimal dReturn = super.getReliability();
 		for (Upgrade upgrade : upgradeList){
 			if (upgrade.getReliabilityMod()!=null){
-				dReturn+=upgrade.getReliabilityMod();
+				dReturn.add(upgrade.getReliabilityMod());
 			}
 		}
-		return dReturn>1?1:dReturn;
+		return dReturn.compareTo(BigDecimal.ONE)>0?BigDecimal.ONE:dReturn;
 	}
 	
 	@Override
-	public Double getLapEfficiency(){
-		Double dReturn = super.getLapEfficiency();
+	public BigDecimal getLapEfficiency(){
+		BigDecimal dReturn = super.getLapEfficiency();
 		for (Upgrade upgrade : upgradeList){
 			if (upgrade.getEfficiencyMod()!=null){
-				dReturn+=upgrade.getEfficiencyMod();
+				dReturn.add(upgrade.getEfficiencyMod());
 			}
 		}
-		return dReturn>.8?.8:dReturn;
+		BigDecimal maxVal=new BigDecimal(.8);
+		return dReturn.compareTo(maxVal)>0?maxVal:dReturn;
 	}
 	
 	@Override

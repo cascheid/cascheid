@@ -1,15 +1,17 @@
 package site.racinggame;
 
+import java.math.BigDecimal;
+
 public class Upgrade implements java.io.Serializable{
 	private static final long serialVersionUID = -40202005388083042L;
 	
 	private Integer upgradeID;
 	private Integer topSpeedMod;
 	private String racingClass;
-	private Double accelerationMod;
-	private Double reliabilityMod;
-	private Double efficiencyMod;
-	private Double price;
+	private Integer accelerationMod;
+	private BigDecimal reliabilityMod;
+	private BigDecimal efficiencyMod;
+	private BigDecimal price;
 	
 	public Upgrade(){
 	}
@@ -38,35 +40,35 @@ public class Upgrade implements java.io.Serializable{
 		this.topSpeedMod = topSpeedMod;
 	}
 
-	public Double getAccelerationMod() {
+	public Integer getAccelerationMod() {
 		return accelerationMod;
 	}
 
-	public void setAccelerationMod(Double accelerationMod) {
+	public void setAccelerationMod(Integer accelerationMod) {
 		this.accelerationMod = accelerationMod;
 	}
 
-	public Double getReliabilityMod() {
+	public BigDecimal getReliabilityMod() {
 		return reliabilityMod;
 	}
 
-	public void setReliabilityMod(Double reliabilityMod) {
+	public void setReliabilityMod(BigDecimal reliabilityMod) {
 		this.reliabilityMod = reliabilityMod;
 	}
 
-	public Double getEfficiencyMod() {
+	public BigDecimal getEfficiencyMod() {
 		return efficiencyMod;
 	}
 
-	public void setEfficiencyMod(Double efficiencyMod) {
+	public void setEfficiencyMod(BigDecimal efficiencyMod) {
 		this.efficiencyMod = efficiencyMod;
 	}
 
-	public Double getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
 
-	public void setPrice(Double price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 }

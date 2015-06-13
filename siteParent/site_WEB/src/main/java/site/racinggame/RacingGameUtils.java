@@ -1,12 +1,22 @@
 package site.racinggame;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import site.dao.RacingGameDao;
 import site.dao.RacingGameDaoImpl;
 
 public class RacingGameUtils {
+	
+	private static int classEPrize = 500;
+	private static int classDPrize = 1500;
+	private static int classCPrize = 5000;
+	private static int classBPrize = 10000;
+	private static int classAPrize = 25000;
+	private static int classSPrize = 100000;
 	
 	public static RacingGame getRacingGameObject(Long racingGameIdentifier, Long identifier){
 		RacingGame racingGame;
@@ -15,7 +25,7 @@ public class RacingGameUtils {
 			racingGame=new RacingGame();
 			racingGame.setRacingClass("E");
 			racingGame.setSelectedClass("E");
-			racingGame.setAvailableCash(100.0);
+			racingGame.setAvailableCash(new BigDecimal(100));
 			racingGame.setCarID(1);
 			racingGame.addNewCar(getRacecarByID(1));
 			racingGame.setSelectedCar(racingGame.getCarList().get(0));
@@ -72,19 +82,91 @@ public class RacingGameUtils {
 		return upgradeList;
 	}
 	
+	public static List<Racecar> getSpectateCarsByClass(String racingClass){
+		List<Racecar> carList = new ArrayList<Racecar>();
+		try{
+			int repCarID=1;
+			if ("E".equals(racingClass)){
+				repCarID=1;
+			} else if ("D".equals(racingClass)){
+				repCarID=20;
+			} else if ("C".equals(racingClass)){
+				repCarID=9;
+			} else if ("B".equals(racingClass)){
+				repCarID=35;
+			} else if ("A".equals(racingClass)){
+				repCarID=23;
+			} else if ("S".equals(racingClass)){
+				repCarID=40;
+			}
+			RacingGameDao dao = new RacingGameDaoImpl();
+			Racecar car = null;
+			car= dao.getRacecarByID(repCarID);
+			carList.add(car);
+			car = new Racecar(car.getCarID(), car.getRacingClass(), car.getTopSpeed(), car.getAcceleration(), car.getReliability(), car.getLapEfficiency(), car.getModel(), car.getPrice(), car.getName());
+			carList.add(car);
+			car = new Racecar(car.getCarID(), car.getRacingClass(), car.getTopSpeed(), car.getAcceleration(), car.getReliability(), car.getLapEfficiency(), car.getModel(), car.getPrice(), car.getName());
+			carList.add(car);
+			car = new Racecar(car.getCarID(), car.getRacingClass(), car.getTopSpeed(), car.getAcceleration(), car.getReliability(), car.getLapEfficiency(), car.getModel(), car.getPrice(), car.getName());
+			carList.add(car);
+		}catch (Exception e){
+			throw new IllegalStateException("Failed to get spectate cars for racing class: " + racingClass,e);
+		}
+		return carList;
+	}
+	
+	public static LinkedHashMap<String, Integer> getFeeMap(){
+		LinkedHashMap<String, Integer> feeMap=new LinkedHashMap<String, Integer>();
+		feeMap.put("E", 0);
+		feeMap.put("D", classDPrize/10);
+		feeMap.put("C", classCPrize/10);
+		feeMap.put("B", classBPrize/10);
+		feeMap.put("A", classAPrize/10);
+		feeMap.put("S", classSPrize/10);
+		return feeMap;
+	}
+	
 	public static List<Racecar> getRandomOpponentsByClass(String racingClass){
 		List<Racecar> carList;
 		try{
 			RacingGameDao dao = new RacingGameDaoImpl();
-			carList = dao.getRandomOpponentsByClass(racingClass);
+			String nextClass=null;
+			int numNextClass=0;
+			if ("E".equals(racingClass)){
+				carList = dao.getRandomOpponentsByClass(racingClass, 5);
+			} else {
+				double rand = Math.random();
+				if (rand<.1){
+					numNextClass=3;
+				} else if (rand<.6){
+					numNextClass=2;
+				} else if (rand<.9){
+					numNextClass=1;
+				}
+				if ("D".equals(racingClass)){
+					nextClass="C";
+				} else if ("C".equals(racingClass)){
+					nextClass="B";
+				} else if ("B".equals(racingClass)){
+					nextClass="A";
+				} else if ("A".equals(racingClass)){
+					nextClass="S";
+				} else if ("S".equals(racingClass)){
+					nextClass="SS";
+				}
+				carList = dao.getRandomOpponentsByClass(racingClass, 5-numNextClass);
+				if (numNextClass>0){
+					carList.addAll(dao.getRandomOpponentsByClass(nextClass, numNextClass));
+				}
+			}
 		} catch (Exception e){
 			throw new IllegalStateException("Failed to get Opponents for racing class: " + racingClass,e);
 		}
 		for (Racecar car : carList){
-			car.setTopSpeed((int)Math.round(car.getTopSpeed()*(1-(.5-Math.random())/2)));
-			car.setAcceleration(car.getAcceleration()*(1-(.5-Math.random())/2));
-			car.setReliability(car.getReliability()*(1-(.5-Math.random())/2));
-			car.setLapEfficiency(car.getLapEfficiency()*(1-(.5-Math.random())/2));
+			car.setTopSpeed((int)Math.round(car.getTopSpeed()*(1-(.5-Math.random())/4)));
+			car.setAcceleration((int)Math.round(car.getAcceleration()*(1-(.5-Math.random())/4)));
+			car.setReliability(car.getReliability().multiply(new BigDecimal(1-(.5-Math.random())/4)));
+			car.setLapEfficiency(car.getLapEfficiency().multiply(new BigDecimal(1-(.5-Math.random())/4)));
 		}
 		return carList;
 	}
@@ -100,56 +182,26 @@ public class RacingGameUtils {
 		return carList;
 	}
 	
-	public static Double getPurseByClass(String racingClass, Integer place){
-		Double dReturn=0.0;
-		if ("E".equals(racingClass)){
-			if (place==1){
-				dReturn = 500.0;
-			} else if (place==2){
-				dReturn = 250.0;
-			} else if (place==3){
-				dReturn = 100.0;
-			}
-		} else if ("D".equals(racingClass)){
-			if (place==1){
-				dReturn = 1500.0;
-			} else if (place==2){
-				dReturn = 750.0;
-			} else if (place==3){
-				dReturn = 300.0;
-			}
+	public static BigDecimal getPurseByClass(String racingClass, Integer place){
+		BigDecimal dReturn=new BigDecimal(0);
+		Integer purse=classEPrize;
+		if ("D".equals(racingClass)){
+			purse=classDPrize;
 		} else if ("C".equals(racingClass)){
-			if (place==1){
-				dReturn = 5000.0;
-			} else if (place==2){
-				dReturn = 2500.0;
-			} else if (place==3){
-				dReturn = 1000.0;
-			}
+			purse=classCPrize;
 		} else if ("B".equals(racingClass)){
-			if (place==1){
-				dReturn = 10000.0;
-			} else if (place==2){
-				dReturn = 5000.0;
-			} else if (place==3){
-				dReturn = 2000.0;
-			}
+			purse=classBPrize;
 		} else if ("A".equals(racingClass)){
-			if (place==1){
-				dReturn = 25000.0;
-			} else if (place==2){
-				dReturn = 12500.0;
-			} else if (place==3){
-				dReturn = 5000.0;
-			}
+			purse=classAPrize;
 		} else if ("S".equals(racingClass)){
-			if (place==1){
-				dReturn = 100000.0;
-			} else if (place==2){
-				dReturn = 25000.0;
-			} else if (place==3){
-				dReturn = 10000.0;
-			}
+			purse=classSPrize;
+		}
+		if (place==1){
+			dReturn = new BigDecimal(purse);
+		} else if (place==2){
+			dReturn = new BigDecimal(purse).divide(new BigDecimal(2));
+		} else if (place==3){
+			dReturn = new BigDecimal(purse).divide(new BigDecimal(5));
 		}
 		return dReturn;
 	}
@@ -273,12 +325,12 @@ public class RacingGameUtils {
 		}
 	}
 	
-	public static String formatMoney(Double value){
+	public static String formatMoney(BigDecimal value){
 		NumberFormat formatter = NumberFormat.getCurrencyInstance();
 		return formatter.format(value);
 	}
 	
-	public static void updateRacingGame(Long racingGameIdentifier, Double availableCash, String racingClass){
+	public static void updateRacingGame(Long racingGameIdentifier, BigDecimal availableCash, String racingClass){
 		RacingGameDao dao = new RacingGameDaoImpl();
 		dao.updateRacingGame(racingGameIdentifier, availableCash, racingClass);
 	}

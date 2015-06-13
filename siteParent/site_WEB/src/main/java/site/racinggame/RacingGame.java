@@ -1,5 +1,6 @@
 package site.racinggame;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,7 @@ public class RacingGame implements java.io.Serializable{
 	private Long racingIdentifier;
 	private Integer carID;
 	private UserRacecar selectedCar;
-	private Double availableCash;
+	private BigDecimal availableCash;
 	private String racingClass;
 	private String selectedClass;
 	private List<UserRacecar> carList;
@@ -46,11 +47,11 @@ public class RacingGame implements java.io.Serializable{
 		this.selectedCar = selectedCar;
 	}
 
-	public Double getAvailableCash() {
+	public BigDecimal getAvailableCash() {
 		return availableCash;
 	}
 
-	public void setAvailableCash(Double availableCash) {
+	public void setAvailableCash(BigDecimal availableCash) {
 		this.availableCash = availableCash;
 	}
 

@@ -2,7 +2,6 @@ package site.identity;
 
 import site.dao.IdentityDao;
 import site.dao.IdentityDaoImpl;
-import site.dao.IdentityDaoMock;
 
 public class IdentityUtils {
 	
@@ -23,5 +22,10 @@ public class IdentityUtils {
 		IdentityDao dao = new IdentityDaoImpl();
 		lReturn = dao.insertNewIdentity(identity);
 		return lReturn;
+	}
+	
+	public static void deleteRacingGame(Long identifier){
+		IdentityDao dao = new IdentityDaoImpl();
+		dao.deleteRacingGame(identifier);
 	}
 }

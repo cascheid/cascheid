@@ -36,9 +36,20 @@ img{
     	</c:otherwise>
 	</c:choose>
 	<h2>Class: ${raceResult.racingClass}</h2>
-	<h3>First Place: ${raceResult.place1}  Time: ${raceResult.place1Time}</h3>
-	<h3>Second Place: ${raceResult.place2}  Time: ${raceResult.place2Time}</h3>
-	<h3>Third Place: ${raceResult.place3}  Time: ${raceResult.place3Time}</h3>
+	<table border="1" style="width:50%; margin:10px auto; font-size: 22px; font-weight:bold;">
+  	<tr>
+    	<td>First Place: ${raceResult.place1}</td>
+    	<td>Time: ${raceResult.place1Time}</td>	
+  	</tr>
+  	<tr>
+    	<td>Second Place: ${raceResult.place2}</td>
+    	<td>Time: ${raceResult.place2Time}</td>
+  	</tr>
+  	<tr>
+    	<td>Third Place: ${raceResult.place3}</td>
+    	<td>Time: ${raceResult.place3Time}</td>
+  	</tr>
+	</table>
 		
 	<script>window.open('raceMoneyFrame', 'moneyFrame');</script>
 </body>
