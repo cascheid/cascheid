@@ -67,7 +67,7 @@ public class UserRacecar extends Racecar implements java.io.Serializable{
 		BigDecimal dReturn = super.getReliability();
 		for (Upgrade upgrade : upgradeList){
 			if (upgrade.getReliabilityMod()!=null){
-				dReturn.add(upgrade.getReliabilityMod());
+				dReturn=dReturn.add(upgrade.getReliabilityMod());
 			}
 		}
 		return dReturn.compareTo(BigDecimal.ONE)>0?BigDecimal.ONE:dReturn;
@@ -78,7 +78,7 @@ public class UserRacecar extends Racecar implements java.io.Serializable{
 		BigDecimal dReturn = super.getLapEfficiency();
 		for (Upgrade upgrade : upgradeList){
 			if (upgrade.getEfficiencyMod()!=null){
-				dReturn.add(upgrade.getEfficiencyMod());
+				dReturn=dReturn.add(upgrade.getEfficiencyMod());
 			}
 		}
 		BigDecimal maxVal=new BigDecimal(.8);

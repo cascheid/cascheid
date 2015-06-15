@@ -34,7 +34,7 @@
 		<form:select id="selectedRacingClass" path="racingClass">
 			<c:forEach items="${availableClasses}" var="currClass" varStatus="status">
 				<c:choose>
-					<c:when test="${currClass eq 'E'}">
+					<c:when test="${currClass eq racingGame.racingClass}">
 						<option value="${currClass}" selected="true">${currClass}</option>
 					</c:when>
 					<c:otherwise>

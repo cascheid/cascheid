@@ -8,14 +8,15 @@
 <link rel="stylesheet" type="text/css" href="css/racing.css">
 <style>
 	body{overflow:hidden;}
-	div.tracklap1 {float:left; width:80px; height:600px; background: lightblue url ("../img/misc/one.png") no-repeat 50% 50%; }
-	div.tracklap2 {float:left; width:80px; height:600px; background: seagreen url ("../img/misc/two.png") no-repeat 50% 50%; }
-	div.tracklap3 {float:left; width:80px; height:600px; background: royalblue url ("../img/misc/three.png") no-repeat 50% 50%; }
-	div.tracklap4 {float:left; width:80px; height:600px; background: lightsalmon url ("../img/misc/four.png") no-repeat 50% 50%; }
-	div.tracklap5 {float:left; width:80px; height:600px; background: indianred url ("../img/misc/five.png") no-repeat 50% 50%; }
-	div.middle {float:left; margin-left:0px; width:70px; height:600px; background-color: lightgreen; background-image: url("../img/misc/one.png"); background-position:center; background-repeat: no-repeat; background-size:contain; }
+	div.tracklap1 {float:left; width:100px; height:650px; background: lightblue url ("../img/misc/one.png") no-repeat 50% 50%; }
+	div.tracklap2 {float:left; width:100px; height:650px; background: seagreen url ("../img/misc/two.png") no-repeat 50% 50%; }
+	div.tracklap3 {float:left; width:100px; height:650px; background: royalblue url ("../img/misc/three.png") no-repeat 50% 50%; }
+	div.tracklap4 {float:left; width:100px; height:650px; background: lightsalmon url ("../img/misc/four.png") no-repeat 50% 50%; }
+	div.tracklap5 {float:left; width:100px; height:650px; background: indianred url ("../img/misc/five.png") no-repeat 50% 50%; }
+	div.splits {float:left; margin-left:0px; width:70px; height:650px; background-color: lightgreen;}
+	div.middle {float:left; margin-left:0px; width:99px; height:650px; background-color: lightgreen;}
 	img.car {position:absolute;
-	bottom:0px;
+	bottom:50px;
 	-webkit-transform: rotate(270deg);
     -moz-transform: rotate(270deg);
     -o-transform: rotate(270deg);
@@ -25,17 +26,22 @@
     height:50px;
 	}
 	
+	img.bowser{position:absolute;
+	width:99px;
+	height:69px;
+	bottom:800px;}
+	
 	img.yoshi{position:absolute;
 	width:108px;
 	height:78px;
-	bottom:250px;
-	margin-left:-50px;}
+	bottom:350px;
+	margin-left:-53px;}
 	
 	img.yoshiflip{position:absolute;
 	width:108px;
 	height:78px;
-	bottom:250px;
-	margin-left:20px;
+	bottom:350px;
+	margin-left:15px;
 	-moz-transform: scaleX(-1);
     -o-transform: scaleX(-1);
     -webkit-transform: scaleX(-1);
@@ -161,17 +167,17 @@
 					} else {
 						yoshi2Active=true;
 					}
-					yoshiElem.src='img/misc/yoshi-eat-1.png';
+					yoshiElem.src='img/sprites/yoshi-eat-1.png';
 				} else if (yoshiEatLoop==2){
-					yoshiElem.src='img/misc/yoshi-eat-2.png';
+					yoshiElem.src='img/sprites/yoshi-eat-2.png';
 				} else if (yoshiEatLoop==3){
-					yoshiElem.src='img/misc/yoshi-eat-3.png';
+					yoshiElem.src='img/sprites/yoshi-eat-3.png';
 				} else if (yoshiEatLoop==4){
-					yoshiElem.src='img/misc/yoshi-eat-4.png';
+					yoshiElem.src='img/sprites/yoshi-eat-4.png';
 				} else if (yoshiEatLoop==5){
-					yoshiElem.src='img/misc/yoshi-eat-5.png';
+					yoshiElem.src='img/sprites/yoshi-eat-5.png';
 				} else if (yoshiEatLoop==6){
-					yoshiElem.src='img/misc/yoshi-eat-6.png';
+					yoshiElem.src='img/sprites/yoshi-eat-6.png';
 					carElem.style.visibility='hidden';
 					if (carNum==1){
 						car1Egged=true;
@@ -183,30 +189,30 @@
 						car4Egged=true;
 					}
 				} else if (yoshiEatLoop==7){
-					yoshiElem.src='img/misc/yoshi-eat-7.png';
+					yoshiElem.src='img/sprites/yoshi-eat-7.png';
 				} else if (yoshiEatLoop==8){
-					yoshiElem.src='img/misc/yoshi-eat-8.png';
+					yoshiElem.src='img/sprites/yoshi-eat-8.png';
 				} else if (yoshiEatLoop==9){
-					yoshiElem.src='img/misc/yoshi-eat-9.png';
+					yoshiElem.src='img/sprites/yoshi-eat-9.png';
 				} else if (yoshiEatLoop==10){
-					yoshiElem.src='img/misc/yoshi-eat-10.png';
+					yoshiElem.src='img/sprites/yoshi-eat-10.png';
 				} else if (yoshiEatLoop==11){
-					yoshiElem.src='img/misc/yoshi-eat-11.png';
+					yoshiElem.src='img/sprites/yoshi-eat-11.png';
 				} else if (yoshiEatLoop==12){
-					yoshiElem.src='img/misc/yoshi-eat-12.png';
+					yoshiElem.src='img/sprites/yoshi-eat-12.png';
 				} else if (yoshiEatLoop==13){
-					yoshiElem.src='img/misc/yoshi-eat-13.png';
+					yoshiElem.src='img/sprites/yoshi-eat-13.png';
 				} else if (yoshiEatLoop==14){
-					yoshiElem.src='img/misc/yoshi-eat-14.png';
+					yoshiElem.src='img/sprites/yoshi-eat-14.png';
 				} else if (yoshiEatLoop==15){
-					yoshiElem.src='img/misc/yoshi-eat-15.png';
+					yoshiElem.src='img/sprites/yoshi-eat-15.png';
 				} else if (yoshiEatLoop==16){
-					yoshiElem.src='img/misc/yoshi-eat-16.png';
+					yoshiElem.src='img/sprites/yoshi-eat-16.png';
 				} else if (yoshiEatLoop==17){
-					yoshiElem.src='img/misc/yoshi-eat-15.png';
+					yoshiElem.src='img/sprites/yoshi-eat-15.png';
 				} else if (yoshiEatLoop==18){
-					yoshiElem.src='img/misc/yoshi-eat-14.png';
-					carElem.src='img/misc/yoshi-egg-lb2.png';
+					yoshiElem.src='img/sprites/yoshi-eat-14.png';
+					carElem.src='img/sprites/yoshi-egg-lb2.png';
 					carElem.style.visibility='';
 					if (carNum==1 || carNum==2){
 						yoshi1Active=false;
@@ -326,55 +332,57 @@
 			var peachLoop=0;
 			var peachFail=false;
 			var peachID;
-			var peachActive=false;
+			var charActive=false;
+			var peachHelpedCar=0;
 			function activatePeach(){
 				peachLoop++;
 				var peachElem = document.getElementById("peach");
 				if (peachLoop==1){
+					charActive=true;
 					peachFail=false;
 					peachElem.style.visibility='';
 					peachElem.style.marginLeft='-50px';
-					peachElem.src='img/misc/peach-twirl-1.png';
+					peachElem.src='img/sprites/peach-twirl-1.png';
 				} else if (peachLoop==2){
-					peachElem.src='img/misc/peach-twirl-1.png';
+					peachElem.src='img/sprites/peach-twirl-1.png';
 					peachElem.style.marginLeft='-40px';
 				} else if (peachLoop==3){
-					peachElem.src='img/misc/peach-twirl-1.png';
+					peachElem.src='img/sprites/peach-twirl-1.png';
 					peachElem.style.marginLeft='-30px';
 				} else if (peachLoop==4){
-					peachElem.src='img/misc/peach-twirl-1.png';
+					peachElem.src='img/sprites/peach-twirl-1.png';
 					peachElem.style.marginLeft='-20px';
 				} else if (peachLoop==5){
-					peachElem.src='img/misc/peach-twirl-1.png';
+					peachElem.src='img/sprites/peach-twirl-1.png';
 					peachElem.style.marginLeft='-10px';
 				} else if (peachLoop==6){
-					peachElem.src='img/misc/peach-twirl-1.png';
+					peachElem.src='img/sprites/peach-twirl-1.png';
 					peachElem.style.marginLeft='0px';
 				} else if (peachLoop==7){
-					peachElem.src='img/misc/peach-twirl-2.png';
+					peachElem.src='img/sprites/peach-twirl-2.png';
 				} else if (peachLoop==8){
-					peachElem.src='img/misc/peach-twirl-3.png';
+					peachElem.src='img/sprites/peach-twirl-3.png';
 				} else if (peachLoop==9){
-					peachElem.src='img/misc/peach-twirl-4.png';
+					peachElem.src='img/sprites/peach-twirl-4.png';
 				} else if (peachLoop==10){
-					peachElem.src='img/misc/peach-twirl-5.png';
+					peachElem.src='img/sprites/peach-twirl-5.png';
 				} else if (peachLoop==11){
-					peachElem.src='img/misc/peach-twirl-6.png';
+					peachElem.src='img/sprites/peach-twirl-6.png';
 				} else if (peachLoop==12){
-					peachElem.src='img/misc/peach-twirl-7.png';
+					peachElem.src='img/sprites/peach-twirl-7.png';
 				} else if (peachLoop==13){
-					peachElem.src='img/misc/peach-twirl-8.png';
+					peachElem.src='img/sprites/peach-twirl-8.png';
 				} else if (peachLoop==14){
-					peachElem.src='img/misc/peach-twirl-9.png';
+					peachElem.src='img/sprites/peach-twirl-9.png';
 				} else if (peachLoop==15){
-					peachElem.src='img/misc/peach-twirl-10.png';
+					peachElem.src='img/sprites/peach-twirl-10.png';
 					if (Math.random()<.25){
 						peachFail=true;
 					}
 				} else if (peachLoop==16){
 					var rand=Math.random();
 					if (peachFail){
-						peachElem.src='img/misc/peach-twirl-fail-1.png';
+						peachElem.src='img/sprites/peach-twirl-fail-1.png';
 						if (rand<=.25){
 							car1CurVelocity=0;
 						} else if (rand<=.5){
@@ -385,50 +393,79 @@
 							car4CurVelocity=0;
 						}
 					} else {
-						peachElem.src='img/misc/peach-twirl-success-1.png';
+						peachElem.src='img/sprites/peach-twirl-success-1.png';
 						if (rand<=.25){
-							car1TopSpeed=car1TopSpeed*2;
-							car1CurVelocity=car1TopSpeed;
+							peachHelpedCar=1;
 						} else if (rand<=.5){
-							car2TopSpeed=car2TopSpeed*2;
-							car2CurVelocity=car2TopSpeed;
+							peachHelpedCar=2;
 						} else if (rand<=.75){
-							car3TopSpeed=car3TopSpeed*2;
-							car3CurVelocity=car3TopSpeed;
+							peachHelpedCar=3;
 						} else {
-							car4TopSpeed=car4TopSpeed*2;
-							car4CurVelocity=car4TopSpeed;
+							peachHelpedCar=4;
 						}
 					}
 				} else if (peachLoop==17){
 					if (peachFail){
-						peachElem.src='img/misc/peach-twirl-fail-2.png';
+						peachElem.src='img/sprites/peach-twirl-fail-2.png';
+					} else {
 					}
 				} else if (peachLoop==18){
 					if (peachFail){
-						peachElem.src='img/misc/peach-twirl-fail-3.png';
+						peachElem.src='img/sprites/peach-twirl-fail-3.png';
 					}
 				} else if (peachLoop==19){
 					if (peachFail){
-						peachElem.src='img/misc/peach-twirl-fail-4.png';
+						peachElem.src='img/sprites/peach-twirl-fail-4.png';
 					}
 				} else if (peachLoop==20){
 					if (peachFail){
-						peachElem.src='img/misc/peach-twirl-fail-5.png';
+						peachElem.src='img/sprites/peach-twirl-fail-5.png';
 					}
 				} else if (peachLoop==21){
 					if (peachFail){
-						peachElem.src='img/misc/peach-twirl-fail-6.png';
+						peachElem.src='img/sprites/peach-twirl-fail-6.png';
 					}
 				} else if (peachLoop==22){
 					if (peachFail){
-						peachElem.src='img/misc/peach-twirl-fail-7.png';
+						peachElem.src='img/sprites/peach-twirl-fail-7.png';
+					}
+				}
+				if (peachLoop>=16){
+					if (!peachFail){
+						if (peachHelpedCar==1){
+							car1TopSpeed=${racer1.topSpeed * 2};
+							car1CurVelocity=car1TopSpeed;
+						} else if (peachHelpedCar==2){
+							car2TopSpeed=${racer2.topSpeed * 2};
+							car2CurVelocity=car2TopSpeed;
+						} else if (peachHelpedCar==3){
+							car3TopSpeed=${racer3.topSpeed * 2};
+							car3CurVelocity=car3TopSpeed;
+						} else if (peachHelpedCar==4){
+							car4TopSpeed=${racer4.topSpeed * 2};
+							car4CurVelocity=car4TopSpeed;
+						}
 					}
 				}
 				if (peachLoop>28){
+					if (!peachFail){
+						if (peachHelpedCar==1){
+							car1TopSpeed=${racer1.topSpeed * (1-((1-racer1.reliability)*Math.random()))};
+							car1CurVelocity=car1TopSpeed;
+						} else if (peachHelpedCar==2){
+							car2TopSpeed=${racer2.topSpeed * (1-((1-racer2.reliability)*Math.random()))};
+							car2CurVelocity=car2TopSpeed;
+						} else if (peachHelpedCar==3){
+							car3TopSpeed=${racer3.topSpeed * (1-((1-racer3.reliability)*Math.random()))};
+							car3CurVelocity=car3TopSpeed;
+						} else if (peachHelpedCar==4){
+							car4TopSpeed=${racer4.topSpeed * (1-((1-racer4.reliability)*Math.random()))};
+							car4CurVelocity=car4TopSpeed;
+						}
+					}
 					peachElem.style.visibility='hidden';
 					peachLoop=0;
-					peachActive=false;
+					charActive=false;
 					clearInterval(peachID);
 				}
 			}
@@ -522,84 +559,84 @@
 					crabLoop=crab4Loop;
 				}
 				if (crabLoop==1){
-					crabElem.src='img/misc/crab-2.png';
+					crabElem.src='img/sprites/crab-2.png';
 					if (dir=="right"){
 						crabElem.style.marginLeft='21px';
 					} else {
 						crabElem.style.marginLeft='1px';
 					}
 				} else if (crabLoop==2){
-					crabElem.src='img/misc/crab-3.png';
+					crabElem.src='img/sprites/crab-3.png';
 					if (dir=="right"){
 						crabElem.style.marginLeft='31px';
 					} else {
 						crabElem.style.marginLeft='-9px';
 					}
 				} else if (crabLoop==3){
-					crabElem.src='img/misc/crab-4.png';
+					crabElem.src='img/sprites/crab-4.png';
 					if (dir=="right"){
 						crabElem.style.marginLeft='41px';
 					} else {
 						crabElem.style.marginLeft='-19px';
 					}
 				} else if (crabLoop==4){
-					crabElem.src='img/misc/crab-5.png';
+					crabElem.src='img/sprites/crab-5.png';
 					if (dir=="right"){
 						crabElem.style.marginLeft='51px';
 					} else {
 						crabElem.style.marginLeft='-29px';
 					}
 				} else if (crabLoop==5){
-					crabElem.src='img/misc/crab-6.png';
+					crabElem.src='img/sprites/crab-6.png';
 					if (dir=="right"){
 						crabElem.style.marginLeft='61px';
 					} else {
 						crabElem.style.marginLeft='-39px';
 					}
 				} else if (crabLoop==6){
-					crabElem.src='img/misc/crab-1.png';
+					crabElem.src='img/sprites/crab-1.png';
 					if (dir=="right"){
 						crabElem.style.marginLeft='71px';
 					} else {
 						crabElem.style.marginLeft='-49px';
 					}
 				} else if (crabLoop==7){
-					crabElem.src='img/misc/crab-6.png';
+					crabElem.src='img/sprites/crab-6.png';
 					if (dir=="right"){
 						crabElem.style.marginLeft='61px';
 					} else {
 						crabElem.style.marginLeft='-39px';
 					}
 				} else if (crabLoop==8){
-					crabElem.src='img/misc/crab-5.png';
+					crabElem.src='img/sprites/crab-5.png';
 					if (dir=="right"){
 						crabElem.style.marginLeft='51px';
 					} else {
 						crabElem.style.marginLeft='-29px';
 					}
 				} else if (crabLoop==9){
-					crabElem.src='img/misc/crab-4.png';
+					crabElem.src='img/sprites/crab-4.png';
 					if (dir=="right"){
 						crabElem.style.marginLeft='41px';
 					} else {
 						crabElem.style.marginLeft='-19px';
 					}
 				} else if (crabLoop==10){
-					crabElem.src='img/misc/crab-3.png';
+					crabElem.src='img/sprites/crab-3.png';
 					if (dir=="right"){
 						crabElem.style.marginLeft='31px';
 					} else {
 						crabElem.style.marginLeft='-9px';
 					}
 				} else if (crabLoop==11){
-					crabElem.src='img/misc/crab-2.png';
+					crabElem.src='img/sprites/crab-2.png';
 					if (dir=="right"){
 						crabElem.style.marginLeft='21px';
 					} else {
 						crabElem.style.marginLeft='1px';
 					}
 				} else if (crabLoop==12){
-					crabElem.src='img/misc/crab-1.png';
+					crabElem.src='img/sprites/crab-1.png';
 					crabElem.style.marginLeft='11px';
 					if (crabNum==1){
 						crab1Active=false;
@@ -699,27 +736,35 @@
 			function triggerCharacterAnimations(){
 				var carTop=car1.style.top;
 				var carBottom=car1.style.bottom;
-				if (yoshiHatesCar1&&!yoshi1Active&&car1Counter==0&&car1.style.bottom.replace("px","")<300&&car1.style.bottom.replace("px","")>200&&yoshi1Face=="left"){
+				if (yoshiHatesCar1&&!yoshi1Active&&car1Counter==0&&car1.style.bottom.replace("px","")<400&&car1.style.bottom.replace("px","")>300&&yoshi1Face=="left"){
 					triggerYoshiEat(1);
 				}
 				carTop=car2.style.top;
 				carBottom=car2.style.bottom;
-				if (yoshiHatesCar2&&!yoshi1Active&&car2Counter==0&&car2.style.bottom.replace("px","")<300&&car2.style.bottom.replace("px","")>200&&yoshi1Face=="right"){
+				if (yoshiHatesCar2&&!yoshi1Active&&car2Counter==0&&car2.style.bottom.replace("px","")<400&&car2.style.bottom.replace("px","")>300&&yoshi1Face=="right"){
 					triggerYoshiEat(2);
 				}
 				carTop=car3.style.top;
 				carBottom=car3.style.bottom;
-				if (yoshiHatesCar3&&!yoshi2Active&&car3Counter==0&&car3.style.bottom.replace("px","")<300&&car3.style.bottom.replace("px","")>200&&yoshi2Face=="left"){
+				if (yoshiHatesCar3&&!yoshi2Active&&car3Counter==0&&car3.style.bottom.replace("px","")<400&&car3.style.bottom.replace("px","")>300&&yoshi2Face=="left"){
 					triggerYoshiEat(3);
 				}
 				carTop=car4.style.top;
 				carBottom=car4.style.bottom;
-				if (yoshiHatesCar4&&!yoshi2Active&&car4Counter==0&&car4.style.bottom.replace("px","")<300&&car4.style.bottom.replace("px","")>200&&yoshi2Face=="right"){
+				if (yoshiHatesCar4&&!yoshi2Active&&car4Counter==0&&car4.style.bottom.replace("px","")<400&&car4.style.bottom.replace("px","")>300&&yoshi2Face=="right"){
 					triggerYoshiEat(4);
 				}
-				if (!peachActive&&Math.random()<.001){
-					peachActive=true;
-					peachID=setInterval(activatePeach, 80);
+				if (!charActive&&Math.random()<.001){
+					var rand = Math.random();
+					if (rand<.2){
+						if (bowserLoop==0){
+							bowserID=setInterval(activateBowser, 100);
+						}
+					} else if (rand<.6){
+						peachID=setInterval(activatePeach, 80);
+					} else {
+						peachID=setInterval(activatePeach, 80);
+					}
 				}
 				if (!crab1Active&&Math.random()<.001){
 					crab1Active=true;
@@ -754,16 +799,184 @@
 					crabID4=setInterval(function() { activateCrab(4, dir); }, 200);
 				}
 			}
+
+			var bowserLoop=0;
+			var bowserID;
+			var car1BowserEffect='none';
+			var car2BowserEffect='none';
+			var car3BowserEffect='none';
+			var car4BowserEffect='none';
+			function activateBowser(){
+				bowserLoop++;
+				var bowserElem = document.getElementById("bowser");
+				if (bowserLoop==1){
+					charActive=true;
+					bowserElem.style.bottom='750px';
+					bowserElem.src='img/sprites/bowser-falling-1.png';
+				} else if (bowserLoop==2){
+					bowserElem.src='img/sprites/bowser-falling-1.png';
+					bowserElem.style.bottom='700px';
+				} else if (bowserLoop==3){
+					bowserElem.src='img/sprites/bowser-falling-1.png';
+					bowserElem.style.bottom='650px';
+				} else if (bowserLoop==4){
+					bowserElem.src='img/sprites/bowser-falling-1.png';
+					bowserElem.style.bottom='600px';
+				} else if (bowserLoop==5){
+					bowserElem.src='img/sprites/bowser-falling-1.png';
+					bowserElem.style.bottom='550px';
+				} else if (bowserLoop==6){
+					bowserElem.src='img/sprites/bowser-falling-1.png';
+					bowserElem.style.bottom='500px';
+				} else if (bowserLoop>=7&&bowserLoop<=13){
+					bowserElem.src='img/sprites/bowser-falling-'+(bowserLoop-5)+'.png';
+				} else if (bowserLoop>=14&&bowserLoop<=28){
+					bowserElem.src='img/sprites/bowser_down-'+(bowserLoop-13)+'.png';
+				} else if (bowserLoop>=29&&bowserLoop<=38){
+					bowserElem.src='img/sprites/bowser_clap-'+(bowserLoop-28)+'.png';
+				} else if (bowserLoop==39){
+					bowserElem.src='img/sprites/bowser_clap-9.png';
+				} else if (bowserLoop==40){
+					bowserElem.src='img/sprites/bowser_clap-8.png';
+				} else if (bowserLoop==41){
+					bowserElem.src='img/sprites/bowser_clap-1.png';
+				} else if (bowserLoop==42){
+					bowserElem.src='img/sprites/bowser_down-15.png';
+				} else if (bowserLoop==50){
+					var carElem=document.getElementById("car1");
+					if (car1BowserEffect=='reverse'){
+						car1CurVelocity=0-car1CurVelocity;
+						carElem.style.webkitTransform='rotate(270deg)';
+						carElem.style.MozTransform='rotate(270deg)';
+						carElem.style.transform='rotate(270deg)';
+					} else if (car1BowserEffect=='mini'){
+						carElem.style.width='100px';
+						carElem.style.height='50px';
+					} 
+					carElem=document.getElementById("car2");
+					if (car2BowserEffect=='reverse'){
+						car2CurVelocity=0-car2CurVelocity;
+						carElem.style.webkitTransform='rotate(270deg)';
+						carElem.style.MozTransform='rotate(270deg)';
+						carElem.style.transform='rotate(270deg)';
+					} else if (car2BowserEffect=='mini'){
+						carElem.style.width='100px';
+						carElem.style.height='50px';
+					}
+					carElem=document.getElementById("car3");
+					if (car3BowserEffect=='reverse'){
+						car3CurVelocity=0-car3CurVelocity;
+						carElem.style.webkitTransform='rotate(270deg)';
+						carElem.style.MozTransform='rotate(270deg)';
+						carElem.style.transform='rotate(270deg)';
+					} else if (car3BowserEffect=='mini'){
+						carElem.style.width='100px';
+						carElem.style.height='50px';
+					}
+					carElem=document.getElementById("car4");
+					if (car4BowserEffect=='reverse'){
+						car4CurVelocity=0-car4CurVelocity;
+						carElem.style.webkitTransform='rotate(270deg)';
+						carElem.style.MozTransform='rotate(270deg)';
+						carElem.style.transform='rotate(270deg)';
+					} else if (car4BowserEffect=='mini'){
+						carElem.style.width='100px';
+						carElem.style.height='50px';
+					}
+					car1BowserEffect='none';
+					car2BowserEffect='none';
+					car3BowserEffect='none';
+					car4BowserEffect='none';
+					bowserElem.style.visibility='hidden';
+					charActive=false;
+					clearInterval(bowserID);
+				}
+				if (bowserLoop==38){
+					var rand=Math.random();
+					var carElem=document.getElementById("car1");
+					if (rand<.25){
+						car1BowserEffect='reverse';
+						carElem.style.webkitTransform='rotate(90deg)';
+						carElem.style.MozTransform='rotate(90deg)';
+						carElem.style.transform='rotate(90deg)';
+					} else if (rand<.5){
+						car1BowserEffect='stopped';
+					} else if (rand<.75){
+						car1BowserEffect='mini';
+						carElem.style.width='50px';
+						carElem.style.height='25px';
+					} else {
+						car1BowserEffect='none';
+					}
+					rand=Math.random();
+					carElem=document.getElementById("car2");
+					if (rand<.25){
+						car2BowserEffect='reverse';
+						carElem.style.webkitTransform='rotate(90deg)';
+						carElem.style.MozTransform='rotate(90deg)';
+						carElem.style.transform='rotate(90deg)';
+					} else if (rand<.5){
+						car2BowserEffect='stopped';
+					} else if (rand<.75){
+						car2BowserEffect='mini';
+						carElem.style.width='50px';
+						carElem.style.height='25px';
+					} else {
+						car2BowserEffect='none';
+					}
+					rand=Math.random();
+					carElem=document.getElementById("car3");
+					if (rand<.25){
+						car3BowserEffect='reverse';
+						carElem.style.webkitTransform='rotate(90deg)';
+						carElem.style.MozTransform='rotate(90deg)';
+						carElem.style.transform='rotate(90deg)';
+					} else if (rand<.5){
+						car3BowserEffect='stopped';
+					} else if (rand<.75){
+						car3BowserEffect='mini';
+						carElem.style.width='50px';
+						carElem.style.height='25px';
+					} else {
+						car3BowserEffect='none';
+					}
+					rand=Math.random();
+					carElem=document.getElementById("car4");
+					if (rand<.25){
+						car4BowserEffect='reverse';
+						carElem.style.webkitTransform='rotate(90deg)';
+						carElem.style.MozTransform='rotate(90deg)';
+						carElem.style.transform='rotate(90deg)';
+					} else if (rand<.5){
+						car4BowserEffect='stopped';
+					} else if (rand<.75){
+						car4BowserEffect='mini';
+						carElem.style.width='50px';
+						carElem.style.height='25px';
+					} else {
+						car4BowserEffect='none';
+					}
+				}
+			}
 			
 			function moveAllCars(){
 				elapsedTime += .01;
 				if (car1Location < distance) {
-					car1CurVelocity = car1CurVelocity + 0.01*car1Accel;//not exact, but close enough
-					if (car1Egged){
+					if(car1BowserEffect=='reverse'){
+						car1CurVelocity=0-car1CurVelocity;
+						car1Accel=0-car1Accel;
+					}
+					car1CurVelocity = car1CurVelocity + 0.01*car1Accel;
+					if (car1Egged||car1BowserEffect=='stopped'){
 						car1CurVelocity=0;
 					}
 					if (car1CurVelocity > car1TopSpeed) {
 						car1CurVelocity=car1TopSpeed;
+					}
+					if (car1BowserEffect=='mini'){
+						if (car1CurVelocity > car1TopSpeed/2) {
+							car1CurVelocity=car1TopSpeed/2;
+						}
 					}
 					car1Location = car1Location + car1CurVelocity * .01;
 					
@@ -780,8 +993,12 @@
 							finishedRace = true;
 						}
 					} else {
-						car1.style.bottom = 500*(car1Location%lapDistance)/lapDistance+"px";
-						if (car1Location/lapDistance>car1Lap){
+						car1.style.bottom = 50+580*(car1Location%lapDistance)/lapDistance+"px";
+
+						if (car1Location/lapDistance<(car1Lap-1)){
+							car1Lap=car1Lap-1;
+							car1CurVelocity=car1CurVelocity*car1LapEfficiency;
+						} else if (car1Location/lapDistance>car1Lap){
 							car1Lap+=1;
 							car1CurVelocity=car1CurVelocity*car1LapEfficiency;
 							if (Math.random()<.25){
@@ -811,12 +1028,21 @@
 				}
 
 				if (car2Location < distance) {
+					if(car2BowserEffect=='reverse'){
+						car2CurVelocity=0-car2CurVelocity;
+						car2Accel=0-car2Accel;
+					}
 					car2CurVelocity = car2CurVelocity + 0.01*car2Accel;
-					if (car2Egged){
+					if (car2Egged||car2BowserEffect=='stopped'){
 						car2CurVelocity=0;
 					}
 					if (car2CurVelocity > car2TopSpeed) {
 						car2CurVelocity=car2TopSpeed;
+					}
+					if (car2BowserEffect=='mini'){
+						if (car2CurVelocity > car2TopSpeed/2) {
+							car2CurVelocity=car2TopSpeed/2;
+						}
 					}
 					car2Location = car2Location + car2CurVelocity * .01;
 					
@@ -833,8 +1059,12 @@
 							finishedRace = true;
 						}
 					} else {
-						car2.style.bottom = 500*(car2Location%lapDistance)/lapDistance+"px";
-						if (car2Location/lapDistance>car2Lap){
+						car2.style.bottom = 50+580*(car2Location%lapDistance)/lapDistance+"px";
+
+						if (car2Location/lapDistance<(car2Lap-1)){
+							car2Lap=car2Lap-1;
+							car2CurVelocity=car2CurVelocity*car2LapEfficiency;
+						} else if (car2Location/lapDistance>car2Lap){
 							car2Lap+=1;
 							car2CurVelocity=car2CurVelocity*car2LapEfficiency;
 							if (Math.random()<.25){
@@ -864,12 +1094,21 @@
 				}
 
 				if (car3Location < distance) {
-					car3CurVelocity = car3CurVelocity + 0.01*car3Accel;//not exact, but close enough
-					if (car3Egged){
+					if(car3BowserEffect=='reverse'){
+						car3CurVelocity=0-car3CurVelocity;
+						car3Accel=0-car3Accel;
+					}
+					car3CurVelocity = car3CurVelocity + 0.01*car3Accel;
+					if (car3Egged||car3BowserEffect=='stopped'){
 						car3CurVelocity=0;
 					}
 					if (car3CurVelocity > car3TopSpeed) {
 						car3CurVelocity=car3TopSpeed;
+					}
+					if (car3BowserEffect=='mini'){
+						if (car3CurVelocity > car3TopSpeed/2) {
+							car3CurVelocity=car3TopSpeed/2;
+						}
 					}
 					car3Location = car3Location + car3CurVelocity * .01;
 					
@@ -886,8 +1125,12 @@
 							finishedRace = true;
 						}
 					} else {
-						car3.style.bottom = 500*(car3Location%lapDistance)/lapDistance+"px";
-						if (car3Location/lapDistance>car3Lap){
+						car3.style.bottom = 50+580*(car3Location%lapDistance)/lapDistance+"px";
+
+						if (car3Location/lapDistance<(car3Lap-1)){
+							car3Lap=car3Lap-1;
+							car3CurVelocity=car3CurVelocity*car3LapEfficiency;
+						} else if (car3Location/lapDistance>car3Lap){
 							car3Lap+=1;
 							car3CurVelocity=car3CurVelocity*car3LapEfficiency;
 							if (Math.random()<.25){
@@ -917,12 +1160,24 @@
 				}
 
 				if (car4Location < distance) {
-					car4CurVelocity = car4CurVelocity + 0.01*car4Accel;//not exact, but close enough
-					if (car4Egged){
+					if(car4BowserEffect=='reverse'){
+						car4CurVelocity=0-car4CurVelocity;
+						car4Accel=0-car4Accel;
+					}
+					car4CurVelocity = car4CurVelocity + 0.01*car4Accel;
+					if (car4Egged||car4BowserEffect=='stopped'){
 						car4CurVelocity=0;
 					}
 					if (car4CurVelocity > car4TopSpeed) {
 						car4CurVelocity=car4TopSpeed;
+					}
+					if (car4BowserEffect=='mini'){
+						if (car4CurVelocity > car4TopSpeed/2) {
+							car4CurVelocity=car4TopSpeed/2;
+						}
+					}
+					if(car4BowserEffect=='reverse'){
+						car4CurVelocity=0-car4CurVelocity;
 					}
 					car4Location = car4Location + car4CurVelocity * .01;
 					
@@ -941,8 +1196,12 @@
 							
 						}
 					} else {
-						car4.style.bottom = 500*(car4Location%lapDistance)/lapDistance+"px";
-						if (car4Location/lapDistance>car4Lap){
+						car4.style.bottom = 50+580*(car4Location%lapDistance)/lapDistance+"px";
+
+						if (car4Location/lapDistance<(car4Lap-1)){
+							car4Lap=car4Lap-1;
+							car4CurVelocity=car4CurVelocity*car4LapEfficiency;
+						} else if (car4Location/lapDistance>car4Lap){
 							car4Lap+=1;
 							car4CurVelocity=car4CurVelocity*car4LapEfficiency;
 							if (Math.random()<.25){
@@ -987,34 +1246,35 @@
 		}
 	</script>
 	
-	<div class="middle">
-		<img class="peach" id="peach" src='img/misc/peach-twirl-1.png'/>
+	<div class="splits">
+		<img class="peach" id="peach" src='img/sprites/peach-twirl-1.png'/>
 	</div>
 	<div class="tracklap1" id="track1">
 			<img class="car" id="car1" src="img/cars/${racer1.model}"/>
 	</div>
-	<div class="middle">
-		<img class="crab" id="crab1" src='img/misc/crab-1.png'/>
-		<img class="yoshi" id="yoshi1" src='img/misc/yoshi-eat-14.png'/>
-		<img class="crab" id="crab2" src='img/misc/crab-1.png'/>
+	<div class="splits">
+		<img class="crab" id="crab1" src='img/sprites/crab-1.png'/>
+		<img class="yoshi" id="yoshi1" src='img/sprites/yoshi-eat-14.png'/>
+		<img class="crab" id="crab2" src='img/sprites/crab-1.png'/>
 	</div>
 	<div class="tracklap1" id="track2">
 		<img class="car" id="car2" src="img/cars/${racer2.model}">
 	</div>
 	<div class="middle">
+		<img class="bowser" id="bowser" src='img/sprites/bowser-falling-1.png'/>
 	</div>
 	<div class="tracklap1" id="track3">
 		<img class="car" id="car3" src="img/cars/${racer3.model}">
 	</div>
-	<div class="middle">
-		<img class="crab" id="crab3" src='img/misc/crab-1.png'/>
-		<img class="yoshiflip" id="yoshi2" src='img/misc/yoshi-eat-14.png'/>
-		<img class="crab" id="crab4" src='img/misc/crab-1.png'/>
+	<div class="splits">
+		<img class="crab" id="crab3" src='img/sprites/crab-1.png'/>
+		<img class="yoshiflip" id="yoshi2" src='img/sprites/yoshi-eat-14.png'/>
+		<img class="crab" id="crab4" src='img/sprites/crab-1.png'/>
 	</div>
 	<div class="tracklap1" id="track4">
 		<img class="car" id="car4" src="img/cars/${racer4.model}">
 	</div>
-	<div class="middle">
+	<div class="splits">
 	</div>
 	<form:form method="POST" id="resultForm" action="spectateResults" commandName="raceResult">
 		<form:input id="classForm" type="hidden" path="racingClass" value="${raceInfo.racingClass}"/>
@@ -1029,13 +1289,13 @@
 		<form:input id="fourthPlaceTimeForm" type="hidden" path="place4Time"/>
 	</form:form>
 	<script>
-		document.getElementById("crab1").style.bottom=375+Math.random()*125+'px';
+		document.getElementById("crab1").style.bottom=475+Math.random()*125+'px';
 		document.getElementById("crab1").style.marginLeft='11px';
-		document.getElementById("crab2").style.bottom=150+(Math.random()*125)/2+'px';
+		document.getElementById("crab2").style.bottom=250+(Math.random()*125)/2+'px';
 		document.getElementById("crab2").style.marginLeft='11px';
-		document.getElementById("crab3").style.bottom=375+Math.random()*125+'px';
+		document.getElementById("crab3").style.bottom=475+Math.random()*125+'px';
 		document.getElementById("crab3").style.marginLeft='11px';
-		document.getElementById("crab4").style.bottom=150+(Math.random()*125)/2+'px';
+		document.getElementById("crab4").style.bottom=250+(Math.random()*125)/2+'px';
 		document.getElementById("crab4").style.marginLeft='11px';
 		startRace();
 	</script>

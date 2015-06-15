@@ -39,6 +39,6 @@
 			window.open("garageDisplay?selectedCarID="+newSelectedCarID, "garageDisplay");
 		}
 	</script>
-	<iframe name="garageDisplay" src="garageDisplay?selectedCarID=${selectedCarID}" width="100%" height="500px"></iframe>
+	<iframe name="garageDisplay" src="garageDisplay?selectedCarID=${selectedCarID}" width="100%" height="750px"></iframe>
 </body>
 </html>

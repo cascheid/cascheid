@@ -12,6 +12,6 @@
 </head>
 <body>
 	<iframe name="moneyFrame" width="100%" height="40px" src="raceMoneyFrame"></iframe>
-	<iframe name="mainRacingFrame" width="100%" height="600px" src="openRacingStore"></iframe>
+	<iframe name="mainRacingFrame" width="100%" height="750px" src="openRacingStore"></iframe>
 </body>
 </html>

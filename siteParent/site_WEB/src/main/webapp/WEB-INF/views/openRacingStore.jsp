@@ -9,7 +9,7 @@
 </style>
 </head>
 <body>
-	<iframe name="centerRacingFrame" width="19%" height="500px" src="racingStoreFrame"></iframe>
-	<iframe name="rightRacingFrame" width="79%" height="500px" src="carDisplayFrame"></iframe>
+	<iframe name="centerRacingFrame" width="19%" height="750px" src="racingStoreFrame"></iframe>
+	<iframe name="rightRacingFrame" width="79%" height="750px" src="carDisplayFrame"></iframe>
 </body>
 </html>
