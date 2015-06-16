@@ -17,5 +17,5 @@ public interface RacingGameDao {
 	public List<Racecar> getAvailableCarsToPurchase(String racingClass, Long racingIdentifier);
 	public Long addNewUserRacecar(Long racingIdentifier, Integer carID);
 	public void addNewUpgrade(Long userRacecarID, Integer upgradeID);
-	public void updateRacingGame(Long racingIdentifier, BigDecimal availableCash, String racingClass);
+	public void updateRacingGame(Long racingIdentifier, BigDecimal availableCash, String racingClass, Integer carID);
 }

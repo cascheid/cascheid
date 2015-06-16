@@ -26,7 +26,6 @@ public class RacingGameUtils {
 			racingGame.setRacingClass("E");
 			racingGame.setSelectedClass("E");
 			racingGame.setAvailableCash(new BigDecimal(100));
-			racingGame.setCarID(1);
 			racingGame.addNewCar(getRacecarByID(1));
 			racingGame.setSelectedCar(racingGame.getCarList().get(0));
 			Long newID;
@@ -39,9 +38,11 @@ public class RacingGameUtils {
 		} else {
 			try{
 				racingGame=dao.getRacingGameByID(racingGameIdentifier);
-				racingGame.setCarID(racingGame.getCarList().get(0).getCarID());
-				racingGame.setSelectedCar(racingGame.getCarList().get(0));
-				racingGame.setSelectedClass(racingGame.getRacingClass());
+				if ("SS".equals(racingGame.getRacingClass())){
+					racingGame.setSelectedClass("S");
+				} else{
+					racingGame.setSelectedClass(racingGame.getRacingClass());
+				}
 			} catch (Exception e){
 				throw new IllegalStateException("Failed to get Racing Game record for identifier: " + racingGameIdentifier, e);
 			}
@@ -206,97 +207,46 @@ public class RacingGameUtils {
 		return dReturn;
 	}
 	
-	public static Integer getNumberOfLaps(){
+	public static Integer getNumberOfLapsByClass(String racingClass){
 		Integer iReturn;
-		Double rand = Math.random();
-		if (rand<.1){
-			iReturn=2;
-		} else if (rand<.5){
-			iReturn=3;
-		} else if (rand<.8){
-			iReturn=4;
-		} else {
-			iReturn=5;
+		double multiplier=3;
+		if ("E".equals(racingClass)){
+			multiplier=2.49;
+		} else if ("D".equals(racingClass)||"C".equals(racingClass)){
+			multiplier=3.49;
+		} else if ("B".equals(racingClass)||"A".equals(racingClass)){
+			multiplier=4.49;
+		} else if ("S".equals(racingClass)){
+			multiplier=5.49;
 		}
+		iReturn = 3+(int)Math.round(multiplier*Math.random());
 		return iReturn;
 	}
 	
 	public static Integer getLapDistanceByClass(String racingClass){
-		Integer iReturn=500;
-		Double rand = Math.random();
+		Integer iReturn;
+		int baseLength=300;
+		int maxLength=600;
 		if ("E".equals(racingClass)){
-			if (rand<.2){
-				iReturn=300;
-			} else if (rand<.4){
-				iReturn=400;
-			} else if (rand<.6){
-				iReturn=500;
-			} else if (rand<.8){
-				iReturn=600;
-			} else {
-				iReturn=700;
-			}
+			baseLength=300;
+			maxLength=600;
 		} else if ("D".equals(racingClass)){
-			if (rand<.2){
-				iReturn=300;
-			} else if (rand<.4){
-				iReturn=400;
-			} else if (rand<.6){
-				iReturn=500;
-			} else if (rand<.8){
-				iReturn=600;
-			} else {
-				iReturn=700;
-			}	
+			baseLength=300;
+			maxLength=600;
 		} else if ("C".equals(racingClass)){
-			if (rand<.2){
-				iReturn=300;
-			} else if (rand<.4){
-				iReturn=400;
-			} else if (rand<.6){
-				iReturn=500;
-			} else if (rand<.8){
-				iReturn=600;
-			} else {
-				iReturn=700;
-			}	
+			baseLength=400;
+			maxLength=700;
 		} else if ("B".equals(racingClass)){
-			if (rand<.2){
-				iReturn=300;
-			} else if (rand<.4){
-				iReturn=400;
-			} else if (rand<.6){
-				iReturn=500;
-			} else if (rand<.8){
-				iReturn=600;
-			} else {
-				iReturn=700;
-			}	
+			baseLength=400;
+			maxLength=700;
 		} else if ("A".equals(racingClass)){
-			if (rand<.2){
-				iReturn=300;
-			} else if (rand<.4){
-				iReturn=400;
-			} else if (rand<.6){
-				iReturn=500;
-			} else if (rand<.8){
-				iReturn=600;
-			} else {
-				iReturn=700;
-			}	
+			baseLength=500;
+			maxLength=800;
 		} else if ("S".equals(racingClass)){
-			if (rand<.2){
-				iReturn=300;
-			} else if (rand<.4){
-				iReturn=400;
-			} else if (rand<.6){
-				iReturn=500;
-			} else if (rand<.8){
-				iReturn=600;
-			} else {
-				iReturn=700;
-			}	
+			baseLength=500;
+			maxLength=800;
 		}
+		iReturn=baseLength+(int)Math.round((maxLength-baseLength)*Math.random());
 		return iReturn;
 	}
 	
@@ -330,8 +280,8 @@ public class RacingGameUtils {
 		return formatter.format(value);
 	}
 	
-	public static void updateRacingGame(Long racingGameIdentifier, BigDecimal availableCash, String racingClass){
+	public static void updateRacingGame(Long racingGameIdentifier, BigDecimal availableCash, String racingClass, Integer carID){
 		RacingGameDao dao = new RacingGameDaoImpl();
-		dao.updateRacingGame(racingGameIdentifier, availableCash, racingClass);
+		dao.updateRacingGame(racingGameIdentifier, availableCash, racingClass, carID);
 	}
 }

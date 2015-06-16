@@ -13,6 +13,6 @@
 </style>
 </head>
 <body>
-	<h1>You have $${availableCash} available to spend.</h1>
+	<h1>You have ${availableCash} available to spend.</h1>
 </body>
 </html>

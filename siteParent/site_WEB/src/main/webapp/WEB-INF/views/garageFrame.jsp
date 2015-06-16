@@ -21,7 +21,7 @@
 	<form:select id="selectedRow" path="selectedCar" onChange="selectGarage()">
 		<c:forEach items="${racingGame.carList}" var="car" varStatus="status">
 			<c:choose>
-			<c:when test="${car.carID eq selectedGarage}">
+			<c:when test="${car.carID==racingGame.selectedCar.carID}">
 				<option value="${car.carID}" selected="true">${car.name}</option>
 			</c:when>
 			<c:otherwise>

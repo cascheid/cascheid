@@ -13,6 +13,7 @@ public class RaceInfo implements java.io.Serializable{
 	private BigDecimal racingFee;
 	private Integer lapDistance;
 	private Integer noLaps;
+	private Integer carID;
 	
 	public RaceInfo(){
 	}
@@ -63,6 +64,14 @@ public class RaceInfo implements java.io.Serializable{
 
 	public void setNoLaps(Integer noLaps) {
 		this.noLaps = noLaps;
+	}
+
+	public Integer getCarID() {
+		return carID;
+	}
+
+	public void setCarID(Integer carID) {
+		this.carID = carID;
 	}
 
 }

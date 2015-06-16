@@ -33,6 +33,7 @@ public class RacingGameDaoImpl extends ParentDao implements RacingGameDao{
 				racingGame.setRacingIdentifier(rs.getLong("RACING_IDENTIFIER"));
 				racingGame.setAvailableCash(rs.getBigDecimal("AVAILABLE_CASH"));
 				racingGame.setRacingClass(rs.getString("RACING_CLASS"));
+				Integer carID=rs.getInt("CAR_ID");
 				List<UserRacecar> carList = jdbcTemplate.query("SELECT * FROM RACECARS RC INNER JOIN USER_RACECARS UR ON RC.CAR_ID=UR.CAR_ID WHERE UR.RACING_IDENTIFIER=?", new Object[]{identifier}, new RowMapper<UserRacecar>(){
 					public UserRacecar mapRow(ResultSet rs, int rowNum)	throws SQLException {
 						UserRacecar car = new UserRacecar();
@@ -73,6 +74,12 @@ public class RacingGameDaoImpl extends ParentDao implements RacingGameDao{
 					}
 				});
 				racingGame.setCarList(carList);
+				for (UserRacecar car : carList){
+					racingGame.setSelectedCar(car);
+					if (car.getCarID()==carID){
+						break;
+					}
+				}
 				return racingGame;
 			}
 				
@@ -289,11 +296,11 @@ public class RacingGameDaoImpl extends ParentDao implements RacingGameDao{
 	}
 
 	public void updateRacingGame(Long racingIdentifier, BigDecimal availableCash,
-			String racingClass) {
+			String racingClass, Integer carID) {
 		if (jdbcTemplate==null){
 			setDataSource(getDataSource());
 		}
-		jdbcTemplate.update("UPDATE RACING_GAME SET AVAILABLE_CASH=?, RACING_CLASS=? WHERE RACING_IDENTIFIER=?", new Object[]{availableCash, String.valueOf(racingClass), racingIdentifier});
+		jdbcTemplate.update("UPDATE RACING_GAME SET AVAILABLE_CASH=?, RACING_CLASS=?, CAR_ID=? WHERE RACING_IDENTIFIER=?", new Object[]{availableCash, String.valueOf(racingClass), carID, racingIdentifier});
 	}
 	
 }

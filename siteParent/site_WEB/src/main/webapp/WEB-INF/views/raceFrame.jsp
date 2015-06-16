@@ -10,10 +10,11 @@
 <style>
 	h1{text-align: center;}
 	select {font-weight: bold; font-size: 22px; float:left; padding-right:10px;}
-	div.inline{display:inline-block; width: 100%; padding-bottom:10px; text-align:center;}
+	div.inline{display:inline-block; width: 100%; padding-bottom:10px; text-align:left;}
 	label.large {font-weight: bold; font-size: 22px; float:left; padding-right:10px;}
-	div.panel{float:left; width:30% height:100%}
-	div.master{width:100%}
+	label.small {float:left; padding-left:30%;}
+	div.panel{float:left; width:49%; height:100%; text-align:left;}
+	div.master{width:100%;float:left; width: 100%; padding-bottom:10px; text-align:center;}
 	button{
 		width: 150px;
 		padding: 10px;
@@ -21,6 +22,7 @@
 		font-weight: bold;
 		text-decoration: none;
 		vertical-align:middle;
+		margin:auto;
 	}
 </style>
 </head>
@@ -34,7 +36,7 @@
 		<form:select id="selectedRacingClass" path="racingClass">
 			<c:forEach items="${availableClasses}" var="currClass" varStatus="status">
 				<c:choose>
-					<c:when test="${currClass eq racingGame.racingClass}">
+					<c:when test="${currClass==racingGame.selectedClass}">
 						<option value="${currClass}" selected="true">${currClass}</option>
 					</c:when>
 					<c:otherwise>
@@ -50,6 +52,21 @@
 			<form:options items="${availableTypes}" />
 		</form:select>
 		</div>
+		<div class="inline">
+			<label class="large">Selected Car: </label>
+		<form:select id="selectedCar" path="carID">
+			<c:forEach items="${racingGame.carList}" var="car" varStatus="status">
+				<c:choose>
+					<c:when test="${car.carID==racingGame.selectedCar.carID}">
+						<option value="${car.carID}" selected="true">${car.name}</option>
+					</c:when>
+					<c:otherwise>
+						<option value="${car.carID}">${car.name}</option>
+					</c:otherwise>
+				</c:choose>
+			</c:forEach>
+		</form:select>
+		</div>
 		<!-- <div class="inline">
 			<label class="large">Course Type: </label>
 		<form:select id="selectedCourse" path="courseType">
@@ -62,13 +79,15 @@
 	<div class="panel">
 	<c:forEach items="${feeMap}" var="fee" varStatus="status">
 		<div class="inline">
-			<label>Class ${fee.key} Fee: </label>
+			<label class="small">Class ${fee.key} Fee: </label>
 			<label id="fee${fee.key}">${fee.value}</label>
 		</div>
 	</c:forEach>
 	</div>
 	</div>
-	<button onClick="submitRace()">Ready to Race!</button>
+	<div class="master">
+		<button onClick="submitRace()">Ready to Race!</button>
+	</div>
 	<script>
 		function submitRace(){
 			var selectedRacingClass=document.getElementById('selectedRacingClass').value;

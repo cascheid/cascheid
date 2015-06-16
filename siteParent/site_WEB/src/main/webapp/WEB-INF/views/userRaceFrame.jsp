@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel="stylesheet" type="text/css" href="css/racing.css">
+<link rel="stylesheet" type="text/css" href="css/racing.css?test=2">
 <style>
 	body{overflow:hidden;}
 </style>
@@ -88,23 +88,9 @@
 						if (car1Location/lapDistance>car1Lap){
 							car1Lap+=1;
 							car1CurVelocity=car1CurVelocity*car1LapEfficiency;
-							if (car1Lap==2){
-								track1.className="tracklap2";
-								car1TopSpeed=${racecar.topSpeed * (1-((1-racecar.reliability)*Math.random()))};
-								car1Acceleration=${racecar.acceleration * (1-((1-racecar.reliability)*Math.random()))};
-							} else if (car1Lap==3){
-								track1.className="tracklap3";
-								car1TopSpeed=${racecar.topSpeed * (1-((1-racecar.reliability)*Math.random()))};
-								car1Acceleration=${racecar.acceleration * (1-((1-racecar.reliability)*Math.random()))};
-							} else if (car1Lap==4){
-								track1.className="tracklap4";
-								car1TopSpeed=${racecar.topSpeed * (1-((1-racecar.reliability)*Math.random()))};
-								car1Acceleration=${racecar.acceleration * (1-((1-racecar.reliability)*Math.random()))};
-							} else if (car1Lap==5){
-								track1.className="tracklap5";
-								car1TopSpeed=${racecar.topSpeed * (1-((1-racecar.reliability)*Math.random()))};
-								car1Acceleration=${racecar.acceleration * (1-((1-racecar.reliability)*Math.random()))};
-							}
+							track1.className="tracklap"+car1Lap;
+							car1TopSpeed=${racecar.topSpeed * (1-((1-racecar.reliability)*Math.random()))};
+							car1Acceleration=${racecar.acceleration * (1-((1-racecar.reliability)*Math.random()))};
 						}
 					}
 				}
@@ -133,23 +119,9 @@
 						if (car2Location/lapDistance>car2Lap){
 							car2Lap+=1;
 							car2CurVelocity=car2CurVelocity*car2LapEfficiency;
-							if (car2Lap==2){
-								track2.className="tracklap2";
-								car2TopSpeed=${racer2.topSpeed * (1-((1-racer2.reliability)*Math.random()))};
-								car2Acceleration=${racer2.acceleration * (1-((1-racer2.reliability)*Math.random()))};
-							} else if (car2Lap==3){
-								track2.className="tracklap3";
-								car2TopSpeed=${racer2.topSpeed * (1-((1-racer2.reliability)*Math.random()))};
-								car2Acceleration=${racer2.acceleration * (1-((1-racer2.reliability)*Math.random()))};
-							} else if (car2Lap==4){
-								track2.className="tracklap4";
-								car2TopSpeed=${racer2.topSpeed * (1-((1-racer2.reliability)*Math.random()))};
-								car2Acceleration=${racer2.acceleration * (1-((1-racer2.reliability)*Math.random()))};
-							} else if (car2Lap==5){
-								track2.className="tracklap5";
-								car2TopSpeed=${racer2.topSpeed * (1-((1-racer2.reliability)*Math.random()))};
-								car2Acceleration=${racer2.acceleration * (1-((1-racer2.reliability)*Math.random()))};
-							}
+							track2.className="tracklap"+car2Lap;
+							car2TopSpeed=${racer2.topSpeed * (1-((1-racer2.reliability)*Math.random()))};
+							car2Acceleration=${racer2.acceleration * (1-((1-racer2.reliability)*Math.random()))};
 						}
 					}
 				}
@@ -178,23 +150,9 @@
 						if (car3Location/lapDistance>car3Lap){
 							car3Lap+=1;
 							car3CurVelocity=car3CurVelocity*car3LapEfficiency;
-							if (car3Lap==2){
-								track3.className="tracklap2";
-								car3TopSpeed=${racer3.topSpeed * (1-((1-racer3.reliability)*Math.random()))};
-								car3Acceleration=${racer3.acceleration * (1-((1-racer3.reliability)*Math.random()))};
-							} else if (car3Lap==3){
-								track3.className="tracklap3";
-								car3TopSpeed=${racer3.topSpeed * (1-((1-racer3.reliability)*Math.random()))};
-								car3Acceleration=${racer3.acceleration * (1-((1-racer3.reliability)*Math.random()))};
-							} else if (car3Lap==4){
-								track3.className="tracklap4";
-								car3TopSpeed=${racer3.topSpeed * (1-((1-racer3.reliability)*Math.random()))};
-								car3Acceleration=${racer3.acceleration * (1-((1-racer3.reliability)*Math.random()))};
-							} else if (car3Lap==5){
-								track3.className="tracklap5";
-								car3TopSpeed=${racer3.topSpeed * (1-((1-racer3.reliability)*Math.random()))};
-								car3Acceleration=${racer3.acceleration * (1-((1-racer3.reliability)*Math.random()))};
-							}
+							track3.className="tracklap"+car3Lap;
+							car3TopSpeed=${racer3.topSpeed * (1-((1-racer3.reliability)*Math.random()))};
+							car3Acceleration=${racer3.acceleration * (1-((1-racer3.reliability)*Math.random()))};
 						}
 					}
 				}
@@ -223,23 +181,9 @@
 						if (car4Location/lapDistance>car4Lap){
 							car4Lap+=1;
 							car4CurVelocity=car4CurVelocity*car4LapEfficiency;
-							if (car4Lap==2){
-								track4.className="tracklap2";
-								car4TopSpeed=${racer4.topSpeed * (1-((1-racer4.reliability)*Math.random()))};
-								car4Acceleration=${racer4.acceleration * (1-((1-racer4.reliability)*Math.random()))};
-							} else if (car4Lap==3){
-								track4.className="tracklap3";
-								car4TopSpeed=${racer4.topSpeed * (1-((1-racer4.reliability)*Math.random()))};
-								car4Acceleration=${racer4.acceleration * (1-((1-racer4.reliability)*Math.random()))};
-							} else if (car4Lap==4){
-								track4.className="tracklap4";
-								car4TopSpeed=${racer4.topSpeed * (1-((1-racer4.reliability)*Math.random()))};
-								car4Acceleration=${racer4.acceleration * (1-((1-racer4.reliability)*Math.random()))};
-							} else if (car4Lap==5){
-								track4.className="tracklap5";
-								car4TopSpeed=${racer4.topSpeed * (1-((1-racer4.reliability)*Math.random()))};
-								car4Acceleration=${racer4.acceleration * (1-((1-racer4.reliability)*Math.random()))};
-							}
+							track4.className="tracklap"+car4Lap;
+							car4TopSpeed=${racer4.topSpeed * (1-((1-racer4.reliability)*Math.random()))};
+							car4Acceleration=${racer4.acceleration * (1-((1-racer4.reliability)*Math.random()))};
 						}
 					}
 				}
@@ -268,23 +212,9 @@
 						if (car5Location/lapDistance>car5Lap){
 							car5Lap+=1;
 							car5CurVelocity=car5CurVelocity*car5LapEfficiency;
-							if (car5Lap==2){
-								track5.className="tracklap2";
-								car5TopSpeed=${racer5.topSpeed * (1-((1-racer5.reliability)*Math.random()))};
-								car5Acceleration=${racer5.acceleration * (1-((1-racer5.reliability)*Math.random()))};
-							} else if (car5Lap==3){
-								track5.className="tracklap3";
-								car5TopSpeed=${racer5.topSpeed * (1-((1-racer5.reliability)*Math.random()))};
-								car5Acceleration=${racer5.acceleration * (1-((1-racer5.reliability)*Math.random()))};
-							} else if (car5Lap==4){
-								track5.className="tracklap4";
-								car5TopSpeed=${racer5.topSpeed * (1-((1-racer5.reliability)*Math.random()))};
-								car5Acceleration=${racer5.acceleration * (1-((1-racer5.reliability)*Math.random()))};
-							} else if (car5Lap==5){
-								track5.className="tracklap5";
-								car5TopSpeed=${racer5.topSpeed * (1-((1-racer5.reliability)*Math.random()))};
-								car5Acceleration=${racer5.acceleration * (1-((1-racer5.reliability)*Math.random()))};
-							}
+							track5.className="tracklap"+car5Lap;
+							car5TopSpeed=${racer5.topSpeed * (1-((1-racer5.reliability)*Math.random()))};
+							car5Acceleration=${racer5.acceleration * (1-((1-racer5.reliability)*Math.random()))};
 						}
 					}
 				}
@@ -313,23 +243,9 @@
 						if (car6Location/lapDistance>car6Lap){
 							car6Lap+=1;
 							car6CurVelocity=car6CurVelocity*car6LapEfficiency;
-							if (car6Lap==2){
-								track6.className="tracklap2";
-								car6TopSpeed=${racer6.topSpeed * (1-((1-racer6.reliability)*Math.random()))};
-								car6Acceleration=${racer6.acceleration * (1-((1-racer6.reliability)*Math.random()))};
-							} else if (car6Lap==3){
-								track6.className="tracklap3";
-								car6TopSpeed=${racer6.topSpeed * (1-((1-racer6.reliability)*Math.random()))};
-								car6Acceleration=${racer6.acceleration * (1-((1-racer6.reliability)*Math.random()))};
-							} else if (car6Lap==4){
-								track6.className="tracklap4";
-								car6TopSpeed=${racer6.topSpeed * (1-((1-racer6.reliability)*Math.random()))};
-								car6Acceleration=${racer6.acceleration * (1-((1-racer6.reliability)*Math.random()))};
-							} else if (car6Lap==5){
-								track6.className="tracklap5";
-								car6TopSpeed=${racer6.topSpeed * (1-((1-racer6.reliability)*Math.random()))};
-								car6Acceleration=${racer6.acceleration * (1-((1-racer6.reliability)*Math.random()))};
-							}
+							track6.className="tracklap"+car6Lap;
+							car6TopSpeed=${racer6.topSpeed * (1-((1-racer6.reliability)*Math.random()))};
+							car6Acceleration=${racer6.acceleration * (1-((1-racer6.reliability)*Math.random()))};
 						}
 					}
 				}

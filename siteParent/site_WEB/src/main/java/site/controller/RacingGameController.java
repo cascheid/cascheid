@@ -1,6 +1,8 @@
 package site.controller;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -50,7 +52,7 @@ public class RacingGameController {
 	@RequestMapping("/raceMoneyFrame")
 	public ModelAndView showMoneyFrame(){
 		ModelAndView mv = new ModelAndView("raceMoneyFrame");
-		mv.addObject("availableCash", racingGame.getAvailableCash());
+		mv.addObject("availableCash", RacingGameUtils.formatMoney(racingGame.getAvailableCash()));
 		mv.addObject("racingClass", racingGame.getRacingClass().charAt(0));
 		return mv;
 	}
@@ -64,7 +66,7 @@ public class RacingGameController {
 	@RequestMapping("/garageFrame")
 	public ModelAndView showGarageFrame(){
 		ModelAndView mv = new ModelAndView("garageFrame");
-		mv.addObject("selectedCarID", racingGame.getCarID());
+		mv.addObject("selectedCarID", racingGame.getSelectedCar().getCarID());
 		mv.addObject("racingGame", racingGame);
 		//mv.addObject("carList", racingGame.getCarList());
 		
@@ -75,7 +77,6 @@ public class RacingGameController {
 	public ModelAndView showGarageDisplay(
 			@RequestParam(value = "selectedCarID", required = true, defaultValue="0") Integer selectedCarID){
 		ModelAndView mv = new ModelAndView("garageDisplay");
-		racingGame.setCarID(selectedCarID);
 		UserRacecar selectedCar=null;
 		for (UserRacecar car : racingGame.getCarList()){
 			if (car.getCarID()==selectedCarID){
@@ -109,7 +110,7 @@ public class RacingGameController {
 		ModelAndView mv;
 		if (carID==0){
 			mv = new ModelAndView("unselectedDisplayFrame");
-			mv.addObject("availableCash", racingGame.getAvailableCash());
+			mv.addObject("availableCash", RacingGameUtils.formatMoney(racingGame.getAvailableCash()));
 		}else {
 			mv = new ModelAndView("carDisplayFrame");
 			Racecar car = RacingGameUtils.getRacecarByID(carID);
@@ -128,7 +129,7 @@ public class RacingGameController {
 		racingGame.addNewCar(raceCar);
 		Long userCarID=RacingGameUtils.saveNewCar(racingGame.getRacingIdentifier(), carID);
 		racingGame.getCarList().get(racingGame.getCarList().size()-1).setUserRacecarID(userCarID);
-		RacingGameUtils.updateRacingGame(racingGame.getRacingIdentifier(), racingGame.getAvailableCash(), racingGame.getRacingClass());
+		RacingGameUtils.updateRacingGame(racingGame.getRacingIdentifier(), racingGame.getAvailableCash(), racingGame.getRacingClass(), racingGame.getSelectedCar().getCarID());
 		return mv;
 	}
 	
@@ -152,7 +153,7 @@ public class RacingGameController {
 		ModelAndView mv;
 		if (upgradeID==0){
 			mv = new ModelAndView("unselectedDisplayFrame");
-			mv.addObject("availableCash", racingGame.getAvailableCash());
+			mv.addObject("availableCash", RacingGameUtils.formatMoney(racingGame.getAvailableCash()));
 		} else {
 			Upgrade upgrade = RacingGameUtils.getUpgradeByID(upgradeID);
 			BigDecimal price = upgrade.getPrice();
@@ -186,7 +187,7 @@ public class RacingGameController {
 		racingGame.getSelectedCar().addUpgrade(upgrade);
 		RacingGameUtils.addNewUpgrade(racingGame.getSelectedCar(), upgrade);
 		mv.addObject("selectedCar", racingGame.getSelectedCar());
-		RacingGameUtils.updateRacingGame(racingGame.getRacingIdentifier(), racingGame.getAvailableCash(), racingGame.getRacingClass());
+		RacingGameUtils.updateRacingGame(racingGame.getRacingIdentifier(), racingGame.getAvailableCash(), racingGame.getRacingClass(), racingGame.getSelectedCar().getCarID());
 		return mv;
 	}
 	
@@ -248,9 +249,17 @@ public class RacingGameController {
 			mv = new ModelAndView("spectateRaceFrame");
 			opponents = RacingGameUtils.getSpectateCarsByClass(raceInfo.getRacingClass());
 		}
-
+		racingGame.setSelectedClass(raceInfo.getRacingClass());
+		if (raceInfo.getCarID()!=racingGame.getSelectedCar().getCarID()){
+			for (UserRacecar car : racingGame.getCarList()){
+				if (car.getCarID()==raceInfo.getCarID()){
+					racingGame.setSelectedCar(car);
+					break;
+				}
+			}
+		}
 		raceInfo.setLapDistance(RacingGameUtils.getLapDistanceByClass(raceInfo.getRacingClass()));
-		raceInfo.setNoLaps(RacingGameUtils.getNumberOfLaps());
+		raceInfo.setNoLaps(RacingGameUtils.getNumberOfLapsByClass(raceInfo.getRacingClass()));
 		mv.addObject("racecar", racingGame.getSelectedCar());
 		int i=0;
 		if (raceInfo.getRaceType().equals("user")){
@@ -303,19 +312,23 @@ public class RacingGameController {
 			finish=3;
 			racingGame.setAvailableCash(racingGame.getAvailableCash().add(RacingGameUtils.getPurseByClass(raceResult.getRacingClass(), 3)));
 		}
-		mv.addObject("raceResult", raceResult);
+		raceResult.setPlace1Time(raceResult.getPlace1Time().setScale(2, RoundingMode.HALF_UP));
+		raceResult.setPlace2Time(raceResult.getPlace2Time().setScale(2, RoundingMode.HALF_UP));
+		raceResult.setPlace3Time(raceResult.getPlace3Time().setScale(2, RoundingMode.HALF_UP));
 		mv.addObject("finish", finish);
 		mv.addObject("newClass", newClass);
-		RacingGameUtils.updateRacingGame(racingGame.getRacingIdentifier(), racingGame.getAvailableCash(), racingGame.getRacingClass());
+		RacingGameUtils.updateRacingGame(racingGame.getRacingIdentifier(), racingGame.getAvailableCash(), racingGame.getRacingClass(), racingGame.getSelectedCar().getCarID());
 		return mv;
 	}
 	
 	@RequestMapping("/spectateResults")
 	public ModelAndView spectateResults(
 			@ModelAttribute("raceResult") RaceResult raceResult){
-		ModelAndView mv = new ModelAndView("spectateResults");		
+		ModelAndView mv = new ModelAndView("spectateResults");
+		raceResult.setPlace1Time(raceResult.getPlace1Time().setScale(2, RoundingMode.HALF_UP));
+		raceResult.setPlace2Time(raceResult.getPlace2Time().setScale(2, RoundingMode.HALF_UP));
+		raceResult.setPlace3Time(raceResult.getPlace3Time().setScale(2, RoundingMode.HALF_UP));
 		mv.addObject("raceResult", raceResult);
-		RacingGameUtils.updateRacingGame(racingGame.getRacingIdentifier(), racingGame.getAvailableCash(), racingGame.getRacingClass());
 		return mv;
 	}
 	

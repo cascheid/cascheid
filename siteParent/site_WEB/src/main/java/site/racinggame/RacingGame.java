@@ -9,7 +9,6 @@ public class RacingGame implements java.io.Serializable{
 	private static final long serialVersionUID = -1729577202981441935L;
 	
 	private Long racingIdentifier;
-	private Integer carID;
 	private UserRacecar selectedCar;
 	private BigDecimal availableCash;
 	private String racingClass;
@@ -29,14 +28,6 @@ public class RacingGame implements java.io.Serializable{
 	
 	public void setRacingIdentifier(Long racingIdentifier){
 		this.racingIdentifier=racingIdentifier;
-	}
-
-	public Integer getCarID() {
-		return carID;
-	}
-
-	public void setCarID(Integer carID) {
-		this.carID = carID;
 	}
 
 	public UserRacecar getSelectedCar() {

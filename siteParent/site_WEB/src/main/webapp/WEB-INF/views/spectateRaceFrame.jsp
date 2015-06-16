@@ -5,14 +5,17 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel="stylesheet" type="text/css" href="css/racing.css">
+<link rel="stylesheet" type="text/css" href="css/racing.css?test=3">
 <style>
 	body{overflow:hidden;}
-	div.tracklap1 {float:left; width:100px; height:650px; background: lightblue url ("../img/misc/one.png") no-repeat 50% 50%; }
-	div.tracklap2 {float:left; width:100px; height:650px; background: seagreen url ("../img/misc/two.png") no-repeat 50% 50%; }
-	div.tracklap3 {float:left; width:100px; height:650px; background: royalblue url ("../img/misc/three.png") no-repeat 50% 50%; }
-	div.tracklap4 {float:left; width:100px; height:650px; background: lightsalmon url ("../img/misc/four.png") no-repeat 50% 50%; }
-	div.tracklap5 {float:left; width:100px; height:650px; background: indianred url ("../img/misc/five.png") no-repeat 50% 50%; }
+	div.tracklap1 {float:left; width:100px; height:650px; background: lightblue url ("../img/misc/one.png") no-repeat 50% 50%; margin:auto;}
+	div.tracklap2 {float:left; width:100px; height:650px; background: seagreen url ("../img/misc/two.png") no-repeat 50% 50%; margin:auto;}
+	div.tracklap3 {float:left; width:100px; height:650px; background: royalblue url ("../img/misc/three.png") no-repeat 50% 50%; margin:auto;}
+	div.tracklap4 {float:left; width:100px; height:650px; background: lightsalmon url ("../img/misc/four.png") no-repeat 50% 50%; margin:auto;}
+	div.tracklap5 {float:left; width:100px; height:650px; background: darkcyan url ("../img/misc/five.png") no-repeat 50% 50%; margin:auto;}
+	div.tracklap6 {float:left; width:100px; height:650px; background: chocolate url ("../img/misc/six.png") no-repeat 50% 50%; margin:auto;}
+	div.tracklap7 {float:left; width:100px; height:650px; background: indianred url ("../img/misc/seven.png") no-repeat 50% 50%; margin:auto;}
+	div.tracklap8 {float:left; width:100px; height:650px; background: darkred url ("../img/misc/eight.png") no-repeat 50% 50%; margin:auto;}
 	div.splits {float:left; margin-left:0px; width:70px; height:650px; background-color: lightgreen;}
 	div.middle {float:left; margin-left:0px; width:99px; height:650px; background-color: lightgreen;}
 	img.car {position:absolute;
@@ -24,6 +27,14 @@
     transform: rotate(270deg);
     width:100px;
     height:50px;
+    margin-left:0px;
+	}
+	
+	img.lakitu {position:absolute;
+	bottom:0px;
+    width:60px;
+    height:60px;
+    margin-left:20px;
 	}
 	
 	img.bowser{position:absolute;
@@ -522,15 +533,15 @@
 					car3Boosted=Math.random();
 					car4Boosted=Math.random();
 				} else if (marioLoop==13){
-					marioElem.src='img/sprites/mario_toss-5_new.png';
+					marioElem.src='img/sprites/mario_toss-5.png';
 				} else if (marioLoop==14){
-					marioElem.src='img/sprites/mario_toss-4_new.png';
+					marioElem.src='img/sprites/mario_toss-4.png';
 				} else if (marioLoop==15){
-					marioElem.src='img/sprites/mario_toss-3_new.png';
+					marioElem.src='img/sprites/mario_toss-3.png';
 				} else if (marioLoop==16){
-					marioElem.src='img/sprites/mario_toss-2_new.png';
+					marioElem.src='img/sprites/mario_toss-2.png';
 				} else if (marioLoop==17){
-					marioElem.src='img/sprites/mario_toss-1_new.png';
+					marioElem.src='img/sprites/mario_toss-1.png';
 				} else if (marioLoop==18){
 					marioElem.src='img/sprites/mario_hat-1.png';
 				} else if (marioLoop==19){
@@ -918,6 +929,10 @@
 			var car2BowserEffect='none';
 			var car3BowserEffect='none';
 			var car4BowserEffect='none';
+			document.getElementById('lakitu1').style.visibility='hidden';
+			document.getElementById('lakitu2').style.visibility='hidden';
+			document.getElementById('lakitu3').style.visibility='hidden';
+			document.getElementById('lakitu4').style.visibility='hidden';
 			function activateBowser(){
 				bowserLoop++;
 				var bowserElem = document.getElementById("bowser");
@@ -967,7 +982,10 @@
 					} else if (car1BowserEffect=='mini'){
 						carElem.style.width='100px';
 						carElem.style.height='50px';
-					} 
+						carElem.style.marginLeft='0px';
+					} else if (car1BowserEffect=='stopped'){
+						document.getElementById('lakitu1').style.visibility='hidden';
+					}
 					carElem=document.getElementById("car2");
 					if (car2BowserEffect=='reverse'){
 						car2CurVelocity=0-car2CurVelocity;
@@ -979,6 +997,9 @@
 					} else if (car2BowserEffect=='mini'){
 						carElem.style.width='100px';
 						carElem.style.height='50px';
+						carElem.style.marginLeft='0px';
+					} else if (car2BowserEffect=='stopped'){
+						document.getElementById('lakitu2').style.visibility='hidden';
 					}
 					carElem=document.getElementById("car3");
 					if (car3BowserEffect=='reverse'){
@@ -991,6 +1012,9 @@
 					} else if (car3BowserEffect=='mini'){
 						carElem.style.width='100px';
 						carElem.style.height='50px';
+						carElem.style.marginLeft='0px';
+					} else if (car3BowserEffect=='stopped'){
+						document.getElementById('lakitu3').style.visibility='hidden';
 					}
 					carElem=document.getElementById("car4");
 					if (car4BowserEffect=='reverse'){
@@ -1003,6 +1027,9 @@
 					} else if (car4BowserEffect=='mini'){
 						carElem.style.width='100px';
 						carElem.style.height='50px';
+						carElem.style.marginLeft='0px';
+					} else if (car4BowserEffect=='stopped'){
+						document.getElementById('lakitu4').style.visibility='hidden';
 					}
 					car1BowserEffect='none';
 					car2BowserEffect='none';
@@ -1026,10 +1053,14 @@
 						carElem.style.transform='rotate(90deg)';
 					} else if (rand<.5){
 						car1BowserEffect='stopped';
+						document.getElementById("lakitu1").src='img/sprites/lakitu_start-1.png';
+						document.getElementById("lakitu1").style.bottom=(Number(carElem.style.bottom.replace("px",""))+50)+'px';
+						document.getElementById("lakitu1").style.visibility='';
 					} else if (rand<.75){
 						car1BowserEffect='mini';
 						carElem.style.width='50px';
 						carElem.style.height='25px';
+						carElem.style.marginLeft='25px';
 					} else {
 						car1BowserEffect='none';
 					}
@@ -1045,10 +1076,14 @@
 						carElem.style.transform='rotate(90deg)';
 					} else if (rand<.5){
 						car2BowserEffect='stopped';
+						document.getElementById("lakitu2").src='img/sprites/lakitu_start-1.png';
+						document.getElementById("lakitu2").style.bottom=(Number(carElem.style.bottom.replace("px",""))+50)+'px';
+						document.getElementById("lakitu2").style.visibility='';
 					} else if (rand<.75){
 						car2BowserEffect='mini';
 						carElem.style.width='50px';
 						carElem.style.height='25px';
+						carElem.style.marginLeft='25px';
 					} else {
 						car2BowserEffect='none';
 					}
@@ -1064,10 +1099,14 @@
 						carElem.style.transform='rotate(90deg)';
 					} else if (rand<.5){
 						car3BowserEffect='stopped';
+						document.getElementById("lakitu3").src='img/sprites/lakitu_start-1.png';
+						document.getElementById("lakitu3").style.bottom=(Number(carElem.style.bottom.replace("px",""))+50)+'px';
+						document.getElementById("lakitu3").style.visibility='';
 					} else if (rand<.75){
 						car3BowserEffect='mini';
 						carElem.style.width='50px';
 						carElem.style.height='25px';
+						carElem.style.marginLeft='25px';
 					} else {
 						car3BowserEffect='none';
 					}
@@ -1083,12 +1122,63 @@
 						carElem.style.transform='rotate(90deg)';
 					} else if (rand<.5){
 						car4BowserEffect='stopped';
+						document.getElementById("lakitu4").src='img/sprites/lakitu_start-1.png';
+						document.getElementById("lakitu4").style.bottom=(Number(carElem.style.bottom.replace("px",""))+50)+'px';
+						document.getElementById("lakitu4").style.visibility='';
 					} else if (rand<.75){
 						car4BowserEffect='mini';
 						carElem.style.width='50px';
 						carElem.style.height='25px';
+						carElem.style.marginLeft='25px';
 					} else {
 						car4BowserEffect='none';
+					}
+				}
+				if (bowserLoop>=38&&bowserLoop<60){
+					var mod=(bowserLoop-38)%8;
+					var newMargin='20px';
+					var newSrc=null;
+					if (mod==4){
+						newMargin='20px';
+						if (bowserLoop==42){
+							newSrc='img/sprites/lakitu_start-2.png';
+						} else if (bowserLoop==50){
+							newSrc='img/sprites/lakitu_start-3.png';
+						} else if (bowserLoop==58){
+							newSrc='img/sprites/lakitu_start-4.png';
+						}
+					} else if (mod==1||mod==3){
+						newMargin='15px';
+					} else if (mod==2){
+						newMargin='10px';
+					} else if (mod==5||mod==7){
+						newMargin='25px';
+					} else if (mod==6){
+						newMargin='30px';
+					}
+					if (car1BowserEffect=='stopped'){
+						document.getElementById("lakitu1").style.marginLeft=newMargin;
+						if (newSrc!=null){
+							document.getElementById("lakitu1").src=newSrc;
+						}
+					}
+					if (car2BowserEffect=='stopped'){
+						document.getElementById("lakitu2").style.marginLeft=newMargin;
+						if (newSrc!=null){
+							document.getElementById("lakitu2").src=newSrc;
+						}
+					}
+					if (car3BowserEffect=='stopped'){
+						document.getElementById("lakitu3").style.marginLeft=newMargin;
+						if (newSrc!=null){
+							document.getElementById("lakitu3").src=newSrc;
+						}
+					}
+					if (car4BowserEffect=='stopped'){
+						document.getElementById("lakitu4").style.marginLeft=newMargin;
+						if (newSrc!=null){
+							document.getElementById("lakitu4").src=newSrc;
+						}
 					}
 				}
 			}
@@ -1128,17 +1218,7 @@
 						if (car1Location/lapDistance<(car1Lap-1)){
 							car1Lap=car1Lap-1;
 							car1CurVelocity=car1CurVelocity*car1LapEfficiency;
-							if (car1Lap==1){
-								track1.className="tracklap1";
-							} else if (car1Lap==2){
-								track1.className="tracklap2";
-							} else if (car1Lap==3){
-								track1.className="tracklap3";
-							} else if (car1Lap==4){
-								track1.className="tracklap4";
-							} else if (car1Lap==5){
-								track1.className="tracklap5";
-							}
+							track1.className="tracklap"+car1Lap;
 						} else if (car1Location/lapDistance>car1Lap){
 							car1Lap+=1;
 							car1CurVelocity=car1CurVelocity*car1LapEfficiency;
@@ -1147,23 +1227,7 @@
 							} else {
 								yoshiHatesCar1=false;
 							}
-							if (car1Lap==2){
-								track1.className="tracklap2";
-								car1TopSpeed=${racer1.topSpeed * (1-((1-racer1.reliability)*Math.random()))};
-								car1Accel=${racer1.acceleration * (1-((1-racer1.reliability)*Math.random()))};
-							} else if (car1Lap==3){
-								track1.className="tracklap3";
-								car1TopSpeed=${racer1.topSpeed * (1-((1-racer1.reliability)*Math.random()))};
-								car1Accel=${racer1.acceleration * (1-((1-racer1.reliability)*Math.random()))};
-							} else if (car1Lap==4){
-								track1.className="tracklap4";
-								car1TopSpeed=${racer1.topSpeed * (1-((1-racer1.reliability)*Math.random()))};
-								car1Accel=${racer1.acceleration * (1-((1-racer1.reliability)*Math.random()))};
-							} else if (car1Lap==5){
-								track1.className="tracklap5";
-								car1TopSpeed=${racer1.topSpeed * (1-((1-racer1.reliability)*Math.random()))};
-								car1Accel=${racer1.acceleration * (1-((1-racer1.reliability)*Math.random()))};
-							}
+							track1.className="tracklap"+car1Lap;;
 						}
 					}
 				}
@@ -1201,6 +1265,7 @@
 						if (car2Location/lapDistance<(car2Lap-1)){
 							car2Lap=car2Lap-1;
 							car2CurVelocity=car2CurVelocity*car2LapEfficiency;
+							track2.className="tracklap"+car2Lap;
 						} else if (car2Location/lapDistance>car2Lap){
 							car2Lap+=1;
 							car2CurVelocity=car2CurVelocity*car2LapEfficiency;
@@ -1209,23 +1274,7 @@
 							} else {
 								yoshiHatesCar2=false;
 							}
-							if (car2Lap==2){
-								track2.className="tracklap2";
-								car2TopSpeed=${racer2.topSpeed * (1-((1-racer2.reliability)*Math.random()))};
-								car2Accel=${racer2.acceleration * (1-((1-racer2.reliability)*Math.random()))};
-							} else if (car2Lap==3){
-								track2.className="tracklap3";
-								car2TopSpeed=${racer2.topSpeed * (1-((1-racer2.reliability)*Math.random()))};
-								car2Accel=${racer2.acceleration * (1-((1-racer2.reliability)*Math.random()))};
-							} else if (car2Lap==4){
-								track2.className="tracklap4";
-								car2TopSpeed=${racer2.topSpeed * (1-((1-racer2.reliability)*Math.random()))};
-								car2Accel=${racer2.acceleration * (1-((1-racer2.reliability)*Math.random()))};
-							} else if (car2Lap==5){
-								track2.className="tracklap5";
-								car2TopSpeed=${racer2.topSpeed * (1-((1-racer2.reliability)*Math.random()))};
-								car2Accel=${racer2.acceleration * (1-((1-racer2.reliability)*Math.random()))};
-							}
+							track2.className="tracklap"+car2Lap;
 						}
 					}
 				}
@@ -1263,6 +1312,7 @@
 						if (car3Location/lapDistance<(car3Lap-1)){
 							car3Lap=car3Lap-1;
 							car3CurVelocity=car3CurVelocity*car3LapEfficiency;
+							track3.className="tracklap"+car3Lap;
 						} else if (car3Location/lapDistance>car3Lap){
 							car3Lap+=1;
 							car3CurVelocity=car3CurVelocity*car3LapEfficiency;
@@ -1271,23 +1321,7 @@
 							} else {
 								yoshiHatesCar3=false;
 							}
-							if (car3Lap==2){
-								track3.className="tracklap2";
-								car3TopSpeed=${racer3.topSpeed * (1-((1-racer3.reliability)*Math.random()))};
-								car3Accel=${racer3.acceleration * (1-((1-racer3.reliability)*Math.random()))};
-							} else if (car3Lap==3){
-								track3.className="tracklap3";
-								car3TopSpeed=${racer3.topSpeed * (1-((1-racer3.reliability)*Math.random()))};
-								car3Accel=${racer3.acceleration * (1-((1-racer3.reliability)*Math.random()))};
-							} else if (car3Lap==4){
-								track3.className="tracklap4";
-								car3TopSpeed=${racer3.topSpeed * (1-((1-racer3.reliability)*Math.random()))};
-								car3Accel=${racer3.acceleration * (1-((1-racer3.reliability)*Math.random()))};
-							} else if (car3Lap==5){
-								track3.className="tracklap5";
-								car3TopSpeed=${racer3.topSpeed * (1-((1-racer3.reliability)*Math.random()))};
-								car3Accel=${racer3.acceleration * (1-((1-racer3.reliability)*Math.random()))};
-							}
+							track3.className="tracklap"+car3Lap;
 						}
 					}
 				}
@@ -1318,8 +1352,6 @@
 							thirdPlace = "car4";
 							document.getElementById("thirdPlaceTimeForm").value=elapsedTime;
 							finishedRace = true;
-						} else {
-							
 						}
 					} else {
 						car4.style.bottom = 50+580*(car4Location%lapDistance)/lapDistance+"px";
@@ -1327,6 +1359,7 @@
 						if (car4Location/lapDistance<(car4Lap-1)){
 							car4Lap=car4Lap-1;
 							car4CurVelocity=car4CurVelocity*car4LapEfficiency;
+							track4.className="tracklap"+car4Lap;
 						} else if (car4Location/lapDistance>car4Lap){
 							car4Lap+=1;
 							car4CurVelocity=car4CurVelocity*car4LapEfficiency;
@@ -1335,23 +1368,7 @@
 							} else {
 								yoshiHatesCar4=false;
 							}
-							if (car4Lap==2){
-								track4.className="tracklap2";
-								car4TopSpeed=${racer4.topSpeed * (1-((1-racer4.reliability)*Math.random()))};
-								car4Accel=${racer4.acceleration * (1-((1-racer4.reliability)*Math.random()))};
-							} else if (car4Lap==3){
-								track4.className="tracklap3";
-								car4TopSpeed=${racer4.topSpeed * (1-((1-racer4.reliability)*Math.random()))};
-								car4Accel=${racer4.acceleration * (1-((1-racer4.reliability)*Math.random()))};
-							} else if (car4Lap==4){
-								track4.className="tracklap4";
-								car4TopSpeed=${racer4.topSpeed * (1-((1-racer4.reliability)*Math.random()))};
-								car4Accel=${racer4.acceleration * (1-((1-racer4.reliability)*Math.random()))};
-							} else if (car4Lap==5){
-								track4.className="tracklap5";
-								car4TopSpeed=${racer4.topSpeed * (1-((1-racer4.reliability)*Math.random()))};
-								car4Accel=${racer4.acceleration * (1-((1-racer4.reliability)*Math.random()))};
-							}
+							track4.className="tracklap"+car4Lap;
 						}
 					}
 				}
@@ -1376,7 +1393,8 @@
 		<img class="peach" id="peach" src='img/sprites/peach-twirl-1.png'/>
 	</div>
 	<div class="tracklap1" id="track1">
-			<img class="car" id="car1" src="img/cars/${racer1.model}"/>
+		<img class="car" id="car1" src="img/cars/${racer1.model}"/>
+		<img class="lakitu" id="lakitu1" src="img/sprites/lakitu_start-1.png">
 	</div>
 	<div class="splits">
 		<img class="crab" id="crab1" src='img/sprites/crab-1.png'/>
@@ -1385,12 +1403,14 @@
 	</div>
 	<div class="tracklap1" id="track2">
 		<img class="car" id="car2" src="img/cars/${racer2.model}">
+		<img class="lakitu" id="lakitu2" src="img/sprites/lakitu_start-1.png">
 	</div>
 	<div class="middle">
 		<img class="bowser" id="bowser" src='img/sprites/bowser-falling-1.png'/>
 	</div>
 	<div class="tracklap1" id="track3">
 		<img class="car" id="car3" src="img/cars/${racer3.model}">
+		<img class="lakitu" id="lakitu3" src="img/sprites/lakitu_start-1.png">
 	</div>
 	<div class="splits">
 		<img class="crab" id="crab3" src='img/sprites/crab-1.png'/>
@@ -1399,6 +1419,7 @@
 	</div>
 	<div class="tracklap1" id="track4">
 		<img class="car" id="car4" src="img/cars/${racer4.model}">
+		<img class="lakitu" id="lakitu4" src="img/sprites/lakitu_start-1.png">
 	</div>
 	<div class="splits">
 		<img class="mario" id="mario" src='img/sprites/mario_thumbsup-1.png'/>
