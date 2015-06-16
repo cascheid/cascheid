@@ -58,6 +58,12 @@
 	height:76px;
 	bottom:400px;
 	margin-left:-60px;}
+	
+	img.mario{position:absolute; 
+	width:60px; 
+	height:76px;
+	bottom:400px;
+	margin-left:60px;}
 </style>
 </head>
 <body>
@@ -470,6 +476,112 @@
 				}
 			}
 
+			var marioID;
+			var marioLoop=0;
+			var car1Boosted=0;
+			var car2Boosted=0;
+			var car3Boosted=0;
+			var car4Boosted=0;
+			function activateMario(){
+				marioLoop++;
+				var marioElem = document.getElementById("mario");
+				if (marioLoop==1){
+					charActive=true;
+					marioElem.style.visibility='';
+					marioElem.style.marginLeft='50px';
+					marioElem.src='img/sprites/mario_toss-1.png';
+				} else if (marioLoop==2){
+					marioElem.src='img/sprites/mario_toss-1.png';
+					marioElem.style.marginLeft='40px';
+				} else if (marioLoop==3){
+					marioElem.src='img/sprites/mario_toss-1.png';
+					marioElem.style.marginLeft='30px';
+				} else if (marioLoop==4){
+					marioElem.src='img/sprites/mario_toss-1.png';
+					marioElem.style.marginLeft='20px';
+				} else if (marioLoop==5){
+					marioElem.src='img/sprites/mario_toss-1.png';
+					marioElem.style.marginLeft='10px';
+				} else if (marioLoop==6){
+					marioElem.src='img/sprites/mario_toss-1.png';
+					marioElem.style.marginLeft='0px';
+				} else if (marioLoop==7){
+					marioElem.src='img/sprites/mario_toss-1.png';
+				} else if (marioLoop==8){
+					marioElem.src='img/sprites/mario_toss-2.png';
+				} else if (marioLoop==9){
+					marioElem.src='img/sprites/mario_toss-3.png';
+				} else if (marioLoop==10){
+					marioElem.src='img/sprites/mario_toss-4.png';
+				} else if (marioLoop==11){
+					marioElem.src='img/sprites/mario_toss-5.png';
+				} else if (marioLoop==12){
+					marioElem.src='img/sprites/mario_toss-6.png';
+					car1Boosted=Math.random();
+					car2Boosted=Math.random();
+					car3Boosted=Math.random();
+					car4Boosted=Math.random();
+				} else if (marioLoop==13){
+					marioElem.src='img/sprites/mario_toss-5.png';
+				} else if (marioLoop==14){
+					marioElem.src='img/sprites/mario_toss-4.png';
+				} else if (marioLoop==15){
+					marioElem.src='img/sprites/mario_toss-3.png';
+				} else if (marioLoop==16){
+					marioElem.src='img/sprites/mario_toss-2.png';
+				} else if (marioLoop==17){
+					marioElem.src='img/sprites/mario_toss-1.png';
+				} else if (marioLoop==18){
+					marioElem.src='img/sprites/mario_hat-1.png';
+				} else if (marioLoop==19){
+					marioElem.src='img/sprites/mario_hat-2.png';
+				} else if (marioLoop==20){
+					marioElem.src='img/sprites/mario_hat-3.png';
+				} else if (marioLoop==21){
+					marioElem.src='img/sprites/mario_hat-2.png';
+				} else if (marioLoop==22){
+					marioElem.src='img/sprites/mario_hat-1.png';
+				} else if (marioLoop==23){
+					marioElem.src='img/sprites/mario_thumbsup-1.png';
+				} else if (marioLoop==24){
+					marioElem.src='img/sprites/mario_thumbsup-2.png';
+				} else if (marioLoop==25){
+					marioElem.src='img/sprites/mario_thumbsup-3.png';
+				}
+				if (marioLoop>=12){
+						car1TopSpeed=${racer1.topSpeed}*(1+car1Boosted);
+						car1CurVelocity=car1TopSpeed;
+						car2TopSpeed=${racer2.topSpeed}*(1+car2Boosted);
+						car2CurVelocity=car2TopSpeed;
+						car3TopSpeed=${racer3.topSpeed}*(1+car3Boosted);
+						car3CurVelocity=car3TopSpeed;
+						car4TopSpeed=${racer4.topSpeed}*(1+car4Boosted);
+						car4CurVelocity=car4TopSpeed;
+				}
+				if (marioLoop>30){
+					car1Boosted=0;
+					car1TopSpeed=${racer1.topSpeed * (1-((1-racer1.reliability)*Math.random()))};
+					car1CurVelocity=car1TopSpeed;
+					
+					car2Boosted=0;
+					car2TopSpeed=${racer2.topSpeed * (1-((1-racer2.reliability)*Math.random()))};
+					car2CurVelocity=car2TopSpeed;
+					
+					car3Boosted=0;
+					car3TopSpeed=${racer3.topSpeed * (1-((1-racer3.reliability)*Math.random()))};
+					car3CurVelocity=car3TopSpeed;
+					
+					car4Boosted=0;
+					car4TopSpeed=${racer4.topSpeed * (1-((1-racer4.reliability)*Math.random()))};
+					car4CurVelocity=car4TopSpeed;
+					
+					marioElem.style.visibility='hidden';
+					marioLoop=0;
+					charActive=false;
+					clearInterval(marioID);
+				}
+			}
+
 			var car1SpinTime=0;
 			var car2SpinTime=0;
 			var car3SpinTime=0;
@@ -763,7 +875,7 @@
 					} else if (rand<.6){
 						peachID=setInterval(activatePeach, 80);
 					} else {
-						peachID=setInterval(activatePeach, 80);
+						marioID=setInterval(activateMario, 80);
 					}
 				}
 				if (!crab1Active&&Math.random()<.001){
@@ -842,10 +954,12 @@
 					bowserElem.src='img/sprites/bowser_clap-1.png';
 				} else if (bowserLoop==42){
 					bowserElem.src='img/sprites/bowser_down-15.png';
-				} else if (bowserLoop==50){
+				} else if (bowserLoop==60){
 					var carElem=document.getElementById("car1");
 					if (car1BowserEffect=='reverse'){
 						car1CurVelocity=0-car1CurVelocity;
+						car1Accel=0-car1Accel;
+						car1TopSpeed=0-car1TopSpeed;
 						carElem.style.webkitTransform='rotate(270deg)';
 						carElem.style.MozTransform='rotate(270deg)';
 						carElem.style.transform='rotate(270deg)';
@@ -856,6 +970,8 @@
 					carElem=document.getElementById("car2");
 					if (car2BowserEffect=='reverse'){
 						car2CurVelocity=0-car2CurVelocity;
+						car2Accel=0-car2Accel;
+						car2TopSpeed=0-car2TopSpeed;
 						carElem.style.webkitTransform='rotate(270deg)';
 						carElem.style.MozTransform='rotate(270deg)';
 						carElem.style.transform='rotate(270deg)';
@@ -866,6 +982,8 @@
 					carElem=document.getElementById("car3");
 					if (car3BowserEffect=='reverse'){
 						car3CurVelocity=0-car3CurVelocity;
+						car3Accel=0-car3Accel;
+						car3TopSpeed=0-car3TopSpeed;
 						carElem.style.webkitTransform='rotate(270deg)';
 						carElem.style.MozTransform='rotate(270deg)';
 						carElem.style.transform='rotate(270deg)';
@@ -876,6 +994,8 @@
 					carElem=document.getElementById("car4");
 					if (car4BowserEffect=='reverse'){
 						car4CurVelocity=0-car4CurVelocity;
+						car4Accel=0-car4Accel;
+						car4TopSpeed=0-car4TopSpeed;
 						carElem.style.webkitTransform='rotate(270deg)';
 						carElem.style.MozTransform='rotate(270deg)';
 						carElem.style.transform='rotate(270deg)';
@@ -896,6 +1016,9 @@
 					var carElem=document.getElementById("car1");
 					if (rand<.25){
 						car1BowserEffect='reverse';
+						car1CurVelocity=0-car1CurVelocity;
+						car1Accel=0-car1Accel;
+						car1TopSpeed=0-car1TopSpeed;
 						carElem.style.webkitTransform='rotate(90deg)';
 						carElem.style.MozTransform='rotate(90deg)';
 						carElem.style.transform='rotate(90deg)';
@@ -912,6 +1035,9 @@
 					carElem=document.getElementById("car2");
 					if (rand<.25){
 						car2BowserEffect='reverse';
+						car2CurVelocity=0-car2CurVelocity;
+						car2Accel=0-car2Accel;
+						car2TopSpeed=0-car2TopSpeed;
 						carElem.style.webkitTransform='rotate(90deg)';
 						carElem.style.MozTransform='rotate(90deg)';
 						carElem.style.transform='rotate(90deg)';
@@ -928,6 +1054,9 @@
 					carElem=document.getElementById("car3");
 					if (rand<.25){
 						car3BowserEffect='reverse';
+						car3CurVelocity=0-car3CurVelocity;
+						car3Accel=0-car3Accel;
+						car3TopSpeed=0-car3TopSpeed;
 						carElem.style.webkitTransform='rotate(90deg)';
 						carElem.style.MozTransform='rotate(90deg)';
 						carElem.style.transform='rotate(90deg)';
@@ -944,6 +1073,9 @@
 					carElem=document.getElementById("car4");
 					if (rand<.25){
 						car4BowserEffect='reverse';
+						car4CurVelocity=0-car4CurVelocity;
+						car4Accel=0-car4Accel;
+						car4TopSpeed=0-car4TopSpeed;
 						carElem.style.webkitTransform='rotate(90deg)';
 						carElem.style.MozTransform='rotate(90deg)';
 						carElem.style.transform='rotate(90deg)';
@@ -962,20 +1094,16 @@
 			function moveAllCars(){
 				elapsedTime += .01;
 				if (car1Location < distance) {
-					if(car1BowserEffect=='reverse'){
-						car1CurVelocity=0-car1CurVelocity;
-						car1Accel=0-car1Accel;
-					}
 					car1CurVelocity = car1CurVelocity + 0.01*car1Accel;
 					if (car1Egged||car1BowserEffect=='stopped'){
 						car1CurVelocity=0;
 					}
-					if (car1CurVelocity > car1TopSpeed) {
+					if (Math.abs(car1CurVelocity) > Math.abs(car1TopSpeed)) {
 						car1CurVelocity=car1TopSpeed;
 					}
 					if (car1BowserEffect=='mini'){
-						if (car1CurVelocity > car1TopSpeed/2) {
-							car1CurVelocity=car1TopSpeed/2;
+						if (car1CurVelocity > car1TopSpeed/4) {
+							car1CurVelocity=car1TopSpeed/4;
 						}
 					}
 					car1Location = car1Location + car1CurVelocity * .01;
@@ -1009,39 +1137,35 @@
 							if (car1Lap==2){
 								track1.className="tracklap2";
 								car1TopSpeed=${racer1.topSpeed * (1-((1-racer1.reliability)*Math.random()))};
-								car1Acceleration=${racer1.acceleration * (1-((1-racer1.reliability)*Math.random()))};
+								car1Accel=${racer1.acceleration * (1-((1-racer1.reliability)*Math.random()))};
 							} else if (car1Lap==3){
 								track1.className="tracklap3";
 								car1TopSpeed=${racer1.topSpeed * (1-((1-racer1.reliability)*Math.random()))};
-								car1Acceleration=${racer1.acceleration * (1-((1-racer1.reliability)*Math.random()))};
+								car1Accel=${racer1.acceleration * (1-((1-racer1.reliability)*Math.random()))};
 							} else if (car1Lap==4){
 								track1.className="tracklap4";
 								car1TopSpeed=${racer1.topSpeed * (1-((1-racer1.reliability)*Math.random()))};
-								car1Acceleration=${racer1.acceleration * (1-((1-racer1.reliability)*Math.random()))};
+								car1Accel=${racer1.acceleration * (1-((1-racer1.reliability)*Math.random()))};
 							} else if (car1Lap==5){
 								track1.className="tracklap5";
 								car1TopSpeed=${racer1.topSpeed * (1-((1-racer1.reliability)*Math.random()))};
-								car1Acceleration=${racer1.acceleration * (1-((1-racer1.reliability)*Math.random()))};
+								car1Accel=${racer1.acceleration * (1-((1-racer1.reliability)*Math.random()))};
 							}
 						}
 					}
 				}
 
 				if (car2Location < distance) {
-					if(car2BowserEffect=='reverse'){
-						car2CurVelocity=0-car2CurVelocity;
-						car2Accel=0-car2Accel;
-					}
 					car2CurVelocity = car2CurVelocity + 0.01*car2Accel;
 					if (car2Egged||car2BowserEffect=='stopped'){
 						car2CurVelocity=0;
 					}
-					if (car2CurVelocity > car2TopSpeed) {
+					if (Math.abs(car2CurVelocity) > Math.abs(car2TopSpeed)) {
 						car2CurVelocity=car2TopSpeed;
 					}
 					if (car2BowserEffect=='mini'){
-						if (car2CurVelocity > car2TopSpeed/2) {
-							car2CurVelocity=car2TopSpeed/2;
+						if (car2CurVelocity > car2TopSpeed/4) {
+							car2CurVelocity=car2TopSpeed/4;
 						}
 					}
 					car2Location = car2Location + car2CurVelocity * .01;
@@ -1075,39 +1199,35 @@
 							if (car2Lap==2){
 								track2.className="tracklap2";
 								car2TopSpeed=${racer2.topSpeed * (1-((1-racer2.reliability)*Math.random()))};
-								car2Acceleration=${racer2.acceleration * (1-((1-racer2.reliability)*Math.random()))};
+								car2Accel=${racer2.acceleration * (1-((1-racer2.reliability)*Math.random()))};
 							} else if (car2Lap==3){
 								track2.className="tracklap3";
 								car2TopSpeed=${racer2.topSpeed * (1-((1-racer2.reliability)*Math.random()))};
-								car2Acceleration=${racer2.acceleration * (1-((1-racer2.reliability)*Math.random()))};
+								car2Accel=${racer2.acceleration * (1-((1-racer2.reliability)*Math.random()))};
 							} else if (car2Lap==4){
 								track2.className="tracklap4";
 								car2TopSpeed=${racer2.topSpeed * (1-((1-racer2.reliability)*Math.random()))};
-								car2Acceleration=${racer2.acceleration * (1-((1-racer2.reliability)*Math.random()))};
+								car2Accel=${racer2.acceleration * (1-((1-racer2.reliability)*Math.random()))};
 							} else if (car2Lap==5){
 								track2.className="tracklap5";
 								car2TopSpeed=${racer2.topSpeed * (1-((1-racer2.reliability)*Math.random()))};
-								car2Acceleration=${racer2.acceleration * (1-((1-racer2.reliability)*Math.random()))};
+								car2Accel=${racer2.acceleration * (1-((1-racer2.reliability)*Math.random()))};
 							}
 						}
 					}
 				}
 
 				if (car3Location < distance) {
-					if(car3BowserEffect=='reverse'){
-						car3CurVelocity=0-car3CurVelocity;
-						car3Accel=0-car3Accel;
-					}
 					car3CurVelocity = car3CurVelocity + 0.01*car3Accel;
 					if (car3Egged||car3BowserEffect=='stopped'){
 						car3CurVelocity=0;
 					}
-					if (car3CurVelocity > car3TopSpeed) {
+					if (Math.abs(car3CurVelocity) > Math.abs(car3TopSpeed)) {
 						car3CurVelocity=car3TopSpeed;
 					}
 					if (car3BowserEffect=='mini'){
-						if (car3CurVelocity > car3TopSpeed/2) {
-							car3CurVelocity=car3TopSpeed/2;
+						if (car3CurVelocity > car3TopSpeed/4) {
+							car3CurVelocity=car3TopSpeed/4;
 						}
 					}
 					car3Location = car3Location + car3CurVelocity * .01;
@@ -1141,43 +1261,36 @@
 							if (car3Lap==2){
 								track3.className="tracklap2";
 								car3TopSpeed=${racer3.topSpeed * (1-((1-racer3.reliability)*Math.random()))};
-								car3Acceleration=${racer3.acceleration * (1-((1-racer3.reliability)*Math.random()))};
+								car3Accel=${racer3.acceleration * (1-((1-racer3.reliability)*Math.random()))};
 							} else if (car3Lap==3){
 								track3.className="tracklap3";
 								car3TopSpeed=${racer3.topSpeed * (1-((1-racer3.reliability)*Math.random()))};
-								car3Acceleration=${racer3.acceleration * (1-((1-racer3.reliability)*Math.random()))};
+								car3Accel=${racer3.acceleration * (1-((1-racer3.reliability)*Math.random()))};
 							} else if (car3Lap==4){
 								track3.className="tracklap4";
 								car3TopSpeed=${racer3.topSpeed * (1-((1-racer3.reliability)*Math.random()))};
-								car3Acceleration=${racer3.acceleration * (1-((1-racer3.reliability)*Math.random()))};
+								car3Accel=${racer3.acceleration * (1-((1-racer3.reliability)*Math.random()))};
 							} else if (car3Lap==5){
 								track3.className="tracklap5";
 								car3TopSpeed=${racer3.topSpeed * (1-((1-racer3.reliability)*Math.random()))};
-								car3Acceleration=${racer3.acceleration * (1-((1-racer3.reliability)*Math.random()))};
+								car3Accel=${racer3.acceleration * (1-((1-racer3.reliability)*Math.random()))};
 							}
 						}
 					}
 				}
 
 				if (car4Location < distance) {
-					if(car4BowserEffect=='reverse'){
-						car4CurVelocity=0-car4CurVelocity;
-						car4Accel=0-car4Accel;
-					}
 					car4CurVelocity = car4CurVelocity + 0.01*car4Accel;
 					if (car4Egged||car4BowserEffect=='stopped'){
 						car4CurVelocity=0;
 					}
-					if (car4CurVelocity > car4TopSpeed) {
+					if (Math.abs(car4CurVelocity) > Math.abs(car4TopSpeed)) {
 						car4CurVelocity=car4TopSpeed;
 					}
 					if (car4BowserEffect=='mini'){
-						if (car4CurVelocity > car4TopSpeed/2) {
-							car4CurVelocity=car4TopSpeed/2;
+						if (car4CurVelocity > car4TopSpeed/4) {
+							car4CurVelocity=car4TopSpeed/4;
 						}
-					}
-					if(car4BowserEffect=='reverse'){
-						car4CurVelocity=0-car4CurVelocity;
 					}
 					car4Location = car4Location + car4CurVelocity * .01;
 					
@@ -1212,19 +1325,19 @@
 							if (car4Lap==2){
 								track4.className="tracklap2";
 								car4TopSpeed=${racer4.topSpeed * (1-((1-racer4.reliability)*Math.random()))};
-								car4Acceleration=${racer4.acceleration * (1-((1-racer4.reliability)*Math.random()))};
+								car4Accel=${racer4.acceleration * (1-((1-racer4.reliability)*Math.random()))};
 							} else if (car4Lap==3){
 								track4.className="tracklap3";
 								car4TopSpeed=${racer4.topSpeed * (1-((1-racer4.reliability)*Math.random()))};
-								car4Acceleration=${racer4.acceleration * (1-((1-racer4.reliability)*Math.random()))};
+								car4Accel=${racer4.acceleration * (1-((1-racer4.reliability)*Math.random()))};
 							} else if (car4Lap==4){
 								track4.className="tracklap4";
 								car4TopSpeed=${racer4.topSpeed * (1-((1-racer4.reliability)*Math.random()))};
-								car4Acceleration=${racer4.acceleration * (1-((1-racer4.reliability)*Math.random()))};
+								car4Accel=${racer4.acceleration * (1-((1-racer4.reliability)*Math.random()))};
 							} else if (car4Lap==5){
 								track4.className="tracklap5";
 								car4TopSpeed=${racer4.topSpeed * (1-((1-racer4.reliability)*Math.random()))};
-								car4Acceleration=${racer4.acceleration * (1-((1-racer4.reliability)*Math.random()))};
+								car4Accel=${racer4.acceleration * (1-((1-racer4.reliability)*Math.random()))};
 							}
 						}
 					}
@@ -1275,6 +1388,7 @@
 		<img class="car" id="car4" src="img/cars/${racer4.model}">
 	</div>
 	<div class="splits">
+		<img class="mario" id="mario" src='img/sprites/mario_thumbsup-1.png'/>
 	</div>
 	<form:form method="POST" id="resultForm" action="spectateResults" commandName="raceResult">
 		<form:input id="classForm" type="hidden" path="racingClass" value="${raceInfo.racingClass}"/>
