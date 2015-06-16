@@ -60,10 +60,9 @@
 	margin-left:-60px;}
 	
 	img.mario{position:absolute; 
-	width:60px; 
-	height:76px;
-	bottom:400px;
-	margin-left:60px;}
+	width:62px; 
+	height:80px;
+	bottom:0px;}
 </style>
 </head>
 <body>
@@ -482,29 +481,30 @@
 			var car2Boosted=0;
 			var car3Boosted=0;
 			var car4Boosted=0;
+			document.getElementById("mario").style.visibility='hidden';
 			function activateMario(){
 				marioLoop++;
 				var marioElem = document.getElementById("mario");
 				if (marioLoop==1){
 					charActive=true;
 					marioElem.style.visibility='';
-					marioElem.style.marginLeft='50px';
-					marioElem.src='img/sprites/mario_toss-1.png';
+					marioElem.style.bottom='30px';
+					marioElem.src='img/sprites/mario_drive-1.png';
 				} else if (marioLoop==2){
-					marioElem.src='img/sprites/mario_toss-1.png';
-					marioElem.style.marginLeft='40px';
+					marioElem.src='img/sprites/mario_drive-1.png';
+					marioElem.style.bottom='40px';
 				} else if (marioLoop==3){
-					marioElem.src='img/sprites/mario_toss-1.png';
-					marioElem.style.marginLeft='30px';
+					marioElem.src='img/sprites/mario_drive-1.png';
+					marioElem.style.bottom='50px';
 				} else if (marioLoop==4){
-					marioElem.src='img/sprites/mario_toss-1.png';
-					marioElem.style.marginLeft='20px';
+					marioElem.src='img/sprites/mario_drive-1.png';
+					marioElem.style.bottom='60px';
 				} else if (marioLoop==5){
-					marioElem.src='img/sprites/mario_toss-1.png';
-					marioElem.style.marginLeft='10px';
+					marioElem.src='img/sprites/mario_drive-1.png';
+					marioElem.style.bottom='70px';
 				} else if (marioLoop==6){
-					marioElem.src='img/sprites/mario_toss-1.png';
-					marioElem.style.marginLeft='0px';
+					marioElem.src='img/sprites/mario_drive-2.png';
+					marioElem.style.bottom='80px';
 				} else if (marioLoop==7){
 					marioElem.src='img/sprites/mario_toss-1.png';
 				} else if (marioLoop==8){
@@ -522,15 +522,15 @@
 					car3Boosted=Math.random();
 					car4Boosted=Math.random();
 				} else if (marioLoop==13){
-					marioElem.src='img/sprites/mario_toss-5.png';
+					marioElem.src='img/sprites/mario_toss-5_new.png';
 				} else if (marioLoop==14){
-					marioElem.src='img/sprites/mario_toss-4.png';
+					marioElem.src='img/sprites/mario_toss-4_new.png';
 				} else if (marioLoop==15){
-					marioElem.src='img/sprites/mario_toss-3.png';
+					marioElem.src='img/sprites/mario_toss-3_new.png';
 				} else if (marioLoop==16){
-					marioElem.src='img/sprites/mario_toss-2.png';
+					marioElem.src='img/sprites/mario_toss-2_new.png';
 				} else if (marioLoop==17){
-					marioElem.src='img/sprites/mario_toss-1.png';
+					marioElem.src='img/sprites/mario_toss-1_new.png';
 				} else if (marioLoop==18){
 					marioElem.src='img/sprites/mario_hat-1.png';
 				} else if (marioLoop==19){
@@ -875,7 +875,7 @@
 					} else if (rand<.6){
 						peachID=setInterval(activatePeach, 80);
 					} else {
-						marioID=setInterval(activateMario, 80);
+						marioID=setInterval(activateMario, 100);
 					}
 				}
 				if (!crab1Active&&Math.random()<.001){
@@ -923,6 +923,7 @@
 				var bowserElem = document.getElementById("bowser");
 				if (bowserLoop==1){
 					charActive=true;
+					bowserElem.style.visibility='';
 					bowserElem.style.bottom='750px';
 					bowserElem.src='img/sprites/bowser-falling-1.png';
 				} else if (bowserLoop==2){
@@ -1009,6 +1010,7 @@
 					car4BowserEffect='none';
 					bowserElem.style.visibility='hidden';
 					charActive=false;
+					bowserLoop=0;
 					clearInterval(bowserID);
 				}
 				if (bowserLoop==38){
@@ -1126,6 +1128,17 @@
 						if (car1Location/lapDistance<(car1Lap-1)){
 							car1Lap=car1Lap-1;
 							car1CurVelocity=car1CurVelocity*car1LapEfficiency;
+							if (car1Lap==1){
+								track1.className="tracklap1";
+							} else if (car1Lap==2){
+								track1.className="tracklap2";
+							} else if (car1Lap==3){
+								track1.className="tracklap3";
+							} else if (car1Lap==4){
+								track1.className="tracklap4";
+							} else if (car1Lap==5){
+								track1.className="tracklap5";
+							}
 						} else if (car1Location/lapDistance>car1Lap){
 							car1Lap+=1;
 							car1CurVelocity=car1CurVelocity*car1LapEfficiency;

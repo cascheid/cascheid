@@ -74,7 +74,7 @@
 			document.getElementById("speedDisplay").style.background='linear-gradient(to right, royalblue 0%, royalblue ${raceCar.topSpeed/4}%, lightgreen ${raceCar.topSpeed/4}%, lightgreen ${(raceCar.topSpeed+upgrade.topSpeedMod)/4}%, white ${(raceCar.topSpeed+upgrade.topSpeedMod)/4}%, white 100%)';
 			document.getElementById("accelDisplay").style.background='linear-gradient(to right, royalblue 0%, royalblue ${raceCar.acceleration/.8}%, lightgreen ${raceCar.acceleration/.8}%, lightgreen ${(raceCar.acceleration+upgrade.accelerationMod)/.8}%, white ${(raceCar.acceleration+upgrade.accelerationMod)/.8}%, white 100%)';
 			document.getElementById("relDisplay").style.background='linear-gradient(to right, royalblue 0%, royalblue ${raceCar.reliability*100}%, lightgreen ${raceCar.reliability*100}%, lightgreen ${(raceCar.reliability+upgrade.reliabilityMod)*100}%, white ${(raceCar.reliability+upgrade.reliabilityMod)*100}%, white 100%)';
-			document.getElementById("effDisplay").style.background='linear-gradient(to right, royalblue 0%, royalblue ${raceCar.lapEfficiency*100}%, lightgreen ${raceCar.lapEfficiency*100}%, lightgreen ${(raceCar.lapEfficiency+upgrade.efficiencyMod)*100}%, white ${(raceCar.lapEfficiency+upgrade.efficiencyMod)*100}%, white 100%)';
+			document.getElementById("effDisplay").style.background='linear-gradient(to right, royalblue 0%, royalblue ${raceCar.lapEfficiency*125}%, lightgreen ${raceCar.lapEfficiency*125}%, lightgreen ${(raceCar.lapEfficiency+upgrade.efficiencyMod)*125}%, white ${(raceCar.lapEfficiency+upgrade.efficiencyMod)*125}%, white 100%)';
 		}
 		
 	</script>

@@ -9,7 +9,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <style>
 	select {font-weight: bold; font-size: 22px; float:left}
-	div.inline{float:left; width: 100%; padding-bottom:10px;}
+	div.inline{float:left; width: 100%; padding-bottom:10px; text-align:center;margin:auto}
 	label.large {font-weight: bold; font-size: 22px; float:left; padding-right:10px;}
 </style>
 </head>
@@ -22,10 +22,10 @@
 		<c:forEach items="${racingGame.carList}" var="car" varStatus="status">
 			<c:choose>
 			<c:when test="${car.carID eq selectedGarage}">
-				<option value="${car.carID}" selected="true">Garage ${status.count}</option>
+				<option value="${car.carID}" selected="true">${car.name}</option>
 			</c:when>
 			<c:otherwise>
-				<option value="${car.carID}">Garage ${status.count}</option>
+				<option value="${car.carID}">${car.name}</option>
 			</c:otherwise>
 			</c:choose>
 		</c:forEach>
@@ -39,6 +39,6 @@
 			window.open("garageDisplay?selectedCarID="+newSelectedCarID, "garageDisplay");
 		}
 	</script>
-	<iframe name="garageDisplay" src="garageDisplay?selectedCarID=${selectedCarID}" width="100%" height="750px"></iframe>
+	<iframe name="garageDisplay" src="garageDisplay?selectedCarID=${selectedCarID}" width="100%" height="750px" frameBorder="0"></iframe>
 </body>
 </html>

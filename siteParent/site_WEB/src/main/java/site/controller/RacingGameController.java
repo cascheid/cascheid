@@ -165,7 +165,7 @@ public class RacingGameController {
 			}
 			if (numPurchases>=5){
 				upgrade.setPrice(null);
-				mv = new ModelAndView("upgradeDisplayFrame");//TODO display another frame
+				mv = new ModelAndView("maxUpgradeDisplay");
 			} else {
 				upgrade.setPrice(price);
 				mv = new ModelAndView("upgradeDisplayFrame");
@@ -216,8 +216,8 @@ public class RacingGameController {
 		availableCourses.add("normal");
 		availableCourses.add("CRAZY");
 		List<String> availableTypes = new ArrayList<String>();
-		availableTypes.add("user");
 		availableTypes.add("spectate");
+		availableTypes.add("user");
 		mv.addObject("racingGame", racingGame);
 		mv.addObject("raceInfo", raceInfo);
 		mv.addObject("availableClasses", availableClasses);

@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 <body>
-	<iframe name="centerUpgradeFrame" width="19%" height="750px" src="upgradeStoreFrame"></iframe>
-	<iframe name="rightUpgradeFrame" width="79%" height="750px" src="upgradeDisplayFrame"></iframe>
+	<iframe name="centerUpgradeFrame" width="19%" height="750px" src="upgradeStoreFrame" frameBorder="0"></iframe>
+	<iframe name="rightUpgradeFrame" width="79%" height="750px" src="upgradeDisplayFrame" frameBorder="0"></iframe>
 </body>
 </html>
