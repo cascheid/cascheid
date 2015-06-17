@@ -132,6 +132,7 @@ public class RacingGameController {
 		Long userCarID=RacingGameUtils.saveNewCar(racingGame.getRacingIdentifier(), carID);
 		racingGame.getCarList().get(racingGame.getCarList().size()-1).setUserRacecarID(userCarID);
 		RacingGameUtils.updateRacingGame(racingGame.getRacingIdentifier(), racingGame.getAvailableCash(), racingGame.getRacingClass(), racingGame.getSelectedCar().getCarID());
+		mv.addObject("carModel", raceCar.getModel());
 		return mv;
 	}
 	
@@ -188,7 +189,7 @@ public class RacingGameController {
 		racingGame.setAvailableCash(racingGame.getAvailableCash().subtract(upgrade.getPrice()));
 		racingGame.getSelectedCar().addUpgrade(upgrade);
 		RacingGameUtils.addNewUpgrade(racingGame.getSelectedCar(), upgrade);
-		mv.addObject("selectedCar", racingGame.getSelectedCar());
+		mv.addObject("carModel", racingGame.getSelectedCar().getModel());
 		RacingGameUtils.updateRacingGame(racingGame.getRacingIdentifier(), racingGame.getAvailableCash(), racingGame.getRacingClass(), racingGame.getSelectedCar().getCarID());
 		return mv;
 	}

@@ -5,7 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link href="css/site.css" rel="stylesheet">
-<title>CScheid Home</title>
+<title>CScheid Games</title>
 </head>
 <body>
 	<nav id="nav01">
@@ -15,8 +15,8 @@
 			<li><a href='about'>About</a></li>
 		</ul>
 	</nav>
-  	<div id="main">
-		<a title="Games" href="gamesIndex" target="_self">Games</a>
-	</div>
+	<iframe name="topFrame" width="100%" height="50px" src="topframe?identifier=${identifier}"></iframe>
+	<iframe name="leftFrame" width="20%" height="750px" src="leftframe?identifier=${identifier}"></iframe>
+	<iframe name="displayFrame" width="78%" height="750px" src="displayframe?identifier=${identifier}"></iframe>
 </body>
 </html>

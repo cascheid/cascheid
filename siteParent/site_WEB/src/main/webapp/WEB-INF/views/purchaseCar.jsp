@@ -8,7 +8,7 @@
 </head>
 <body>
 	<h1>Purchase Successful!</h1>
-	<img src="img/cars/${selectedCar.model}" width="400px" height="200px">
+	<img src="img/cars/${carModel}" width="400px" height="200px">
 	<script>window.open('raceMoneyFrame', 'moneyFrame');</script>
 
 

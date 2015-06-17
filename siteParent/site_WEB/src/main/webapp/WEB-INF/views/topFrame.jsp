@@ -6,6 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 <body>
+	<a title="Home" href="index" target="_parent">Home</a>
 	<a title="Racing Game" href="racingparent?identifier=${identifier}" target="displayFrame">Racing Game</a>
 	<a title="Snake Game" href="snakeFrame.jsp" target="displayFrame">Snake Game</a>
 </body>

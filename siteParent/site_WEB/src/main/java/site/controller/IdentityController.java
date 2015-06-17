@@ -17,7 +17,7 @@ import site.identity.IdentityUtils;
 public class IdentityController {
 	Identity identity=null;
 	
-	@RequestMapping("/")
+	@RequestMapping(value={"/", "/index"})
 	public ModelAndView getIndex( @CookieValue(value = "identifier", defaultValue = "0") Long identifier,
             HttpServletResponse response) {
 		ModelAndView mv = new ModelAndView("index");
@@ -32,6 +32,13 @@ public class IdentityController {
 		cookie.setMaxAge(60*60*24*7);
         response.addCookie(cookie);
 		mv.addObject("identifier", identifier);
+		return mv;
+	}
+	
+	@RequestMapping("/gamesIndex")
+	public ModelAndView getGamesIndex() {
+		ModelAndView mv = new ModelAndView("gamesIndex");
+		mv.addObject("identifier", identity.getIdentifier());
 		return mv;
 	}
 	 
