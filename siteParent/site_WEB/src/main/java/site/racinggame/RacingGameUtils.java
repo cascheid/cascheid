@@ -83,10 +83,10 @@ public class RacingGameUtils {
 		return upgradeList;
 	}
 	
-	public static List<Racecar> getSpectateCarsByClass(String racingClass){
+	public static List<Racecar> getSpectateCarsByCarID(Integer carID){
 		List<Racecar> carList = new ArrayList<Racecar>();
 		try{
-			int repCarID=1;
+			/*int repCarID=1;
 			if ("E".equals(racingClass)){
 				repCarID=1;
 			} else if ("D".equals(racingClass)){
@@ -99,10 +99,10 @@ public class RacingGameUtils {
 				repCarID=23;
 			} else if ("S".equals(racingClass)){
 				repCarID=40;
-			}
+			}*/
 			RacingGameDao dao = new RacingGameDaoImpl();
 			Racecar car = null;
-			car= dao.getRacecarByID(repCarID);
+			car= dao.getRacecarByID(carID);
 			carList.add(car);
 			car = new Racecar(car.getCarID(), car.getRacingClass(), car.getTopSpeed(), car.getAcceleration(), car.getReliability(), car.getLapEfficiency(), car.getModel(), car.getPrice(), car.getName());
 			carList.add(car);
@@ -111,7 +111,7 @@ public class RacingGameUtils {
 			car = new Racecar(car.getCarID(), car.getRacingClass(), car.getTopSpeed(), car.getAcceleration(), car.getReliability(), car.getLapEfficiency(), car.getModel(), car.getPrice(), car.getName());
 			carList.add(car);
 		}catch (Exception e){
-			throw new IllegalStateException("Failed to get spectate cars for racing class: " + racingClass,e);
+			throw new IllegalStateException("Failed to get spectate cars for car ID: " + carID,e);
 		}
 		return carList;
 	}

@@ -5,8 +5,10 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -239,16 +241,6 @@ public class RacingGameController {
 		if (raceInfo.getRaceType()==null){
 			raceInfo.setRaceType("spectate");
 		}
-		List<Racecar> opponents;
-		if (raceInfo.getRaceType().equals("user")){
-			LinkedHashMap<String, Integer> feeMap = RacingGameUtils.getFeeMap();
-			racingGame.setAvailableCash(racingGame.getAvailableCash().subtract(new BigDecimal(feeMap.get(raceInfo.getRacingClass()))));
-			mv = new ModelAndView("userRaceFrame");
-			opponents = RacingGameUtils.getRandomOpponentsByClass(raceInfo.getRacingClass());
-		} else {
-			mv = new ModelAndView("spectateRaceFrame");
-			opponents = RacingGameUtils.getSpectateCarsByClass(raceInfo.getRacingClass());
-		}
 		racingGame.setSelectedClass(raceInfo.getRacingClass());
 		if (raceInfo.getCarID()!=racingGame.getSelectedCar().getCarID()){
 			for (UserRacecar car : racingGame.getCarList()){
@@ -257,6 +249,16 @@ public class RacingGameController {
 					break;
 				}
 			}
+		}
+		Set<Racecar> opponents;
+		if (raceInfo.getRaceType().equals("user")){
+			LinkedHashMap<String, Integer> feeMap = RacingGameUtils.getFeeMap();
+			racingGame.setAvailableCash(racingGame.getAvailableCash().subtract(new BigDecimal(feeMap.get(raceInfo.getRacingClass()))));
+			mv = new ModelAndView("userRaceFrame");
+			opponents = new HashSet<Racecar>(RacingGameUtils.getRandomOpponentsByClass(raceInfo.getRacingClass()));
+		} else {
+			mv = new ModelAndView("spectateRaceFrame");
+			opponents = new HashSet<Racecar>(RacingGameUtils.getSpectateCarsByCarID(racingGame.getSelectedCar().getCarID()));
 		}
 		raceInfo.setLapDistance(RacingGameUtils.getLapDistanceByClass(raceInfo.getRacingClass()));
 		raceInfo.setNoLaps(RacingGameUtils.getNumberOfLapsByClass(raceInfo.getRacingClass()));

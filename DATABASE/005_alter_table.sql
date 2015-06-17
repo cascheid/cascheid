@@ -1,0 +1,1 @@
+alter table racing_game add column CAR_ID INT NOT NULL DEFAULT 1;

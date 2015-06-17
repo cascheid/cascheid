@@ -1,6 +1,7 @@
 package site.racinggame;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +65,7 @@ public class UserRacecar extends Racecar implements java.io.Serializable{
 	
 	@Override
 	public BigDecimal getReliability(){
-		BigDecimal dReturn = super.getReliability();
+		BigDecimal dReturn = super.getReliability().setScale(2, RoundingMode.HALF_UP);
 		for (Upgrade upgrade : upgradeList){
 			if (upgrade.getReliabilityMod()!=null){
 				dReturn=dReturn.add(upgrade.getReliabilityMod());
@@ -75,13 +76,13 @@ public class UserRacecar extends Racecar implements java.io.Serializable{
 	
 	@Override
 	public BigDecimal getLapEfficiency(){
-		BigDecimal dReturn = super.getLapEfficiency();
+		BigDecimal dReturn = super.getLapEfficiency().setScale(2, RoundingMode.HALF_UP);
 		for (Upgrade upgrade : upgradeList){
 			if (upgrade.getEfficiencyMod()!=null){
 				dReturn=dReturn.add(upgrade.getEfficiencyMod());
 			}
 		}
-		BigDecimal maxVal=new BigDecimal(.8);
+		BigDecimal maxVal=new BigDecimal(.8).setScale(2, RoundingMode.HALF_UP);
 		return dReturn.compareTo(maxVal)>0?maxVal:dReturn;
 	}
 	
