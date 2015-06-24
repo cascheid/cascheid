@@ -28,4 +28,9 @@ public class IdentityUtils {
 		IdentityDao dao = new IdentityDaoImpl();
 		dao.deleteRacingGame(identifier);
 	}
+	
+	public static void updateSnakeScore(Long identifier, Integer snakeScore){
+		IdentityDao dao = new IdentityDaoImpl();
+		dao.updateSnakeScore(identifier, snakeScore);
+	}
 }

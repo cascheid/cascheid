@@ -24,7 +24,10 @@ public class IdentityDaoImpl extends ParentDao implements IdentityDao{
 			@Override
 			public Identity mapRow(ResultSet rs, int rowNum)
 					throws SQLException {
-				Identity identity=new Identity(rs.getLong("IDENTIFIER"), rs.getLong("RACING_IDENTIFIER"));
+				Identity identity=new Identity();
+				identity.setIdentifier(rs.getLong("IDENTIFIER"));
+				identity.setRacingGameIdentifier(rs.getLong("RACING_IDENTIFIER"));
+				identity.setSnakeScore(rs.getInt("SNAKE_SCORE"));
 				return identity;
 			}
 				
@@ -66,5 +69,11 @@ public class IdentityDaoImpl extends ParentDao implements IdentityDao{
 			jdbcTemplate.update("DELETE FROM USER_RACECARS WHERE RACING_IDENTIFIER=?", new Object[]{racingIdentifier});
 			jdbcTemplate.update("UPDATE IDENTITY SET RACING_IDENTIFIER=NULL WHERE IDENTIFIER=?", new Object[]{identifier});
 		}
+	}
+	public void updateSnakeScore(Long identifier, Integer snakeScore){
+		if (jdbcTemplate==null){
+			setDataSource(getDataSource());
+		}
+		jdbcTemplate.update("UPDATE IDENTITY SET SNAKE_SCORE=? WHERE IDENTIFIER=?", new Object[]{snakeScore, identifier});
 	}
 }

@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import site.identity.Identity;
@@ -35,6 +36,12 @@ public class IdentityController {
 		return mv;
 	}
 	
+	@RequestMapping("/about")
+	public ModelAndView getAboutPage() {
+		ModelAndView mv = new ModelAndView("about");
+		return mv;
+	}
+	
 	@RequestMapping("/gamesIndex")
 	public ModelAndView getGamesIndex() {
 		ModelAndView mv = new ModelAndView("gamesIndex");
@@ -58,6 +65,26 @@ public class IdentityController {
 	@RequestMapping("/displayframe")
 	public ModelAndView showDisplayFrame() {
 		ModelAndView mv = new ModelAndView("displayFrame");
+		return mv;
+	}
+	
+	@RequestMapping("/snakeFrame")
+	public ModelAndView showSnakeFrame() {
+		ModelAndView mv = new ModelAndView("snakeFrame");
+		mv.addObject("highScore", identity.getSnakeScore()==null?0:identity.getSnakeScore());
+		return mv;
+	}
+	
+	@RequestMapping("/snakeResult")
+	public ModelAndView showSnakeResult(
+			@RequestParam(value = "score", required = true, defaultValue="0") Integer score) {
+		ModelAndView mv = new ModelAndView("snakeResult");
+		mv.addObject("lastHighScore", identity.getSnakeScore());
+		mv.addObject("score", score);
+		if (identity.getSnakeScore()==null||score>identity.getSnakeScore()){
+			identity.setSnakeScore(score);
+			IdentityUtils.updateSnakeScore(identity.getIdentifier(), score);
+		}
 		return mv;
 	}
 	
