@@ -26,7 +26,7 @@
     margin: 0px;
     padding: 0px;
     position: absolute;
-    width:400px;
+    width:600px;
     height:400px;
     z-index:1;
 }
@@ -47,7 +47,7 @@
     position: absolute;
     background-color: lightblue;
     border: 0px solid black;
-    width:400px;
+    width:600px;
     height:400px;
     margin:auto;
 }
@@ -63,7 +63,7 @@
 	<div id="snakeContainer">
 		<div id="firstblock" class="block"></div>
 		<div id="firstfood" class="block"></div>
-		<img id="background" class="backgroundPicture" src='img/misc/Universe_Jungle.png'>
+		<img id="background" class="backgroundPicture" src='img/snake/bvi.jpg'>
 		<div id="blank1" class="blankDiv"></div>
 		<div id="blank2" class="blankDiv"></div>
 		<div id="blank3" class="blankDiv"></div>
@@ -80,6 +80,14 @@
 		<div id="blank14" class="blankDiv"></div>
 		<div id="blank15" class="blankDiv"></div>
 		<div id="blank16" class="blankDiv"></div>
+		<div id="blank17" class="blankDiv"></div>
+		<div id="blank18" class="blankDiv"></div>
+		<div id="blank19" class="blankDiv"></div>
+		<div id="blank20" class="blankDiv"></div>
+		<div id="blank21" class="blankDiv"></div>
+		<div id="blank22" class="blankDiv"></div>
+		<div id="blank23" class="blankDiv"></div>
+		<div id="blank24" class="blankDiv"></div>
 	</div>
 	</div>
 	<script>
@@ -143,11 +151,21 @@
 		var range14=['100px', '300px'];
 		var range15=['200px', '300px'];
 		var range16=['300px', '300px'];
+		var range17=['400px', '0px'];
+		var range18=['400px', '100px'];
+		var range19=['400px', '200px'];
+		var range20=['400px', '300px'];
+		var range21=['500px', '0px'];
+		var range22=['500px', '100px'];
+		var range23=['500px', '200px'];
+		var range24=['500px', '300px'];
+
+		var pictureList=['barcelona.jpg', 'bvi.jpg', 'cabo_san_lucas.jpg', 'cancun.jpg', 'chichen_itza.jpg', 'disney_world.jpg', 'naxos.jpg', 'rome.jpg', 'valencia.jpg', 'venice.jpg', 'victoria_falls.jpg'];
 
 		function resetImage(){
 			imageCounter=0;
-			var myArray=[range1, range2, range3, range4, range5, range6, range7, range8, range9, range10, range11, range12, range13, range14, range15, range16];
-			for (var i=1; i<=16; i++){
+			var myArray=[range1, range2, range3, range4, range5, range6, range7, range8, range9, range10, range11, range12, range13, range14, range15, range16, range17, range18, range19, range20, range21, range22, range23, range24];
+			for (var i=1; i<=24; i++){
 				var index=Math.floor(Math.random()*myArray.length);
 				var randRange=myArray[index];
 				myArray.splice(index, 1);
@@ -155,6 +173,7 @@
 				document.getElementById("blank"+i).style.top=randRange[1];
 				document.getElementById("blank"+i).style.visibility='';
 			}
+			document.getElementById('background').src='img/snake/'+pictureList[Math.floor(Math.random()*pictureList.length)];
 		}
 		resetImage();
 		
@@ -221,7 +240,7 @@
 					eatFood();
 					return;
 				}
-				if (newLeft>384){
+				if (newLeft>584){
 					endGame();
 					return;
 				}
@@ -241,7 +260,7 @@
 					eatFood();
 					return;
 				}
-				if (newTop>384){
+				if (newTop>584){
 					endGame();
 					return;
 				}
