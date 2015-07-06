@@ -20,7 +20,7 @@
 			left:0;
 		}
 		
-		#fish{
+		.fish{
 			position:fixed;
 			top:900px;
 			left:500px;
@@ -28,10 +28,19 @@
 		
 		div.master{
 			position:relative;
+			z-index:3;
+		}
+		
+		#top{
+			position:fixed;
+			top:0px;
+			left:0px;
 			z-index:2;
 		}
 	</style>
 <title>CScheid Home</title>
+<script src="js/smoke.js"></script>
+<!--  --><script src="js/rain.js"></script>
 </head>
 <body>
 	<canvas id="bodyCanvas"></canvas>
@@ -39,13 +48,18 @@
 	var runInterval;
 	var fishInterval;
 	var waterfallInterval;
-	var fishLeft=500;
-	var fishTop=850;
-	var goingRight=true;
-	var fishDirection='straight';
+	var fish1Left=500;
+	var fish1Top=850;
+	var fish2Left=1000;
+	var fish2Top=880;
+	var goingRight1=true;
+	var goingRight2=false;
+	var fish1Direction='straight';
+	var fish2Direction='straight';
 	var ratio=1;
 	var canvas;
 	var ctx;
+	var bAnim=true;
 	function waterRipple() {
 	    canvas = document.getElementById('bodyCanvas');
 	    ctx = canvas.getContext('2d');
@@ -73,13 +87,15 @@
 	    canvas.style.top = '0px';
 
 	    var img = new Image();
-		img.src='img/misc/timon.jpg';
-	    var fullWidth=img.width;
-	    var fullHeight=img.height;
+		img.src='img/misc/bottom.jpg';
+	    var fullWidth=1828;
+	    var fullHeight=1080;
 	    ratio = width/fullWidth;
 	    var displayedHeight = (height/ratio)/fullHeight;
-	    var offsetHeight = fullHeight*(1-displayedHeight)*ratio;
-		ctx.drawImage(img, 0, 0, img.width, img.height*displayedHeight, 0, 0, width, height);
+	    
+	    document.getElementById('top').style.width=width+'px';
+	    document.getElementById('top').style.height=height/displayedHeight+'px';
+		ctx.drawImage(img, 0, 0, fullWidth, fullHeight*displayedHeight, 0, 0, width, height);
 	    texture = ctx.getImageData(0, 0, width, height);
 	    ripple = ctx.getImageData(0, 0, width, height);
 	    
@@ -90,9 +106,13 @@
 	    /**
 	     * Main loop
 	     */
+	    var loopCounter=0;
 	    function run() {
 	        newframe();
 	        ctx.putImageData(ripple, 0, 0);
+        	drawRain();
+		    updateMist();
+	        drawMist();
 	    }
 	    
 	    /**
@@ -175,53 +195,55 @@
 	        }
 	    }
 	    
-	    /*canvas.onmousemove = function(evt) {
-		    var dx=evt.offsetX || evt.layerX;
-		    var dy=evt.offsetY || evt.layerY;
-	        disturb(evt.offsetX || evt.layerX, evt.offsetY || evt.layerY);
-	    };*/
-	    
-	    runInterval=setInterval(run, delay);
-		var waterfallLoop=0;
-	    function animateWaterfalls(){
-		    for (var x=Math.round(1309*ratio); x<1343; x=x+5*ratio){
-				disturb(x, 110+Math.round(waterfallLoop*20*ratio));
-			}
-		    waterfallLoop++;
-		    if (waterfallLoop>21){
-			    waterfallLoop=0;
-			}
-            /*if (y>=Math.round(110*ratio)&&y<=Math.round(333*ratio)&&x>1309*ratio&&x<1343*ratio){
-                if (y=Math.round(110*ratio)){
-	                _rd[i*4] = _td[(x + (Math.round(333*ratio) * _width)) * 4];
-	            } else {
-                	_rd[i*4] = _td[i*4-_width];
-	            }
-            }*/
-		}
+	    runInterval=setInterval(run, 50);
 
-		//waterfallInterval=setInterval(animateWaterfalls, 200);
-	    /*// generate random ripples
-	    var rnd = Math.random;
-	    setInterval(function() {
-	        disturb(rnd() * width, rnd() * height);
-	    }, 700);*/
-
-		var fishElem=document.getElementById('fish');
-		fishLeft=fishLeft*ratio;
-		fishTop=fishTop*ratio;
-		fishElem.style.width=24*ratio;
-		fishElem.style.height=17*ratio;
-		fishElem.style.left=fishLeft+'px';
-		fishElem.style.top=fishTop+'px';
-		var topBorder=850*ratio;
-		var bottomBorder=1030*ratio;
-		var leftBorder=400*ratio;
+		var fish1Elem=document.getElementById('fish1');
+		var fish2Elem=document.getElementById('fish2');
+		fish1Left=fish1Left*ratio;
+		fish1Top=fish1Top*ratio;
+		fish1Elem.width=40*ratio;
+		fish1Elem.height=20*ratio;
+		fish1Elem.style.left=fish1Left+'px';
+		fish1Elem.style.top=fish1Top+'px';
+		fish2Left=fish2Left*ratio;
+		fish2Top=fish2Top*ratio;
+		fish2Elem.width=50*ratio;
+		fish2Elem.height=25*ratio;
+		fish2Elem.style.left=fish2Left+'px';
+		fish2Elem.style.top=fish2Top+'px';
+		fish2Elem.style.webkitTransform='rotate(180deg)';
+		fish2Elem.style.MozTransform='rotate(180deg)';
+		fish2Elem.style.transform='rotate(180deg)';
+		var topBorder=820*ratio;
+		var bottomBorder=930*ratio;
+		var leftBorder=100*ratio;
 		var rightBorder=1750*ratio;
-		function animateFish(){
-			var mv=5*(Math.random()/2);
+		function animateAllFish(){
+			animateFish(1);
+			animateFish(2);
+		}
+		function animateFish(num){
+			var fishElem;
+			var fishLeft;
+			var fishTop;
+			var fishDirection;
+			var goingRight;
+			if (num==1){
+				fishElem=fish1Elem;
+				fishLeft=fish1Left;
+				fishTop=fish1Top;
+				fishDirection=fish1Direction;
+				goingRight=goingRight1;
+			} else {
+				fishElem=fish2Elem;
+				fishLeft=fish2Left;
+				fishTop=fish2Top;
+				fishDirection=fish2Direction;
+				goingRight=goingRight2;
+			}
+			var mv=5*(Math.random()/num);
 			var rand=Math.random();
-			if (rand<.004){
+			if (rand<.01){
 				fishDirection='straight';
 				var rotate;
 				if (goingRight){
@@ -232,7 +254,7 @@
 				fishElem.style.webkitTransform=rotate;
 				fishElem.style.MozTransform=rotate;
 				fishElem.style.transform=rotate;
-			} else if (rand<.007&&fishTop<(bottomBorder-50*ratio)){
+			} else if (rand<.02&&fishTop<(bottomBorder-50*ratio)){
 				fishDirection='down';
 				var rotate;
 				if (goingRight){
@@ -243,7 +265,7 @@
 				fishElem.style.webkitTransform=rotate;
 				fishElem.style.MozTransform=rotate;
 				fishElem.style.transform=rotate;
-			} else if (rand<.01&&fishTop>(topBorder+50*ratio)){
+			} else if (rand<.03&&fishTop>(topBorder+50*ratio)){
 				fishDirection='up';
 				var rotate;
 				if (goingRight){
@@ -261,12 +283,20 @@
 					fishTop=fishTop-mv*ratio*.7;
 					if (fishTop<topBorder){
 						fishDirection='down';
+						rotate='rotate(45deg)';
+						fishElem.style.webkitTransform=rotate;
+						fishElem.style.MozTransform=rotate;
+						fishElem.style.transform=rotate;
 					}
 				} else if (fishDirection=='down'){
 					fishLeft=fishLeft+mv*ratio*.7;
 					fishTop=fishTop+mv*ratio*.7;
 					if (fishTop>bottomBorder){
 						fishDirection='up';
+						rotate='rotate(315deg)';
+						fishElem.style.webkitTransform=rotate;
+						fishElem.style.MozTransform=rotate;
+						fishElem.style.transform=rotate;
 					}
 				} else {
 					fishLeft=fishLeft+mv*ratio;
@@ -291,12 +321,20 @@
 					fishTop=fishTop-mv*ratio*.7;
 					if (fishTop<topBorder){
 						fishDirection='down';
+						rotate='rotate(135deg)';
+						fishElem.style.webkitTransform=rotate;
+						fishElem.style.MozTransform=rotate;
+						fishElem.style.transform=rotate;
 					}
 				} else if (fishDirection=='down'){
 					fishLeft=fishLeft-mv*ratio*.7;
 					fishTop=fishTop+mv*ratio*.7;
 					if (fishTop>bottomBorder){
 						fishDirection='up';
+						rotate='rotate(225deg)';
+						fishElem.style.webkitTransform=rotate;
+						fishElem.style.MozTransform=rotate;
+						fishElem.style.transform=rotate;
 					}
 				} else {
 					fishLeft=fishLeft-mv*ratio;
@@ -319,51 +357,58 @@
 			fishElem.style.left=fishLeft+'px';
 			fishElem.style.top=fishTop+'px';
 			disturb(fishLeft+12*ratio, fishTop+9*ratio);
+			if (num==1){
+				fish1Left=fishLeft;
+				fish1Top=fishTop;
+				fish1Direction=fishDirection;
+				goingRight1=goingRight;
+			} else {
+				fish2Left=fishLeft;
+				fish2Top=fishTop;
+				fish2Direction=fishDirection;
+				goingRight2=goingRight;
+			}
 		}
 
-		fishInterval=setInterval(animateFish, 20);
-	    
+		fishInterval=setInterval(animateAllFish, 20);
+
+		initMist(512*ratio, 1532*ratio, 728*ratio, 760*ratio, 55*ratio, 250);
+		initRain(300*ratio, 1800*ratio, 0*ratio, 720*ratio, 2000, 2*ratio);
 	}
 
     function onResize(){
-	    clearInterval(fishInterval);
-	    clearInterval(runInterval);
-	    //clearInterval(waterfallInterval);
-	    fishLeft=fishLeft/ratio;
-	    fishTop=fishTop/ratio;
-	    /*var oldRatio=ratio;
-    	width = window.innerWidth;
-        height = window.innerHeight;
-	    canvas.width = width;
-	    canvas.height = height;
-	    ratio = width/fullWidth;
-		//ctx.drawImage(img, 0, 0, img.width, img.height*displayedHeight, 0, 0, width, height);
-	    texture = ctx.getImageData(0, 0, width, height);
-	    ripple = ctx.getImageData(0, 0, width, height);
-		fishLeft=fishLeft*ratio/oldRatio;
-		fishTop=fishTop*ratio/oldRatio;
-		//fishElem.style.width=24*ratio;
-		//fishElem.style.height=17*ratio;
-		fishElem.style.left=fishLeft+'px';
-		fishElem.style.top=fishTop+'px';
-		topBorder=850*ratio;
-		bottomBorder=1030*ratio;
-		leftBorder=400*ratio;
-		rightBorder=1750*ratio;
-		ripplemap = [];
-        last_map = [];*/
+        if (bAnim){
+	    	clearInterval(fishInterval);
+	    	clearInterval(runInterval);
+	    	fish1Left=fish1Left/ratio;
+	    	fish1Top=fish1Top/ratio;
 	    
-	    /*for (var i = 0; i < size; i++) {
-	        last_map[i] = ripplemap[i] = 0;
-	    }*/
-	    //runInterval=setInterval(run, delay);
-		//fishInterval=setInterval(animateFish, 10);
-	    waterRipple();
-	    //var newimg=new Image();
-	    //newimg.src=canvas.toDataURL();
-	    //processImage(newimg);
-	    //animate();
+	    	waterRipple();
+        }
 	 }
+
+	 function toggleAnim(){
+		if (bAnim){
+			bAnim=false;
+			clearInterval(fishInterval);
+	    	clearInterval(runInterval);
+	    	document.getElementById('bodyCanvas').style.visibility='hidden';
+	    	document.getElementById('fish1').style.visibility='hidden';
+	    	document.getElementById('fish2').style.visibility='hidden';
+	    	document.getElementById('btnAnim').innerHTML='Animations Off';
+		} else {
+			bAnim=true;
+	    	document.getElementById('bodyCanvas').style.visibility='';
+	    	document.getElementById('fish1').style.visibility='';
+	    	document.getElementById('fish2').style.visibility='';
+	    	document.getElementById('btnAnim').innerHTML='Animations On';
+			onResize();
+		}
+	 }
+
+     window.onload = function() {
+       waterRipple();
+     };
 
 	 window.addEventListener('resize', onResize, false);
 
@@ -377,12 +422,13 @@
 		</ul>
 	</nav>
   	<div id="main">
-  		<button onclick="onResize()">Animate</button>
+  		<button id='btnAnim' onclick="toggleAnim()">Animations On</button>
 		<h1>Welcome to my site!</h1>
 	</div>
 	</div>
-	<img id="fish" src="img/sprites/crab-1.png">
-	<script>waterRipple()</script>
+	<img id="fish1" class="fish" src="img/sprites/fish.png">
+	<img id="fish2" class="fish" src="img/sprites/fish.png">
+	<img id="top" src="img/misc/top.png">
 	
 </body>
 </html>

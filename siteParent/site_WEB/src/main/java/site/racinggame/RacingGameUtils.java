@@ -11,11 +11,11 @@ import site.dao.RacingGameDaoImpl;
 
 public class RacingGameUtils {
 	
-	private static int classEPrize = 500;
-	private static int classDPrize = 1500;
-	private static int classCPrize = 5000;
-	private static int classBPrize = 10000;
-	private static int classAPrize = 25000;
+	private static int classEPrize = 1500;
+	private static int classDPrize = 4500;
+	private static int classCPrize = 9000;
+	private static int classBPrize = 15000;
+	private static int classAPrize = 30000;
 	private static int classSPrize = 100000;
 	
 	public static RacingGame getRacingGameObject(Long racingGameIdentifier, Long identifier){

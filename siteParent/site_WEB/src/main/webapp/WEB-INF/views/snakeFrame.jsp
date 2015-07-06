@@ -180,7 +180,7 @@
 		function eatFood(){
 			score++;
 			imageCounter++;
-			if (imageCounter<=16){
+			if (imageCounter<=24){
 				document.getElementById("blank"+imageCounter).style.visibility='hidden';
 			} else if (imageCounter==25){
 				resetImage();
@@ -260,7 +260,7 @@
 					eatFood();
 					return;
 				}
-				if (newTop>584){
+				if (newTop>384){
 					endGame();
 					return;
 				}

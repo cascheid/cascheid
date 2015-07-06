@@ -2,7 +2,7 @@
 var particles = [];
 
 // The amount of particles to render
-var particleCount = 40;
+var particleCount;
 
 // The maximum velocity in each direction
 var maxVelocity = 2;
@@ -11,24 +11,14 @@ var maxVelocity = 2;
 var targetFPS = 40;
 
 // Set the dimensions of the canvas as variables so they can be used.
-var canvasWidth = 50;
-var canvasHeight = 50;
+var canvasWidth;
+var canvasHeight;
+var leftBound;
+var rightBound;
+var topBound;
+var bottomBound;
+var size;
 
-// Create an image object (only need one instance)
-var imageObj = new Image();
-var mainImg = new Image();
-
-// Once the image has been downloaded then set the image on all of the particles
-imageObj.onload = function() {
-    particles.forEach(function(particle) {
-            particle.setImage(imageObj);
-    });
-};
-
-// Once the callback is arranged then set the source of the image
-imageObj.src = "http://www.blog.jonnycornwell.com/wp-content/uploads/2012/07/Smoke10.png";
-imageObj.style.width='50px';
-imageObj.style.height='50px';
 
 // A function to create a particle object.
 function Particle(context) {
@@ -51,16 +41,17 @@ function Particle(context) {
     this.draw = function() {
         // If an image is set draw it
         if(this.image){
-            this.context.drawImage(this.image, 200+this.x-128, 200+this.y-128, 100, 100);         
+            //this.context.drawImage(this.image, leftBound+this.x-128, topBound+this.y-128, 35, 35);  
+            this.context.drawImage(this.image, leftBound+this.x, topBound+this.y, size, size);         
             // If the image is being rendered do not draw the circle so break out of the draw function                
             return;
         }
         // Draw the circle as before, with the addition of using the position and the radius from this object.
-        this.context.beginPath();
+        /*this.context.beginPath();
         this.context.arc(this.x, this.y, this.radius, 0, 2 * Math.PI, false);
         this.context.fillStyle = "rgba(0, 255, 255, 1)";
         this.context.fill();
-        this.context.closePath();
+        this.context.closePath();*/
     };
 
     // Update the particle.
@@ -119,17 +110,27 @@ function generateRandom(min, max){
 var context;
 
 // Initialise the scene and set the context if possible
-function init() {
-    var canvas = document.getElementById('myCanvas');
+function initMist(left, right, top, bottom, imgsize, count) {
+    var canvas = document.getElementById('bodyCanvas');
     if (canvas.getContext) {
+    	leftBound=left;
+    	rightBound=right;
+    	topBound=top;
+    	bottomBound=bottom;
+    	size=imgsize;
+    	canvasWidth=rightBound-leftBound;
+    	canvasHeight=bottomBound-topBound;
 
         // Set the context variable so it can be re-used
         context = canvas.getContext('2d');
-        mainImg.src='http://thelionkingvideos.weebly.com/uploads/4/6/7/1/4671811/4045903_orig.jpg';
-        mainImg.style.height='400px';
-		context.drawImage(mainImg, 0, 0, mainImg.width, mainImg.height, 0, 0, 400, 400 );
+        //mainImg.src='http://thelionkingvideos.weebly.com/uploads/4/6/7/1/4671811/4045903_orig.jpg';
+        //mainImg.style.height='400px';
+		//context.drawImage(mainImg, 0, 0, mainImg.width, mainImg.height, 0, 0, 400, 400 );
 
         // Create the particles and set their initial positions and velocities
+        particles = [];
+        maxVelocity=imgsize/18;
+        particleCount=count;
         for(var i=0; i < particleCount; ++i){
             var particle = new Particle(context);
             
@@ -140,6 +141,27 @@ function init() {
             particle.setVelocity(generateRandom(-maxVelocity, maxVelocity), generateRandom(-maxVelocity, maxVelocity));
             particles.push(particle);            
         }
+
+        
+        // Create an image object (only need one instance)
+        var imageObj = new Image();
+
+        // Once the image has been downloaded then set the image on all of the particles
+        imageObj.onload = function() {
+            particles.forEach(function(particle) {
+                    particle.setImage(imageObj);
+            });
+        };
+
+        // Once the callback is arranged then set the source of the image
+        imageObj.src = "img/misc/mist.png";
+        /*setInterval(function() {
+            // Update the scene befoe drawing
+            update();
+            // Draw the scene
+
+            draw();
+        }, 1000 / targetFPS);*/
     }
     else {
         alert("Please use a modern browser");
@@ -147,35 +169,24 @@ function init() {
 }
 
 // The function to draw the scene
-function draw() {
+function drawMist() {
     // Clear the drawing surface and fill it with a black background
     //context.fillStyle = "rgba(0, 0, 0, 0.5)";
     //context.fillRect(0, 0, 400, 400);
 
     // Go through all of the particles and draw them.           
-    context.drawImage(mainImg, 0, 0, mainImg.width, mainImg.height, 0, 0, 400, 400 );
+    //context.drawImage(mainImg, 0, 0, mainImg.width, mainImg.height, 0, 0, 400, 400 );
     particles.forEach(function(particle) {
         particle.draw();
     });
 }
 
 // Update the scene
-function update() {
+function updateMist() {
     particles.forEach(function(particle) {
         particle.update();
     });
 }
 
 // Initialize the scene
-init();
-
-// If the context is set then we can draw the scene (if not then the browser does not support canvas)
-if (context) {
-    setInterval(function() {
-        // Update the scene befoe drawing
-        update();
-        // Draw the scene
-
-        draw();
-    }, 1000 / targetFPS);
-}
+//init();
