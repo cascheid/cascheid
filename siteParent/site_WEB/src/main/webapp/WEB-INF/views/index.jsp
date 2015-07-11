@@ -59,7 +59,9 @@
 	var ratio=1;
 	var canvas;
 	var ctx;
-	var bAnim=true;
+	var bAnim=false;
+    var canvasimg = new Image();
+	canvasimg.src='img/misc/bottom.jpg';
 	function waterRipple() {
 	    canvas = document.getElementById('bodyCanvas');
 	    ctx = canvas.getContext('2d');
@@ -86,8 +88,6 @@
 	    canvas.style.left ='0px';
 	    canvas.style.top = '0px';
 
-	    var img = new Image();
-		img.src='img/misc/bottom.jpg';
 	    var fullWidth=1828;
 	    var fullHeight=1080;
 	    ratio = width/fullWidth;
@@ -95,7 +95,7 @@
 	    
 	    document.getElementById('top').style.width=width+'px';
 	    document.getElementById('top').style.height=height/displayedHeight+'px';
-		ctx.drawImage(img, 0, 0, fullWidth, fullHeight*displayedHeight, 0, 0, width, height);
+		ctx.drawImage(canvasimg, 0, 0, fullWidth, fullHeight*displayedHeight, 0, 0, width, height);
 	    texture = ctx.getImageData(0, 0, width, height);
 	    ripple = ctx.getImageData(0, 0, width, height);
 	    
@@ -182,7 +182,7 @@
 	    
 	                    new_pixel = (a + (b * _width)) * 4;
 	                    cur_pixel = i * 4;
-	                    if (a<(320*ratio)||b<(800*ratio)){
+	                    if (a<(100*ratio)||b<(800*ratio)){
 		                    new_pixel=cur_pixel;
 		                }
 	                    _rd[cur_pixel] = _td[new_pixel];
@@ -195,7 +195,7 @@
 	        }
 	    }
 	    
-	    runInterval=setInterval(run, 50);
+	    runInterval=setInterval(run, 20);
 
 		var fish1Elem=document.getElementById('fish1');
 		var fish2Elem=document.getElementById('fish2');
@@ -218,7 +218,9 @@
 		var bottomBorder=930*ratio;
 		var leftBorder=100*ratio;
 		var rightBorder=1750*ratio;
+		//var fishCounter=0;
 		function animateAllFish(){
+			//fishCounter++;
 			animateFish(1);
 			animateFish(2);
 		}
@@ -241,7 +243,8 @@
 				fishDirection=fish2Direction;
 				goingRight=goingRight2;
 			}
-			var mv=5*(Math.random()/num);
+			//var mv=20*(Math.random()/(4*num));
+			var mv=4*ratio/num;
 			var rand=Math.random();
 			if (rand<.01){
 				fishDirection='straight';
@@ -260,7 +263,7 @@
 				if (goingRight){
 					rotate='rotate(45deg)';
 				} else {
-					rotate='rotate(135deg)';
+					rotate='rotate(140deg)';
 				}
 				fishElem.style.webkitTransform=rotate;
 				fishElem.style.MozTransform=rotate;
@@ -271,16 +274,17 @@
 				if (goingRight){
 					rotate='rotate(315deg)';
 				} else {
-					rotate='rotate(225deg)';
+					rotate='rotate(215deg)';
 				}
 				fishElem.style.webkitTransform=rotate;
 				fishElem.style.MozTransform=rotate;
 				fishElem.style.transform=rotate;
 			}
+			
 			if (goingRight){
 				if (fishDirection=='up'){
-					fishLeft=fishLeft+mv*ratio*.7;//roughly sqrt(2)
-					fishTop=fishTop-mv*ratio*.7;
+					fishLeft=fishLeft+mv*.7;//roughly sqrt(2)
+					fishTop=fishTop-mv*.7;
 					if (fishTop<topBorder){
 						fishDirection='down';
 						rotate='rotate(45deg)';
@@ -289,8 +293,8 @@
 						fishElem.style.transform=rotate;
 					}
 				} else if (fishDirection=='down'){
-					fishLeft=fishLeft+mv*ratio*.7;
-					fishTop=fishTop+mv*ratio*.7;
+					fishLeft=fishLeft+mv*.7;
+					fishTop=fishTop+mv*.7;
 					if (fishTop>bottomBorder){
 						fishDirection='up';
 						rotate='rotate(315deg)';
@@ -299,15 +303,15 @@
 						fishElem.style.transform=rotate;
 					}
 				} else {
-					fishLeft=fishLeft+mv*ratio;
+					fishLeft=fishLeft+mv;
 				}
 				if (fishLeft>rightBorder){
 					goingRight=false;
 					var rotate;
 					if (fishDirection=='up'){
-						rotate='rotate(225deg)';
+						rotate='rotate(215deg)';
 					} else if (fishDirection=='down'){
-						rotate='rotate(135deg)';
+						rotate='rotate(140deg)';
 					} else {
 						rotate='rotate(180deg)';
 					}
@@ -317,29 +321,28 @@
 				}
 			} else {
 				if (fishDirection=='up'){
-					fishLeft=fishLeft-mv*ratio*.7;//roughly sqrt(2)
-					fishTop=fishTop-mv*ratio*.7;
+					fishLeft=fishLeft-mv*.7;//roughly sqrt(2)
+					fishTop=fishTop-mv*.7;
 					if (fishTop<topBorder){
 						fishDirection='down';
-						rotate='rotate(135deg)';
+						rotate='rotate(140deg)';
 						fishElem.style.webkitTransform=rotate;
 						fishElem.style.MozTransform=rotate;
 						fishElem.style.transform=rotate;
 					}
 				} else if (fishDirection=='down'){
-					fishLeft=fishLeft-mv*ratio*.7;
-					fishTop=fishTop+mv*ratio*.7;
+					fishLeft=fishLeft-mv*.7;
+					fishTop=fishTop+mv*.7;
 					if (fishTop>bottomBorder){
 						fishDirection='up';
-						rotate='rotate(225deg)';
+						rotate='rotate(215deg)';
 						fishElem.style.webkitTransform=rotate;
 						fishElem.style.MozTransform=rotate;
 						fishElem.style.transform=rotate;
 					}
 				} else {
-					fishLeft=fishLeft-mv*ratio;
+					fishLeft=fishLeft-mv;
 				}
-				fishLeft=fishLeft-mv*ratio;
 				if (fishLeft<leftBorder){
 					goingRight=true;
 					if (fishDirection=='up'){
@@ -356,7 +359,12 @@
 			}
 			fishElem.style.left=fishLeft+'px';
 			fishElem.style.top=fishTop+'px';
-			disturb(fishLeft+12*ratio, fishTop+9*ratio);
+			//if (fishCounter==2){
+				disturb(fishLeft+12*ratio, fishTop+9*ratio);
+				//if (num==2){
+					//fishCounter=0;
+				//}
+			//}
 			if (num==1){
 				fish1Left=fishLeft;
 				fish1Top=fishTop;
@@ -370,7 +378,7 @@
 			}
 		}
 
-		fishInterval=setInterval(animateAllFish, 20);
+		fishInterval=setInterval(animateAllFish, 10);
 
 		initMist(512*ratio, 1532*ratio, 728*ratio, 760*ratio, 55*ratio, 250);
 		initRain(300*ratio, 1800*ratio, 0*ratio, 720*ratio, 2000, 2*ratio);
@@ -382,6 +390,8 @@
 	    	clearInterval(runInterval);
 	    	fish1Left=fish1Left/ratio;
 	    	fish1Top=fish1Top/ratio;
+	    	fish2Left=fish2Left/ratio;
+	    	fish2Top=fish2Top/ratio;
 	    
 	    	waterRipple();
         }
@@ -407,7 +417,8 @@
 	 }
 
      window.onload = function() {
-       waterRipple();
+       bAnim=true;
+       onResize();
      };
 
 	 window.addEventListener('resize', onResize, false);
@@ -423,7 +434,7 @@
 	</nav>
   	<div id="main">
   		<button id='btnAnim' onclick="toggleAnim()">Animations On</button>
-		<h1>Welcome to my site!</h1>
+		<h1>Hellow World!</h1>
 	</div>
 	</div>
 	<img id="fish1" class="fish" src="img/sprites/fish.png">

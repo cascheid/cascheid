@@ -4,9 +4,19 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Left Frame</title>
+<style>
+h1{text-align: center;}
+h2{text-align: center;}
+h3{text-align: center;}
+img{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+</style>
+<title>Session Timed Out</title>
 </head>
 <body>
-	<h1>Choose a Game to Play!</h1>
+	<h2>Session timed out. Please reload the page.</h2>
 </body>
 </html>

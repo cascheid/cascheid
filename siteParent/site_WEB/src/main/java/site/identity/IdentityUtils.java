@@ -7,12 +7,25 @@ public class IdentityUtils {
 	
 	public static Identity getIdentityByIdentifier(Long identifier){
 		Identity identity=null;
-		if (identifier!=null){
+		if (identifier!=null&&identifier>0){
 			IdentityDao dao = new IdentityDaoImpl();
 			//IdentityDao dao = new IdentityDaoMock();
 			identity=dao.getIdentityByIdentifier(identifier);
 		} else {
-			identity=new Identity(identifier);
+			identity=new Identity();
+		}
+		return identity;
+	}
+	
+	public static Identity getIdentityByUsername(String username){
+		Identity identity=null;
+		try{
+		if (username!=null&&!username.equals("")){
+			IdentityDao dao = new IdentityDaoImpl();
+			identity=dao.getIdentityByUsername(username);
+		}
+		}catch(Exception e){
+			e.printStackTrace();//just means invalid username
 		}
 		return identity;
 	}
@@ -32,5 +45,16 @@ public class IdentityUtils {
 	public static void updateSnakeScore(Long identifier, Integer snakeScore){
 		IdentityDao dao = new IdentityDaoImpl();
 		dao.updateSnakeScore(identifier, snakeScore);
+	}
+	
+	public static void updateUsername(Long identifier, String username){
+		IdentityDao dao = new IdentityDaoImpl();
+		dao.updateUsername(identifier, username);
+	}
+	
+	public static boolean checkExistingUsername(String username){
+		IdentityDao dao = new IdentityDaoImpl();
+		boolean bExists=dao.checkExistingUsername(username);
+		return bExists;
 	}
 }

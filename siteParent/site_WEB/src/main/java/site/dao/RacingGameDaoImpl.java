@@ -106,7 +106,7 @@ public class RacingGameDaoImpl extends ParentDao implements RacingGameDao{
 		    keyHolder);
 		lReturn=(Long) keyHolder.getKey();
 		racingGame.setRacingIdentifier(lReturn);
-		jdbcTemplate.update(
+		/*jdbcTemplate.update(
 			    new PreparedStatementCreator() {
 			        public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 			            PreparedStatement ps =
@@ -117,7 +117,7 @@ public class RacingGameDaoImpl extends ParentDao implements RacingGameDao{
 			        }
 			    },
 			    keyHolder);
-		racingGame.getCarList().get(0).setUserRacecarID((Long) keyHolder.getKey());
+		racingGame.getCarList().get(0).setUserRacecarID((Long) keyHolder.getKey());*/
 		jdbcTemplate.update("UPDATE IDENTITY SET RACING_IDENTIFIER=? WHERE IDENTIFIER=?", new Object[]{racingGame.getRacingIdentifier(), identifier});
 		return lReturn;
 	}

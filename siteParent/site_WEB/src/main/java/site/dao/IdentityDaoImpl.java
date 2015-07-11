@@ -28,6 +28,27 @@ public class IdentityDaoImpl extends ParentDao implements IdentityDao{
 				identity.setIdentifier(rs.getLong("IDENTIFIER"));
 				identity.setRacingGameIdentifier(rs.getLong("RACING_IDENTIFIER"));
 				identity.setSnakeScore(rs.getInt("SNAKE_SCORE"));
+				identity.setUsername(rs.getString("USERNAME"));
+				return identity;
+			}
+				
+		});
+		return identity;
+	}
+	
+	public Identity getIdentityByUsername(String username){
+		if (jdbcTemplate==null){
+			setDataSource(getDataSource());
+		}
+		Identity identity = jdbcTemplate.queryForObject("SELECT * FROM IDENTITY WHERE UPPER(USERNAME)=?", new Object[]{username.toUpperCase()}, new RowMapper<Identity>(){
+			@Override
+			public Identity mapRow(ResultSet rs, int rowNum)
+					throws SQLException {
+				Identity identity=new Identity();
+				identity.setIdentifier(rs.getLong("IDENTIFIER"));
+				identity.setRacingGameIdentifier(rs.getLong("RACING_IDENTIFIER"));
+				identity.setSnakeScore(rs.getInt("SNAKE_SCORE"));
+				identity.setUsername(rs.getString("USERNAME"));
 				return identity;
 			}
 				
@@ -45,7 +66,8 @@ public class IdentityDaoImpl extends ParentDao implements IdentityDao{
 		    new PreparedStatementCreator() {
 		        public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
 		            PreparedStatement ps =
-		                connection.prepareStatement("INSERT INTO IDENTITY(IDENTIFIER) VALUES (NULL)", Statement.RETURN_GENERATED_KEYS);
+		                connection.prepareStatement("INSERT INTO IDENTITY(IDENTIFIER, USERNAME) VALUES (NULL,?)", Statement.RETURN_GENERATED_KEYS);
+		            ps.setString(1, identity.getUsername());
 		            return ps;
 		        }
 		    },
@@ -75,5 +97,25 @@ public class IdentityDaoImpl extends ParentDao implements IdentityDao{
 			setDataSource(getDataSource());
 		}
 		jdbcTemplate.update("UPDATE IDENTITY SET SNAKE_SCORE=? WHERE IDENTIFIER=?", new Object[]{snakeScore, identifier});
+	}
+	
+	public boolean checkExistingUsername(String username){
+		if (jdbcTemplate==null){
+			setDataSource(getDataSource());
+		}
+		boolean bExists=true;
+		Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM IDENTITY WHERE UPPER(USERNAME)=?", new Object[]{username.toUpperCase()}, Integer.class);
+		if (count==0){
+			bExists=false;
+		}
+		return bExists;
+	}
+	
+	
+	public void updateUsername(Long identifier, String username){
+		if (jdbcTemplate==null){
+			setDataSource(getDataSource());
+		}
+		jdbcTemplate.update("UPDATE IDENTITY SET USERNAME=? WHERE IDENTIFIER=?", new Object[]{username, identifier});
 	}
 }

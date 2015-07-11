@@ -10,6 +10,7 @@ public class Identity implements java.io.Serializable{
 	private Long identifier;
 	private Long racingGameIdentifier;
 	private Integer snakeScore;
+	private String username;
 	//private RacingGame racingGame;	
 	//private SnakeGame snakeGame;
 	
@@ -47,5 +48,16 @@ public class Identity implements java.io.Serializable{
 
 	public void setSnakeScore(Integer snakeScore) {
 		this.snakeScore = snakeScore;
+	}
+
+	public String getUsername() {
+		if (username==null){
+			return "anonymous";
+		}
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 }

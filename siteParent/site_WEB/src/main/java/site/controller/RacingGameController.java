@@ -1,20 +1,23 @@
 package site.controller;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import site.identity.Identity;
@@ -35,8 +38,11 @@ public class RacingGameController {
 	
 	@RequestMapping("/racingparent")
 	public ModelAndView showParentFrame(
-			@RequestParam(value = "identifier", required = true, defaultValue="0") Long identifier, 
+			@RequestParam(value = "identifier") Long identifier, 
 			@RequestParam(value = "delete", defaultValue="false") boolean bDelete) {
+		if (identifier==null){
+			return new ModelAndView("timeout");
+		}
 		if (bDelete){
 			if (identity!=null){
 				IdentityUtils.deleteRacingGame(identity.getIdentifier());
@@ -46,13 +52,18 @@ public class RacingGameController {
 			identity=IdentityUtils.getIdentityByIdentifier(identifier);
 		}
 		ModelAndView mv = new ModelAndView("racingParentFrame");
-		racingGame=RacingGameUtils.getRacingGameObject(identity.getRacingGameIdentifier(), identity.getIdentifier());
+		if (racingGame==null){
+			racingGame=RacingGameUtils.getRacingGameObject(identity.getRacingGameIdentifier(), identity.getIdentifier());
+		}
 		
 		return mv;
 	}
 	
 	@RequestMapping("/raceMoneyFrame")
 	public ModelAndView showMoneyFrame(){
+		if (racingGame==null){
+			return new ModelAndView("timeout");
+		}
 		ModelAndView mv = new ModelAndView("raceMoneyFrame");
 		mv.addObject("availableCash", RacingGameUtils.formatMoney(racingGame.getAvailableCash()));
 		mv.addObject("racingClass", racingGame.getRacingClass().charAt(0));
@@ -67,6 +78,9 @@ public class RacingGameController {
 	
 	@RequestMapping("/garageFrame")
 	public ModelAndView showGarageFrame(){
+		if (racingGame==null){
+			return new ModelAndView("timeout");
+		}
 		ModelAndView mv = new ModelAndView("garageFrame");
 		mv.addObject("selectedCarID", racingGame.getSelectedCar().getCarID());
 		mv.addObject("racingGame", racingGame);
@@ -78,6 +92,9 @@ public class RacingGameController {
 	@RequestMapping("/garageDisplay")
 	public ModelAndView showGarageDisplay(
 			@RequestParam(value = "selectedCarID", required = true, defaultValue="0") Integer selectedCarID){
+		if (racingGame==null){
+			return new ModelAndView("timeout");
+		}
 		ModelAndView mv = new ModelAndView("garageDisplay");
 		UserRacecar selectedCar=null;
 		for (UserRacecar car : racingGame.getCarList()){
@@ -94,14 +111,32 @@ public class RacingGameController {
 	
 	@RequestMapping("/openRacingStore")
 	public ModelAndView openStore(){
+		if (racingGame==null){
+			return new ModelAndView("timeout");
+		}
 		ModelAndView mv = new ModelAndView("openRacingStore");
 		return mv;
 	}
 	
 	@RequestMapping("/racingStoreFrame")
 	public ModelAndView showStoreFrame(){
+		if (racingGame==null){
+			return new ModelAndView("timeout");
+		}
 		ModelAndView mv = new ModelAndView("racingStoreFrame");
 		List<Racecar> carOptions = RacingGameUtils.getAvailableCarsToPurchase(racingGame.getRacingClass(), racingGame.getRacingIdentifier());
+		if (racingGame.getRacingIdentifier()==null||racingGame.getRacingIdentifier()<=0){
+			for (UserRacecar usercar: racingGame.getCarList()){
+				Iterator<Racecar> it = carOptions.iterator();
+				while (it.hasNext()){
+					Racecar car = it.next();
+					if (car.getCarID()==usercar.getCarID()){
+						it.remove();
+						break;
+					}
+				}
+			}
+		}
 		mv.addObject("carOptions", carOptions);
 		return mv;
 	}
@@ -109,6 +144,9 @@ public class RacingGameController {
 	@RequestMapping("/carDisplayFrame")
 	public ModelAndView showCarDisplay(
 			@RequestParam(value = "carID", required = true, defaultValue="0") Integer carID){
+		if (racingGame==null){
+			return new ModelAndView("timeout");
+		}
 		ModelAndView mv;
 		if (carID==0){
 			mv = new ModelAndView("unselectedDisplayFrame");
@@ -125,25 +163,36 @@ public class RacingGameController {
 	@RequestMapping("/purchaseCar")
 	public ModelAndView purchaseCar(
 			@RequestParam(value = "carID", required = true) Integer carID){
+		if (racingGame==null){
+			return new ModelAndView("timeout");
+		}
 		ModelAndView mv = new ModelAndView("purchaseCar");
 		Racecar raceCar = RacingGameUtils.getRacecarByID(carID);
 		racingGame.setAvailableCash(racingGame.getAvailableCash().subtract(raceCar.getPrice()));
 		racingGame.addNewCar(raceCar);
-		Long userCarID=RacingGameUtils.saveNewCar(racingGame.getRacingIdentifier(), carID);
-		racingGame.getCarList().get(racingGame.getCarList().size()-1).setUserRacecarID(userCarID);
-		RacingGameUtils.updateRacingGame(racingGame.getRacingIdentifier(), racingGame.getAvailableCash(), racingGame.getRacingClass(), racingGame.getSelectedCar().getCarID());
+		if (racingGame.getRacingIdentifier()!=null&&racingGame.getRacingIdentifier()>0){
+			Long userCarID=RacingGameUtils.saveNewCar(racingGame.getRacingIdentifier(), carID);
+			racingGame.getCarList().get(racingGame.getCarList().size()-1).setUserRacecarID(userCarID);
+			RacingGameUtils.updateRacingGame(racingGame.getRacingIdentifier(), racingGame.getAvailableCash(), racingGame.getRacingClass(), racingGame.getSelectedCar().getCarID());
+		}
 		mv.addObject("carModel", raceCar.getModel());
 		return mv;
 	}
 	
 	@RequestMapping("/openUpgradeStore")
 	public ModelAndView openUpgradeStore(){
+		if (racingGame==null){
+			return new ModelAndView("timeout");
+		}
 		ModelAndView mv = new ModelAndView("openUpgradeStore");
 		return mv;
 	}
 	
 	@RequestMapping("/upgradeStoreFrame")
 	public ModelAndView showUpgradeStore(){
+		if (racingGame==null){
+			return new ModelAndView("timeout");
+		}
 		ModelAndView mv = new ModelAndView("upgradeStoreFrame");
 		List<Upgrade> upgradeOptions = RacingGameUtils.getUpgradesByClass(racingGame.getSelectedCar().getRacingClass());
 		mv.addObject("upgradeOptions", upgradeOptions);
@@ -153,6 +202,9 @@ public class RacingGameController {
 	@RequestMapping("/upgradeDisplayFrame")
 	public ModelAndView showUpgradeDisplay(
 			@RequestParam(value = "upgradeID", required = true, defaultValue="0") Integer upgradeID){
+		if (racingGame==null){
+			return new ModelAndView("timeout");
+		}
 		ModelAndView mv;
 		if (upgradeID==0){
 			mv = new ModelAndView("unselectedDisplayFrame");
@@ -185,17 +237,25 @@ public class RacingGameController {
 	@RequestMapping("/purchaseUpgrade")
 	public ModelAndView purchaseUpgrade(
 			@ModelAttribute("upgrade") Upgrade upgrade){
+		if (racingGame==null){
+			return new ModelAndView("timeout");
+		}
 		ModelAndView mv = new ModelAndView("purchaseCar");
 		racingGame.setAvailableCash(racingGame.getAvailableCash().subtract(upgrade.getPrice()));
 		racingGame.getSelectedCar().addUpgrade(upgrade);
-		RacingGameUtils.addNewUpgrade(racingGame.getSelectedCar(), upgrade);
+		if (racingGame.getRacingIdentifier()!=null&&racingGame.getRacingIdentifier()>0){
+			RacingGameUtils.addNewUpgrade(racingGame.getSelectedCar(), upgrade);
+			RacingGameUtils.updateRacingGame(racingGame.getRacingIdentifier(), racingGame.getAvailableCash(), racingGame.getRacingClass(), racingGame.getSelectedCar().getCarID());
+		}
 		mv.addObject("carModel", racingGame.getSelectedCar().getModel());
-		RacingGameUtils.updateRacingGame(racingGame.getRacingIdentifier(), racingGame.getAvailableCash(), racingGame.getRacingClass(), racingGame.getSelectedCar().getCarID());
 		return mv;
 	}
 	
 	@RequestMapping("/raceFrame")
 	public ModelAndView openRaceFrame(){
+		if (racingGame==null){
+			return new ModelAndView("timeout");
+		}
 		ModelAndView mv = new ModelAndView("raceFrame");
 		RaceInfo raceInfo = new RaceInfo();
 		List<String> availableClasses = new ArrayList<String>();
@@ -235,6 +295,9 @@ public class RacingGameController {
 	@RequestMapping("/startRace")
 	public ModelAndView openUserRaceFrame(
 			@ModelAttribute("raceInfo") RaceInfo raceInfo){
+		if (racingGame==null){
+			return new ModelAndView("timeout");
+		}
 		ModelAndView mv; 
 		if (raceInfo==null){
 			raceInfo=new RaceInfo();
@@ -281,10 +344,14 @@ public class RacingGameController {
 	@RequestMapping("/racingResults")
 	public ModelAndView racingResults(
 			@ModelAttribute("raceResult") RaceResult raceResult){
+		if (racingGame==null){
+			return new ModelAndView("timeout");
+		}
 		ModelAndView mv = new ModelAndView("racingResults");
 		Integer finish=6;
 		String newClass=null;
 		if ("user".equals(raceResult.getPlace1())){
+			raceResult.setPlace1(identity.getUsername());
 			finish=1;
 			if (raceResult.getRacingClass().equals(racingGame.getRacingClass())&&!"SS".equals(racingGame.getRacingClass())){
 				if ("E".equals(racingGame.getRacingClass())){
@@ -309,9 +376,11 @@ public class RacingGameController {
 			}
 			racingGame.setAvailableCash(racingGame.getAvailableCash().add(RacingGameUtils.getPurseByClass(raceResult.getRacingClass(), 1)));
 		} else if ("user".equals(raceResult.getPlace2())){
+			raceResult.setPlace2(identity.getUsername());
 			finish=2;
 			racingGame.setAvailableCash(racingGame.getAvailableCash().add(RacingGameUtils.getPurseByClass(raceResult.getRacingClass(), 2)));
 		} else if ("user".equals(raceResult.getPlace3())){
+			raceResult.setPlace3(identity.getUsername());
 			finish=3;
 			racingGame.setAvailableCash(racingGame.getAvailableCash().add(RacingGameUtils.getPurseByClass(raceResult.getRacingClass(), 3)));
 		}
@@ -320,18 +389,38 @@ public class RacingGameController {
 		raceResult.setPlace3Time(raceResult.getPlace3Time().setScale(2, RoundingMode.HALF_UP));
 		mv.addObject("finish", finish);
 		mv.addObject("newClass", newClass);
-		RacingGameUtils.updateRacingGame(racingGame.getRacingIdentifier(), racingGame.getAvailableCash(), racingGame.getRacingClass(), racingGame.getSelectedCar().getCarID());
+		if (racingGame.getRacingIdentifier()!=null&&racingGame.getRacingIdentifier()>0){
+			RacingGameUtils.updateRacingGame(racingGame.getRacingIdentifier(), racingGame.getAvailableCash(), racingGame.getRacingClass(), racingGame.getSelectedCar().getCarID());
+		}
 		return mv;
 	}
 	
 	@RequestMapping("/spectateResults")
 	public ModelAndView spectateResults(
 			@ModelAttribute("raceResult") RaceResult raceResult){
+		if (racingGame==null){
+			return new ModelAndView("timeout");
+		}
 		ModelAndView mv = new ModelAndView("spectateResults");
 		raceResult.setPlace1Time(raceResult.getPlace1Time().setScale(2, RoundingMode.HALF_UP));
 		raceResult.setPlace2Time(raceResult.getPlace2Time().setScale(2, RoundingMode.HALF_UP));
 		raceResult.setPlace3Time(raceResult.getPlace3Time().setScale(2, RoundingMode.HALF_UP));
 		mv.addObject("raceResult", raceResult);
+		return mv;
+	}
+	
+	@RequestMapping(value = "/saveracinggame")
+	//@ResponseStatus(value = HttpStatus.OK)
+	public ModelAndView saveNewUser(@RequestParam(value = "identifier") Long identifier,
+			@RequestParam(value = "sError", required=false) String sError){
+		if (racingGame!=null){
+			RacingGameUtils.insertRacingGameInfo(racingGame, identifier);
+		}
+		ModelAndView mv = new ModelAndView("newUserRedirect");
+		mv.addObject("identifier", identifier);
+		mv.addObject("type", "done");
+		//mv.addObject("username", identity.getUsername());
+		mv.addObject("sError", sError);
 		return mv;
 	}
 	

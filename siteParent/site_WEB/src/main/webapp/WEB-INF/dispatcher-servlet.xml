@@ -30,5 +30,6 @@ http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 	<mvc:resources mapping="/img/misc/*" location="/WEB-INF/img/misc/" />
 	<mvc:resources mapping="/img/sprites/*" location="/WEB-INF/img/sprites/" />
 	<mvc:resources mapping="/img/snake/*" location="/WEB-INF/img/snake/" />
+	<mvc:resources mapping="/img/battleship/*" location="/WEB-INF/img/battleship/" />
 	<mvc:annotation-driven />
 </beans>

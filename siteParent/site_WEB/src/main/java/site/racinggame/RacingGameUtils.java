@@ -25,14 +25,20 @@ public class RacingGameUtils {
 			racingGame=new RacingGame();
 			racingGame.setRacingClass("E");
 			racingGame.setSelectedClass("E");
-			racingGame.setAvailableCash(new BigDecimal(100));
+			racingGame.setAvailableCash(new BigDecimal(1000));
 			racingGame.addNewCar(getRacecarByID(1));
 			racingGame.setSelectedCar(racingGame.getCarList().get(0));
 			Long newID;
-			try{
-				newID=dao.insertNewRacingGame(racingGame, identifier);
-			} catch (Exception e){
-				throw new IllegalStateException("Failed to insert new Racing Game record.", e);
+			if (identifier!=null&&identifier>0){
+				try{
+					newID=dao.insertNewRacingGame(racingGame, identifier);
+					Long userCarID=dao.addNewUserRacecar(newID, 1);
+					racingGame.getCarList().get(0).setUserRacecarID(userCarID);
+				} catch (Exception e){
+					throw new IllegalStateException("Failed to insert new Racing Game record.", e);
+				}
+			}else{
+				newID=0l;
 			}
 			racingGame.setRacingIdentifier(newID);
 		} else {
@@ -45,6 +51,20 @@ public class RacingGameUtils {
 				}
 			} catch (Exception e){
 				throw new IllegalStateException("Failed to get Racing Game record for identifier: " + racingGameIdentifier, e);
+			}
+		}
+		return racingGame;
+	}
+	
+	public static RacingGame insertRacingGameInfo(RacingGame racingGame, Long identifier){
+		RacingGameDao dao = new RacingGameDaoImpl();
+		Long newID=dao.insertNewRacingGame(racingGame, identifier);
+		racingGame.setRacingIdentifier(newID);
+		for (UserRacecar car: racingGame.getCarList()){
+			Long userCarID=dao.addNewUserRacecar(newID, car.getCarID());
+			car.setUserRacecarID(userCarID);
+			for (Upgrade upgrade : car.getUpgradeList()){
+				dao.addNewUpgrade(userCarID, upgrade.getUpgradeID());
 			}
 		}
 		return racingGame;
@@ -281,7 +301,9 @@ public class RacingGameUtils {
 	}
 	
 	public static void updateRacingGame(Long racingGameIdentifier, BigDecimal availableCash, String racingClass, Integer carID){
-		RacingGameDao dao = new RacingGameDaoImpl();
-		dao.updateRacingGame(racingGameIdentifier, availableCash, racingClass, carID);
+		if (racingGameIdentifier!=null&&racingGameIdentifier>0){
+			RacingGameDao dao = new RacingGameDaoImpl();
+			dao.updateRacingGame(racingGameIdentifier, availableCash, racingClass, carID);
+		}
 	}
 }
