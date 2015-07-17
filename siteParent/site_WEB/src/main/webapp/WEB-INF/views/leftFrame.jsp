@@ -16,7 +16,7 @@
 		<a title="Snake Game" href="snakeFrame" target="displayFrame">Snake Game</a>
 	</div>
 	<div>
-		<a title="Battleship Game" href="battleship" target="displayFrame">Battleship;;</a>
+		<a title="Battleship Game" href="battleship" target="displayFrame">Battleship</a>
 	</div>
 </body>
 </html>
