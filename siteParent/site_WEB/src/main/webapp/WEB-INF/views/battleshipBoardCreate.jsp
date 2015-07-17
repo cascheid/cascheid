@@ -44,7 +44,7 @@
 	</form:form>
 	<button id="btnSubmit" onclick='submitBoard()'>Finish and Submit</button>
 	<script>
-		initBattleship(Math.min(window.innerWidth, window.innerHeight), false);
+		initBoardLoad(Math.min(window.innerWidth, window.innerHeight));
 
 		function submitBoard(){
 			for (var i=0; i<nameArray.length; i++){
@@ -56,11 +56,6 @@
 			boardForm.submit();
 		}
 
-		window.onload=function(){
-			drawTopGrid();
-			drawTopText();
-			drawTopShips();
-		}
 	</script>
 </body>
 </html>

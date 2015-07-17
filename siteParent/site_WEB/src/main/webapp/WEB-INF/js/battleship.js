@@ -2,27 +2,61 @@ var bw;
 var canvas;
 var context;
 var stndTxt;
-var placingShips=true;
+var placingShips;
 var placingSelected='';
 var draggedSquares=0;
 var reqSquares=0;
 var initialDrag='';
 var dragVert=true;
 var nameArray=['carrier', 'battleship', 'destroyer', 'submarine', 'patrol'];
-function initBattleship(size, bfull){
+var socket;
+var localGameId;
+var currStatus;
+var myId;
+var opponentId;
+function initBoardLoad(size){
 	bw = (size-20)/2;
 	canvas = document.getElementById('canvas');
 	context = canvas.getContext('2d');
 	stndTxt=(bw-20)/12;
 	canvas.width = size;
-    if (bfull){
-	    canvas.height = size;
-    } else {
-	    canvas.height = size/2;
-    }
+	canvas.height = size/2;
 
+    placingShips=true;
 	canvas.addEventListener("mousedown", onClick, false);
 	canvas.addEventListener("mouseup", onMouseUp, false);
+	
+	drawTopGrid();
+	drawTopText();
+	drawTopShips();
+	
+	socket = new WebSocket("ws://localhost:8080/site_WEB/wsbattleship");
+	socket.onmessage = onMessage;
+	socket.onopen = function(){
+		fire('A1');
+	};
+}
+
+function initGame(size, gameID, status, identifier){
+	localGameId=gameID;
+	currStatus=status;
+	myId=identifier;
+	bw = (size-20)/2;
+	canvas = document.getElementById('canvas');
+	context = canvas.getContext('2d');
+	stndTxt=(bw-20)/12;
+	canvas.width = size;
+	canvas.height = size;
+
+    placingShips=false;
+	canvas.addEventListener("mousedown", onClick, false);
+	canvas.addEventListener("mouseup", onMouseUp, false);
+	
+	socket = new WebSocket("ws://localhost:8080/site_WEB/wsbattleship");
+	socket.onmessage = onMessage;
+	socket.onload = function(){
+		initWs();
+	};
 }
 
 	function drawTopGrid(){
@@ -579,5 +613,28 @@ function initBattleship(size, bfull){
 				clearHighlights();
 			}
 		}
+	}
+
+	function onMessage(event) {
+	    var result = JSON.parse(event.data);
+	    window.alert(result.status);
+	}
+	
+	function initWs(){
+		var action = {
+			gameID: localGameId,
+			status: currStatus,
+			user1: myId,
+			user2: '0'
+		};
+		socket.send(JSON.stringify(action));
+	}
+
+	function fire(shotloc) {
+	    var action = {
+	        loc: shotloc,
+	        status: 'fired'
+	    };
+	    socket.send(JSON.stringify(action));
 	}
 	    
