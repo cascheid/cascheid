@@ -8,6 +8,7 @@ public class BattleshipMove implements java.io.Serializable {
 	//private Long userID;
 	private String loc;
 	private String status;
+	private Long userID;
 	
 	public BattleshipMove(){
 	}
@@ -26,6 +27,14 @@ public class BattleshipMove implements java.io.Serializable {
 
 	public void setStatus(String shotStatus) {
 		this.status = shotStatus;
+	}
+
+	public Long getUserID() {
+		return userID;
+	}
+
+	public void setUserID(Long userID) {
+		this.userID = userID;
 	}
 
 	@Override
@@ -53,10 +62,10 @@ public class BattleshipMove implements java.io.Serializable {
 				return false;
 		} else if (!loc.equals(other.loc))
 			return false;
-		if (status == null) {
-			if (other.status != null)
+		if (userID == null) {
+			if (other.userID != null)
 				return false;
-		} else if (!status.equals(other.status))
+		} else if (!userID.equals(other.userID))
 			return false;
 		return true;
 	}

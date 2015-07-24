@@ -23,9 +23,12 @@
 		text-decoration: none;
 		vertical-align:middle;
 		margin:auto;
+		position:absolute;
+		left: 30px;
+		top: 770px;
 	}
 </style>
-<script src="js/battleship.js"></script>
+<script src="js/battleship.js?version=3.5"></script>
 </head>
 <body>
 	<h1>Battleship vs. ${opponent}</h1>
@@ -43,17 +46,8 @@
 		<form:input id="patrolVertical" type="hidden" path="patrolVertical"/>
 	</form:form>
 	<script>
-		initBattleship(Math.min(window.innerWidth, window.innerHeight), true);
-
-		window.onload=function(){
-			drawTopGrid();
-			drawBottomGrid();
-			drawTopText();
-			drawBottomText();
-			drawTopShips();
-			drawBottomShips();
-			drawLoadedShips();
-		}
+		initGame(Math.min(window.innerWidth, window.innerHeight), ${gameID}, ${identifier}, ${myTurn}, ${myMoves}, ${oppMoves}, ${mySunkenShips}, ${oppSunkenShips});
 	</script>
+	<button onclick="submitFire()">Fire!</button>
 </body>
 </html>

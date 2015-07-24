@@ -11,9 +11,15 @@ var dragVert=true;
 var nameArray=['carrier', 'battleship', 'destroyer', 'submarine', 'patrol'];
 var socket;
 var localGameId;
-var currStatus;
+var myTurn=false;
 var myId;
 var opponentId;
+var shotSelected='';
+var myMoves=[];
+var oppMoves=[];
+var mySunkenShips=[];
+var oppSunkenShips=[];
+var lastMove;
 function initBoardLoad(size){
 	bw = (size-20)/2;
 	canvas = document.getElementById('canvas');
@@ -25,22 +31,22 @@ function initBoardLoad(size){
     placingShips=true;
 	canvas.addEventListener("mousedown", onClick, false);
 	canvas.addEventListener("mouseup", onMouseUp, false);
-	
-	drawTopGrid();
-	drawTopText();
-	drawTopShips();
-	
-	socket = new WebSocket("ws://localhost:8080/site_WEB/wsbattleship");
-	socket.onmessage = onMessage;
-	socket.onopen = function(){
-		fire('A1');
-	};
+
+	window.onload=function(){
+		drawTopGrid();
+		drawTopText();
+		drawTopShips();
+	}
 }
 
-function initGame(size, gameID, status, identifier){
+function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysunkenships, oppsunkenships){
 	localGameId=gameID;
-	currStatus=status;
+	myTurn=turnStatus;
 	myId=identifier;
+	myMoves=mymoves;
+	oppMoves=oppmoves;
+	mySunkenShips=mysunkenships;
+	oppSunkenShips=oppsunkenships;
 	bw = (size-20)/2;
 	canvas = document.getElementById('canvas');
 	context = canvas.getContext('2d');
@@ -50,17 +56,34 @@ function initGame(size, gameID, status, identifier){
 
     placingShips=false;
 	canvas.addEventListener("mousedown", onClick, false);
-	canvas.addEventListener("mouseup", onMouseUp, false);
+	//canvas.addEventListener("mouseup", onMouseUp, false);
 	
 	socket = new WebSocket("ws://localhost:8080/site_WEB/wsbattleship");
 	socket.onmessage = onMessage;
-	socket.onload = function(){
+	socket.onopen = function(){
 		initWs();
 	};
+
+	window.onload=function(){
+		drawTopGrid();
+		drawBottomGrid();
+		drawTopText();
+	    toggleTurn();
+		drawBottomText();
+		drawTopShips();
+		drawBottomShips();
+	}
 }
 
+	var waterImg = new Image();
+	waterImg.src='img/battleship/water.png';
+	waterImg.width=bw+'px';
+	waterImg.height=bw+'px';
+
 	function drawTopGrid(){
+		context.drawImage(waterImg, 10, 10, bw, bw);
 		//top grid
+		context.beginPath();
 		for (var i=0; i<=10; i++){
 			context.moveTo(10+i*bw/10, 10);
 			context.lineTo(10+i*bw/10, 10+bw);
@@ -72,11 +95,32 @@ function initGame(size, gameID, status, identifier){
 		}
 		
 		context.strokeStyle='black';
+		context.lineWidth = bw/100;
 		context.stroke();
+		
+		drawLoadedShips();
+		
+		for (var i=0; i<oppMoves.length; i++){
+			if (oppMoves[i].status=='hit'){
+				if (oppMoves[i].status==lastMove){
+					drawHit(oppMoves[i].loc, 0, true);
+				} else {
+					drawHit(oppMoves[i].loc, 0, false);
+				}
+			} else if (oppMoves[i].status=='miss'){
+				if (oppMoves[i].status==lastMove){
+					drawMiss(oppMoves[i].loc, 0, true);
+				} else {
+					drawMiss(oppMoves[i].loc, 0, false);
+				}
+			}
+		}
 	}
 	
 	function drawBottomGrid(){
+		context.drawImage(waterImg, bw+10, bw+10, bw, bw);
 		//bottom grid
+		context.beginPath();
 		for (var i=0; i<=10; i++){
 			context.moveTo(bw+10+i*bw/10, bw+10);
 			context.lineTo(bw+10+i*bw/10, bw+10+bw);
@@ -88,7 +132,24 @@ function initGame(size, gameID, status, identifier){
 		}
 
 		context.strokeStyle='black';
+		context.lineWidth = bw/100;
 		context.stroke();
+		
+		for (var i=0; i<myMoves.length; i++){
+			if (myMoves[i].status=='hit'){
+				if (myMoves[i].status==lastMove){
+					drawHit(myMoves[i].loc, bw, true);
+				} else {
+					drawHit(myMoves[i].loc, bw, false);
+				}
+			} else if (myMoves[i].status=='miss'){
+				if (myMoves[i].status==lastMove){
+					drawMiss(myMoves[i].loc, bw, true);
+				} else {
+					drawMiss(myMoves[i].loc, bw, false);
+				}
+			}
+		}
 	}
 
 	function drawTopText(){
@@ -110,7 +171,21 @@ function initGame(size, gameID, status, identifier){
 		context.fillStyle='blue';
 		context.fillText("Submarine:", bw+20, 20+7.5*stndTxt, (bw-20)/2);
 		context.fillStyle='green';
-		context.fillText("Patrol Boat:", bw+20, 20+9*stndTxt, (bw-20)/2);	
+		context.fillText("Patrol Boat:", bw+20, 20+9*stndTxt, (bw-20)/2);
+	}
+	
+	function toggleTurn(){
+		context.textAlign='center';
+		context.clearRect(bw+20, 20+9.5*stndTxt, bw-20, 2*stndTxt);
+		if (myTurn){
+			context.font=stndTxt*1.5+'px Arial';
+			context.fillStyle='#00FF00';
+			context.fillText("YOUR TURN", bw+10+bw/2, 20+11*stndTxt, bw-20);
+		} else {
+			context.font=stndTxt*1.5+'px Arial';
+			context.fillStyle='black';
+			context.fillText("THEIR TURN", bw+10+bw/2, 20+11*stndTxt, bw-20);	
+		}
 	}
 
 	function drawBottomText(){
@@ -162,6 +237,35 @@ function initGame(size, gameID, status, identifier){
 		context.drawImage(destroyerImg, bw+20+bw/2, 20+5*stndTxt, 3*bw/10, bw/10);
 		context.drawImage(submarineImg, bw+20+bw/2, 20+6.5*stndTxt, 3*bw/10, bw/10);
 		context.drawImage(patrolImg, bw+20+bw/2, 20+8*stndTxt, bw/5, bw/10);
+		
+		for (var i=0; i<mySunkenShips.length; i++){
+			var yStart;
+			var length;
+			if (mySunkenShips[i]=='carrier'){
+				yStart=20+2*stndTxt;
+				length=bw/2;
+			} else if (mySunkenShips[i]=='battleship'){
+				yStart=20+3.5*stndTxt;
+				length=2*bw/5;
+			} else if (mySunkenShips[i]=='destroyer'){
+				yStart=20+5*stndTxt;
+				length=3*bw/10;
+			} else if (mySunkenShips[i]=='submarine'){
+				yStart=20+6.5*stndTxt;
+				length=3*bw/10;
+			} else if (mySunkenShips[i]=='patrol'){
+				yStart=20+8*stndTxt;
+				length=bw/5;
+			}
+			context.beginPath();
+			context.moveTo(bw+20+bw/2, yStart);
+			context.lineTo(bw+20+bw/2+length, yStart+bw/10);
+			context.moveTo(bw+20+bw/2, yStart+bw/10);
+			context.lineTo(bw+20+bw/2+length, yStart);
+			context.lineWidth = bw/50;
+			context.strokeStyle='red';
+			context.stroke();
+		}
 	}
 
 	function drawBottomShips(){
@@ -170,6 +274,35 @@ function initGame(size, gameID, status, identifier){
 		context.drawImage(destroyerImg, 10+bw/2, bw+20+5*stndTxt, 3*bw/10, bw/10);
 		context.drawImage(submarineImg, 10+bw/2, bw+20+6.5*stndTxt, 3*bw/10, bw/10);
 		context.drawImage(patrolImg, 10+bw/2, bw+20+8*stndTxt, bw/5, bw/10);
+		
+		for (var i=0; i<oppSunkenShips.length; i++){
+			var yStart;
+			var length;
+			if (oppSunkenShips[i]=='carrier'){
+				yStart=bw+20+2*stndTxt;
+				length=bw/2;
+			} else if (oppSunkenShips[i]=='battleship'){
+				yStart=bw+20+3.5*stndTxt;
+				length=2*bw/5;
+			} else if (oppSunkenShips[i]=='destroyer'){
+				yStart=bw+20+5*stndTxt;
+				length=3*bw/10;
+			} else if (oppSunkenShips[i]=='submarine'){
+				yStart=bw+20+6.5*stndTxt;
+				length=3*bw/10;
+			} else if (oppSunkenShips[i]=='patrol'){
+				yStart=bw+20+8*stndTxt;
+				length=bw/5;
+			}
+			context.beginPath();
+			context.moveTo(10+bw/2, yStart);
+			context.lineTo(10+bw/2+length, yStart+bw/10);
+			context.moveTo(10+bw/2, yStart+bw/10);
+			context.lineTo(10+bw/2+length, yStart);
+			context.lineWidth = bw/50;
+			context.strokeStyle='red';
+			context.stroke();
+		}
 	}
 
 	function getXCoord(square){
@@ -245,6 +378,10 @@ function initGame(size, gameID, status, identifier){
 			}
 		}
 	}
+	
+	function getRowBottom(y){
+		return (getRow(y-bw));
+	}
 
 	function getRow(y){
 		var b=null;
@@ -272,6 +409,10 @@ function initGame(size, gameID, status, identifier){
 		return b;
 	}
 
+	function getColumnBottom(x){
+		return (getColumn(x-bw));
+	}
+	
 	function getColumn(x){
 		var b=null;
 		if (x>10&&x<=10+bw/10){
@@ -408,6 +549,24 @@ function initGame(size, gameID, status, identifier){
 					}
 				}
 			}
+		} else if (myTurn){
+			if (x>=bw+10&&y>=bw+10){
+				var square=getRowBottom(y)+getColumnBottom(x);
+				if (shotSelected==''){
+					var i = myMoves.length;
+				    while (i--) {
+				       if (myMoves[i] == square) {
+				           //repeat
+				    	   return;
+				       }
+				    }
+				    highlightSquareBottom(square, 'red');
+				    shotSelected=square;
+				} else if (square==shotSelected){
+					clearHighlights();
+				    shotSelected='';
+				}
+			}
 		}
 	}
 
@@ -517,7 +676,8 @@ function initGame(size, gameID, status, identifier){
 	function clearHighlights(){
 		context.clearRect(10, 10, bw, bw);
 		drawTopGrid();
-		drawLoadedShips();
+		context.clearRect(10+bw, 10+bw, bw, bw);
+		drawBottomGrid();
 	}
 
 	function highlightSquare(square){
@@ -534,6 +694,11 @@ function initGame(size, gameID, status, identifier){
 		
 		context.fillStyle=color;
 		context.fillRect(getXCoord(square), getYCoord(square), bw/10, bw/10);
+	}
+	
+	function highlightSquareBottom(square, color){
+		context.fillStyle=color;
+		context.fillRect(getXCoord(square)+bw, getYCoord(square)+bw, bw/10, bw/10);
 	}
 	
 	function dragSelection(event){
@@ -614,16 +779,64 @@ function initGame(size, gameID, status, identifier){
 			}
 		}
 	}
+	
+	function animateShotResult(status, square, offset){
+		if (status=='hit'){
+			var expInt=setInterval(function(){update(20);}, 20);
+			setTimeout(function(){
+				clearInterval(expInt); 
+				particles=[]; 
+				drawHit(square, offset, true);
+			}, 1500);
+			createExplosion(getXCoord(square)+offset+bw/20, getYCoord(square)+offset+bw/20, "#525252");
+			createExplosion(getXCoord(square)+offset+bw/20, getYCoord(square)+offset+bw/20, "#FFA318");
+		} else {
+			waterRipple(square, offset);
+		}
+	}
 
 	function onMessage(event) {
 	    var result = JSON.parse(event.data);
-	    window.alert(result.status);
+	    clearHighlights();
+	    if (result.status!='illegal'){
+	    	if (result.userID==myId){
+	    		if (result.status.substring(0, 4) == 'sunk'){
+	    			var sunkenShip=result.status.substring(4, result.status.length);
+	    			oppSunkenShips.push(sunkenShip);
+	    			window.alert('You sunk their '+sunkenShip+"!");
+	    			drawBottomShips();
+	    			result.status='hit';
+	    		}
+	    		lastMove=result;
+			    animateShotResult(result.status, result.loc, bw);
+			    myMoves.push(result);
+			    myTurn=false;
+			    toggleTurn();
+	    	} else {
+	    		if (result.status.substring(0, 4) == 'sunk'){
+	    			var sunkenShip=result.status.substring(4, result.status.length);
+	    			mySunkenShips.push(sunkenShip);
+	    			window.alert('Your '+sunkenShip+" has been sunk!");
+	    			drawTopShips();
+	    			result.status='hit';
+	    		}
+	    		lastMove=result;
+			    animateShotResult(result.status, result.loc, 0);
+			    oppMoves.push(result);
+			    myTurn=true;
+			    toggleTurn();
+	    	}
+	    } else {
+	    	window.alert('Illegal shot selected.');
+	    }
+		shotSelected='';
+	    //window.alert(result.status);
 	}
 	
 	function initWs(){
 		var action = {
 			gameID: localGameId,
-			status: currStatus,
+			status: 'LOAD',
 			user1: myId,
 			user2: '0'
 		};
@@ -633,8 +846,292 @@ function initGame(size, gameID, status, identifier){
 	function fire(shotloc) {
 	    var action = {
 	        loc: shotloc,
-	        status: 'fired'
+	        status: 'fired',
+	        userID: myId
 	    };
 	    socket.send(JSON.stringify(action));
 	}
+	
+	function submitFire(){
+		if (myTurn){
+			if (shotSelected==''){
+				window.alert("Please select location to fire.")
+			} else {
+				fire(shotSelected);
+			}	
+		}
+	}
+	
+	function drawHit(square, offset, lastShot){
+		var color;
+		if (lastShot){
+			color='red';
+		} else {
+			color='white';
+		}
+		var centerX=getXCoord(square)+offset+bw/20;
+		var centerY=getYCoord(square)+offset+bw/20;
+		context.beginPath();
+		context.arc(centerX, centerY, bw/30, 0, 2 * Math.PI, false);
+		context.fillStyle = color;
+		context.fill();
+		context.lineWidth = bw/150;
+		context.strokeStyle=color;
+		context.stroke();
+	}
+	
+	function drawMiss(square, offset, lastShot){
+		var color;
+		if (lastShot){
+			color='red';
+		} else {
+			color='white';
+		}
+		context.beginPath();
+		var xStart=getXCoord(square)+offset;
+		var yStart=getYCoord(square)+offset;
+		context.moveTo(xStart+bw/100, yStart+bw/100);
+		context.lineTo(xStart+bw/10-bw/100, yStart+bw/10-bw/100);
+		context.moveTo(xStart+bw/100, yStart+bw/10-bw/100);
+		context.lineTo(xStart+bw/10-bw/100, yStart+bw/100);
+		context.lineWidth = bw/50;
+		context.strokeStyle=color;
+		context.stroke();
+	}
+	
+/**
+ * Code for Explosions
+ */
+	/*
+	 * A single explosion particle
+	 */
+	function Particle ()
+	{
+		this.scale = 1.0;
+		this.x = 0;
+		this.y = 0;
+		this.radius = bw/50;
+		this.color = "#000";
+		this.velocityX = 0;
+		this.velocityY = 0;
+		this.scaleSpeed = 0.5;
+		this.minCoord=10+bw;
+		this.maxCoord=10+2*bw;
+
+		this.update = function(ms)
+		{
+			// shrinking
+			this.scale -= this.scaleSpeed * ms / 1000.0;
+
+			if (this.scale <= 0)
+			{
+				this.scale = 0;
+			}
+			// moving away from explosion center
+			this.x += this.velocityX * ms/1000.0;
+			this.y += this.velocityY * ms/1000.0;
+		};
+
+		this.draw = function(context)
+		{
+			// translating the 2D context to the particle coordinates
+			if ((this.x-this.radius)>this.minCoord&&(this.x+this.radius)<this.maxCoord&&
+					(this.y-this.radius)>this.minCoord&&(this.y+this.radius)<this.maxCoord){
+				context.save();
+				context.translate(this.x, this.y);
+				context.scale(this.scale, this.scale);
+
+				// drawing a filled circle in the particle's local space
+				context.beginPath();
+				context.arc(0, 0, this.radius, 0, Math.PI*2, true);
+				context.closePath();
+
+				context.fillStyle = this.color;
+				context.fill();
+
+				context.restore();
+			}
+		};
+	}
+
+	var particles = [];
+	
+	function update (frameDelay)
+	{
+		// draw a white background to clear canvas
+		//context.fillStyle = "#FFF";
+		//context.fillRect(0, 0, context.canvas.width, context.canvas.height);
+		clearHighlights();
+
+		// update and draw particles
+		for (var i=0; i<particles.length; i++)
+		{
+			var particle = particles[i];
+
+			particle.update(frameDelay);
+			particle.draw(context);
+		}
+	}
+	
+	function randomFloat (min, max)
+	{
+		return min + Math.random()*(max-min);
+	}
+	
+	function createExplosion(x, y, color)
+	{
+		var minSize = bw/60;
+		var maxSize = bw/20;
+		var count = 10;
+		var minSpeed = 30.0;
+		var maxSpeed = 100.0;
+		var minScaleSpeed = 1.0;
+		var maxScaleSpeed = 4.0;
+
+		for (var angle=0; angle<360; angle += Math.round(360/count))
+		{
+			var particle = new Particle();
+
+			particle.x = x;
+			particle.y = y;
+
+			particle.radius = randomFloat(minSize, maxSize);
+
+			particle.color = color;
+
+			particle.scaleSpeed = randomFloat(minScaleSpeed, maxScaleSpeed);
+
+			var speed = randomFloat(minSpeed, maxSpeed);
+
+			particle.velocityX = speed * Math.cos(angle * Math.PI / 180.0);
+			particle.velocityY = speed * Math.sin(angle * Math.PI / 180.0);
+
+			particles.push(particle);
+		}
+	}
+	
+/**
+ * Code for splashes
+ */
+	
+	function waterRipple(square, offset) {
+		var xStart=getXCoord(square)+offset;
+		var yStart=getYCoord(square)+offset;
+		var sqSize=Math.floor(bw/10);
+		var size = sqSize * (sqSize + 2) * 2,
+        delay = 30,
+        oldind = sqSize,
+        newind = sqSize * (sqSize + 3),
+        riprad = 1,
+        ripplemap = [],
+        last_map = [],
+        ripple,
+        texture;
+
+		//context.drawImage(waterImg, bw+10, bw+10, bw, bw);
+	    texture = context.getImageData(xStart, yStart, sqSize, sqSize);
+	    ripple = context.getImageData(xStart, yStart, sqSize, sqSize);
 	    
+	    for (var i = 0; i < size; i++) {
+	        last_map[i] = ripplemap[i] = 0;
+	    }
+	    
+	    /**
+	     * Main loop
+	     */
+	    var loopCounter=0;
+	    var runInterval;
+	    function run() {
+	    	loopCounter++;
+	        newframe();
+	        context.putImageData(ripple, xStart, yStart);
+	        if (loopCounter==100){
+	        	loopCounter=0;
+	        	clearInterval(runInterval);
+	        	drawMiss(square, offset, true);
+	        }
+	    }
+	    
+	    /**
+	     * Disturb water at specified point
+	     */
+	    function disturb(dx, dy) {
+	        dx <<= 0;
+	        dy <<= 0;
+	        
+	        for (var j = dy - riprad; j < dy + riprad; j++) {
+	            for (var k = dx - riprad; k < dx + riprad; k++) {
+	                ripplemap[oldind + (j * sqSize) + k] += 128;
+	            }
+	        }
+	    }
+	    
+	    /**
+	     * Generates new ripples
+	     */
+	    function newframe() {
+	        var a, b, data, cur_pixel, new_pixel, old_data;
+	        
+	        var t = oldind; oldind = newind; newind = t;
+	        var i = 0;
+	        
+	        // create local copies of variables to decrease
+	        // scope lookup time in Firefox
+	        var _width = sqSize,
+	            _height = sqSize,
+	            _ripplemap = ripplemap,
+	            _last_map = last_map,
+	            _rd = ripple.data,
+	            _td = texture.data,
+	            _half_width = sqSize >> 1,
+	            _half_height = sqSize >> 1;
+	        
+	        for (var y = 0; y < _height; y++) {
+	            for (var x = 0; x < _width; x++) {
+	                var _newind = newind + i, _mapind = oldind + i;
+	                data = (
+	                    _ripplemap[_mapind - _width] + 
+	                    _ripplemap[_mapind + _width] + 
+	                    _ripplemap[_mapind - 1] + 
+	                    _ripplemap[_mapind + 1]) >> 1;
+	                    
+	                data -= _ripplemap[_newind];
+	                data -= data >> 5;
+	                
+	                _ripplemap[_newind] = data;
+
+	                //where data=0 then still, where data>0 then wave
+	                data = 512 - data;
+	                
+	                old_data = _last_map[i];
+	                _last_map[i] = data;
+	                
+	                if (old_data != data) {
+	                    //offsets
+	                    a = (((x - _half_width) * data / 512) << 0) + _half_width;
+	                    b = (((y - _half_height) * data / 512) << 0) + _half_height;
+	    
+	                    //bounds check
+	                    if (a >= _width) a = _width - 1;
+	                    if (a < 0) a = 0;
+	                    if (b >= _height) b = _height - 1;
+	                    if (b < 0) b = 0;
+	    
+	                    new_pixel = (a + (b * _width)) * 4;
+	                    cur_pixel = i * 4;
+	                    
+	                    _rd[cur_pixel] = _td[new_pixel];
+	                    _rd[cur_pixel + 1] = _td[new_pixel + 1];
+	                    _rd[cur_pixel + 2] = _td[new_pixel + 2];
+	                }
+	                
+	                ++i;
+	            }
+	        }
+	    }
+	    //disturb (xStart+Math.floor(bw/20), yStart+Math.floor(bw/20));
+	    disturb (Math.floor(bw/20), Math.floor(bw/20));
+	    
+	    runInterval=setInterval(run, 20);
+	}
+	

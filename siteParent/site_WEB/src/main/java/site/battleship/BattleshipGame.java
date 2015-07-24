@@ -5,8 +5,8 @@ public class BattleshipGame implements java.io.Serializable {
 	private static final long serialVersionUID = 7039405534593210434L;
 	
 	private Long gameID;
-	private String user1;
-	private String user2;
+	private Long user1;
+	private Long user2;
 	private String status;
 	
 	public BattleshipGame(){
@@ -20,19 +20,19 @@ public class BattleshipGame implements java.io.Serializable {
 		this.gameID = gameID;
 	}
 
-	public String getUser1() {
+	public Long getUser1() {
 		return user1;
 	}
 
-	public void setUser1(String user1) {
+	public void setUser1(Long user1) {
 		this.user1 = user1;
 	}
 
-	public String getUser2() {
+	public Long getUser2() {
 		return user2;
 	}
 
-	public void setUser2(String user2) {
+	public void setUser2(Long user2) {
 		this.user2 = user2;
 	}
 
