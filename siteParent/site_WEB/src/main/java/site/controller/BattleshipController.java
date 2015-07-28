@@ -124,16 +124,25 @@ public class BattleshipController {
 			mv = new ModelAndView("battleship");
 
 			boolean myTurn=false;
+			String winState="active";
 			if (activeGame.getUser2().equals(identity.getIdentifier())){
 				activeOpponent = IdentityUtils.getIdentityByIdentifier(activeGame.getUser1());
 				if (activeGame.getStatus().equals("2TURN")){
 					myTurn=true;
-				}
+				} else if (activeGame.getStatus().equals("1WIN")){
+					winState="lose";
+				} else if (activeGame.getStatus().equals("2WIN")){
+					winState="win";
+				} 
 			} else if (activeGame.getUser1().equals(identity.getIdentifier())){
 				activeOpponent = IdentityUtils.getIdentityByIdentifier(activeGame.getUser2());
 				if (activeGame.getStatus().equals("1TURN")){
 					myTurn=true;
-				}
+				} else if (activeGame.getStatus().equals("1WIN")){
+					winState="win";
+				} else if (activeGame.getStatus().equals("2WIN")){
+					winState="lose";
+				} 
 			} else {
 				return null;
 			}
@@ -160,6 +169,7 @@ public class BattleshipController {
 			mv.addObject("identifier", identity.getIdentifier());
 			mv.addObject("gameID", activeGame.getGameID());
 			mv.addObject("myTurn", myTurn);
+			mv.addObject("winState", winState);
 			mv.addObject("opponent", activeOpponent.getUsername());
 			mv.addObject("battleshipBoard", battleshipBoard);
 			ObjectMapper objectMapper = new ObjectMapper();

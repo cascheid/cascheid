@@ -46,11 +46,26 @@ public class BattleshipHandler extends TextWebSocketHandler {
             TextMessage returnMessage = new TextMessage(json);
             session.sendMessage(returnMessage);
             Long oppID=game.getOpponentID(newMv.getUserID());
+            WebSocketSession opponent=null;
             if (activeGameIDs.containsKey(oppID)&&activeGameIDs.get(oppID)==game.getGame().getGameID()){
-                WebSocketSession opponent=sessions.get(oppID);
+                opponent=sessions.get(oppID);
                 if (opponent!=null){
                 	opponent.sendMessage(returnMessage);
                 }
+            }
+            if (newMv.getStatus().startsWith("sunk")){
+            	if (game.checkUserVictory(newMv.getUserID())){
+            		BattleshipMove lastMove=new BattleshipMove();
+            		lastMove.setStatus("win");
+            		lastMove.setUserID(newMv.getUserID());
+            		lastMove.setLoc(newMv.getLoc());
+            		String winjson = objectMapper.writeValueAsString(lastMove);
+            		TextMessage winMessage = new TextMessage(winjson);
+                    session.sendMessage(winMessage);
+                    if (opponent!=null){
+                    	opponent.sendMessage(winMessage);
+                    }
+            	}
             }
         }
     }
@@ -133,6 +148,24 @@ public class BattleshipHandler extends TextWebSocketHandler {
 			}
 			
 			return (!user1Active&&!user2Active);
+		}
+		
+		public boolean checkUserVictory(Long identifier){
+			if (identifier.equals(game.getUser1())){
+				if (user2Board.checkAllSunk()){
+					BattleshipUtils.updateBattleshipGameStatus(game.getGameID(), "1WIN");
+					return true;
+				}
+			} else if (identifier.equals(game.getUser2())){
+				if (user1Board.checkAllSunk()){
+					BattleshipUtils.updateBattleshipGameStatus(game.getGameID(), "2WIN");
+					return true;
+				}
+			} else {
+				throw new IllegalStateException("UserID doesn't match game.");
+			}
+			
+			return false;
 		}
 		
 		public String getShotStatus(BattleshipMove mv){
@@ -255,6 +288,10 @@ public class BattleshipHandler extends TextWebSocketHandler {
 				return "illegal";
 			}
 			return "hit";
+		}
+		
+		public boolean checkAllSunk(){
+			return (carrierHealth<=0&&battleshipHealth<=0&&destroyerHealth<=0&&submarineHealth<=0&&patrolHealth<=0);
 		}
 	}
 }

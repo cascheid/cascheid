@@ -46,7 +46,7 @@
 		<form:input id="patrolVertical" type="hidden" path="patrolVertical"/>
 	</form:form>
 	<script>
-		initGame(Math.min(window.innerWidth, window.innerHeight), ${gameID}, ${identifier}, ${myTurn}, ${myMoves}, ${oppMoves}, ${mySunkenShips}, ${oppSunkenShips});
+		initGame(Math.min(window.innerWidth, window.innerHeight), ${gameID}, ${identifier}, ${myTurn}, ${myMoves}, ${oppMoves}, ${mySunkenShips}, ${oppSunkenShips}, '${winState}');
 	</script>
 	<button onclick="submitFire()">Fire!</button>
 </body>

@@ -25,7 +25,7 @@
 		margin:auto;
 	}
 </style>
-<script src="js/battleship.js"></script>
+<script src="js/battleship.js?version=3.5"></script>
 </head>
 <body>
 	<h1>Battleship vs. ${opponent}</h1>
