@@ -44,7 +44,6 @@ public class BattleshipHandler extends TextWebSocketHandler {
         	newMv.setStatus(game.getShotStatus(newMv));
             String json = objectMapper.writeValueAsString(newMv);
             TextMessage returnMessage = new TextMessage(json);
-            session.sendMessage(returnMessage);
             Long oppID=game.getOpponentID(newMv.getUserID());
             WebSocketSession opponent=null;
             if (activeGameIDs.containsKey(oppID)&&activeGameIDs.get(oppID)==game.getGame().getGameID()){
@@ -53,6 +52,12 @@ public class BattleshipHandler extends TextWebSocketHandler {
                 	opponent.sendMessage(returnMessage);
                 }
             }
+            if (newMv.getStatus().startsWith("hit")){
+            	newMv.setStatus("hit");
+            }
+            json = objectMapper.writeValueAsString(newMv);
+            returnMessage = new TextMessage(json);
+            session.sendMessage(returnMessage);
             if (newMv.getStatus().startsWith("sunk")){
             	if (game.checkUserVictory(newMv.getUserID())){
             		BattleshipMove lastMove=new BattleshipMove();
@@ -178,17 +183,17 @@ public class BattleshipHandler extends TextWebSocketHandler {
 						sReturn="miss";
 						String hit=user2Board.getBoard().checkHit(mv.getLoc());
 						if (!"".equals(hit)){
-							sReturn=user2Board.assignHit(hit);
+							sReturn=user2Board.assignHit(hit)+hit;
 						}
 						if (sReturn!=null&&!"illegal".equals(sReturn)){
-							mv.setStatus(sReturn+hit);
+							mv.setStatus(sReturn);
 							user1Moves.add(mv);
 							BattleshipUtils.insertBattleshipMove(game.getGameID(), mv);
 							BattleshipUtils.updateBattleshipGameStatus(game.getGameID(), "2TURN");
 							game.setStatus("2TURN");
-							if (sReturn.equals("sunk")){
+							/*if (sReturn.equals("sunk")){
 								sReturn+=hit;
-							}
+							}*/
 						}
 					}
 				}
@@ -200,17 +205,17 @@ public class BattleshipHandler extends TextWebSocketHandler {
 						sReturn="miss";
 						String hit=user1Board.getBoard().checkHit(mv.getLoc());
 						if (!"".equals(hit)){
-							sReturn=user1Board.assignHit(hit);
+							sReturn=user1Board.assignHit(hit)+hit;
 						}
 						if (!"illegal".equals(sReturn)){
 							user2Moves.add(mv);
-							mv.setStatus(sReturn+hit);
+							mv.setStatus(sReturn);
 							BattleshipUtils.insertBattleshipMove(game.getGameID(), mv);
 							BattleshipUtils.updateBattleshipGameStatus(game.getGameID(), "1TURN");
 							game.setStatus("1TURN");
-							if (sReturn.equals("sunk")){
+							/*if (sReturn.equals("sunk")){
 								sReturn+=hit;
-							}
+							}*/
 						}
 					}
 				}
@@ -232,6 +237,21 @@ public class BattleshipHandler extends TextWebSocketHandler {
 		public ActiveBattleshipBoard(BattleshipBoard board, List<BattleshipMove> oppMoves){
 			this.setBoard(board);
 			for (BattleshipMove mv : oppMoves){
+				if (mv.getStatus().equals("sunkcarrier")){
+					carrierHealth=0;
+				}
+				if (mv.getStatus().equals("sunkbattleship")){
+					battleshipHealth=0;
+				}
+				if (mv.getStatus().equals("sunkdestroyer")){
+					destroyerHealth=0;
+				}
+				if (mv.getStatus().equals("sunksubmarine")){
+					submarineHealth=0;
+				}
+				if (mv.getStatus().equals("sunkpatrol")){
+					patrolHealth=0;
+				}
 				if (mv.getStatus().equals("hitcarrier")){
 					carrierHealth--;
 				}

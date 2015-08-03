@@ -21,6 +21,9 @@ var mySunkenShips=[];
 var oppSunkenShips=[];
 var lastMove;
 var winState;
+var updateInterval;
+var particles = [];
+var fireParticles = [];
 function initBoardLoad(size){
 	bw = (size-20)/2;
 	canvas = document.getElementById('canvas');
@@ -74,6 +77,7 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 		drawBottomText();
 		drawTopShips();
 		drawBottomShips();
+		initFireHits();
 	}
 }
 
@@ -101,14 +105,13 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 		context.stroke();
 		
 		drawLoadedShips();
-		
 		for (var i=0; i<oppMoves.length; i++){
 			if (oppMoves[i].status=='hit'){
-				if (oppMoves[i].status==lastMove){
+				/*if (oppMoves[i].status==lastMove){
 					drawHit(oppMoves[i].loc, 0, true);
 				} else {
 					drawHit(oppMoves[i].loc, 0, false);
-				}
+				}*/
 			} else if (oppMoves[i].status=='miss'){
 				if (oppMoves[i].status==lastMove){
 					drawMiss(oppMoves[i].loc, 0, true);
@@ -801,18 +804,29 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 			}
 		}
 	}
+	updateInterval=setInterval(function(){update(20);}, 20);
 	
 	function animateShotResult(status, square, offset){
 		if (status=='hit'){
-			var expInt=setInterval(function(){update(20);}, 20);
 			setTimeout(function(){
-				clearInterval(expInt); 
 				particles=[]; 
+				clearHighlights();
 				drawHit(square, offset, true);
 			}, 1500);
-			createExplosion(getXCoord(square)+offset+bw/20, getYCoord(square)+offset+bw/20, "#525252");
-			createExplosion(getXCoord(square)+offset+bw/20, getYCoord(square)+offset+bw/20, "#FFA318");
-		} else {
+			createExplosion(getXCoord(square)+offset+bw/20, getYCoord(square)+offset+bw/20, "#525252", offset);
+			createExplosion(getXCoord(square)+offset+bw/20, getYCoord(square)+offset+bw/20, "#FFA318", offset);
+		} else if (status.substring(0, 3) == 'hit'){
+			setTimeout(function(){
+				particles=[];
+				var hitShip=status.substring(3, status.length);
+				var vert=(document.getElementById(hitShip+'Vertical').value=='true');
+				var newFire = new FireCanvas(Math.floor(bw/10), square, vert);
+				newFire.initFire();
+				fireParticles.push(newFire);
+			}, 1500);
+			createExplosion(getXCoord(square)+offset+bw/20, getYCoord(square)+offset+bw/20, "#525252", offset);
+			createExplosion(getXCoord(square)+offset+bw/20, getYCoord(square)+offset+bw/20, "#FFA318", offset);
+		} else if (status=='miss'){
 			waterRipple(square, offset);
 		}
 	}
@@ -820,6 +834,7 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 	function onMessage(event) {
 	    var result = JSON.parse(event.data);
 	    clearHighlights();
+	    window.alert(result.status);
 	    if (result.status!='illegal'){
 	    	if (result.status=='win'){
 	    		if (result.userID==myId){
@@ -831,8 +846,7 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 	    		}
 	    		myTurn=false;
 			    toggleTurn();
-	    	}
-	    	if (result.userID==myId){
+	    	} else if (result.userID==myId){
 	    		if (result.status.substring(0, 4) == 'sunk'){
 	    			var sunkenShip=result.status.substring(4, result.status.length);
 	    			oppSunkenShips.push(sunkenShip);
@@ -851,7 +865,7 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 	    			mySunkenShips.push(sunkenShip);
 	    			window.alert('Your '+sunkenShip+" has been sunk!");
 	    			drawTopShips();
-	    			result.status='hit';
+	    			result.status='hit'+sunkenShip;
 	    		}
 	    		lastMove=result;
 			    animateShotResult(result.status, result.loc, 0);
@@ -938,7 +952,7 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 	/*
 	 * A single explosion particle
 	 */
-	function Particle ()
+	function Particle (offset)
 	{
 		this.scale = 1.0;
 		this.x = 0;
@@ -948,8 +962,8 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 		this.velocityX = 0;
 		this.velocityY = 0;
 		this.scaleSpeed = 0.5;
-		this.minCoord=10+bw;
-		this.maxCoord=10+2*bw;
+		this.minCoord=10+offset;
+		this.maxCoord=10+bw+offset;
 
 		this.update = function(ms)
 		{
@@ -987,14 +1001,16 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 		};
 	}
 
-	var particles = [];
 	
 	function update (frameDelay)
 	{
 		// draw a white background to clear canvas
 		//context.fillStyle = "#FFF";
 		//context.fillRect(0, 0, context.canvas.width, context.canvas.height);
-		clearHighlights();
+		clearTopHighlights();
+		if (particles.length>0){
+			clearBottomHighlights();
+		}
 
 		// update and draw particles
 		for (var i=0; i<particles.length; i++)
@@ -1004,6 +1020,13 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 			particle.update(frameDelay);
 			particle.draw(context);
 		}
+		
+
+		for (var i=0; i<fireParticles.length; i++)
+		{
+			var fire = fireParticles[i];
+			fire.updateFire();
+		}
 	}
 	
 	function randomFloat (min, max)
@@ -1011,19 +1034,20 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 		return min + Math.random()*(max-min);
 	}
 	
-	function createExplosion(x, y, color)
+	function createExplosion(x, y, color, off)
 	{
 		var minSize = bw/60;
 		var maxSize = bw/20;
 		var count = 10;
-		var minSpeed = 30.0;
-		var maxSpeed = 100.0;
+		var minSpeed = 60.0;
+		var maxSpeed = 200.0;
 		var minScaleSpeed = 1.0;
 		var maxScaleSpeed = 4.0;
+		var offset=off;
 
 		for (var angle=0; angle<360; angle += Math.round(360/count))
 		{
-			var particle = new Particle();
+			var particle = new Particle(offset);
 
 			particle.x = x;
 			particle.y = y;
@@ -1167,4 +1191,228 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 	    
 	    runInterval=setInterval(run, 20);
 	}
+	
+/**
+ * Code for fire animation
+ */
+
+
+    function randomValue(max)
+    {
+        // protip: a double bitwise not (~~) is much faster than
+        // Math.floor() for truncating floating point values into "ints"
+        return ~~(Math.random() * max);
+    };
+	
+	function initFireHits(){
+		for (var i=0; i<oppMoves.length; i++){
+			if (oppMoves[i].status.substring(0, 3) == 'hit'){
+				var hitShip=oppMoves[i].status.substring(3, oppMoves[i].status.length);
+				var vert=(document.getElementById(hitShip+'Vertical').value=='true');
+				var newFire = new FireCanvas(Math.floor(bw/10), oppMoves[i].loc, vert);
+				newFire.initFire();
+				fireParticles.push(newFire);
+			}
+		}
+	}
+
+	//var canvasDemo = new FireCanvas(); 
+	function FireCanvas(size, square, isvert)
+	{
+	    //var context;
+	    //var buffer;
+	    //var bufferContext;
+	    this.fireData;
+	    this.firePallete;
+	    this.fireWidth=size;
+	    this.fireHeight=size;
+	    this.colorMap= Array(this.fireWidth * this.fireHeight);
+	    //var scale = 2;
+	    this.fan = size/3;
+	    this.slack = 5;
+	    this.xStart=getXCoord(square);
+	    this.yStart=getYCoord(square);
+	    this.vert=isvert;
+	    this.context=context;
+
+	    //this.canvas = document.getElementById('canvas');
+
+	    this.initFire = function()
+	    {
+	        //context = canvas.getContext('2d');
+
+	        //fireWidth = canvas.width / scale;
+	        //fireHeight = canvas.height / scale;
+
+	        //colorMap = Array(fireWidth * fireHeight);
+	        this.fireData = this.context.getImageData(this.xStart, this.yStart, this.fireWidth, this.fireHeight);
+
+	        for(var i = 0; i < this.colorMap.length; i++)
+	        	this.colorMap[i] = 0;
+
+	        this.initPalette();
+	        //initBuffer();
+
+	        //setInterval(updateFire,20);
+	    };
+
+	    // init firePallete from warm to white hot colors
+	    this.initPalette = function()
+	    {
+	        this.firePallete = Array(256);
+
+	        for(var i = 0; i < 64; i++)
+	        {
+	        	this.firePallete[i] = [(i << 2), 0, 0];
+	        	this.firePallete[i + 64] = [255, (i << 2), 0];
+	        	this.firePallete[i + 128] = [255, 255, (i << 2)];
+	        	this.firePallete[i + 192] = [255, 255, 255];
+	        }
+	    };
+	    
+	    // because "two-dimensional" arrays in JavaScript suck
+	    this.toIndex = function(x, y)
+	    {
+	    	//if (this.vert){
+	    	//	(x * this.fireWidth + y)
+	    	//} else {
+	    		return (y * this.fireWidth + x);
+	    	//}
+	    };
+
+	    // offscreen buffer for rendering and scaling
+	    /*var initBuffer = function()
+	    {
+	        buffer = document.createElement('canvas');
+	        buffer.width = fireWidth;
+	        buffer.height = fireHeight;
+	        buffer.style.visibility = 'hidden';
+	        
+	        bufferContext = buffer.getContext("2d");
+	        fireData = bufferContext.createImageData(fireWidth, fireHeight);
+	    };*/
+
+	    // main render loop
+	    this.updateFire = function()
+	    {
+	        this.fireData = this.context.getImageData(this.xStart, this.yStart, this.fireWidth, this.fireHeight);
+	    	//clearTopHighlights();
+	    	this.smooth();
+	    	this.draw();
+
+	    };
+
+	    // take the middle pixel and average it with the surrounding pixels
+	    // then write it one veritcal pixel up
+	    //
+	    // v1|v2|v3
+	    // v4|**|v5
+	    // v6|v7|v8
+	    this.smooth = function()
+	    {
+	    	if (this.vert){
+		        for(var x = this.fireWidth - 1; x >= 1; x--)
+		        {
+		            for(var y = this.fireHeight; y--;)
+		            {
+		                var p = ((
+		                		this.colorMap[this.toIndex(x - 1, y - 1)] +
+		                		this.colorMap[this.toIndex(x, y - 1)] +
+		                		this.colorMap[this.toIndex(x + 1, y - 1)] +
+		                		this.colorMap[this.toIndex(x - 1, y)] +
+		                		this.colorMap[this.toIndex(x + 1, y)] +
+		                		this.colorMap[this.toIndex(x - 1, y + 1)] +
+		                		this.colorMap[this.toIndex(x, y + 1)] +
+		                		this.colorMap[this.toIndex(x + 1, y + 1)]) >> 3);
+
+		                p = Math.max(0, p - randomValue(this.fan));
+		                this.colorMap[this.toIndex(x, y - 1)] = p;
+
+		                if(y < this.fireHeight - this.slack) // don't draw random noise in bottom rows
+		                {
+		                    if(y < this.fireHeight - 2)
+		                    {
+		                        // set two lines of random firePallete noise at bottom of
+		                        // colorMap
+		                    	this.colorMap[this.toIndex(x, this.fireHeight)] =
+		                            randomValue(this.firePallete.length);
+		                    	this.colorMap[this.toIndex(x, this.fireHeight - 1)] =
+		                            randomValue(this.firePallete.length);
+		                    }
+		                    var toind=this.toIndex(x, y);
+		                    var cmap=this.colorMap[toind];
+		                    var fp=this.firePallete[cmap];
+
+		                    this.drawPixel(x, y, this.firePallete[this.colorMap[this.toIndex(x, y)]]);
+		                }
+		            }
+		        }
+	    	} else {
+		        for(var x = this.fireWidth - 1; x >= 1; x--)
+		        {
+		            for(var y = this.fireHeight; y--;)
+		            {
+		                var p = ((
+		                		this.colorMap[this.toIndex(x - 1, y - 1)] +
+		                		this.colorMap[this.toIndex(x, y - 1)] +
+		                		this.colorMap[this.toIndex(x + 1, y - 1)] +
+		                		this.colorMap[this.toIndex(x - 1, y)] +
+		                		this.colorMap[this.toIndex(x + 1, y)] +
+		                		this.colorMap[this.toIndex(x - 1, y + 1)] +
+		                		this.colorMap[this.toIndex(x, y + 1)] +
+		                		this.colorMap[this.toIndex(x + 1, y + 1)]) >> 3);
+
+		                p = Math.max(0, p - randomValue(this.fan));
+		                this.colorMap[this.toIndex(x, y - 1)] = p;
+
+		                if(y < this.fireHeight - this.slack) // don't draw random noise in bottom rows
+		                {
+		                    if(y < this.fireHeight - 2)
+		                    {
+		                        // set two lines of random firePallete noise at bottom of
+		                        // colorMap
+		                    	this.colorMap[this.toIndex(x, this.fireHeight)] =
+		                            randomValue(this.firePallete.length);
+		                    	this.colorMap[this.toIndex(x, this.fireHeight - 1)] =
+		                            randomValue(this.firePallete.length);
+		                    }
+		                    var toind=this.toIndex(x, y);
+		                    var cmap=this.colorMap[toind];
+		                    var fp=this.firePallete[cmap];
+
+		                    this.drawPixel(x, y, this.firePallete[this.colorMap[this.toIndex(x, y)]]);
+		                }
+		            }
+		        }
+	    	}
+	    };
+
+	    // draw colormap->firePallete values to screen
+	    this.draw = function()
+	    {
+	        // render the image data to the offscreen buffer...
+	        //bufferContext.putImageData(fireData, 0, 0);
+	    	this.context.putImageData(this.fireData, this.xStart, this.yStart);
+	        // ...then draw it to scale to the onscreen canvas
+	        //context.drawImage(buffer, 0, 0, fireWidth * scale, fireHeight * scale);
+	    };
+
+	    // set pixels in imageData
+	    this.drawPixel = function(x, y, color)
+	    {
+	    	if (color[0]>150){
+	        var offset;
+	        if (this.vert){
+	        	offset = this.fireWidth * this.fireHeight*4-(y + x * this.fireData.width) * 4;
+	        } else {
+	        	offset = (x + y * this.fireData.width) * 4
+	        }
+	        this.fireData.data[offset] = color[0];
+	        this.fireData.data[offset + 1] = color[1];
+	        this.fireData.data[offset + 2] = color[2];
+	        this.fireData.data[offset + 3] = 255;
+	    	}
+	    };
+
+	};
 	

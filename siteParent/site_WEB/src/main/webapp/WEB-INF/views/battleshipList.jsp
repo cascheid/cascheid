@@ -47,6 +47,9 @@ table#t01 th	{
 		}
 	}
 </script>
+<div style="width:100%">
+	<label style="color:red">${sError}</label>
+</div>
 <table id="t01">
 	<tr>
     	<th colspan="2">Create New Game</th>

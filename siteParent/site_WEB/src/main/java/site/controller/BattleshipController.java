@@ -48,6 +48,10 @@ public class BattleshipController {
 					gameStatus="YOUR TURN";
 				} else if (game.getStatus().equals("2TURN")){
 					gameStatus="OPPONENT TURN";
+				} else if (game.getStatus().equals("1WIN")){
+					gameStatus="YOU WON!";
+				} else if (game.getStatus().equals("2WIN")){
+					gameStatus="YOU LOST";
 				}
 			} else if (game.getUser2()==identity.getIdentifier()){
 				opp = IdentityUtils.getIdentityByIdentifier(game.getUser1());
@@ -55,6 +59,10 @@ public class BattleshipController {
 					gameStatus="YOUR TURN";
 				} else if (game.getStatus().equals("1TURN")){
 					gameStatus="OPPONENT TURN";
+				} else if (game.getStatus().equals("2WIN")){
+					gameStatus="YOU WON!";
+				} else if (game.getStatus().equals("1WIN")){
+					gameStatus="YOU LOST";
 				}
 			}
 			uiGame.setOpponent(opp.getUsername());
@@ -73,26 +81,32 @@ public class BattleshipController {
 		if (identity==null){
 			return new ModelAndView("timeout");
 		}
-		ModelAndView mv = new ModelAndView("battleshipBoardCreate");
-		if (gameID!=null&&gameID>0){
-			activeGame = BattleshipUtils.getBattleshipGameByID(gameID);
-			if (!activeGame.getUser2().equals(identity.getIdentifier())){//not invited to this game
-				return null;
+		ModelAndView mv;
+		if (IdentityUtils.checkExistingUsername(opponentName)){
+			mv = new ModelAndView("battleshipBoardCreate");
+			if (gameID!=null&&gameID>0){
+				activeGame = BattleshipUtils.getBattleshipGameByID(gameID);
+				if (!activeGame.getUser2().equals(identity.getIdentifier())){//not invited to this game
+					return null;
+				}
+				activeOpponent = IdentityUtils.getIdentityByIdentifier(activeGame.getUser1());
+			} else {
+				activeOpponent = IdentityUtils.getIdentityByUsername(opponentName);
+				if (activeOpponent==null){
+					return null;
+				}
+				activeGame = new BattleshipGame();
+				activeGame.setUser1(identity.getIdentifier());
+				activeGame.setUser2(activeOpponent.getIdentifier());
+				activeGame.setStatus("1TURN");
 			}
-			activeOpponent = IdentityUtils.getIdentityByIdentifier(activeGame.getUser1());
+			mv.addObject("identifier", identity.getIdentifier());
+			mv.addObject("opponent", activeOpponent.getUsername());
+			mv.addObject("battleshipBoard", new BattleshipBoard());
 		} else {
-			activeOpponent = IdentityUtils.getIdentityByUsername(opponentName);
-			if (activeOpponent==null){
-				return null;
-			}
-			activeGame = new BattleshipGame();
-			activeGame.setUser1(identity.getIdentifier());
-			activeGame.setUser2(activeOpponent.getIdentifier());
-			activeGame.setStatus("1TURN");
+			mv=getBattleshipIndex(identity.getIdentifier());
+			mv.addObject("sError", "Invalid Username");
 		}
-		mv.addObject("identifier", identity.getIdentifier());
-		mv.addObject("opponent", activeOpponent.getUsername());
-		mv.addObject("battleshipBoard", new BattleshipBoard());
 		return mv;
 	}
 	
@@ -153,9 +167,7 @@ public class BattleshipController {
 			for (BattleshipMove move : oppMoves){
 				if (move.getStatus().startsWith("sunk")){
 					mySunkenShips.add(move.getStatus().substring(4, move.getStatus().length()));
-					move.setStatus("hit");
-				} else if (move.getStatus().startsWith("hit")){
-					move.setStatus("hit");
+					move.setStatus(move.getStatus().replace("sunk", "hit"));
 				}
 			}
 			for (BattleshipMove move : myMoves){
