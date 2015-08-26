@@ -4,17 +4,23 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link href="css/site.css" rel="stylesheet">
-<title>CScheid Games</title>
+<link href="css/site.css?test=2" rel="stylesheet">
+<title>CAScheid Games</title>
 <style>
-#top {
-    padding: 5px;
-    padding-left:  15px;
-    padding-right: 15px;
-    background-color: #ffffff;
-    width:97%;
+body{
+	background-image: url(img/misc/timon.jpg);
+	-moz-background-size: cover;
+	-webkit-background-size: cover;
+	background-size: cover;
+	background-position: top center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
 }
-label {
+#gameTop{
+	height:50px;
+}
+#userLabel{
+    color: #34282C;
     padding-right:  15px;
 }
 </style>
@@ -62,9 +68,10 @@ label {
 			<li><a href='about'>About</a></li>
 		</ul>
 	</nav>
-	<div id="top">
+	<div id="main">
+	<div id="gameTop">
 		<div style="width:85%; float:left">
-			<label>Username: ${username}</label>
+			<label class="large">Logged in as: ${username}</label>
 			<button onclick="loadUser()">Load User</button>
 			<button id="btnCreate" onclick="createUser()">Save as New User</button>
 			<button id="btnChange" onclick="changeUsername()" disabled="true">Change Username</button>
@@ -76,15 +83,23 @@ label {
 			<label style="color:red">${sError}</label>
 		</div>
 	</div>
+	<div class="borderedDiv">
+		<iframe id="leftFrame" name="leftFrame" style="width:20%; visibility:hidden; border-right: solid 2px #000000" frameborder=0 src="leftframe?identifier=${identifier}" onload="this.style.visibility='visible';"></iframe>
+		<iframe id="displayFrame" name="displayFrame" style="width:78%; visibility:hidden" frameborder=0 src="displayframe?identifier=${identifier}" onload="this.style.visibility='visible';"></iframe>
+	</div>
+	</div>
+	
 	<script>
+	document.onreadystatechange = function(e){
+	    if (document.readyState === 'complete'){
+	    	document.getElementById('leftFrame').height=(window.innerHeight-150)+'px';
+	    	document.getElementById('displayFrame').height=(window.innerHeight-150)+'px';
+	    }
+	};
 	if ('anonymous'!='${username}'){
 	    document.getElementById("btnCreate").disabled = true;
 	    document.getElementById("btnChange").disabled = false;
 	}
 	</script>
-	
-	<iframe name="leftFrame" width="20%" height="750px" src="leftframe?identifier=${identifier}"></iframe>
-	<iframe name="displayFrame" width="78%" height="750px" src="displayframe?identifier=${identifier}"></iframe>
-	
 </body>
 </html>

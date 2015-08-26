@@ -1,18 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1" %>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel="stylesheet" type="text/css" href="css/racing.css?test=2">
+<link rel="stylesheet" type="text/css" href="css/site.css?test=3"/>
+<link rel="stylesheet" type="text/css" href="css/racing.css?test=3">
 <style>
-	body{overflow:hidden;}
+	body{overflow-x:hidden;}
 </style>
+<title>CAScheid Racing Game</title>
 </head>
 <body>
-	<h3>Class: ${raceInfo.racingClass}  Lap Length: ${raceInfo.lapDistance}  Number of Laps: ${raceInfo.noLaps}</h3>
-	
+	<div id="topBanner">
+		<label id="topLabel">Class: ${raceInfo.racingClass}  Lap Length: ${raceInfo.lapDistance}  Number of Laps: ${raceInfo.noLaps}</label>
+	</div>
 	<script>
 		var finishedRace=false;
 		function startRace(){
@@ -263,36 +266,35 @@
 
 		}
 	</script>
-	
+	<div class="trackboundary">
+	</div>
 	<div class="tracklap1" id="track1">
-		<hr/>
-			<img class="car" id="car1" src="img/cars/${racecar.model}" width="100px" height="50px">
-		<hr/>
+		<img class="car" id="car1" src="img/cars/${racecar.model}" width="100px" height="50px">
+	</div>
+	<div class="trackboundary">
 	</div>
 	<div class="tracklap1" id="track2">
-		<hr/>
-			<img class="car" id="car2" src="img/cars/${racer2.model}" width="100px" height="50px">
-		<hr/>
+		<img class="car" id="car2" src="img/cars/${racer2.model}" width="100px" height="50px">
+	</div>
+	<div class="trackboundary">
 	</div>
 	<div class="tracklap1" id="track3">
-		<hr/>
-			<img class="car" id="car3" src="img/cars/${racer3.model}" width="100px" height="50px">
-		<hr/>
+		<img class="car" id="car3" src="img/cars/${racer3.model}" width="100px" height="50px">
+	</div>
+	<div class="trackboundary">
 	</div>
 	<div class="tracklap1" id="track4">
-		<hr/>
-			<img class="car" id="car4" src="img/cars/${racer4.model}" width="100px" height="50px">
-		<hr/>
+		<img class="car" id="car4" src="img/cars/${racer4.model}" width="100px" height="50px">
+	</div>
+	<div class="trackboundary">
 	</div>
 	<div class="tracklap1" id="track5">
-		<hr/>
-			<img class="car" id="car5" src="img/cars/${racer5.model}" width="100px" height="50px">
-		<hr/>
+		<img class="car" id="car5" src="img/cars/${racer5.model}" width="100px" height="50px">
+	</div>
+	<div class="trackboundary">
 	</div>
 	<div class="tracklap1" id="track6">
-		<hr/>
-			<img class="car" id="car6" src="img/cars/${racer6.model}" width="100px" height="50px">
-		<hr/>
+		<img class="car" id="car6" src="img/cars/${racer6.model}" width="100px" height="50px">
 	</div>
 	<form:form method="POST" id="resultForm" action="racingResults" commandName="raceResult">
 		<form:input id="classForm" type="hidden" path="racingClass" value="${raceInfo.racingClass}"/>
@@ -304,6 +306,28 @@
 		<form:input id="thirdPlaceTimeForm" type="hidden" path="place3Time"/>
 	</form:form>
 	<script>
+	var dist=${raceInfo.lapDistance};
+	var scale=500/dist;//Setting 500 as average scale
+	var trackHeight=Math.ceil(scale*56);//56 average track height
+	var carHeight=Math.floor(scale*50);
+	var carWidth=Math.floor(scale*100);
+	var tracks=document.getElementsByClassName('tracklap1');
+	for (var i=0; i<tracks.length; i++){
+		tracks[i].style.height=trackHeight+'px';
+	}
+	var cars=document.getElementsByClassName('car');
+	for (var i=0; i<cars.length; i++){
+		cars[i].style.height=carHeight+'px';
+		cars[i].style.width=carWidth+'px';
+	}
+	var boundaries = document.getElementsByClassName('trackboundary');
+	var remainder=window.innerHeight-(25+6*trackHeight);//total height minus 25 for top label, minus height*6 cars
+	if (remainder>0){
+		var boundHeight=Math.floor(remainder/7);
+		for (var i=0; i<boundaries.length; i++){
+			boundaries[i].style.height=Math.min(boundHeight, Math.round(trackHeight/4))+'px';
+		}
+	}
 	startRace();
 	</script>
 </body>

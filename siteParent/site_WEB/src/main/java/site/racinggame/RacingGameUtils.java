@@ -41,6 +41,7 @@ public class RacingGameUtils {
 				newID=0l;
 			}
 			racingGame.setRacingIdentifier(newID);
+			racingGame.setSelectedMode("user");
 		} else {
 			try{
 				racingGame=dao.getRacingGameByID(racingGameIdentifier);
@@ -49,6 +50,7 @@ public class RacingGameUtils {
 				} else{
 					racingGame.setSelectedClass(racingGame.getRacingClass());
 				}
+				racingGame.setSelectedMode("user");
 			} catch (Exception e){
 				throw new IllegalStateException("Failed to get Racing Game record for identifier: " + racingGameIdentifier, e);
 			}

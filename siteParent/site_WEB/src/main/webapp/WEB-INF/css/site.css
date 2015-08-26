@@ -1,15 +1,7 @@
 body {
-	background-image: url(../img/misc/timon.jpg);
-	-moz-background-size: cover;
-	-webkit-background-size: cover;
-	background-size: cover;
-	background-position: top center;
-	background-repeat: no-repeat;
-	background-attachment: fixed;
-
     font-family: "Trebuchet MS", Verdana, sans-serif;
     font-size: 16px;
-    color: #696969;
+    color: #34282C;
     padding: 3px;
 }
 
@@ -17,20 +9,48 @@ body {
     padding: 5px;
     padding-left:  15px;
     padding-right: 15px;
-    background-color: #ffffff;
+	background: rgba(128,128,128,.85);
+    /*background: rgba(255,255,255,.85);*/
     border-radius: 0 0 5px 5px;
 }
-
-iframe {
-    background-color: #ffffff;
-    border-radius: 0 0 5px 5px;
+iframe{
+	padding:0;
+	line-height:0;
+	border:0;
 }
 
 h1 {
+	text-align: center;
     font-family: Georgia, serif;
-    border-bottom: 3px solid #cc9900;
-    color: #996600;
+    /*color: #191970;*/
+    color: #34282C;
+    /*color: #007FFF;*/
     font-size: 30px;
+}
+
+h2.underline{
+    border-bottom: 2px solid #191970;
+}
+
+h2{ 
+    font-family: Georgia, serif;
+    color: #34282C;
+    font-size: 24px;
+	text-align: center;
+}
+
+.underline{
+    /*border-bottom: 3px solid #cc9900;*/
+    border-bottom: 2px solid #191970;
+}
+
+label.large{
+	font-weight: bold; font-size: 22px; float:left; padding-right:15px;
+}
+
+div.fullCenter{
+	width:100%;
+	text-align:center;
 }
 
 ul#menu {
@@ -44,14 +64,81 @@ ul#menu li {
 }
 
 ul#menu li a {
-    background-color: #ffffff;
+	background: rgba(128,128,128,.85);
     padding: 10px 20px;
     text-decoration: none;
-    color: #696969;
+    /*color: #34282C;*/
+    /*color: #696969;*/
+    color: #191970;
+    /*color: #996600;*/
     border-radius: 4px 4px 0 0;
 }
 
 ul#menu li a:hover {
     color: white;
     background-color: black;
+}
+
+#gameTop {
+    padding: 5px;
+    padding-left:  15px;
+    padding-right: 15px;
+    width:97%;
+}
+
+a {color:#191970;}
+a:visited {color:#191970;}
+a:hover {color:#0000A0;}
+a:active {color:#191970;}
+
+select{
+	font-family: "Trebuchet MS", Verdana, sans-serif;
+    font-size: 16px;
+    color: #34282C;
+    /*color: #996600;*/
+    height:30px;
+    background-color:#D3D3D3;
+}
+option{
+	font-family: "Trebuchet MS", Verdana, sans-serif;
+    font-size: 16px;
+    color: #34282C;
+    /*color: #996600;*/
+    background-color:#D3D3D3;
+}
+
+button{
+    font-family: "Trebuchet MS", Verdana, sans-serif;
+    font-size: 16px;
+    color: #34282C;
+}
+
+div.borderedDiv{
+	border:1px solid black;
+	height:100%;
 } 
+
+div.centerInline{
+	text-align:justify;
+text-align-last:center;
+	width:100%;
+}
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th, td {
+    padding: 5px;
+    text-align: left;
+}
+table tr:nth-child(even) {
+    background-color: #eee;
+}
+table tr:nth-child(odd) {
+   background-color:#fff;
+}
+table th	{
+    background-color: black;
+    color: white;
+}

@@ -313,11 +313,13 @@ public class RacingGameController {
 		}
 		Set<Racecar> opponents;
 		if (raceInfo.getRaceType().equals("user")){
+			racingGame.setSelectedMode("user");
 			LinkedHashMap<String, Integer> feeMap = RacingGameUtils.getFeeMap();
 			racingGame.setAvailableCash(racingGame.getAvailableCash().subtract(new BigDecimal(feeMap.get(raceInfo.getRacingClass()))));
 			mv = new ModelAndView("userRaceFrame");
 			opponents = new HashSet<Racecar>(RacingGameUtils.getRandomOpponentsByClass(raceInfo.getRacingClass()));
 		} else {
+			racingGame.setSelectedMode("spectate");
 			mv = new ModelAndView("spectateRaceFrame");
 			opponents = new HashSet<Racecar>(RacingGameUtils.getSpectateCarsByCarID(racingGame.getSelectedCar().getCarID()));
 		}

@@ -1,24 +1,40 @@
-body {background-color: #ffffff; height:660px; margin: 0; padding: 0;}
+body {margin: 0; padding: 0;}
 
-h1 {color: #000000; font: arial;}
-h2 {color: #000000; font: arial;}
-p {color: #000000; font: arial;}
+select {font-weight: bold; font-size: 22px; float:left; padding-right:10px;}
 
-div.tracklap1 {background-color: lightblue; background-image: url("../img/misc/one.png"); background-position:center; background-repeat: no-repeat; background-size:contain; }
-div.tracklap2 {background-color: seagreen; background-image: url("../img/misc/two.png"); background-position:center; background-repeat: no-repeat; background-size:contain; }
-div.tracklap3 {background-color: royalblue; background-image: url("../img/misc/three.png"); background-position:center; background-repeat: no-repeat; background-size:contain; }
-div.tracklap4 {background-color: lightsalmon; background-image: url("../img/misc/four.png"); background-position:center; background-repeat: no-repeat; background-size:contain; }
-div.tracklap5 {background-color: darkcyan; background-image: url("../img/misc/five.png"); background-position:center; background-repeat: no-repeat; background-size:contain; }
-div.tracklap6 {background-color: chocolate; background-image: url("../img/misc/six.png"); background-position:center; background-repeat: no-repeat; background-size:contain; }
-div.tracklap7 {background-color: indianred; background-image: url("../img/misc/seven.png"); background-position:center; background-repeat: no-repeat; background-size:contain; }
-div.tracklap8 {background-color: darkred; background-image: url("../img/misc/eight.png"); background-position:center; background-repeat: no-repeat; background-size:contain; }
+button{width: 150px; padding: 10px; box-shadow: -8px 8px 10px 3px rgba(0,0,0,0.2); font-weight: bold; text-decoration: none;}
 
+div.tracklap1 {background-color: lightblue; background-image: url("../img/misc/one.png"); background-position:center; background-repeat: no-repeat; background-size:contain; border:1px solid black}
+div.tracklap2 {background-color: seagreen; background-image: url("../img/misc/two.png"); background-position:center; background-repeat: no-repeat; background-size:contain; border:1px solid black }
+div.tracklap3 {background-color: royalblue; background-image: url("../img/misc/three.png"); background-position:center; background-repeat: no-repeat; background-size:contain; border:1px solid black }
+div.tracklap4 {background-color: lightsalmon; background-image: url("../img/misc/four.png"); background-position:center; background-repeat: no-repeat; background-size:contain; border:1px solid black }
+div.tracklap5 {background-color: darkcyan; background-image: url("../img/misc/five.png"); background-position:center; background-repeat: no-repeat; background-size:contain; border:1px solid black }
+div.tracklap6 {background-color: chocolate; background-image: url("../img/misc/six.png"); background-position:center; background-repeat: no-repeat; background-size:contain; border:1px solid black }
+div.tracklap7 {background-color: indianred; background-image: url("../img/misc/seven.png"); background-position:center; background-repeat: no-repeat; background-size:contain; border:1px solid black }
+div.tracklap8 {background-color: darkred; background-image: url("../img/misc/eight.png"); background-position:center; background-repeat: no-repeat; background-size:contain; border:1px solid black }
+
+div.splits {float:left; margin-left:0px; width:70px; height:650px; background-color: lightgreen;}
+div.middle {float:left; margin-left:0px; width:99px; height:650px; background-color: lightgreen;}
+
+div.statsPath{float:left; position:relative; overflow:hidden; width:49%; height:20px; border:3px solid #000;}
+div.statsDisplayBlock{width:80%; height:20px; background-color:royalblue;}
+div.inline{display:inline-block; width: 100%; padding-bottom:10px;}
+div.statsinline{float:left; width: 100%; padding-bottom:5px;}
+div.statssplit{width: 49%; display:inline-block;}
+	
 img.car {position:relative;}
+img.spectatecar {position:absolute; bottom:-50px; -webkit-transform: rotate(270deg); -moz-transform: rotate(270deg); -o-transform: rotate(270deg); -ms-transform: rotate(270deg); transform: rotate(270deg); width:100px; height:50px; margin-left:0px;}
+img.lakitu {position:absolute; bottom:0px; width:60px; height:60px; margin-left:20px;}
+img.bowser{position:absolute; width:99px; height:69px; bottom:800px;}
+img.yoshi{position:absolute; width:108px; height:78px; bottom:350px; margin-left:-53px;}
+img.yoshiflip{position:absolute; width:108px; height:78px; bottom:350px; margin-left:25px; -moz-transform: scaleX(-1); -o-transform: scaleX(-1); -webkit-transform: scaleX(-1); transform: scaleX(-1); filter: FlipH; -ms-filter: "FlipH";}
+img.crab{position:absolute; width:48px; height:34px;}
+img.peach{position:absolute; width:60px; height:76px; bottom:400px; margin-left:-60px;}
+img.mario{position:absolute; width:62px; height:80px; bottom:0px;}
+	
+label.stats {font-size: 22px; font-weight:bold; display:inline-block; width:40%; float:left;}
+label.bold{font-weight:bold;}
 
-button{
-	width: 150px;
-	padding: 10px;
-	box-shadow: -8px 8px 10px 3px rgba(0,0,0,0.2);
-	font-weight: bold;
-	text-decoration: none;
-}
+#topBanner{height:25px; border-bottom:1px solid black; overflow:hidden; text-align:center;}
+#topLabel{font-family: "Trebuchet MS", Verdana, sans-serif; font-size: 20px;}
+#resultImg{margin:auto; display:block;}

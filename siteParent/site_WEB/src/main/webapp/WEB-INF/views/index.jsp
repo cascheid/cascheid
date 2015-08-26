@@ -4,43 +4,49 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link href="css/site.css" rel="stylesheet">
-	<style>
-		#main{
-    		background: rgba(255,255,255,.25)
-    	}
-    	
-		ul#menu li a {
-    		background: rgba(255,255,255,.5)
-    	}
-    	
-		#bodyCanvas{
-			position:fixed;
-			top:0;
-			left:0;
-		}
-		
-		.fish{
-			position:fixed;
-			top:900px;
-			left:500px;
-		}
-		
-		div.master{
-			position:relative;
-			z-index:3;
-		}
-		
-		#top{
-			position:fixed;
-			top:0px;
-			left:0px;
-			z-index:2;
-		}
-	</style>
-<title>CScheid Home</title>
-<script src="js/smoke.js"></script>
-<!--  --><script src="js/rain.js"></script>
+<link href="css/site.css?test=3" rel="stylesheet">
+<style>
+body{
+	background-image: url(img/misc/timon.jpg);
+	-moz-background-size: cover;
+	-webkit-background-size: cover;
+	background-size: cover;
+	background-position: top center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+}
+#main{
+	background: rgba(255,255,255,.25);
+	width:236px;
+	text-align:center;
+}   	
+ul#menu li a {
+   	background: rgba(255,255,255,.5)
+}   	
+#bodyCanvas{
+	position:fixed;
+	top:0;
+	left:0;
+}		
+.fish{
+	position:fixed;
+	top:900px;
+	left:500px;
+}
+div.master{
+	position:relative;
+	z-index:3;
+}	
+#top{
+	position:fixed;
+	top:0px;
+	left:0px;
+	z-index:2;
+}
+</style>
+<title>CAScheid Home</title>
+<script src="js/mist.js"></script>
+<script src="js/rain.js"></script>
 </head>
 <body>
 	<canvas id="bodyCanvas"></canvas>
@@ -95,6 +101,7 @@
 	    
 	    document.getElementById('top').style.width=width+'px';
 	    document.getElementById('top').style.height=height/displayedHeight+'px';
+	    document.getElementById('top').style.display='';
 		ctx.drawImage(canvasimg, 0, 0, fullWidth, fullHeight*displayedHeight, 0, 0, width, height);
 	    texture = ctx.getImageData(0, 0, width, height);
 	    ripple = ctx.getImageData(0, 0, width, height);
@@ -433,13 +440,12 @@
 		</ul>
 	</nav>
   	<div id="main">
-  		<button id='btnAnim' onclick="toggleAnim()">Animations On</button>
-		<h1>Hellow World!</h1>
+  		<button id='btnAnim' style="margin:auto" onclick="toggleAnim()">Animations On</button>
 	</div>
 	</div>
 	<img id="fish1" class="fish" src="img/sprites/fish.png">
 	<img id="fish2" class="fish" src="img/sprites/fish.png">
-	<img id="top" src="img/misc/top.png">
+	<img id="top" src="img/misc/top.png" style='display:none'>
 	
 </body>
 </html>

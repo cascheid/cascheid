@@ -4,9 +4,22 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link rel="stylesheet" type="text/css" href="css/site.css?test=3"/>
+<style>
+	body{overflow:hidden; border:0px; margin:0px; padding:0px;}
+</style>
+<title>CAScheid Racing Game</title>
 </head>
 <body>
-	<iframe name="centerUpgradeFrame" width="19%" height="750px" src="upgradeStoreFrame" frameBorder="0"></iframe>
-	<iframe name="rightUpgradeFrame" width="79%" height="750px" src="upgradeDisplayFrame" frameBorder="0"></iframe>
+	<iframe id="centerUpgradeFrame" name="centerUpgradeFrame" width="19%" src="upgradeStoreFrame" frameBorder="0" style="visibility:hidden" onload="this.style.visibility='visible';"></iframe>
+	<iframe id="rightUpgradeFrame" name="rightUpgradeFrame" width="79%" src="upgradeDisplayFrame" frameBorder="0" style="visibility:hidden" onload="this.style.visibility='visible';"></iframe>
+	<script>
+	document.onreadystatechange = function(e){
+	    if (document.readyState === 'complete'){
+			document.getElementById('centerUpgradeFrame').height=(window.innerHeight)+'px';
+			document.getElementById('rightUpgradeFrame').height=(window.innerHeight)+'px';
+	    }
+	};
+	</script>
 </body>
 </html>

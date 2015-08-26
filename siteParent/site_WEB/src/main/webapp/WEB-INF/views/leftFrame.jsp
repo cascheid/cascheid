@@ -1,14 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-
     pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Left Frame</title>
+<title>CAScheid Game List</title>
+<link rel="stylesheet" type="text/css" href="css/site.css?test=3"/>
+<style>
+</style>
 </head>
 <body>
-	<h1>Game List</h1>
+	<h1 class="underline">Game List</h1>
 	<div>
 		<a title="Racing Game" href="racingparent?identifier=${identifier}" target="displayFrame">Racing Game</a>
 	</div>

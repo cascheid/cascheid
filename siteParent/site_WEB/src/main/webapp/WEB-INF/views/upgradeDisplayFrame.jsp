@@ -1,61 +1,38 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<style>
-	h1 {
-		position:center;
-	}
-	div.inline{float:left; width: 100%; padding-bottom:5px;}
-	div.inlinesplit{float:left; width: 49%;}
-	
-	div.path{
-		float:left;
-		position:relative;
-		overflow:hidden;
-		width:49%;
-		height:20px;
-		border:3px solid #000;
-	}
-	div.displayBlock{
-		width:80%;
-		height:20px;
-		background-color:royalblue;
-		background:linear-gradient(to right, royalblue 0%, royalblue 50%, lightgreen 50%, lightgreen 80%, white 80%, white 100%);
-	}
-	div.upgradedBlock{
-		width:10%;
-		height:20px;
-		background-color:lightgreen;
-	}
-	
-	label {font-size: 22px; font-weight:bold; display:inline-block; width:40%; float:left;}
-	
-	button {padding-left: 10px;}
-</style>
+<link rel="stylesheet" type="text/css" href="css/site.css?test=3"/>
+<link rel="stylesheet" type="text/css" href="css/racing.css?test=3"/>
+<title>CAScheid Racing Game</title>
 </head>
 <body>
-	<div class="inline">
-	<label>Top Speed: ${raceCar.topSpeed} mph</label>
-	<div id="speedDisplay" class="path"></div>
-	</div>	
-	<div class="inline">
-	<label>Acceleration: ${raceCar.acceleration} mph/s</label>
-	<div id="accelDisplay" class="path"></div>
+	<div class="statsinline">
+		<label class="stats">Top Speed: ${raceCar.topSpeed} mph</label>
+		<div id="speedDisplay" class="statsPath"></div>
 	</div>
-	<div class="inline">
-	<label>Reliability: ${raceCar.reliability*100}%</label>
-	<div class="path" id="relDisplay"></div>
+	<div class="statsinline">
+		<label class="stats">Acceleration: ${raceCar.acceleration}
+			mph/s</label>
+		<div id="accelDisplay" class="statsPath"></div>
 	</div>
-	<div class="inline">
-	<label>Lap Efficiency: ${raceCar.lapEfficiency*100}%</label>
-	<div class="path" id="effDisplay"></div>
+	<div class="statsinline">
+		<label class="stats">Reliability: ${raceCar.reliability*100}%</label>
+		<div class="statsPath" id="relDisplay"></div>
 	</div>
-	<img src="img/cars/${raceCar.model}" width="400px" height="200px">
-		<form:form method="POST" id="buyForm" action="purchaseUpgrade" commandName="upgrade">
+	<div class="statsinline">
+		<label class="stats">Lap Efficiency:
+			${raceCar.lapEfficiency*100}%</label>
+		<div class="statsPath" id="effDisplay"></div>
+	</div>
+	<div class="statsinline" style="text-align:center">
+		<img id="resultImg" src="img/cars/${raceCar.model}" width="400px" height="200px">
+	</div>
+	<form:form method="POST" id="buyForm" action="purchaseUpgrade" commandName="upgrade">
 		<form:input type="hidden" path="upgradeID" value="${upgrade.upgradeID}" />
 		<form:input type="hidden" path="racingClass" value="${upgrade.racingClass}" />
 		<form:input type="hidden" path="price" value="${upgrade.price}" />
@@ -65,7 +42,14 @@
 		<form:input type="hidden" path="efficiencyMod" value="${upgrade.efficiencyMod}" />
 	</form:form>
 	<div id="buttondiv">
-	<h1>Price: $${upgrade.price}</h1><button onclick='purchaseUpgrade()'>Buy upgrade</button>
+		<div class="statsinline">
+			<div class="statssplit">
+				<h1>Price: $<spring:eval expression="upgrade.price" /></h1>
+			</div>
+			<div class="statssplit">
+				<button onclick='purchaseUpgrade()'>Buy upgrade</button>
+			</div>
+		</div>
 	</div>
 	<script>
 		if (${upgrade.price==null}){
@@ -77,27 +61,13 @@
 			document.getElementById("effDisplay").style.background='linear-gradient(to right, royalblue 0%, royalblue ${raceCar.lapEfficiency*125}%, lightgreen ${raceCar.lapEfficiency*125}%, lightgreen ${(raceCar.lapEfficiency+upgrade.efficiencyMod)*125}%, white ${(raceCar.lapEfficiency+upgrade.efficiencyMod)*125}%, white 100%)';
 		}
 		
-	</script>
-	
-	<script>
 		function purchaseUpgrade(){
 			if (${upgrade.price} <= ${availableCash}){
-				
-				//document.getElementById("upgradeID").value=${upgrade.upgradeID};
-				//document.getElementById("accelerationMod").value=${upgrade.accelerationMod};
-				//document.getElementById("topSpeedMod").value=${upgrade.accelerationMod};
-				//document.getElementById("reliabilityMod").value=${upgrade.accelerationMod};
-				//document.getElementById("efficiencyMod").value=${upgrade.accelerationMod};
-				//document.getElementById("efficiencyMod").value=${upgrade.accelerationMod};
-				//document.getElementById("price").value=${upgrade.accelerationMod};
 				buyForm.submit();
-				//window.open("purchaseUpgrade?upgradeID=${upgrade.upgradeID}","_self");
 			} else {
 				window.alert("You cannot afford this upgrade!");
 			}
 		}
 	</script>
-
-
 </body>
 </html>

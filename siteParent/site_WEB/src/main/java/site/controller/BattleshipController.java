@@ -31,7 +31,14 @@ public class BattleshipController {
 	
 	@RequestMapping("/battleship")
 	public ModelAndView getBattleshipIndex(@CookieValue(value = "identifier", defaultValue = "0") Long identifier){
-		ModelAndView mv = new ModelAndView("battleshipList");
+		ModelAndView mv;
+		if (identifier==0){//no cookie
+			mv = new ModelAndView("pleaseLogin");
+			mv.addObject("action","play Battleship");
+			return mv;
+		} else {
+			mv = new ModelAndView("battleshipList");
+		}
 		if (identity==null){
 			identity=IdentityUtils.getIdentityByIdentifier(identifier);
 		}

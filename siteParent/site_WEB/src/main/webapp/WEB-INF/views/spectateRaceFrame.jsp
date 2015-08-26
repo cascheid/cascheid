@@ -1,89 +1,112 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1" %>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link rel="stylesheet" type="text/css" href="css/site.css?test=3"/>
 <link rel="stylesheet" type="text/css" href="css/racing.css?test=3">
 <style>
 	body{overflow:hidden;}
-	div.tracklap1 {float:left; width:100px; height:650px; background: lightblue url ("../img/misc/one.png") no-repeat 50% 50%; margin:auto;}
-	div.tracklap2 {float:left; width:100px; height:650px; background: seagreen url ("../img/misc/two.png") no-repeat 50% 50%; margin:auto;}
-	div.tracklap3 {float:left; width:100px; height:650px; background: royalblue url ("../img/misc/three.png") no-repeat 50% 50%; margin:auto;}
-	div.tracklap4 {float:left; width:100px; height:650px; background: lightsalmon url ("../img/misc/four.png") no-repeat 50% 50%; margin:auto;}
-	div.tracklap5 {float:left; width:100px; height:650px; background: darkcyan url ("../img/misc/five.png") no-repeat 50% 50%; margin:auto;}
-	div.tracklap6 {float:left; width:100px; height:650px; background: chocolate url ("../img/misc/six.png") no-repeat 50% 50%; margin:auto;}
-	div.tracklap7 {float:left; width:100px; height:650px; background: indianred url ("../img/misc/seven.png") no-repeat 50% 50%; margin:auto;}
-	div.tracklap8 {float:left; width:100px; height:650px; background: darkred url ("../img/misc/eight.png") no-repeat 50% 50%; margin:auto;}
-	div.splits {float:left; margin-left:0px; width:70px; height:650px; background-color: lightgreen;}
-	div.middle {float:left; margin-left:0px; width:99px; height:650px; background-color: lightgreen;}
-	img.car {position:absolute;
-	bottom:50px;
-	-webkit-transform: rotate(270deg);
-    -moz-transform: rotate(270deg);
-    -o-transform: rotate(270deg);
-    -ms-transform: rotate(270deg);
-    transform: rotate(270deg);
-    width:100px;
-    height:50px;
-    margin-left:0px;
-	}
-	
-	img.lakitu {position:absolute;
-	bottom:0px;
-    width:60px;
-    height:60px;
-    margin-left:20px;
-	}
-	
-	img.bowser{position:absolute;
-	width:99px;
-	height:69px;
-	bottom:800px;}
-	
-	img.yoshi{position:absolute;
-	width:108px;
-	height:78px;
-	bottom:350px;
-	margin-left:-53px;}
-	
-	img.yoshiflip{position:absolute;
-	width:108px;
-	height:78px;
-	bottom:350px;
-	margin-left:15px;
-	-moz-transform: scaleX(-1);
-    -o-transform: scaleX(-1);
-    -webkit-transform: scaleX(-1);
-    transform: scaleX(-1);
-    filter: FlipH;
-    -ms-filter: "FlipH";}
-	
-	img.crab{position:absolute;
-	width:48px;
-	height:34px;}
-	
-	img.peach{position:absolute; 
-	width:60px; 
-	height:76px;
-	bottom:400px;
-	margin-left:-60px;}
-	
-	img.mario{position:absolute; 
-	width:62px; 
-	height:80px;
-	bottom:0px;}
+	div.tracklap1 {z-index:-1; position:relative; overflow:hidden; float:left;}
+	div.tracklap2 {z-index:-1; position:relative; overflow:hidden; float:left;}
+	div.tracklap3 {z-index:-1; position:relative; overflow:hidden; float:left;}
+	div.tracklap4 {z-index:-1; position:relative; overflow:hidden; float:left;}
+	div.tracklap5 {z-index:-1; position:relative; overflow:hidden; float:left;}
+	div.tracklap6 {z-index:-1; position:relative; overflow:hidden; float:left;}
+	div.tracklap7 {z-index:-1; position:relative; overflow:hidden; float:left;}
+	div.tracklap8 {z-index:-1; position:relative; overflow:hidden; float:left;}
 </style>
+<title>CAScheid Racing Game</title>
 </head>
 <body>
-	<h3>Class: ${raceInfo.racingClass}  Lap Length: ${raceInfo.lapDistance}  Number of Laps: ${raceInfo.noLaps}</h3>
+	<div id="topBanner">
+		<label id="topLabel">Class: ${raceInfo.racingClass}  Lap Length: ${raceInfo.lapDistance}  Number of Laps: ${raceInfo.noLaps}</label>
+	</div>
 	
 	<script>
+		var heightScale = (window.innerHeight-25)/650;
 		var finishedRace=false;
 		function startRace(){
 			var distance=${raceInfo.lapDistance*raceInfo.noLaps};
 			var lapDistance=${raceInfo.lapDistance};
+
+			var scale=500*heightScale/lapDistance;//Setting 500 as average scale
+			var tracks=document.getElementsByClassName('tracklap1');
+			var trackHeight=Math.floor(heightScale*650);
+			var trackWidth=Math.floor(scale*100);
+			var carHeight=Math.floor(scale*50);
+			var carWidth=Math.floor(scale*100);
+			for (var i=0; i<tracks.length; i++){
+				tracks[i].style.height=trackHeight+'px';
+				tracks[i].style.width=trackWidth+'px';
+			}
+
+			var cars=document.getElementsByClassName('spectatecar');
+			for (var i=0; i<cars.length; i++){
+				cars[i].style.height=carHeight+'px';
+				cars[i].style.width=carWidth+'px';
+			}
+
+			var tempObjs=document.getElementsByClassName('splits');
+			var tempHeight=trackHeight;
+			var tempWidth=Math.floor(78*scale);
+			for (var i=0; i<tempObjs.length; i++){
+				tempObjs[i].style.height=tempHeight+'px';
+				tempObjs[i].style.width=tempWidth+'px';
+			}
+
+			tempObjs=document.getElementsByClassName('middle');
+			tempWidth=Math.floor(99*scale);
+			for (var i=0; i<tempObjs.length; i++){
+				tempObjs[i].style.height=tempHeight+'px';
+				tempObjs[i].style.width=tempWidth+'px';
+			}
+
+			tempObjs=document.getElementsByClassName('lakitu');
+			tempHeight=Math.floor(60*scale);
+			tempWidth=tempHeight;
+			for (var i=0; i<tempObjs.length; i++){
+				tempObjs[i].style.height=tempHeight+'px';
+				tempObjs[i].style.width=tempHeight+'px';
+			}
+			
+			tempObjs=document.getElementsByClassName('crab');
+			tempWidth=Math.floor(48*scale);
+			tempHeight=Math.floor(34*scale);
+			var marg=Math.floor(11*scale);
+			for (var i=0; i<tempObjs.length; i++){
+				tempObjs[i].style.height=tempHeight+'px';
+				tempObjs[i].style.width=tempWidth+'px';
+				tempObjs[i].style.marginLeft=marg+'px';
+			}
+
+			document.getElementById("crab1").style.bottom=heightScale*(475+Math.random()*125)+'px';
+			document.getElementById("crab2").style.bottom=heightScale*(250+(Math.random()*125)/2)+'px';
+			document.getElementById("crab3").style.bottom=heightScale*(475+Math.random()*125)+'px';
+			document.getElementById("crab4").style.bottom=heightScale*(250+(Math.random()*125)/2)+'px';
+
+			document.getElementById('mario').style.width=Math.floor(scale*62)+'px';
+			document.getElementById('mario').style.height=Math.floor(scale*80)+'px';
+			document.getElementById('peach').style.width=Math.floor(scale*60)+'px';
+			document.getElementById('peach').style.height=Math.floor(scale*76)+'px';
+			document.getElementById('peach').style.bottom=Math.floor(heightScale*400)+'px';
+			document.getElementById('peach').style.marginLeft=Math.floor(scale*-60)+'px';
+			document.getElementById('bowser').style.width=Math.floor(scale*99)+'px';
+			document.getElementById('bowser').style.height=Math.floor(scale*69)+'px';
+			document.getElementById('bowser').style.bottom=Math.ceil(heightScale*800)+'px';
+			document.getElementById('yoshi1').style.width=Math.floor(scale*108)+'px';
+			document.getElementById('yoshi1').style.height=Math.floor(scale*78)+'px';
+			document.getElementById('yoshi1').style.bottom=Math.ceil(heightScale*350)+'px';
+			document.getElementById('yoshi1').style.marginLeft=Math.floor(scale*-53)+'px';
+			document.getElementById('yoshi2').style.width=Math.floor(scale*108)+'px';
+			document.getElementById('yoshi2').style.height=Math.floor(scale*78)+'px';
+			document.getElementById('yoshi2').style.bottom=Math.ceil(heightScale*350)+'px';
+			document.getElementById('yoshi2').style.marginLeft=Math.floor(scale*25)+'px';
+
+			
+			
 			var elapsedTime=0;
 			var firstPlace=null;
 			var secondPlace=null;
@@ -325,9 +348,11 @@
 						if (yoshi1Face=="left"){
 							yoshi1Face="right";
 							document.getElementById("yoshi1").className='yoshiflip';
+							document.getElementById("yoshi1").style.marginLeft=Math.floor(25*scale)+'px';
 						} else {
 							yoshi1Face="left";
 							document.getElementById("yoshi1").className='yoshi';
+							document.getElementById("yoshi1").style.marginLeft=Math.floor(-53*scale)+'px';
 						}
 					}
 				}
@@ -336,9 +361,11 @@
 						if (yoshi2Face=="left"){
 							yoshi2Face="right";
 							document.getElementById("yoshi2").className='yoshiflip';
+							document.getElementById("yoshi2").style.marginLeft=Math.floor(25*scale)+'px';
 						} else {
 							yoshi2Face="left";
 							document.getElementById("yoshi2").className='yoshi';
+							document.getElementById("yoshi2").style.marginLeft=Math.floor(-53*scale)+'px';
 						}
 					}
 				}
@@ -357,20 +384,20 @@
 					charActive=true;
 					peachFail=false;
 					peachElem.style.visibility='';
-					peachElem.style.marginLeft='-50px';
+					peachElem.style.marginLeft=Math.floor(-50*scale)+'px';
 					peachElem.src='img/sprites/peach-twirl-1.png';
 				} else if (peachLoop==2){
 					peachElem.src='img/sprites/peach-twirl-1.png';
-					peachElem.style.marginLeft='-40px';
+					peachElem.style.marginLeft=Math.floor(-40*scale)+'px';
 				} else if (peachLoop==3){
 					peachElem.src='img/sprites/peach-twirl-1.png';
-					peachElem.style.marginLeft='-30px';
+					peachElem.style.marginLeft=Math.floor(-30*scale)+'px';
 				} else if (peachLoop==4){
 					peachElem.src='img/sprites/peach-twirl-1.png';
-					peachElem.style.marginLeft='-20px';
+					peachElem.style.marginLeft=Math.floor(-20*scale)+'px';
 				} else if (peachLoop==5){
 					peachElem.src='img/sprites/peach-twirl-1.png';
-					peachElem.style.marginLeft='-10px';
+					peachElem.style.marginLeft=Math.floor(-10*scale)+'px';
 				} else if (peachLoop==6){
 					peachElem.src='img/sprites/peach-twirl-1.png';
 					peachElem.style.marginLeft='0px';
@@ -499,23 +526,23 @@
 				if (marioLoop==1){
 					charActive=true;
 					marioElem.style.visibility='';
-					marioElem.style.bottom='30px';
+					marioElem.style.bottom=Math.floor(30*heightScale)+'px';
 					marioElem.src='img/sprites/mario_drive-1.png';
 				} else if (marioLoop==2){
 					marioElem.src='img/sprites/mario_drive-1.png';
-					marioElem.style.bottom='40px';
+					marioElem.style.bottom=Math.floor(40*heightScale)+'px';
 				} else if (marioLoop==3){
 					marioElem.src='img/sprites/mario_drive-1.png';
-					marioElem.style.bottom='50px';
+					marioElem.style.bottom=Math.floor(50*heightScale)+'px';
 				} else if (marioLoop==4){
 					marioElem.src='img/sprites/mario_drive-1.png';
-					marioElem.style.bottom='60px';
+					marioElem.style.bottom=Math.floor(60*heightScale)+'px';
 				} else if (marioLoop==5){
 					marioElem.src='img/sprites/mario_drive-1.png';
-					marioElem.style.bottom='70px';
+					marioElem.style.bottom=Math.floor(70*heightScale)+'px';
 				} else if (marioLoop==6){
 					marioElem.src='img/sprites/mario_drive-2.png';
-					marioElem.style.bottom='80px';
+					marioElem.style.bottom=Math.floor(80*heightScale)+'px';
 				} else if (marioLoop==7){
 					marioElem.src='img/sprites/mario_toss-1.png';
 				} else if (marioLoop==8){
@@ -684,83 +711,83 @@
 				if (crabLoop==1){
 					crabElem.src='img/sprites/crab-2.png';
 					if (dir=="right"){
-						crabElem.style.marginLeft='21px';
+						crabElem.style.marginLeft=Math.floor(21*scale)+'px';
 					} else {
-						crabElem.style.marginLeft='1px';
+						crabElem.style.marginLeft=Math.floor(1*scale)+'px';
 					}
 				} else if (crabLoop==2){
 					crabElem.src='img/sprites/crab-3.png';
 					if (dir=="right"){
-						crabElem.style.marginLeft='31px';
+						crabElem.style.marginLeft=Math.floor(31*scale)+'px';
 					} else {
-						crabElem.style.marginLeft='-9px';
+						crabElem.style.marginLeft=Math.floor(-9*scale)+'px';
 					}
 				} else if (crabLoop==3){
 					crabElem.src='img/sprites/crab-4.png';
 					if (dir=="right"){
-						crabElem.style.marginLeft='41px';
+						crabElem.style.marginLeft=Math.floor(41*scale)+'px';
 					} else {
-						crabElem.style.marginLeft='-19px';
+						crabElem.style.marginLeft=Math.floor(-19*scale)+'px';
 					}
 				} else if (crabLoop==4){
 					crabElem.src='img/sprites/crab-5.png';
 					if (dir=="right"){
-						crabElem.style.marginLeft='51px';
+						crabElem.style.marginLeft=Math.floor(51*scale)+'px';
 					} else {
-						crabElem.style.marginLeft='-29px';
+						crabElem.style.marginLeft=Math.floor(-29*scale)+'px';
 					}
 				} else if (crabLoop==5){
 					crabElem.src='img/sprites/crab-6.png';
 					if (dir=="right"){
-						crabElem.style.marginLeft='61px';
+						crabElem.style.marginLeft=Math.floor(61*scale)+'px';
 					} else {
-						crabElem.style.marginLeft='-39px';
+						crabElem.style.marginLeft=Math.floor(-39*scale)+'px';
 					}
 				} else if (crabLoop==6){
 					crabElem.src='img/sprites/crab-1.png';
 					if (dir=="right"){
-						crabElem.style.marginLeft='71px';
+						crabElem.style.marginLeft=Math.floor(71*scale)+'px';
 					} else {
-						crabElem.style.marginLeft='-49px';
+						crabElem.style.marginLeft=Math.floor(-49*scale)+'px';
 					}
 				} else if (crabLoop==7){
 					crabElem.src='img/sprites/crab-6.png';
 					if (dir=="right"){
-						crabElem.style.marginLeft='61px';
+						crabElem.style.marginLeft=Math.floor(61*scale)+'px';
 					} else {
-						crabElem.style.marginLeft='-39px';
+						crabElem.style.marginLeft=Math.floor(-39*scale)+'px';
 					}
 				} else if (crabLoop==8){
 					crabElem.src='img/sprites/crab-5.png';
 					if (dir=="right"){
-						crabElem.style.marginLeft='51px';
+						crabElem.style.marginLeft=Math.floor(51*scale)+'px';
 					} else {
-						crabElem.style.marginLeft='-29px';
+						crabElem.style.marginLeft=Math.floor(-29*scale)+'px';
 					}
 				} else if (crabLoop==9){
 					crabElem.src='img/sprites/crab-4.png';
 					if (dir=="right"){
-						crabElem.style.marginLeft='41px';
+						crabElem.style.marginLeft=Math.floor(41*scale)+'px';
 					} else {
-						crabElem.style.marginLeft='-19px';
+						crabElem.style.marginLeft=Math.floor(-19*scale)+'px';
 					}
 				} else if (crabLoop==10){
 					crabElem.src='img/sprites/crab-3.png';
 					if (dir=="right"){
-						crabElem.style.marginLeft='31px';
+						crabElem.style.marginLeft=Math.floor(31*scale)+'px';
 					} else {
-						crabElem.style.marginLeft='-9px';
+						crabElem.style.marginLeft=Math.floor(-9*scale)+'px';
 					}
 				} else if (crabLoop==11){
 					crabElem.src='img/sprites/crab-2.png';
 					if (dir=="right"){
-						crabElem.style.marginLeft='21px';
+						crabElem.style.marginLeft=Math.floor(21*scale)+'px';
 					} else {
-						crabElem.style.marginLeft='1px';
+						crabElem.style.marginLeft=Math.floor(1*scale)+'px';
 					}
 				} else if (crabLoop==12){
 					crabElem.src='img/sprites/crab-1.png';
-					crabElem.style.marginLeft='11px';
+					crabElem.style.marginLeft=Math.floor(11*scale)+'px';
 					if (crabNum==1){
 						crab1Active=false;
 						crab1Loop=0;
@@ -798,7 +825,7 @@
 					var carElem=document.getElementById("car"+carNum);
 					var carBottom=Number(carElem.style.bottom.replace("px",""));
 					var crabBottom=Number(crabElem.style.bottom.replace("px",""));
-					if (crabLoop<=8&&carBottom<=crabBottom+10&&carBottom+70>=crabBottom){
+					if (crabLoop<=8&&carBottom<=crabBottom+(10*scale)&&carBottom+(70*scale)>=crabBottom){
 						if (carNum==1){
 							if (car1SpinTime==0){
 								spinCar1=setInterval(function() { spinCar(carNum); },50);
@@ -859,22 +886,22 @@
 			function triggerCharacterAnimations(){
 				var carTop=car1.style.top;
 				var carBottom=car1.style.bottom;
-				if (yoshiHatesCar1&&!yoshi1Active&&car1Counter==0&&car1.style.bottom.replace("px","")<400&&car1.style.bottom.replace("px","")>300&&yoshi1Face=="left"){
+				if (yoshiHatesCar1&&!yoshi1Active&&car1Counter==0&&car1.style.bottom.replace("px","")<heightScale*400&&car1.style.bottom.replace("px","")>heightScale*300&&yoshi1Face=="left"){
 					triggerYoshiEat(1);
 				}
 				carTop=car2.style.top;
 				carBottom=car2.style.bottom;
-				if (yoshiHatesCar2&&!yoshi1Active&&car2Counter==0&&car2.style.bottom.replace("px","")<400&&car2.style.bottom.replace("px","")>300&&yoshi1Face=="right"){
+				if (yoshiHatesCar2&&!yoshi1Active&&car2Counter==0&&car2.style.bottom.replace("px","")<heightScale*400&&car2.style.bottom.replace("px","")>heightScale*300&&yoshi1Face=="right"){
 					triggerYoshiEat(2);
 				}
 				carTop=car3.style.top;
 				carBottom=car3.style.bottom;
-				if (yoshiHatesCar3&&!yoshi2Active&&car3Counter==0&&car3.style.bottom.replace("px","")<400&&car3.style.bottom.replace("px","")>300&&yoshi2Face=="left"){
+				if (yoshiHatesCar3&&!yoshi2Active&&car3Counter==0&&car3.style.bottom.replace("px","")<heightScale*400&&car3.style.bottom.replace("px","")>heightScale*300&&yoshi2Face=="left"){
 					triggerYoshiEat(3);
 				}
 				carTop=car4.style.top;
 				carBottom=car4.style.bottom;
-				if (yoshiHatesCar4&&!yoshi2Active&&car4Counter==0&&car4.style.bottom.replace("px","")<400&&car4.style.bottom.replace("px","")>300&&yoshi2Face=="right"){
+				if (yoshiHatesCar4&&!yoshi2Active&&car4Counter==0&&car4.style.bottom.replace("px","")<heightScale*400&&car4.style.bottom.replace("px","")>heightScale*300&&yoshi2Face=="right"){
 					triggerYoshiEat(4);
 				}
 				if (!charActive&&Math.random()<.001){
@@ -939,23 +966,23 @@
 				if (bowserLoop==1){
 					charActive=true;
 					bowserElem.style.visibility='';
-					bowserElem.style.bottom='750px';
+					bowserElem.style.bottom=Math.floor(750*heightScale)+'px';
 					bowserElem.src='img/sprites/bowser-falling-1.png';
 				} else if (bowserLoop==2){
 					bowserElem.src='img/sprites/bowser-falling-1.png';
-					bowserElem.style.bottom='700px';
+					bowserElem.style.bottom=Math.floor(700*heightScale)+'px';
 				} else if (bowserLoop==3){
 					bowserElem.src='img/sprites/bowser-falling-1.png';
-					bowserElem.style.bottom='650px';
+					bowserElem.style.bottom=Math.floor(650*heightScale)+'px';
 				} else if (bowserLoop==4){
 					bowserElem.src='img/sprites/bowser-falling-1.png';
-					bowserElem.style.bottom='600px';
+					bowserElem.style.bottom=Math.floor(600*heightScale)+'px';
 				} else if (bowserLoop==5){
 					bowserElem.src='img/sprites/bowser-falling-1.png';
-					bowserElem.style.bottom='550px';
+					bowserElem.style.bottom=Math.floor(550*heightScale)+'px';
 				} else if (bowserLoop==6){
 					bowserElem.src='img/sprites/bowser-falling-1.png';
-					bowserElem.style.bottom='500px';
+					bowserElem.style.bottom=Math.floor(500*heightScale)+'px';
 				} else if (bowserLoop>=7&&bowserLoop<=13){
 					bowserElem.src='img/sprites/bowser-falling-'+(bowserLoop-5)+'.png';
 				} else if (bowserLoop>=14&&bowserLoop<=28){
@@ -980,8 +1007,8 @@
 						carElem.style.MozTransform='rotate(270deg)';
 						carElem.style.transform='rotate(270deg)';
 					} else if (car1BowserEffect=='mini'){
-						carElem.style.width='100px';
-						carElem.style.height='50px';
+						carElem.style.width=Math.floor(scale*100)+'px';
+						carElem.style.height=Math.floor(scale*50)+'px';
 						carElem.style.marginLeft='0px';
 					} else if (car1BowserEffect=='stopped'){
 						document.getElementById('lakitu1').style.visibility='hidden';
@@ -995,8 +1022,8 @@
 						carElem.style.MozTransform='rotate(270deg)';
 						carElem.style.transform='rotate(270deg)';
 					} else if (car2BowserEffect=='mini'){
-						carElem.style.width='100px';
-						carElem.style.height='50px';
+						carElem.style.width=Math.floor(scale*100)+'px';
+						carElem.style.height=Math.floor(scale*50)+'px';
 						carElem.style.marginLeft='0px';
 					} else if (car2BowserEffect=='stopped'){
 						document.getElementById('lakitu2').style.visibility='hidden';
@@ -1010,8 +1037,8 @@
 						carElem.style.MozTransform='rotate(270deg)';
 						carElem.style.transform='rotate(270deg)';
 					} else if (car3BowserEffect=='mini'){
-						carElem.style.width='100px';
-						carElem.style.height='50px';
+						carElem.style.width=Math.floor(scale*100)+'px';
+						carElem.style.height=Math.floor(scale*50)+'px';
 						carElem.style.marginLeft='0px';
 					} else if (car3BowserEffect=='stopped'){
 						document.getElementById('lakitu3').style.visibility='hidden';
@@ -1025,8 +1052,8 @@
 						carElem.style.MozTransform='rotate(270deg)';
 						carElem.style.transform='rotate(270deg)';
 					} else if (car4BowserEffect=='mini'){
-						carElem.style.width='100px';
-						carElem.style.height='50px';
+						carElem.style.width=Math.floor(scale*100)+'px';
+						carElem.style.height=Math.floor(scale*50)+'px';
 						carElem.style.marginLeft='0px';
 					} else if (car4BowserEffect=='stopped'){
 						document.getElementById('lakitu4').style.visibility='hidden';
@@ -1058,9 +1085,9 @@
 						document.getElementById("lakitu1").style.visibility='';
 					} else if (rand<.75){
 						car1BowserEffect='mini';
-						carElem.style.width='50px';
-						carElem.style.height='25px';
-						carElem.style.marginLeft='25px';
+						carElem.style.width=Math.floor(scale*50)+'px';
+						carElem.style.height=Math.floor(scale*25)+'px';
+						carElem.style.marginLeft=Math.floor(scale*25)+'px';
 					} else {
 						car1BowserEffect='none';
 					}
@@ -1081,9 +1108,9 @@
 						document.getElementById("lakitu2").style.visibility='';
 					} else if (rand<.75){
 						car2BowserEffect='mini';
-						carElem.style.width='50px';
-						carElem.style.height='25px';
-						carElem.style.marginLeft='25px';
+						carElem.style.width=Math.floor(scale*50)+'px';
+						carElem.style.height=Math.floor(scale*25)+'px';
+						carElem.style.marginLeft=Math.floor(scale*25)+'px';
 					} else {
 						car2BowserEffect='none';
 					}
@@ -1104,9 +1131,9 @@
 						document.getElementById("lakitu3").style.visibility='';
 					} else if (rand<.75){
 						car3BowserEffect='mini';
-						carElem.style.width='50px';
-						carElem.style.height='25px';
-						carElem.style.marginLeft='25px';
+						carElem.style.width=Math.floor(scale*50)+'px';
+						carElem.style.height=Math.floor(scale*25)+'px';
+						carElem.style.marginLeft=Math.floor(scale*25)+'px';
 					} else {
 						car3BowserEffect='none';
 					}
@@ -1127,19 +1154,19 @@
 						document.getElementById("lakitu4").style.visibility='';
 					} else if (rand<.75){
 						car4BowserEffect='mini';
-						carElem.style.width='50px';
-						carElem.style.height='25px';
-						carElem.style.marginLeft='25px';
+						carElem.style.width=Math.floor(scale*50)+'px';
+						carElem.style.height=Math.floor(scale*25)+'px';
+						carElem.style.marginLeft=Math.floor(scale*25)+'px';
 					} else {
 						car4BowserEffect='none';
 					}
 				}
 				if (bowserLoop>=38&&bowserLoop<60){
 					var mod=(bowserLoop-38)%8;
-					var newMargin='20px';
+					var newMargin=Math.floor(20*scale)+'px';
 					var newSrc=null;
 					if (mod==4){
-						newMargin='20px';
+						newMargin=Math.floor(20*scale)+'px';
 						if (bowserLoop==42){
 							newSrc='img/sprites/lakitu_start-2.png';
 						} else if (bowserLoop==50){
@@ -1148,13 +1175,13 @@
 							newSrc='img/sprites/lakitu_start-4.png';
 						}
 					} else if (mod==1||mod==3){
-						newMargin='15px';
+						newMargin=Math.floor(15*scale)+'px';;
 					} else if (mod==2){
-						newMargin='10px';
+						newMargin=Math.floor(10*scale)+'px';
 					} else if (mod==5||mod==7){
-						newMargin='25px';
+						newMargin=Math.floor(25*scale)+'px';
 					} else if (mod==6){
-						newMargin='30px';
+						newMargin=Math.floor(30*scale)+'px';
 					}
 					if (car1BowserEffect=='stopped'){
 						document.getElementById("lakitu1").style.marginLeft=newMargin;
@@ -1213,7 +1240,7 @@
 							finishedRace = true;
 						}
 					} else {
-						car1.style.bottom = 50+580*(car1Location%lapDistance)/lapDistance+"px";
+						car1.style.bottom = -50*heightScale+heightScale*700*(car1Location%lapDistance)/lapDistance+"px";
 
 						if (car1Location/lapDistance<(car1Lap-1)){
 							car1Lap=car1Lap-1;
@@ -1260,7 +1287,7 @@
 							finishedRace = true;
 						}
 					} else {
-						car2.style.bottom = 50+580*(car2Location%lapDistance)/lapDistance+"px";
+						car2.style.bottom = -50*heightScale+heightScale*700*(car2Location%lapDistance)/lapDistance+"px";
 
 						if (car2Location/lapDistance<(car2Lap-1)){
 							car2Lap=car2Lap-1;
@@ -1307,7 +1334,7 @@
 							finishedRace = true;
 						}
 					} else {
-						car3.style.bottom = 50+580*(car3Location%lapDistance)/lapDistance+"px";
+						car3.style.bottom = -50*heightScale+heightScale*700*(car3Location%lapDistance)/lapDistance+"px";
 
 						if (car3Location/lapDistance<(car3Lap-1)){
 							car3Lap=car3Lap-1;
@@ -1354,7 +1381,7 @@
 							finishedRace = true;
 						}
 					} else {
-						car4.style.bottom = 50+580*(car4Location%lapDistance)/lapDistance+"px";
+						car4.style.bottom = -50*heightScale+heightScale*700*(car4Location%lapDistance)/lapDistance+"px";
 
 						if (car4Location/lapDistance<(car4Lap-1)){
 							car4Lap=car4Lap-1;
@@ -1393,7 +1420,7 @@
 		<img class="peach" id="peach" src='img/sprites/peach-twirl-1.png'/>
 	</div>
 	<div class="tracklap1" id="track1">
-		<img class="car" id="car1" src="img/cars/${racer1.model}"/>
+		<img class="spectatecar" id="car1" src="img/cars/${racer1.model}"/>
 		<img class="lakitu" id="lakitu1" src="img/sprites/lakitu_start-1.png">
 	</div>
 	<div class="splits">
@@ -1402,14 +1429,14 @@
 		<img class="crab" id="crab2" src='img/sprites/crab-1.png'/>
 	</div>
 	<div class="tracklap1" id="track2">
-		<img class="car" id="car2" src="img/cars/${racer2.model}">
+		<img class="spectatecar" id="car2" src="img/cars/${racer2.model}">
 		<img class="lakitu" id="lakitu2" src="img/sprites/lakitu_start-1.png">
 	</div>
 	<div class="middle">
 		<img class="bowser" id="bowser" src='img/sprites/bowser-falling-1.png'/>
 	</div>
 	<div class="tracklap1" id="track3">
-		<img class="car" id="car3" src="img/cars/${racer3.model}">
+		<img class="spectatecar" id="car3" src="img/cars/${racer3.model}">
 		<img class="lakitu" id="lakitu3" src="img/sprites/lakitu_start-1.png">
 	</div>
 	<div class="splits">
@@ -1418,7 +1445,7 @@
 		<img class="crab" id="crab4" src='img/sprites/crab-1.png'/>
 	</div>
 	<div class="tracklap1" id="track4">
-		<img class="car" id="car4" src="img/cars/${racer4.model}">
+		<img class="spectatecar" id="car4" src="img/cars/${racer4.model}">
 		<img class="lakitu" id="lakitu4" src="img/sprites/lakitu_start-1.png">
 	</div>
 	<div class="splits">
@@ -1437,14 +1464,6 @@
 		<form:input id="fourthPlaceTimeForm" type="hidden" path="place4Time"/>
 	</form:form>
 	<script>
-		document.getElementById("crab1").style.bottom=475+Math.random()*125+'px';
-		document.getElementById("crab1").style.marginLeft='11px';
-		document.getElementById("crab2").style.bottom=250+(Math.random()*125)/2+'px';
-		document.getElementById("crab2").style.marginLeft='11px';
-		document.getElementById("crab3").style.bottom=475+Math.random()*125+'px';
-		document.getElementById("crab3").style.marginLeft='11px';
-		document.getElementById("crab4").style.bottom=250+(Math.random()*125)/2+'px';
-		document.getElementById("crab4").style.marginLeft='11px';
 		startRace();
 	</script>
 </body>

@@ -7,24 +7,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<style>
-	h1{text-align: center;}
-	select {font-weight: bold; font-size: 22px; float:left; padding-right:10px;}
-	div.inline{display:inline-block; width: 100%; padding-bottom:10px; text-align:left;}
-	label.large {font-weight: bold; font-size: 22px; float:left; padding-right:10px;}
-	label.small {float:left; padding-left:30%;}
-	div.panel{float:left; width:49%; height:100%; text-align:left;}
-	div.master{width:100%;float:left; width: 100%; padding-bottom:10px; text-align:center;}
-	button{
-		width: 150px;
-		padding: 10px;
-		box-shadow: -8px 8px 10px 3px rgba(0,0,0,0.2);
-		font-weight: bold;
-		text-decoration: none;
-		vertical-align:middle;
-		margin:auto;
-	}
-</style>
+<link rel="stylesheet" type="text/css" href="css/site.css?test=3"/>
+<title>CAScheid Battleship</title>
 <script src="js/battleship.js?version=3.5"></script>
 </head>
 <body>

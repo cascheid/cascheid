@@ -2,6 +2,9 @@ package site.racinggame;
 
 import java.math.BigDecimal;
 
+import org.springframework.format.annotation.NumberFormat;
+import org.springframework.format.annotation.NumberFormat.Style;
+
 public class Racecar implements java.io.Serializable{
 	
 	private static final long serialVersionUID = -6448889763873084248L;
@@ -87,6 +90,7 @@ public class Racecar implements java.io.Serializable{
 		this.model = model;
 	}
 
+	@NumberFormat(style = Style.NUMBER, pattern = "#,###")
 	public BigDecimal getPrice() {
 		return price;
 	}

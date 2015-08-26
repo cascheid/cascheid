@@ -1,24 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<style>
-h1{text-align: center;}
-h2{text-align: center;}
-h3{text-align: center;}
-img{
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-}
-</style>
-<title>Race Results</title>
+<link rel="stylesheet" type="text/css" href="css/site.css?test=3"/>
+<title>CAScheid Racing Game</title>
 </head>
 <body>
-	<h2>Class: ${raceResult.racingClass}</h2>
-	<table border="1" style="width:50%; margin:10px auto; font-size: 22px; font-weight:bold;">
+	<div class="fullCenter">
+		<label id="classLabel">Class: ${raceResult.racingClass}</label>
+	</div>
+	<table id="resultTab" border="1" style="width:50%; margin:10px auto; font-size: 22px; font-weight:bold;">
   	<tr>
     	<td>First Place: ${raceResult.place1}</td>
     	<td>Time: ${raceResult.place1Time}</td>	
@@ -32,5 +25,12 @@ img{
     	<td>Time: ${raceResult.place3Time}</td>
   	</tr>
 	</table>
+		
+	<script>
+		var scale=window.innerHeight/400;
+		document.getElementById('classLabel').style.fontSize=Math.floor(30*scale)+'px';
+		document.getElementById('resultTab').style.fontSize=Math.floor(22*scale)+'px';
+		window.open('raceMoneyFrame', 'moneyFrame');
+	</script>
 </body>
 </html>

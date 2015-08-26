@@ -14,6 +14,7 @@ public class RacingGame implements java.io.Serializable{
 	private String racingClass;
 	private String selectedClass;
 	private List<UserRacecar> carList;
+	private String selectedMode;
 	
 	public RacingGame(){
 	}
@@ -77,5 +78,13 @@ public class RacingGame implements java.io.Serializable{
 			carList=new ArrayList<UserRacecar>();
 		}
 		carList.add(new UserRacecar(car));
+	}
+
+	public String getSelectedMode() {
+		return selectedMode;
+	}
+
+	public void setSelectedMode(String selectedMode) {
+		this.selectedMode = selectedMode;
 	}
 }

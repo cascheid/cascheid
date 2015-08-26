@@ -1,17 +1,26 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-    <%@ page import="site.racinggame.*" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel="stylesheet" type="text/css" href="css/textStyle.css"/>
+<link rel="stylesheet" type="text/css" href="css/site.css?test=3"/>
 <style>
-	body{overflow:hidden;}
+html{border:0px; margin:0px; padding:0px;}
+body{overflow:hidden; border:0px; margin:0px; padding:0px;}
 </style>
+<title>CAScheid Racing Game</title>
 </head>
 <body>
-	<iframe name="moneyFrame" width="100%" height="40px" src="raceMoneyFrame"></iframe>
-	<iframe name="mainRacingFrame" width="100%" height="750px" src="openRacingStore" frameBorder="0"></iframe>
+	<iframe name="moneyFrame" width="100%" height="40px" frameborder='0' class="underline" src="raceMoneyFrame"></iframe>
+	<iframe id="mainRacingFrame" name="mainRacingFrame" width="100%" src="openRacingStore" frameBorder="0"></iframe>
+	<script>
+	document.onreadystatechange = function(e){
+	    if (document.readyState === 'complete'){
+			document.getElementById('mainRacingFrame').height=(window.innerHeight-40)+'px';
+			document.getElementById('mainRacingFrame').src="openRacingStore";
+	    }
+	};
+	</script>
 </body>
 </html>

@@ -1,15 +1,27 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<link rel="stylesheet" type="text/css" href="css/site.css?test=3"/>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"/>
 <style>
-	body{overflow:hidden;}
+	body{overflow:hidden; border:0px; margin:0px; padding:0px;}
 </style>
+<title>CAScheid Racing Game</title>
 </head>
 <body>
-	<iframe name="centerRacingFrame" width="19%" height="750px" src="racingStoreFrame" frameBorder="0"></iframe>
-	<iframe name="rightRacingFrame" width="79%" height="750px" src="carDisplayFrame" frameBorder="0"></iframe>
+	<iframe id="centerRacingFrame" name="centerRacingFrame" width="19%" src="racingStoreFrame" frameBorder="0" style="visibility:hidden" onload="this.style.visibility='visible';"></iframe>
+	<iframe id="rightRacingFrame" name="rightRacingFrame" width="79%" src="carDisplayFrame" frameBorder="0" style="visibility:hidden" onload="this.style.visibility='visible';"></iframe>
+	<script>
+	document.onreadystatechange = function(e){
+	    if (document.readyState === 'complete'){
+			document.getElementById('centerRacingFrame').height=(window.innerHeight)+'px';
+			document.getElementById('centerRacingFrame').src='racingStoreFrame';
+			document.getElementById('rightRacingFrame').height=(window.innerHeight)+'px';
+			document.getElementById('rightRacingFrame').src='carDisplayFrame';
+	    }
+	};
+	</script>
 </body>
 </html>

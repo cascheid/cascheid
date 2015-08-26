@@ -2,6 +2,9 @@ package site.racinggame;
 
 import java.math.BigDecimal;
 
+import org.springframework.format.annotation.NumberFormat;
+import org.springframework.format.annotation.NumberFormat.Style;
+
 public class Upgrade implements java.io.Serializable{
 	private static final long serialVersionUID = -40202005388083042L;
 	
@@ -64,6 +67,7 @@ public class Upgrade implements java.io.Serializable{
 		this.efficiencyMod = efficiencyMod;
 	}
 
+	@NumberFormat(style = Style.NUMBER, pattern = "#,###")
 	public BigDecimal getPrice() {
 		return price;
 	}
