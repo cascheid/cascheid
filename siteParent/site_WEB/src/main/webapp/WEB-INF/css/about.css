@@ -1,0 +1,13 @@
+body{background-image: url(../img/misc/timon.jpg); -moz-background-size: cover; -webkit-background-size: cover; background-size: cover; background-position: top center; background-repeat: no-repeat; background-attachment: fixed;}
+
+.content{padding-left:20px; padding-right:20px;}
+.tabpage {text-align:left;}
+.tabs{height:30px; margin-bottom: 26px;}
+.tabs > ul{padding: 0; list-style:none; display:inline-block;}
+.tabs > ul > li{margin:0 2px 0 0; display:block; float:left; background-color: #191970; padding: 10px 20px;/*change this if too many tabs*/ text-decoration: none; color: black; border-radius: 4px 4px 0 0;}
+.tabs > ul > li:hover{color: white; background-color: black; cursor: pointer;}
+.tabs > ul > li.tabActiveHeader{background-color: #808080; color: #191970;}
+
+#tabscontent {padding: 10px; width:60%; margin:auto; background-color: #808080; color: #191970; border-radius: 4px 4px 4px 4px;}
+#tabContainer {width:100%; padding-bottom:20px; text-align: center;}
+#wrapper{width:100%; margin-top:-20px;}
