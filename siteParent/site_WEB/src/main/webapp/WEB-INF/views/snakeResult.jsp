@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel="stylesheet" type="text/css" href="css/site.css?test=3"/>
+<link rel="stylesheet" type="text/css" href="css/site.css?version=1.00"/>
 <title>CAScheid Snake Game</title>
 </head>
 <body>

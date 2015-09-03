@@ -6,8 +6,8 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel="stylesheet" type="text/css" href="css/site.css?test=3"/>
-<link rel="stylesheet" type="text/css" href="css/racing.css?test=3"/>
+<link rel="stylesheet" type="text/css" href="css/site.css?version=1.00"/>
+<link rel="stylesheet" type="text/css" href="css/racing.css?version=1.00"/>
 <title>CAScheid Racing Game</title>
 </head>
 <body>

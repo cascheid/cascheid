@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel="stylesheet" type="text/css" href="css/site.css?test=3"/>
+<link rel="stylesheet" type="text/css" href="css/site.css?version=1.00"/>
 <style>
 html{border:0px; margin:0px; padding:0px;}
 body{overflow:hidden; border:0px; margin:0px; padding:0px;}

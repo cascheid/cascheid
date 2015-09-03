@@ -7,9 +7,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link rel="stylesheet" type="text/css" href="css/site.css?test=3"/>
+<link rel="stylesheet" type="text/css" href="css/site.css?version=1.00"/>
 <title>CAScheid Battleship</title>
-<script src="js/battleship.js?version=3.5"></script>
+<script src="js/battleship.js?version=1.00"></script>
 </head>
 <body style="padding:0px; margin:0px;">
 	<div class="fullCenter" style="height:50px; padding:0px; margin:0px;">
