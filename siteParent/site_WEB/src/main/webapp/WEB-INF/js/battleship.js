@@ -24,13 +24,17 @@ var winState;
 var updateInterval;
 var particles = [];
 var fireParticles = [];
-function initBoardLoad(size){
-	bw = (size-20)/2;
+var horizontalDisplay=false;
+function initBoardLoad(){
+	
+	bw = Math.min(window.innerHeight-80, (window.innerWidth-20)/3);
 	canvas = document.getElementById('canvas');
 	context = canvas.getContext('2d');
 	stndTxt=(bw-20)/12;
-	canvas.width = size;
-	canvas.height = size/2;
+	canvas.width = bw*3+20;
+	canvas.height = bw+20;
+	document.getElementById('btnSubmit').style.top=(50+bw*17/20)+'px';
+	document.getElementById('btnSubmit').style.left=(bw+20+bw/5)+'px';
 
     placingShips=true;
 	canvas.addEventListener("mousedown", onClick, false);
@@ -40,10 +44,11 @@ function initBoardLoad(size){
 		drawTopGrid();
 		drawTopText();
 		drawTopShips();
+		drawInstructionText();
 	}
 }
 
-function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysunkenships, oppsunkenships, winstate){
+function initGame(gameID, identifier, turnStatus, mymoves, oppmoves, mysunkenships, oppsunkenships, winstate){
 	localGameId=gameID;
 	myTurn=turnStatus;
 	myId=identifier;
@@ -52,12 +57,25 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 	mySunkenShips=mysunkenships;
 	oppSunkenShips=oppsunkenships;
 	winState=winstate;
-	bw = (size-20)/2;
 	canvas = document.getElementById('canvas');
 	context = canvas.getContext('2d');
+	if (window.innerWidth>=(window.innerHeight-50)*2){
+		bw=Math.min(window.innerHeight-80, (window.innerWidth-20)/4);
+		horizontalDisplay=true;
+		canvas.width = window.innerWidth;
+		canvas.height = bw+10;
+		document.getElementById('btnFire').style.top=(50+bw*17/20)+'px';
+		document.getElementById('btnFire').style.left=(3*bw+20+bw/5)+'px';
+		20+9*stndTxt
+	} else {
+		bw=(window.innerWidth-20)/2;
+		horizontalDisplay=false;
+		canvas.width = window.innerWidth;//TODO account for all sizes
+		canvas.height = window.innerWidth;
+		document.getElementById('btnFire').style.top=(50+bw*37/20)+'px';
+		document.getElementById('btnFire').style.left=(20+bw/5)+'px';
+	}
 	stndTxt=(bw-20)/12;
-	canvas.width = size;
-	canvas.height = size;
 
     placingShips=false;
 	canvas.addEventListener("mousedown", onClick, false);
@@ -78,6 +96,7 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 		drawTopShips();
 		drawBottomShips();
 		initFireHits();
+		updateInterval=setInterval(function(){update(20);}, 20);
 	}
 }
 
@@ -123,6 +142,10 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 	}
 	
 	function drawBottomGrid(){
+		if (horizontalDisplay){
+			drawRightGrid();
+			return;
+		}
 		context.drawImage(waterImg, bw+10, bw+10, bw, bw);
 		//bottom grid
 		context.beginPath();
@@ -156,13 +179,46 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 			}
 		}
 	}
+	
+	function drawRightGrid(){
+		context.drawImage(waterImg, 2*bw+10, 10, bw, bw);
+		//bottom grid
+		context.beginPath();
+		for (var i=0; i<=10; i++){
+			context.moveTo(2*bw+10+i*bw/10, 10);
+			context.lineTo(2*bw+10+i*bw/10, 10+bw);
+		}
+
+		for (var i=0; i<=10; i++){
+			context.moveTo(2*bw+10, 10+i*bw/10);
+			context.lineTo(3*bw+10, 10+i*bw/10);
+		}
+
+		context.strokeStyle='black';
+		context.lineWidth = bw/100;
+		context.stroke();
+		
+		for (var i=0; i<myMoves.length; i++){
+			if (myMoves[i].status=='hit'){
+				if (myMoves[i].status==lastMove){
+					drawHit(myMoves[i].loc, 2*bw, true);
+				} else {
+					drawHit(myMoves[i].loc, 2*bw, false);
+				}
+			} else if (myMoves[i].status=='miss'){
+				if (myMoves[i].status==lastMove){
+					drawMiss(myMoves[i].loc, 2*bw, true);
+				} else {
+					drawMiss(myMoves[i].loc, 2*bw, false);
+				}
+			}
+		}
+	}
 
 	function drawTopText(){
 		context.font=stndTxt*1.5+'px Arial';
 		context.fillStyle='red';
 		context.textAlign='center';
-		//context.fillText("My Board", bw+20, 50, bw-20);
-		//context.fillText("Their Board", 20, bw+50, bw-20);
 		context.fillText("My Board", bw+10+bw/2, 20+1.5*stndTxt, bw-20);
 
 		context.font=stndTxt+'px Arial';
@@ -179,6 +235,21 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 		context.fillText("Patrol Boat:", bw+20, 20+9*stndTxt, (bw-20)/2);
 	}
 	
+	function drawInstructionText(){
+		context.font=stndTxt+'px Arial';
+		context.textAlign='left';
+		context.fillStyle='black';
+		context.fillText("Place ships by first selecting ", 2*bw+20, 20+3*stndTxt, bw);
+		context.fillText("the image of the ship to place, ", 2*bw+20, 20+4*stndTxt, bw);
+		context.fillText("then clicking and dragging the ", 2*bw+20, 20+5*stndTxt, bw);
+		context.fillText("squares on the board the ", 2*bw+20, 20+6*stndTxt, bw);
+		context.fillText("appropriate number of places ", 2*bw+20, 20+7*stndTxt, bw);
+		context.fillText("and release. If the piece did ", 2*bw+20, 20+8*stndTxt, bw);
+		context.fillText("not drop onto the grid, then ", 2*bw+20, 20+9*stndTxt, bw);
+		context.fillText("too few spaces were selected ", 2*bw+20, 20+10*stndTxt, bw);
+		context.fillText("or the pieces overlapped.", 2*bw+20, 20+11*stndTxt, bw);
+	}
+	
 	function toggleTurn(){
 		context.textAlign='center';
 		context.clearRect(bw+20, 20+9.5*stndTxt, bw-20, 2*stndTxt);
@@ -186,27 +257,33 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 			context.font=stndTxt*1.5+'px Arial';
 			context.fillStyle='#00FF00';
 			context.fillText("YOU WIN!", bw+10+bw/2, 20+11*stndTxt, bw-20);
+			document.getElementById('btnFire').disabled=true;
 		} else if (winState=='lose'){
 			context.font=stndTxt*1.5+'px Arial';
 			context.fillStyle='red';
 			context.fillText("YOU LOSE", bw+10+bw/2, 20+11*stndTxt, bw-20);	
+			document.getElementById('btnFire').disabled=true;
 		} else if (myTurn){
 			context.font=stndTxt*1.5+'px Arial';
 			context.fillStyle='#00FF00';
 			context.fillText("YOUR TURN", bw+10+bw/2, 20+11*stndTxt, bw-20);
+			document.getElementById('btnFire').disabled=false;
 		} else {
 			context.font=stndTxt*1.5+'px Arial';
 			context.fillStyle='black';
-			context.fillText("THEIR TURN", bw+10+bw/2, 20+11*stndTxt, bw-20);	
+			context.fillText("THEIR TURN", bw+10+bw/2, 20+11*stndTxt, bw-20);
+			document.getElementById('btnFire').disabled=true;
 		}
 	}
 
 	function drawBottomText(){
+		if (horizontalDisplay){
+			drawRightText();
+			return;
+		}
 		context.font=stndTxt*1.5+'px Arial';
 		context.fillStyle='red';
 		context.textAlign='center';
-		//context.fillText("My Board", bw+20, 50, bw-20);
-		//context.fillText("Their Board", 20, bw+50, bw-20);
 		context.fillText("Their Board", 10+bw/2, bw+20+1.5*stndTxt, bw-20);
 
 		context.font=stndTxt+'px Arial';
@@ -221,6 +298,26 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 		context.fillText("Submarine:", 20, bw+20+7.5*stndTxt, (bw-20)/2);
 		context.fillStyle='green';
 		context.fillText("Patrol Boat:", 20, bw+20+9*stndTxt, (bw-20)/2);		
+	}
+	
+	function drawRightText(){
+		context.font=stndTxt*1.5+'px Arial';
+		context.fillStyle='red';
+		context.textAlign='center';
+		context.fillText("Their Board", 10+7*bw/2, 20+1.5*stndTxt, bw-20);
+
+		context.font=stndTxt+'px Arial';
+		context.textAlign='left';
+		context.fillStyle='magenta';
+		context.fillText("Carrier:", 20+3*bw, 20+3*stndTxt, (bw-20)/2);
+		context.fillStyle='purple';
+		context.fillText("Battleship:", 20+3*bw, 20+4.5*stndTxt, (bw-20)/2);
+		context.fillStyle='orange';
+		context.fillText("Destroyer:", 20+3*bw, 20+6*stndTxt, (bw-20)/2);
+		context.fillStyle='blue';
+		context.fillText("Submarine:", 20+3*bw, 20+7.5*stndTxt, (bw-20)/2);
+		context.fillStyle='green';
+		context.fillText("Patrol Boat:", 20+3*bw, 20+9*stndTxt, (bw-20)/2);	
 	}
 
 	var carrierImg = new Image();
@@ -245,11 +342,11 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 	patrolImg.height=bw/10+'px';
 	
 	function drawTopShips(){
-		context.drawImage(carrierImg, bw+20+bw/2, 20+2*stndTxt, bw/2, bw/10);
-		context.drawImage(battleshipImg, bw+20+bw/2, 20+3.5*stndTxt, 2*bw/5, bw/10);
-		context.drawImage(destroyerImg, bw+20+bw/2, 20+5*stndTxt, 3*bw/10, bw/10);
-		context.drawImage(submarineImg, bw+20+bw/2, 20+6.5*stndTxt, 3*bw/10, bw/10);
-		context.drawImage(patrolImg, bw+20+bw/2, 20+8*stndTxt, bw/5, bw/10);
+		context.drawImage(carrierImg, bw+10+bw/2, 20+2*stndTxt, bw/2, bw/10);
+		context.drawImage(battleshipImg, bw+10+bw/2, 20+3.5*stndTxt, 2*bw/5, bw/10);
+		context.drawImage(destroyerImg, bw+10+bw/2, 20+5*stndTxt, 3*bw/10, bw/10);
+		context.drawImage(submarineImg, bw+10+bw/2, 20+6.5*stndTxt, 3*bw/10, bw/10);
+		context.drawImage(patrolImg, bw+10+bw/2, 20+8*stndTxt, bw/5, bw/10);
 		
 		for (var i=0; i<mySunkenShips.length; i++){
 			var yStart;
@@ -271,10 +368,10 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 				length=bw/5;
 			}
 			context.beginPath();
-			context.moveTo(bw+20+bw/2, yStart);
-			context.lineTo(bw+20+bw/2+length, yStart+bw/10);
-			context.moveTo(bw+20+bw/2, yStart+bw/10);
-			context.lineTo(bw+20+bw/2+length, yStart);
+			context.moveTo(bw+10+bw/2, yStart);
+			context.lineTo(bw+10+bw/2+length, yStart+bw/10);
+			context.moveTo(bw+10+bw/2, yStart+bw/10);
+			context.lineTo(bw+10+bw/2+length, yStart);
 			context.lineWidth = bw/50;
 			context.strokeStyle='red';
 			context.stroke();
@@ -282,6 +379,10 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 	}
 
 	function drawBottomShips(){
+		if (horizontalDisplay){
+			drawRightShips();
+			return;
+		}
 		context.drawImage(carrierImg, 10+bw/2, bw+20+2*stndTxt, bw/2, bw/10);
 		context.drawImage(battleshipImg, 10+bw/2, bw+20+3.5*stndTxt, 2*bw/5, bw/10);
 		context.drawImage(destroyerImg, 10+bw/2, bw+20+5*stndTxt, 3*bw/10, bw/10);
@@ -312,6 +413,43 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 			context.lineTo(10+bw/2+length, yStart+bw/10);
 			context.moveTo(10+bw/2, yStart+bw/10);
 			context.lineTo(10+bw/2+length, yStart);
+			context.lineWidth = bw/50;
+			context.strokeStyle='red';
+			context.stroke();
+		}
+	}
+	
+	function drawRightShips(){
+		context.drawImage(carrierImg, 10+7*bw/2, 20+2*stndTxt, bw/2, bw/10);
+		context.drawImage(battleshipImg, 10+7*bw/2, 20+3.5*stndTxt, 2*bw/5, bw/10);
+		context.drawImage(destroyerImg, 10+7*bw/2, 20+5*stndTxt, 3*bw/10, bw/10);
+		context.drawImage(submarineImg, 10+7*bw/2, 20+6.5*stndTxt, 3*bw/10, bw/10);
+		context.drawImage(patrolImg, 10+7*bw/2, 20+8*stndTxt, bw/5, bw/10);
+		
+		for (var i=0; i<oppSunkenShips.length; i++){
+			var yStart;
+			var length;
+			if (oppSunkenShips[i]=='carrier'){
+				yStart=20+2*stndTxt;
+				length=bw/2;
+			} else if (oppSunkenShips[i]=='battleship'){
+				yStart=20+3.5*stndTxt;
+				length=2*bw/5;
+			} else if (oppSunkenShips[i]=='destroyer'){
+				yStart=20+5*stndTxt;
+				length=3*bw/10;
+			} else if (oppSunkenShips[i]=='submarine'){
+				yStart=20+6.5*stndTxt;
+				length=3*bw/10;
+			} else if (oppSunkenShips[i]=='patrol'){
+				yStart=20+8*stndTxt;
+				length=bw/5;
+			}
+			context.beginPath();
+			context.moveTo(10+7*bw/2, yStart);
+			context.lineTo(10+7*bw/2+length, yStart+bw/10);
+			context.moveTo(10+7*bw/2, yStart+bw/10);
+			context.lineTo(10+7*bw/2+length, yStart);
 			context.lineWidth = bw/50;
 			context.strokeStyle='red';
 			context.stroke();
@@ -429,6 +567,10 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 	function getColumnBottom(x){
 		return (getColumn(x-bw));
 	}
+
+	function getColumnRight(x){
+		return (getColumn(x-2*bw));
+	}
 	
 	function getColumn(x){
 		var b=null;
@@ -498,61 +640,57 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 					if (newy>=0&&newy<=bw/10&&newx<=bw/2){//carrier
 						if (placingSelected=='carrier'){
 							placingSelected='';
-							/*context.rect(bw+20+bw/2, 20+2*stndTxt, bw/2, bw/10);
-							context.fillStyle = "white";
-							context.fill();*/
-							//context.clearRect(bw+20+bw/2, 20+2*stndTxt, bw/2, bw/10);
-							context.clearRect(Math.floor(bw+20+bw/2), Math.floor(20+2*stndTxt), Math.ceil(bw/2)+1, Math.ceil(bw/10)+1);
-							context.drawImage(carrierImg, bw+20+bw/2, 20+2*stndTxt, bw/2, bw/10);
+							context.clearRect(Math.floor(bw+10+bw/2), Math.floor(20+2*stndTxt), Math.ceil(bw/2)+1, Math.ceil(bw/10)+1);
+							context.drawImage(carrierImg, bw+10+bw/2, 20+2*stndTxt, bw/2, bw/10);
 						} else if (placingSelected==''){
 							placingSelected='carrier';
 							context.fillStyle = "magenta";
-							context.fillRect(Math.floor(bw+20+bw/2), Math.floor(20+2*stndTxt), Math.ceil(bw/2)+1, Math.ceil(bw/10)+1);
-							context.drawImage(carrierImg, bw+20+bw/2, 20+2*stndTxt, bw/2, bw/10);
+							context.fillRect(Math.floor(bw+10+bw/2), Math.floor(20+2*stndTxt), Math.ceil(bw/2)+1, Math.ceil(bw/10)+1);
+							context.drawImage(carrierImg, bw+10+bw/2, 20+2*stndTxt, bw/2, bw/10);
 						}
 					} else if (newy>=1.5*stndTxt&&newy<=1.5*stndTxt+bw/10&&newx<=2*bw/5){//battleship
 						if (placingSelected=='battleship'){
 							placingSelected='';
-							context.clearRect(Math.floor(bw+20+bw/2), Math.floor(20+3.5*stndTxt), Math.ceil(2*bw/5)+1, Math.ceil(bw/10)+1);
-							context.drawImage(battleshipImg, bw+20+bw/2, 20+3.5*stndTxt, 2*bw/5, bw/10);
+							context.clearRect(Math.floor(bw+10+bw/2), Math.floor(20+3.5*stndTxt), Math.ceil(2*bw/5)+1, Math.ceil(bw/10)+1);
+							context.drawImage(battleshipImg, bw+10+bw/2, 20+3.5*stndTxt, 2*bw/5, bw/10);
 						} else if (placingSelected==''){
 							placingSelected='battleship';
 							context.fillStyle = "purple";
-							context.fillRect(Math.floor(bw+20+bw/2), Math.floor(20+3.5*stndTxt), Math.ceil(2*bw/5)+1, Math.ceil(bw/10)+1);
-							context.drawImage(battleshipImg, bw+20+bw/2, 20+3.5*stndTxt, 2*bw/5, bw/10);
+							context.fillRect(Math.floor(bw+10+bw/2), Math.floor(20+3.5*stndTxt), Math.ceil(2*bw/5)+1, Math.ceil(bw/10)+1);
+							context.drawImage(battleshipImg, bw+10+bw/2, 20+3.5*stndTxt, 2*bw/5, bw/10);
 						}
 					} else if (newy>=3*stndTxt&&newy<=3*stndTxt+bw/10&&newx<=3*bw/10){//destroyer
 						if (placingSelected=='destroyer'){
 							placingSelected='';
-							context.clearRect(Math.floor(bw+20+bw/2), Math.floor(20+5*stndTxt), Math.ceil(3*bw/10)+1, Math.ceil(bw/10)+1);
-							context.drawImage(destroyerImg, bw+20+bw/2, 20+5*stndTxt, 3*bw/10, bw/10);
+							context.clearRect(Math.floor(bw+10+bw/2), Math.floor(20+5*stndTxt), Math.ceil(3*bw/10)+1, Math.ceil(bw/10)+1);
+							context.drawImage(destroyerImg, bw+10+bw/2, 20+5*stndTxt, 3*bw/10, bw/10);
 						} else if (placingSelected==''){
 							placingSelected='destroyer';
 							context.fillStyle = "orange";
-							context.fillRect(Math.floor(bw+20+bw/2), Math.floor(20+5*stndTxt), Math.ceil(3*bw/10)+1, Math.ceil(bw/10)+1);
-							context.drawImage(destroyerImg, bw+20+bw/2, 20+5*stndTxt, 3*bw/10, bw/10);
+							context.fillRect(Math.floor(bw+10+bw/2), Math.floor(20+5*stndTxt), Math.ceil(3*bw/10)+1, Math.ceil(bw/10)+1);
+							context.drawImage(destroyerImg, bw+10+bw/2, 20+5*stndTxt, 3*bw/10, bw/10);
 						}
 					} else if (newy>=4.5*stndTxt&&newy<=4.5*stndTxt+bw/10&&newx<=3*bw/10){//submarine
 						if (placingSelected=='submarine'){
 							placingSelected='';
-							context.clearRect(Math.floor(bw+20+bw/2), Math.floor(20+6.5*stndTxt), Math.ceil(3*bw/10)+1, Math.ceil(bw/10)+1);
-							context.drawImage(submarineImg, bw+20+bw/2, 20+6.5*stndTxt, 3*bw/10, bw/10);
+							context.clearRect(Math.floor(bw+10+bw/2), Math.floor(20+6.5*stndTxt), Math.ceil(3*bw/10)+1, Math.ceil(bw/10)+1);
+							context.drawImage(submarineImg, bw+10+bw/2, 20+6.5*stndTxt, 3*bw/10, bw/10);
 						} else if (placingSelected==''){
 							placingSelected='submarine';
 							context.fillStyle = "blue";
-							context.fillRect(Math.floor(bw+20+bw/2), Math.floor(20+6.5*stndTxt), Math.ceil(3*bw/10)+1, Math.ceil(bw/10)+1);
-							context.drawImage(submarineImg, bw+20+bw/2, 20+6.5*stndTxt, 3*bw/10, bw/10);
+							context.fillRect(Math.floor(bw+10+bw/2), Math.floor(20+6.5*stndTxt), Math.ceil(3*bw/10)+1, Math.ceil(bw/10)+1);
+							context.drawImage(submarineImg, bw+10+bw/2, 20+6.5*stndTxt, 3*bw/10, bw/10);
 						}
 					} else if (newy>=6*stndTxt&&newy<=6*stndTxt+bw/10&&newx<=bw/5){//patrol boat
 						if (placingSelected=='patrol'){
 							placingSelected='';
-							context.clearRect(Math.floor(bw+20+bw/2), Math.floor(20+8*stndTxt), Math.ceil(bw/5)+1, Math.ceil(bw/10)+1);
-							context.drawImage(patrolImg, bw+20+bw/2, 20+8*stndTxt, bw/5, bw/10);
+							context.clearRect(Math.floor(bw+10+bw/2), Math.floor(20+8*stndTxt), Math.ceil(bw/5)+1, Math.ceil(bw/10)+1);
+							context.drawImage(patrolImg, bw+10+bw/2, 20+8*stndTxt, bw/5, bw/10);
 						} else if (placingSelected==''){
 							placingSelected='patrol';
 							context.fillStyle = "green";
-							context.fillRect(Math.floor(bw+20+bw/2), Math.floor(20+8*stndTxt), Math.ceil(bw/5)+1, Math.ceil(bw/10)+1);
-							context.drawImage(patrolImg, bw+20+bw/2, 20+8*stndTxt, bw/5, bw/10);
+							context.fillRect(Math.floor(bw+10+bw/2), Math.floor(20+8*stndTxt), Math.ceil(bw/5)+1, Math.ceil(bw/10)+1);
+							context.drawImage(patrolImg, bw+10+bw/2, 20+8*stndTxt, bw/5, bw/10);
 						}
 					}
 				}
@@ -569,21 +707,41 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 				}
 			}
 		} else if (myTurn){
-			if (x>=bw+10&&y>=bw+10){
-				var square=getRowBottom(y)+getColumnBottom(x);
-				if (shotSelected==''){
-					var i = myMoves.length;
-				    while (i--) {
-				       if (myMoves[i] == square) {
-				           //repeat
-				    	   return;
-				       }
-				    }
-				    highlightSquareBottom(square, 'red');
-				    shotSelected=square;
-				} else if (square==shotSelected){
-					clearBottomHighlights();
-				    shotSelected='';
+			if (horizontalDisplay){
+				if (x>=2*bw+10&&x<=3*bw+10&&y>=10&&y<=bw+10){
+					var square=getRow(y)+getColumnRight(x);
+					if (shotSelected==''){
+						var i = myMoves.length;
+					    while (i--) {
+					       if (myMoves[i] == square) {
+					           //repeat
+					    	   return;
+					       }
+					    }
+					    highlightSquareRight(square, 'red');
+					    shotSelected=square;
+					} else if (square==shotSelected){
+						clearRightHighlights();
+					    shotSelected='';
+					}
+				}
+			} else {
+				if (x>=bw+10&&y>=bw+10){
+					var square=getRowBottom(y)+getColumnBottom(x);
+					if (shotSelected==''){
+						var i = myMoves.length;
+					    while (i--) {
+					       if (myMoves[i] == square) {
+					           //repeat
+					    	   return;
+					       }
+					    }
+					    highlightSquareBottom(square, 'red');
+					    shotSelected=square;
+					} else if (square==shotSelected){
+						clearBottomHighlights();
+					    shotSelected='';
+					}
 				}
 			}
 		}
@@ -700,6 +858,11 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 		drawBottomGrid();
 	}
 
+	function clearRightHighlights(){
+		context.clearRect(10+2*bw, 10, bw, bw);
+		drawRightGrid();
+	}
+
 	function clearHighlights(){
 		clearTopHighlights();
 		clearBottomHighlights();
@@ -724,6 +887,11 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 	function highlightSquareBottom(square, color){
 		context.fillStyle=color;
 		context.fillRect(getXCoord(square)+bw, getYCoord(square)+bw, bw/10, bw/10);
+	}
+	
+	function highlightSquareRight(square, color){
+		context.fillStyle=color;
+		context.fillRect(getXCoord(square)+2*bw, getYCoord(square), bw/10, bw/10);
 	}
 	
 	function dragSelection(event){
@@ -800,21 +968,29 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 					}
 				}
 			} else {
-				clearTopHighlights();
+				//clearTopHighlights();
 			}
 		}
 	}
-	updateInterval=setInterval(function(){update(20);}, 20);
 	
 	function animateShotResult(status, square, offset){
 		if (status=='hit'){
 			setTimeout(function(){
 				particles=[]; 
 				clearHighlights();
-				drawHit(square, offset, true);
+				if (horizontalDisplay){
+					drawHit(square, 2*offset, true);
+				} else {
+					drawHit(square, offset, true);
+				}
 			}, 1500);
-			createExplosion(getXCoord(square)+offset+bw/20, getYCoord(square)+offset+bw/20, "#525252", offset);
-			createExplosion(getXCoord(square)+offset+bw/20, getYCoord(square)+offset+bw/20, "#FFA318", offset);
+			if (horizontalDisplay){
+				createExplosion(getXCoord(square)+2*offset+bw/20, getYCoord(square)+bw/20, "#525252", 2*offset);
+				createExplosion(getXCoord(square)+2*offset+bw/20, getYCoord(square)+bw/20, "#FFA318", 2*offset);
+			} else {
+				createExplosion(getXCoord(square)+offset+bw/20, getYCoord(square)+offset+bw/20, "#525252", offset);
+				createExplosion(getXCoord(square)+offset+bw/20, getYCoord(square)+offset+bw/20, "#FFA318", offset);
+			}
 		} else if (status.substring(0, 3) == 'hit'){
 			setTimeout(function(){
 				particles=[];
@@ -824,8 +1000,13 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 				newFire.initFire();
 				fireParticles.push(newFire);
 			}, 1500);
-			createExplosion(getXCoord(square)+offset+bw/20, getYCoord(square)+offset+bw/20, "#525252", offset);
-			createExplosion(getXCoord(square)+offset+bw/20, getYCoord(square)+offset+bw/20, "#FFA318", offset);
+			if (horizontalDisplay){
+				createExplosion(getXCoord(square)+2*offset+bw/20, getYCoord(square)+bw/20, "#525252", 2*offset);
+				createExplosion(getXCoord(square)+2*offset+bw/20, getYCoord(square)+bw/20, "#FFA318", 2*offset);
+			} else {
+				createExplosion(getXCoord(square)+offset+bw/20, getYCoord(square)+offset+bw/20, "#525252", offset);
+				createExplosion(getXCoord(square)+offset+bw/20, getYCoord(square)+offset+bw/20, "#FFA318", offset);
+			}
 		} else if (status=='miss'){
 			waterRipple(square, offset);
 		}
@@ -834,7 +1015,6 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 	function onMessage(event) {
 	    var result = JSON.parse(event.data);
 	    clearHighlights();
-	    window.alert(result.status);
 	    if (result.status!='illegal'){
 	    	if (result.status=='win'){
 	    		if (result.userID==myId){
@@ -916,8 +1096,15 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 		} else {
 			color='white';
 		}
-		var centerX=getXCoord(square)+offset+bw/20;
-		var centerY=getYCoord(square)+offset+bw/20;
+		var centerX;
+		var centerY;
+		if (horizontalDisplay){
+			centerX=getXCoord(square)+offset+bw/20
+			centerY=getYCoord(square)+bw/20;
+		} else {
+			centerX=getXCoord(square)+offset+bw/20;
+			centerY=getYCoord(square)+offset+bw/20;
+		}
 		context.beginPath();
 		context.arc(centerX, centerY, bw/30, 0, 2 * Math.PI, false);
 		context.fillStyle = color;
@@ -935,8 +1122,15 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 			color='white';
 		}
 		context.beginPath();
-		var xStart=getXCoord(square)+offset;
-		var yStart=getYCoord(square)+offset;
+		var xStart;
+		var yStart;
+		if (horizontalDisplay){
+			xStart=getXCoord(square)+offset;
+			yStart=getYCoord(square);
+		} else {
+			xStart=getXCoord(square)+offset;
+			yStart=getYCoord(square)+offset;
+		}
 		context.moveTo(xStart+bw/100, yStart+bw/100);
 		context.lineTo(xStart+bw/10-bw/100, yStart+bw/10-bw/100);
 		context.moveTo(xStart+bw/100, yStart+bw/10-bw/100);
@@ -962,8 +1156,14 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 		this.velocityX = 0;
 		this.velocityY = 0;
 		this.scaleSpeed = 0.5;
-		this.minCoord=10+offset;
-		this.maxCoord=10+bw+offset;
+		this.minXCoord=10+offset;
+		this.maxXCoord=10+bw+offset;
+		this.minYCoord=10+offset;
+		this.maxYCoord=10+bw+offset;
+		if (horizontalDisplay){
+			this.minYCoord=10;
+			this.maxYCoord=10+bw;
+		}
 
 		this.update = function(ms)
 		{
@@ -982,8 +1182,8 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 		this.draw = function(context)
 		{
 			// translating the 2D context to the particle coordinates
-			if ((this.x-this.radius)>this.minCoord&&(this.x+this.radius)<this.maxCoord&&
-					(this.y-this.radius)>this.minCoord&&(this.y+this.radius)<this.maxCoord){
+			if ((this.x-this.radius)>this.minXCoord&&(this.x+this.radius)<this.maxXCoord&&
+					(this.y-this.radius)>this.minYCoord&&(this.y+this.radius)<this.maxYCoord){
 				context.save();
 				context.translate(this.x, this.y);
 				context.scale(this.scale, this.scale);
@@ -1009,7 +1209,11 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 		//context.fillRect(0, 0, context.canvas.width, context.canvas.height);
 		clearTopHighlights();
 		if (particles.length>0){
-			clearBottomHighlights();
+			if (horizontalDisplay){
+				clearRightHighlights();
+			} else {
+				clearBottomHighlights();
+			}
 		}
 
 		// update and draw particles
@@ -1074,6 +1278,10 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 	function waterRipple(square, offset) {
 		var xStart=getXCoord(square)+offset;
 		var yStart=getYCoord(square)+offset;
+		if (horizontalDisplay){
+			xStart=getXCoord(square)+2*offset;
+			yStart=getYCoord(square);
+		}
 		var sqSize=Math.floor(bw/10);
 		var size = sqSize * (sqSize + 2) * 2,
         delay = 30,
@@ -1105,7 +1313,11 @@ function initGame(size, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 	        if (loopCounter==100){
 	        	loopCounter=0;
 	        	clearInterval(runInterval);
-	        	drawMiss(square, offset, true);
+	    		if (horizontalDisplay){
+		        	drawMiss(square, 2*offset, true);
+	    		} else {
+		        	drawMiss(square, offset, true);
+	    		}
 	        }
 	    }
 	    

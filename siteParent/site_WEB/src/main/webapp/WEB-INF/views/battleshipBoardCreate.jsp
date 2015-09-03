@@ -11,8 +11,11 @@
 <title>CAScheid Battleship</title>
 <script src="js/battleship.js?version=3.5"></script>
 </head>
-<body>
-	<h1>Battleship vs. ${opponent}</h1>
+<body style="padding:0px; margin:0px;">
+	<div class="fullCenter" style="height:50px; padding:0px; margin:0px;">
+		<label style="font-size:30px; padding-right:30px;">Battleship vs. ${opponent}</label>
+		<a title="Battleship Game List" href="battleship" target="_self">Back to List</a>
+	</div>
 	<canvas id='canvas'></canvas>
 	<form:form id="boardForm" action="startBattleship" commandName="battleshipBoard">
 		<form:input id="carrierLoc" type="hidden" path="carrierLoc"/>
@@ -26,9 +29,9 @@
 		<form:input id="patrolLoc" type="hidden" path="patrolLoc"/>
 		<form:input id="patrolVertical" type="hidden" path="patrolVertical"/>
 	</form:form>
-	<button id="btnSubmit" onclick='submitBoard()'>Finish and Submit</button>
+	<button id="btnSubmit" onclick='submitBoard()' style="padding:10px; width:250px; box-shadow: -8px 8px 10px 3px rgba(0,0,0,0.2); font-weight: bold; position:absolute;">Finish and Submit</button>
 	<script>
-		initBoardLoad(Math.min(window.innerWidth, window.innerHeight));
+		initBoardLoad();
 
 		function submitBoard(){
 			for (var i=0; i<nameArray.length; i++){

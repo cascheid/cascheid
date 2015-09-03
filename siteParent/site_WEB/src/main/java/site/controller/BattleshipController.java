@@ -39,7 +39,7 @@ public class BattleshipController {
 		} else {
 			mv = new ModelAndView("battleshipList");
 		}
-		if (identity==null){
+		if (identity==null||identity.getIdentifier()!=identifier){
 			identity=IdentityUtils.getIdentityByIdentifier(identifier);
 		}
 		List<BattleshipGame> games = BattleshipUtils.getBattleshipGamesByIdentifier(identity.getIdentifier());
@@ -225,6 +225,11 @@ public class BattleshipController {
 		mv.addObject("identifier", identity.getIdentifier());
 		mv.addObject("gameID", gameID);
 		mv.addObject("myTurn", false);
+		mv.addObject("winState", "active");
+		mv.addObject("myMoves", "[]");
+		mv.addObject("oppMoves", "[]");
+		mv.addObject("mySunkenShips", "[]");
+		mv.addObject("oppSunkenShips", "[]");
 		mv.addObject("opponent", activeOpponent.getUsername());
 		mv.addObject("battleshipBoard", battleshipBoard);
 		return mv;

@@ -45,8 +45,9 @@ public class RacingGameController {
 				IdentityUtils.deleteRacingGame(identity.getIdentifier());
 				identity.setRacingGameIdentifier(null);
 			}
-		} else {
+		} else if (identity==null||identity.getIdentifier()!=identifier){
 			identity=IdentityUtils.getIdentityByIdentifier(identifier);
+			racingGame=null;
 		}
 		ModelAndView mv = new ModelAndView("racingParentFrame");
 		if (racingGame==null){
