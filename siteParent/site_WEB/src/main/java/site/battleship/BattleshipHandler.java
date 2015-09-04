@@ -35,6 +35,21 @@ public class BattleshipHandler extends TextWebSocketHandler {
             	game = new ActiveBattleshipGame(newGame, BattleshipUtils.getBattleshipBoard(gameID, newGame.getUser1()), BattleshipUtils.getBattleshipBoard(gameID, newGame.getUser2()), BattleshipUtils.getBattleshipMoves(gameID, newGame.getUser1()), BattleshipUtils.getBattleshipMoves(gameID, newGame.getUser2()));
             	game.setUserActive(gameInfo.getUser1());
             	games.put(gameID, game);
+            } else if (game.getGame().getUser2()==gameInfo.getUser1()&&game.isNewGame()){//2nd player created the board, let them know
+            	game.getGame().setStatus("1TURN");
+                game.setNewSecondPlayerBoard();
+            	BattleshipMove startMv = new BattleshipMove();
+            	startMv.setStatus("start");
+                Long oppID=game.getGame().getUser1();
+            	String json = objectMapper.writeValueAsString(startMv);
+                TextMessage returnMessage = new TextMessage(json);
+                WebSocketSession opponent=null;
+                if (activeGameIDs.containsKey(oppID)&&activeGameIDs.get(oppID)==game.getGame().getGameID()){
+                    opponent=sessions.get(oppID);
+                    if (opponent!=null){
+                    	opponent.sendMessage(returnMessage);
+                    }
+                }
             }
             activeGameIDs.put(gameInfo.getUser1(), gameID);
             sessions.put(gameInfo.getUser1(), session);
@@ -113,6 +128,15 @@ public class BattleshipHandler extends TextWebSocketHandler {
 		
 		public BattleshipGame getGame(){
 			return game;
+		}
+		
+		public boolean isNewGame(){
+			return (user1Moves.size()==0&&game.getStatus().equals("2TURN"));
+		}
+		
+		public void setNewSecondPlayerBoard(){
+			BattleshipBoard board = BattleshipUtils.getBattleshipBoard(game.getGameID(), game.getUser2());
+			this.user2Board=new ActiveBattleshipBoard(board, user1Moves);
 		}
 		
 		public void setUser1Active(boolean user1Active){

@@ -70,7 +70,7 @@ function initGame(gameID, identifier, turnStatus, mymoves, oppmoves, mysunkenshi
 	} else {
 		bw=(window.innerWidth-20)/2;
 		horizontalDisplay=false;
-		canvas.width = window.innerWidth;//TODO account for all sizes
+		canvas.width = window.innerWidth;
 		canvas.height = window.innerWidth;
 		document.getElementById('btnFire').style.top=(50+bw*37/20)+'px';
 		document.getElementById('btnFire').style.left=(20+bw/5)+'px';
@@ -219,7 +219,7 @@ function initGame(gameID, identifier, turnStatus, mymoves, oppmoves, mysunkenshi
 		context.font=stndTxt*1.5+'px Arial';
 		context.fillStyle='red';
 		context.textAlign='center';
-		context.fillText("My Board", bw+10+bw/2, 20+1.5*stndTxt, bw-20);
+		context.fillText("Ally Ships", bw+10+bw/2, 20+1.5*stndTxt, bw-20);
 
 		context.font=stndTxt+'px Arial';
 		context.textAlign='left';
@@ -284,7 +284,7 @@ function initGame(gameID, identifier, turnStatus, mymoves, oppmoves, mysunkenshi
 		context.font=stndTxt*1.5+'px Arial';
 		context.fillStyle='red';
 		context.textAlign='center';
-		context.fillText("Their Board", 10+bw/2, bw+20+1.5*stndTxt, bw-20);
+		context.fillText("Enemy Ships", 10+bw/2, bw+20+1.5*stndTxt, bw-20);
 
 		context.font=stndTxt+'px Arial';
 		context.textAlign='left';
@@ -304,7 +304,7 @@ function initGame(gameID, identifier, turnStatus, mymoves, oppmoves, mysunkenshi
 		context.font=stndTxt*1.5+'px Arial';
 		context.fillStyle='red';
 		context.textAlign='center';
-		context.fillText("Their Board", 10+7*bw/2, 20+1.5*stndTxt, bw-20);
+		context.fillText("Enemy Ships", 10+7*bw/2, 20+1.5*stndTxt, bw-20);
 
 		context.font=stndTxt+'px Arial';
 		context.textAlign='left';
@@ -1015,7 +1015,12 @@ function initGame(gameID, identifier, turnStatus, mymoves, oppmoves, mysunkenshi
 	function onMessage(event) {
 	    var result = JSON.parse(event.data);
 	    clearHighlights();
-	    if (result.status!='illegal'){
+	    if (result.status=='start'){
+	    	if (!myTurn){
+	    		myTurn=true;
+			    toggleTurn();
+	    	}
+	    } else if (result.status!='illegal'){
 	    	if (result.status=='win'){
 	    		if (result.userID==myId){
 	    			winState='win';
