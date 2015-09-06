@@ -9,10 +9,10 @@
 <title>CAScheid Home</title>
 <script src="js/mist.js"></script>
 <script src="js/rain.js"></script>
+<script src="js/index.js"></script>
 </head>
 <body>
 	<canvas id="bodyCanvas"></canvas>
-	<script src="js/index.js"></script>
 	<div class="master">
 	<nav id="nav01">
 		<ul id='menu'>

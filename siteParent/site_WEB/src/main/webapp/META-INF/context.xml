@@ -3,9 +3,10 @@
 <Context>
     <Resource
         name="jdbc/mysite" type="javax.sql.DataSource"
-        maxActive="100" maxIdle="30" maxWait="10000" 
-        url="jdbc:mysql://localhost:3306/mysite"
+        maxActive="8" maxIdle="4" maxWait="10000" 
+        url="jdbc:mysql://aa14i5fczih8zmn.c9opukwmqmft.us-east-1.rds.amazonaws.com:3306/mysite"
         driverClassName="com.mysql.jdbc.Driver"
+    	factory="org.apache.commons.dbcp.BasicDataSourceFactory"
         username="webapp" password="w3b@pp!"
     />
     <ResourceLink name="jdbc/mysite"

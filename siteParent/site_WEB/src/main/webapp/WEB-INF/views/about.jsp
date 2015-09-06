@@ -22,7 +22,7 @@
 			<h3>Java developer based in the Washington D.C. metro area. Main enterprise experience in Java/JEE, but also have professional experience with javascript, PL/SQL, JSP web applications, GWT, linux, and bash. Also have minor to moderate experience in lots of other random things from personal projects (like this one).</h3>
 		</div>
 		<div class="fullCenter" style="padding:0px">
-			<label>Contact: </label> <a href="mailto:user@domain.com">user@domain.com</a> 
+			<label>Contact: </label> <a href="mailto:chris@cascheid.com">chris@cascheid.com</a> 
 		</div>
 		<h2 class="underline">About My Site</h2>
 		<div id="wrapper">
