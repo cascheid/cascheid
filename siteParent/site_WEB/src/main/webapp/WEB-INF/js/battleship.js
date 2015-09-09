@@ -80,8 +80,10 @@ function initGame(gameID, identifier, turnStatus, mymoves, oppmoves, mysunkenshi
     placingShips=false;
 	canvas.addEventListener("mousedown", onClick, false);
 	//canvas.addEventListener("mouseup", onMouseUp, false);
-	
-	socket = new WebSocket("ws://localhost:8080/site_WEB/wsbattleship");
+	var hostname=window.location.hostname;
+	socket = new WebSocket("ws://cascheid.elasticbeanstalk.com/wsbattleship");
+	var socket2 = new WebSocket("ws://cascheid.elasticbeanstalk.com:80/wsbattleship");
+	var socket3 = new WebSocket("ws://cascheid.elasticbeanstalk.com:8080/wsbattleship");
 	socket.onmessage = onMessage;
 	socket.onopen = function(){
 		initWs();

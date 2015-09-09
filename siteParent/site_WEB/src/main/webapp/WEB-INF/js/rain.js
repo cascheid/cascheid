@@ -45,7 +45,7 @@ function initRain(left, right, top, bottom, parts, lwidth){
 };
 
 function drawRain() {
-  rctx.clearRect(rlb, rtb, w, h);
+  //rctx.clearRect(rlb, rtb, w, h);
   for(var c = 0; c < rainParticles.length; c++) {
     var p = rainParticles[c];
     rctx.beginPath();

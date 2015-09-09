@@ -14,6 +14,7 @@
 	var ctx;
 	var bAnim=false;
     var canvasimg = new Image();
+    var offsetLeft=0;
 	canvasimg.src='img/misc/bottom.jpg';
 	function waterRipple() {
 	    canvas = document.getElementById('bodyCanvas');
@@ -44,12 +45,28 @@
 	    var fullWidth=1828;
 	    var fullHeight=1080;
 	    ratio = width/fullWidth;
-	    var displayedHeight = (height/ratio)/fullHeight;
-	    
-	    document.getElementById('top').style.width=width+'px';
-	    document.getElementById('top').style.height=height/displayedHeight+'px';
-	    document.getElementById('top').style.display='';
-		ctx.drawImage(canvasimg, 0, 0, fullWidth, fullHeight*displayedHeight, 0, 0, width, height);
+	    var heightRatio=height/fullHeight;
+	    var displayedHeight=1;
+	    if (heightRatio>ratio){
+	    	var displayedWidth=(width/heightRatio)/fullWidth;
+		    
+		    document.getElementById('top').style.width=width/displayedWidth+'px';
+		    document.getElementById('top').style.height=height+'px';
+		    document.getElementById('top').style.display='';
+	    	offsetLeft=(fullWidth-fullWidth*displayedWidth)/2;
+		    document.getElementById('top').style.left=(0-offsetLeft)*heightRatio+'px';
+			ctx.drawImage(canvasimg, offsetLeft, 0, fullWidth*displayedWidth, fullHeight, 0, 0, width, height);
+			ratio=heightRatio;
+	    } else {
+		    displayedHeight = (height/ratio)/fullHeight;
+		    offsetLeft=0;
+		    
+		    document.getElementById('top').style.width=width+'px';
+		    document.getElementById('top').style.height=height/displayedHeight+'px';
+		    document.getElementById('top').style.display='';
+		    document.getElementById('top').style.left='0px';
+			ctx.drawImage(canvasimg, 0, 0, fullWidth, fullHeight*displayedHeight, 0, 0, width, height);
+	    }
 	    texture = ctx.getImageData(0, 0, width, height);
 	    ripple = ctx.getImageData(0, 0, width, height);
 	    
@@ -75,6 +92,11 @@
 	            }
 	        }
 	    }
+	    
+		var topBorder=820*ratio;
+		var bottomBorder=(1030*displayedHeight)*ratio;
+		var leftBorder=Math.max(100-offsetLeft, 35)*ratio;
+		var rightBorder=(1750-2*offsetLeft)*ratio;
 	    
 	    function newframe() {
 	        var a, b, data, cur_pixel, new_pixel, old_data;
@@ -126,7 +148,7 @@
 	    
 	                    new_pixel = (a + (b * _width)) * 4;
 	                    cur_pixel = i * 4;
-	                    if (a<(100*ratio)||b<(800*ratio)){
+	                    if (a<(leftBorder-20*ratio)||a>(rightBorder+40*ratio)||b<(topBorder-20*ratio)){
 		                    new_pixel=cur_pixel;
 		                }
 	                    _rd[cur_pixel] = _td[new_pixel];
@@ -144,13 +166,13 @@
 
 		var fish1Elem=document.getElementById('fish1');
 		var fish2Elem=document.getElementById('fish2');
-		fish1Left=500*ratio;
+		fish1Left=Math.max(500-offsetLeft, 100)*ratio;
 		fish1Top=850*ratio;
 		fish1Elem.width=40*ratio;
 		fish1Elem.height=20*ratio;
 		fish1Elem.style.left=fish1Left+'px';
 		fish1Elem.style.top=fish1Top+'px';
-		fish2Left=1000*ratio;
+		fish2Left=Math.max(1000-offsetLeft, 100)*ratio;
 		fish2Top=880*ratio;
 		fish2Elem.width=50*ratio;
 		fish2Elem.height=25*ratio;
@@ -159,10 +181,6 @@
 		fish2Elem.style.webkitTransform='rotate(180deg)';
 		fish2Elem.style.MozTransform='rotate(180deg)';
 		fish2Elem.style.transform='rotate(180deg)';
-		var topBorder=820*ratio;
-		var bottomBorder=930*ratio;
-		var leftBorder=100*ratio;
-		var rightBorder=1750*ratio;
 		
 		function animateAllFish(){
 			animateFish(1);
@@ -321,8 +339,8 @@
 		clearInterval(fishInterval);
 		fishInterval=setInterval(animateAllFish, 10);
 
-		initMist(512*ratio, 1532*ratio, 728*ratio, 760*ratio, 55*ratio, 250);
-		initRain(300*ratio, 1800*ratio, 0*ratio, 720*ratio, 2000, 2*ratio);
+		initMist(Math.max(512-offsetLeft)*ratio, (1532-offsetLeft)*ratio, 728*ratio, 760*ratio, 55*ratio, 250);
+		initRain(Math.max(300-offsetLeft, 0)*ratio, (1800-2*offsetLeft)*ratio, 0*ratio, 720*ratio, 2000, 2*ratio);
 	}
 
     function onResize(){
@@ -359,6 +377,8 @@
 
      window.onload = function() {
        bAnim=true;
+   		document.getElementById('fish1').style.display='';
+   		document.getElementById('fish2').style.display='';
        onResize();
      };
 

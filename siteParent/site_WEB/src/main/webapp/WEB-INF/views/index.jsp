@@ -7,9 +7,9 @@
 <link href="css/site.css?version=1.00" rel="stylesheet">
 <link href="css/index.css?version=1.00" rel="stylesheet">
 <title>CAScheid Home</title>
+<script src="js/index.js"></script>
 <script src="js/mist.js"></script>
 <script src="js/rain.js"></script>
-<script src="js/index.js"></script>
 </head>
 <body>
 	<canvas id="bodyCanvas"></canvas>
@@ -25,8 +25,8 @@
   		<button id='btnAnim' style="margin:auto" onclick="toggleAnim()">Animations On</button>
 	</div>
 	</div>
-	<img id="fish1" class="fish" src="img/sprites/fish.png">
-	<img id="fish2" class="fish" src="img/sprites/fish.png">
+	<img id="fish1" class="fish" src="img/sprites/fish.png" style='display:none'>
+	<img id="fish2" class="fish" src="img/sprites/fish.png" style='display:none'>
 	<img id="top" src="img/misc/top.png" style='display:none'>
 	
 </body>
