@@ -3,7 +3,7 @@
   <parent>
     <groupId>site</groupId>
     <artifactId>siteParent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
   </parent>
   <artifactId>site_WEB</artifactId>
   <packaging>war</packaging>
@@ -106,22 +106,25 @@
    		<scope>provided</scope>
 	</dependency>
 	
-<dependency>
-    <groupId>javax.websocket</groupId>
-    <artifactId>javax.websocket-api</artifactId>
-    <version>1.0</version>
-    <scope>provided</scope>
-</dependency>
+	<dependency>
+    	<groupId>javax.websocket</groupId>
+    	<artifactId>javax.websocket-api</artifactId>
+    	<version>1.0</version>
+    	<scope>provided</scope>
+	</dependency>
+	
 	<dependency>
 		<groupId>com.fasterxml.jackson.core</groupId>
 		<artifactId>jackson-core</artifactId>
 		<version>2.5.4</version>
 	</dependency>
+	
 	<dependency>
 		<groupId>com.fasterxml.jackson.core</groupId>
 		<artifactId>jackson-databind</artifactId>
 		<version>2.5.4</version>
 	</dependency>
+	
 	<dependency>
 		<groupId>com.fasterxml.jackson.jaxrs</groupId>
     	<artifactId>jackson-jaxrs-json-provider</artifactId>

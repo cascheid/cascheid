@@ -3,7 +3,7 @@
   <parent>
     <groupId>site</groupId>
     <artifactId>siteParent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
   </parent>
   <groupId>site_JAR</groupId>
   <artifactId>site_JAR</artifactId>
