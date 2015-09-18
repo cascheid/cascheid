@@ -1,0 +1,9 @@
+body{background-image: url(../img/misc/timon.jpg); -moz-background-size: cover; -webkit-background-size: cover; background-size: cover; background-position: top center; background-repeat: no-repeat; background-attachment: fixed;}
+
+img.fish{ position:fixed; top:900px; left:500px;}
+div.master{position:relative; z-index:3;}
+
+#bodyCanvas{position:fixed; top:0; left:0;}
+#main{background: rgba(255,255,255,.25); width:236px; text-align:center;}
+ul#menu li a {background: rgba(255,255,255,.5)}
+#top{position:fixed; top:0px; left:0px; z-index:2;}

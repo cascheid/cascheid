@@ -1,144 +1,98 @@
 package site.racinggame;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
+
 public class UserRacecar extends Racecar implements java.io.Serializable{
 	
 	private static final long serialVersionUID = 1843972156627922738L;
 	
-	private Upgrade upgrade1;
-	private Upgrade upgrade2;
-	private Upgrade upgrade3;
-	private Upgrade upgrade4;
-	private Upgrade upgrade5;
+	private Long userRacecarID;
+	private List<Upgrade> upgradeList = new ArrayList<Upgrade>();
 	
 	public UserRacecar(){
 	}
 
 	public UserRacecar(Racecar car){
-		super(car.getCarID(), car.getRacingClass(), car.getTopSpeed(), car.getAcceleration(), car.getReliability(), car.getLapEfficiency(), car.getModel(), car.getPrice());
+		super(car.getCarID(), car.getRacingClass(), car.getTopSpeed(), car.getAcceleration(), car.getReliability(), car.getLapEfficiency(), car.getModel(), car.getPrice(), car.getName());
 	}
 
-	public Upgrade getUpgrade1() {
-		return upgrade1;
+	public Long getUserRacecarID() {
+		return userRacecarID;
 	}
 
-	public void setUpgrade1(Upgrade upgrade1) {
-		this.upgrade1 = upgrade1;
+	public void setUserRacecarID(Long userRacecarID) {
+		this.userRacecarID = userRacecarID;
+	}
+	
+	public List<Upgrade> getUpgradeList() {
+		return upgradeList;
 	}
 
-	public Upgrade getUpgrade2() {
-		return upgrade2;
+	public void setUpgradeList(List<Upgrade> upgradeList) {
+		if (upgradeList!=null){
+			this.upgradeList = upgradeList;
+		}
+	}
+	
+	public void addUpgrade(Upgrade upgrade){
+		upgradeList.add(upgrade);
 	}
 
-	public void setUpgrade2(Upgrade upgrade2) {
-		this.upgrade2 = upgrade2;
-	}
-
-	public Upgrade getUpgrade3() {
-		return upgrade3;
-	}
-
-	public void setUpgrade3(Upgrade upgrade3) {
-		this.upgrade3 = upgrade3;
-	}
-
-	public Upgrade getUpgrade4() {
-		return upgrade4;
-	}
-
-	public void setUpgrade4(Upgrade upgrade4) {
-		this.upgrade4 = upgrade4;
-	}
-
-	public Upgrade getUpgrade5() {
-		return upgrade5;
-	}
-
-	public void setUpgrade5(Upgrade upgrade5) {
-		this.upgrade5 = upgrade5;
+	@Override
+	public Integer getTopSpeed(){
+		Integer iReturn = super.getTopSpeed();
+		for (Upgrade upgrade : upgradeList){
+			if (upgrade.getTopSpeedMod()!=null){
+				iReturn+=upgrade.getTopSpeedMod();
+			}
+		}
+		return iReturn>400?400:iReturn;
 	}
 	
 	@Override
-	public double getTopSpeed(){
-		double dReturn = super.getTopSpeed();
-		if (upgrade1!=null&&upgrade1.getTopSpeedMod()!=0){
-			dReturn+=upgrade1.getTopSpeedMod();
+	public Integer getAcceleration(){
+		Integer dReturn = super.getAcceleration();
+		for (Upgrade upgrade : upgradeList){
+			if (upgrade.getAccelerationMod()!=null){
+				dReturn+=upgrade.getAccelerationMod();
+			}
 		}
-		if (upgrade2!=null&&upgrade2.getTopSpeedMod()!=0){
-			dReturn+=upgrade2.getTopSpeedMod();
-		}
-		if (upgrade3!=null&&upgrade3.getTopSpeedMod()!=0){
-			dReturn+=upgrade3.getTopSpeedMod();
-		}
-		if (upgrade4!=null&&upgrade4.getTopSpeedMod()!=0){
-			dReturn+=upgrade4.getTopSpeedMod();
-		}
-		if (upgrade5!=null&&upgrade5.getTopSpeedMod()!=0){
-			dReturn+=upgrade5.getTopSpeedMod();
-		}
-		return dReturn;
+		return dReturn>80?80:dReturn;
 	}
 	
 	@Override
-	public double getAcceleration(){
-		double dReturn = super.getAcceleration();
-		if (upgrade1!=null&&upgrade1.getAccelerationMod()!=0){
-			dReturn+=upgrade1.getAccelerationMod();
+	public BigDecimal getReliability(){
+		BigDecimal dReturn = super.getReliability().setScale(2, RoundingMode.HALF_UP);
+		for (Upgrade upgrade : upgradeList){
+			if (upgrade.getReliabilityMod()!=null){
+				dReturn=dReturn.add(upgrade.getReliabilityMod());
+			}
 		}
-		if (upgrade2!=null&&upgrade2.getAccelerationMod()!=0){
-			dReturn+=upgrade2.getAccelerationMod();
-		}
-		if (upgrade3!=null&&upgrade3.getAccelerationMod()!=0){
-			dReturn+=upgrade3.getAccelerationMod();
-		}
-		if (upgrade4!=null&&upgrade4.getAccelerationMod()!=0){
-			dReturn+=upgrade4.getAccelerationMod();
-		}
-		if (upgrade5!=null&&upgrade5.getAccelerationMod()!=0){
-			dReturn+=upgrade5.getAccelerationMod();
-		}
-		return dReturn;
+		return dReturn.compareTo(BigDecimal.ONE)>0?BigDecimal.ONE:dReturn;
 	}
 	
 	@Override
-	public double getReliability(){
-		double dReturn = super.getReliability();
-		if (upgrade1!=null&&upgrade1.getReliabilityMod()!=0){
-			dReturn+=upgrade1.getReliabilityMod();
+	public BigDecimal getLapEfficiency(){
+		BigDecimal dReturn = super.getLapEfficiency().setScale(2, RoundingMode.HALF_UP);
+		for (Upgrade upgrade : upgradeList){
+			if (upgrade.getEfficiencyMod()!=null){
+				dReturn=dReturn.add(upgrade.getEfficiencyMod());
+			}
 		}
-		if (upgrade2!=null&&upgrade2.getReliabilityMod()!=0){
-			dReturn+=upgrade2.getReliabilityMod();
-		}
-		if (upgrade3!=null&&upgrade3.getReliabilityMod()!=0){
-			dReturn+=upgrade3.getReliabilityMod();
-		}
-		if (upgrade4!=null&&upgrade4.getReliabilityMod()!=0){
-			dReturn+=upgrade4.getReliabilityMod();
-		}
-		if (upgrade5!=null&&upgrade5.getReliabilityMod()!=0){
-			dReturn+=upgrade5.getReliabilityMod();
-		}
-		return dReturn;
+		BigDecimal maxVal=new BigDecimal(.8).setScale(2, RoundingMode.HALF_UP);
+		return dReturn.compareTo(maxVal)>0?maxVal:dReturn;
 	}
 	
 	@Override
-	public double getLapEfficiency(){
-		double dReturn = super.getLapEfficiency();
-		if (upgrade1!=null&&upgrade1.getEfficiencyMod()!=0){
-			dReturn+=upgrade1.getEfficiencyMod();
+	public String getRacingClass(){
+		if (super.getRacingClass().equals("SS")){
+			return "S";
+		} else {
+			return super.getRacingClass();
 		}
-		if (upgrade2!=null&&upgrade2.getEfficiencyMod()!=0){
-			dReturn+=upgrade2.getEfficiencyMod();
-		}
-		if (upgrade3!=null&&upgrade3.getEfficiencyMod()!=0){
-			dReturn+=upgrade3.getEfficiencyMod();
-		}
-		if (upgrade4!=null&&upgrade4.getEfficiencyMod()!=0){
-			dReturn+=upgrade4.getEfficiencyMod();
-		}
-		if (upgrade5!=null&&upgrade5.getEfficiencyMod()!=0){
-			dReturn+=upgrade5.getEfficiencyMod();
-		}
-		return dReturn;
 	}
 	
 }

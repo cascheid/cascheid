@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+        <!--  local
+        url="jdbc:mysql://localhost:3306/mysite"
+        -->
+        <!--  server
+        url="jdbc:mysql://aaaia6gm1ly6vk.c9opukwmqmft.us-east-1.rds.amazonaws.com:3306/mysite"
+    	factory="org.apache.commons.dbcp.BasicDataSourceFactory"
+    	-->
+<Context>
+    <Resource
+        name="jdbc/mysite" type="javax.sql.DataSource"
+        maxActive="8" maxIdle="4" maxWait="10000" 
+        url="jdbc:mysql://aaaia6gm1ly6vk.c9opukwmqmft.us-east-1.rds.amazonaws.com:3306/mysite"
+    	factory="org.apache.commons.dbcp.BasicDataSourceFactory"
+        driverClassName="com.mysql.jdbc.Driver"
+        username="webapp" password="w3b@pp!"
+        validationQuery="SELECT 1"
+        testWhileIdle="true" testOnBorrow="true"
+        timeBetweenEvictionRunsMillis="10000"
+        minEvictableIdleTimeMillis="60000"
+    />
+    <ResourceLink name="jdbc/mysite"
+             global="jdbc/mysite"
+              type="javax.sql.DataSource" />
+</Context>

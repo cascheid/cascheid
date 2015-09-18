@@ -1,22 +1,28 @@
 package site.racinggame;
 
+import java.math.BigDecimal;
+
+import org.springframework.format.annotation.NumberFormat;
+import org.springframework.format.annotation.NumberFormat.Style;
+
 public class Racecar implements java.io.Serializable{
 	
 	private static final long serialVersionUID = -6448889763873084248L;
 	
 	private Integer carID;
-	private char racingClass;
-	private double topSpeed;
-	private double acceleration;
-	private double reliability;
-	private double lapEfficiency;
+	private String racingClass;
+	private Integer topSpeed;
+	private Integer acceleration;
+	private BigDecimal reliability;
+	private BigDecimal lapEfficiency;
 	private String model;
-	private double price;
+	private BigDecimal price;
+	private String name;
 	
 	public Racecar(){
 	}
 
-	public Racecar(Integer carID, char racingClass, double topSpeed, double acceleration, double reliability, double lapEfficiency, String model, double price){
+	public Racecar(Integer carID, String racingClass, Integer topSpeed, Integer acceleration, BigDecimal reliability, BigDecimal lapEfficiency, String model, BigDecimal price, String name){
 		this.carID=carID;
 		this.racingClass=racingClass;
 		this.topSpeed=topSpeed;
@@ -25,6 +31,7 @@ public class Racecar implements java.io.Serializable{
 		this.lapEfficiency=lapEfficiency;
 		this.model=model;
 		this.setPrice(price);
+		this.name=name;
 	}
 	
 	public Integer getCarID() {
@@ -35,43 +42,43 @@ public class Racecar implements java.io.Serializable{
 		this.carID = carID;
 	}
 
-	public char getRacingClass() {
+	public String getRacingClass() {
 		return racingClass;
 	}
 
-	public void setRacingClass(char racingClass) {
+	public void setRacingClass(String racingClass) {
 		this.racingClass = racingClass;
 	}
 
-	public double getTopSpeed() {
+	public Integer getTopSpeed() {
 		return topSpeed;
 	}
 
-	public void setTopSpeed(double topSpeed) {
+	public void setTopSpeed(Integer topSpeed) {
 		this.topSpeed = topSpeed;
 	}
 
-	public double getAcceleration() {
+	public Integer getAcceleration() {
 		return acceleration;
 	}
 
-	public void setAcceleration(double acceleration) {
+	public void setAcceleration(Integer acceleration) {
 		this.acceleration = acceleration;
 	}
 
-	public double getReliability() {
+	public BigDecimal getReliability() {
 		return reliability;
 	}
 
-	public void setReliability(double reliability) {
+	public void setReliability(BigDecimal reliability) {
 		this.reliability = reliability;
 	}
 
-	public double getLapEfficiency() {
+	public BigDecimal getLapEfficiency() {
 		return lapEfficiency;
 	}
 
-	public void setLapEfficiency(double lapEfficiency) {
+	public void setLapEfficiency(BigDecimal lapEfficiency) {
 		this.lapEfficiency = lapEfficiency;
 	}
 
@@ -83,11 +90,20 @@ public class Racecar implements java.io.Serializable{
 		this.model = model;
 	}
 
-	public double getPrice() {
+	@NumberFormat(style = Style.NUMBER, pattern = "#,###")
+	public BigDecimal getPrice() {
 		return price;
 	}
 
-	public void setPrice(double price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

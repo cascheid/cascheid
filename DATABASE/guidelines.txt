@@ -1,0 +1,42 @@
+SS
+Top speed: 280-320
+Accel: 55-70
+Reliability: .6-.75
+Lap Efficiency: .4-.5
+
+
+S
+Top speed:210-250
+Accel: 40-50
+Reliability: .45-.625
+Lap Efficiency: .35-.5
+
+A
+Top speed: 180-220
+Accel: 30-40
+Reliability: .4-.6
+Lap Efficiency: .35-.45
+
+B
+Top speed: 160-200
+Accel: 25-35
+Reliability: .4-.55
+Lap Efficiency: .3-.45
+
+C
+Top speed: 140-180
+Accel: 20-28
+Reliability: .4-.5
+Lap Efficiency: .3-.45
+
+D
+Top speed: 120-150
+Accel: 15-25
+Reliability: .35-.5
+Lap Efficiency: .3-.4
+
+E
+Top Speed: 90-120
+Accel: 10-15
+Reliability: .35-.45
+Lap Efficiency: .3-.4

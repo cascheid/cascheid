@@ -9,11 +9,12 @@ public class Identity implements java.io.Serializable{
 	
 	private Long identifier;
 	private Long racingGameIdentifier;
+	private Integer snakeScore;
+	private String username;
 	//private RacingGame racingGame;	
 	//private SnakeGame snakeGame;
 	
 	public Identity(){
-		this.identifier=IdentityUtils.getRandomIdentifier();
 	}
 	
 	public Identity(Long identifier){
@@ -22,14 +23,15 @@ public class Identity implements java.io.Serializable{
 	
 	public Identity(Long identifier, Long racingGameIdentifier){
 		this.identifier=identifier;
+		this.racingGameIdentifier=racingGameIdentifier;
 	}
 	
 	public Long getIdentifier(){
 		return identifier;
 	}
 	
-	public RacingGame getRacingGameObject(){
-		return RacingGameUtils.getRacingGameObject(racingGameIdentifier);
+	public void setIdentifier(Long identifier){
+		this.identifier=identifier;
 	}
 
 	public Long getRacingGameIdentifier() {
@@ -38,5 +40,24 @@ public class Identity implements java.io.Serializable{
 
 	public void setRacingGameIdentifier(Long racingGameIdentifier) {
 		this.racingGameIdentifier = racingGameIdentifier;
+	}
+
+	public Integer getSnakeScore() {
+		return snakeScore;
+	}
+
+	public void setSnakeScore(Integer snakeScore) {
+		this.snakeScore = snakeScore;
+	}
+
+	public String getUsername() {
+		if (username==null){
+			return "anonymous";
+		}
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
 	}
 }
