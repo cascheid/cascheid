@@ -16,8 +16,8 @@ public class BattleshipConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new BattleshipHandler(), "/wsbattleship")
-            .addInterceptors(new HttpSessionHandshakeInterceptor());
+        registry.addHandler(new BattleshipHandler(), "/wsbattleship").withSockJS();
+//            .addInterceptors(new HttpSessionHandshakeInterceptor()).withSockJS();
     }
 
 

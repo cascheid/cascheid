@@ -9,6 +9,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" type="text/css" href="css/site.css?version=1.00"/>
 <title>CAScheid Battleship</title>
+<script src="js/sockjs-0.3.4.min.js"></script>
 <script src="js/battleship.js?version=1.00"></script>
 </head>
 <body style="padding:0px; margin:0px;">
@@ -31,7 +32,7 @@
 	</form:form>
 	<button id="btnFire" onclick="submitFire()" style="padding:10px; width:100px; box-shadow: -8px 8px 10px 3px rgba(0,0,0,0.2); font-weight: bold; position:absolute;">Fire!</button>
 	<script>
-		initGame(${gameID}, ${identifier}, ${myTurn}, ${myMoves}, ${oppMoves}, ${mySunkenShips}, ${oppSunkenShips}, '${winState}');
+		initGame('${pageContext.request.contextPath}', ${gameID}, ${identifier}, ${myTurn}, ${myMoves}, ${oppMoves}, ${mySunkenShips}, ${oppSunkenShips}, '${winState}');
 	</script>
 </body>
 </html>

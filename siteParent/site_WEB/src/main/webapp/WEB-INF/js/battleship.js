@@ -48,7 +48,7 @@ function initBoardLoad(){
 	}
 }
 
-function initGame(gameID, identifier, turnStatus, mymoves, oppmoves, mysunkenships, oppsunkenships, winstate){
+function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysunkenships, oppsunkenships, winstate){
 	localGameId=gameID;
 	myTurn=turnStatus;
 	myId=identifier;
@@ -81,13 +81,26 @@ function initGame(gameID, identifier, turnStatus, mymoves, oppmoves, mysunkenshi
 	canvas.addEventListener("mousedown", onClick, false);
 	//canvas.addEventListener("mouseup", onMouseUp, false);
 	var hostname=window.location.hostname;
-	socket = new WebSocket("ws://cascheid.elasticbeanstalk.com/wsbattleship");
-	var socket2 = new WebSocket("ws://cascheid.elasticbeanstalk.com:80/wsbattleship");
-	var socket3 = new WebSocket("ws://cascheid.elasticbeanstalk.com:8080/wsbattleship");
+	//socket = new WebSocket("ws://52.20.192.224:80/wsbattleship");
+	socket = new SockJS(root+'/wsbattleship');
+	//var socket2 = new SockJS('/site_WEB/wsbattleship');
+	//var socket4 = new WebSocket("ws://52.20.192.224:8080/wsbattleship");
+	//var socket2 = new WebSocket("ws://cascheid.elasticbeanstalk.com:80/wsbattleship");
+	//var socket3 = new WebSocket("ws://cascheid.elasticbeanstalk.com:8080/wsbattleship");
 	socket.onmessage = onMessage;
 	socket.onopen = function(){
+		console.log('/chat opened');
 		initWs();
 	};
+	/*socket2.onopen = function(){
+		console.log('/site_WEB/chat opened');
+	};*/
+	socket.onclose = function(){
+		console.log('/chat closed');
+	}/*
+	socket2.onclose = function(){
+		console.log('/site_WEB/chat closed');
+	}*/
 
 	window.onload=function(){
 		drawTopGrid();

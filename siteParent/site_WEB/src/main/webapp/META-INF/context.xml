@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+        <!--  url="jdbc:mysql://localhost:3306/mysite"-->
+        <!--  url="jdbc:mysql://aaaia6gm1ly6vk.c9opukwmqmft.us-east-1.rds.amazonaws.com:3306/mysite"
+    	factory="org.apache.commons.dbcp.BasicDataSourceFactory"-->
 <Context>
     <Resource
         name="jdbc/mysite" type="javax.sql.DataSource"
         maxActive="8" maxIdle="4" maxWait="10000" 
-        url="jdbc:mysql://aa14i5fczih8zmn.c9opukwmqmft.us-east-1.rds.amazonaws.com:3306/mysite"
-        driverClassName="com.mysql.jdbc.Driver"
+        url="jdbc:mysql://aaaia6gm1ly6vk.c9opukwmqmft.us-east-1.rds.amazonaws.com:3306/mysite"
     	factory="org.apache.commons.dbcp.BasicDataSourceFactory"
+        driverClassName="com.mysql.jdbc.Driver"
         username="webapp" password="w3b@pp!"
     />
     <ResourceLink name="jdbc/mysite"
