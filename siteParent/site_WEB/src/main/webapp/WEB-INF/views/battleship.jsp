@@ -9,7 +9,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <link rel="stylesheet" type="text/css" href="css/site.css?version=1.00"/>
 <title>CAScheid Battleship</title>
-<script src="js/sockjs-0.3.4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.0.3/sockjs.min.js"></script>
 <script src="js/battleship.js?version=1.00"></script>
 </head>
 <body style="padding:0px; margin:0px;">

@@ -79,28 +79,15 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 
     placingShips=false;
 	canvas.addEventListener("mousedown", onClick, false);
-	//canvas.addEventListener("mouseup", onMouseUp, false);
-	var hostname=window.location.hostname;
-	//socket = new WebSocket("ws://52.20.192.224:80/wsbattleship");
+	
 	socket = new SockJS(root+'/wsbattleship');
-	//var socket2 = new SockJS('/site_WEB/wsbattleship');
-	//var socket4 = new WebSocket("ws://52.20.192.224:8080/wsbattleship");
-	//var socket2 = new WebSocket("ws://cascheid.elasticbeanstalk.com:80/wsbattleship");
-	//var socket3 = new WebSocket("ws://cascheid.elasticbeanstalk.com:8080/wsbattleship");
 	socket.onmessage = onMessage;
 	socket.onopen = function(){
-		console.log('/chat opened');
 		initWs();
 	};
-	/*socket2.onopen = function(){
-		console.log('/site_WEB/chat opened');
-	};*/
 	socket.onclose = function(){
-		console.log('/chat closed');
-	}/*
-	socket2.onclose = function(){
-		console.log('/site_WEB/chat closed');
-	}*/
+		console.log(root+'/wsbattleship closed');
+	}
 
 	window.onload=function(){
 		drawTopGrid();
@@ -662,6 +649,13 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 							context.fillStyle = "magenta";
 							context.fillRect(Math.floor(bw+10+bw/2), Math.floor(20+2*stndTxt), Math.ceil(bw/2)+1, Math.ceil(bw/10)+1);
 							context.drawImage(carrierImg, bw+10+bw/2, 20+2*stndTxt, bw/2, bw/10);
+						} else {
+							context.clearRect(Math.floor(bw+10+bw/2), Math.floor(20+2*stndTxt), Math.ceil(bw/2)+1, Math.ceil(bw)+1);
+							drawTopShips();
+							placingSelected='carrier';
+							context.fillStyle = "magenta";
+							context.fillRect(Math.floor(bw+10+bw/2), Math.floor(20+2*stndTxt), Math.ceil(bw/2)+1, Math.ceil(bw/10)+1);
+							context.drawImage(carrierImg, bw+10+bw/2, 20+2*stndTxt, bw/2, bw/10);
 						}
 					} else if (newy>=1.5*stndTxt&&newy<=1.5*stndTxt+bw/10&&newx<=2*bw/5){//battleship
 						if (placingSelected=='battleship'){
@@ -669,6 +663,13 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 							context.clearRect(Math.floor(bw+10+bw/2), Math.floor(20+3.5*stndTxt), Math.ceil(2*bw/5)+1, Math.ceil(bw/10)+1);
 							context.drawImage(battleshipImg, bw+10+bw/2, 20+3.5*stndTxt, 2*bw/5, bw/10);
 						} else if (placingSelected==''){
+							placingSelected='battleship';
+							context.fillStyle = "purple";
+							context.fillRect(Math.floor(bw+10+bw/2), Math.floor(20+3.5*stndTxt), Math.ceil(2*bw/5)+1, Math.ceil(bw/10)+1);
+							context.drawImage(battleshipImg, bw+10+bw/2, 20+3.5*stndTxt, 2*bw/5, bw/10);
+						} else {
+							context.clearRect(Math.floor(bw+10+bw/2), Math.floor(20+2*stndTxt), Math.ceil(bw/2)+1, Math.ceil(bw)+1);
+							drawTopShips();
 							placingSelected='battleship';
 							context.fillStyle = "purple";
 							context.fillRect(Math.floor(bw+10+bw/2), Math.floor(20+3.5*stndTxt), Math.ceil(2*bw/5)+1, Math.ceil(bw/10)+1);
@@ -684,6 +685,13 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 							context.fillStyle = "orange";
 							context.fillRect(Math.floor(bw+10+bw/2), Math.floor(20+5*stndTxt), Math.ceil(3*bw/10)+1, Math.ceil(bw/10)+1);
 							context.drawImage(destroyerImg, bw+10+bw/2, 20+5*stndTxt, 3*bw/10, bw/10);
+						} else {
+							context.clearRect(Math.floor(bw+10+bw/2), Math.floor(20+2*stndTxt), Math.ceil(bw/2)+1, Math.ceil(bw)+1);
+							drawTopShips();
+							placingSelected='destroyer';
+							context.fillStyle = "orange";
+							context.fillRect(Math.floor(bw+10+bw/2), Math.floor(20+5*stndTxt), Math.ceil(3*bw/10)+1, Math.ceil(bw/10)+1);
+							context.drawImage(destroyerImg, bw+10+bw/2, 20+5*stndTxt, 3*bw/10, bw/10);
 						}
 					} else if (newy>=4.5*stndTxt&&newy<=4.5*stndTxt+bw/10&&newx<=3*bw/10){//submarine
 						if (placingSelected=='submarine'){
@@ -695,6 +703,13 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 							context.fillStyle = "blue";
 							context.fillRect(Math.floor(bw+10+bw/2), Math.floor(20+6.5*stndTxt), Math.ceil(3*bw/10)+1, Math.ceil(bw/10)+1);
 							context.drawImage(submarineImg, bw+10+bw/2, 20+6.5*stndTxt, 3*bw/10, bw/10);
+						} else {
+							context.clearRect(Math.floor(bw+10+bw/2), Math.floor(20+2*stndTxt), Math.ceil(bw/2)+1, Math.ceil(bw)+1);
+							drawTopShips();
+							placingSelected='submarine';
+							context.fillStyle = "blue";
+							context.fillRect(Math.floor(bw+10+bw/2), Math.floor(20+6.5*stndTxt), Math.ceil(3*bw/10)+1, Math.ceil(bw/10)+1);
+							context.drawImage(submarineImg, bw+10+bw/2, 20+6.5*stndTxt, 3*bw/10, bw/10);
 						}
 					} else if (newy>=6*stndTxt&&newy<=6*stndTxt+bw/10&&newx<=bw/5){//patrol boat
 						if (placingSelected=='patrol'){
@@ -702,6 +717,13 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 							context.clearRect(Math.floor(bw+10+bw/2), Math.floor(20+8*stndTxt), Math.ceil(bw/5)+1, Math.ceil(bw/10)+1);
 							context.drawImage(patrolImg, bw+10+bw/2, 20+8*stndTxt, bw/5, bw/10);
 						} else if (placingSelected==''){
+							placingSelected='patrol';
+							context.fillStyle = "green";
+							context.fillRect(Math.floor(bw+10+bw/2), Math.floor(20+8*stndTxt), Math.ceil(bw/5)+1, Math.ceil(bw/10)+1);
+							context.drawImage(patrolImg, bw+10+bw/2, 20+8*stndTxt, bw/5, bw/10);
+						} else {
+							context.clearRect(Math.floor(bw+10+bw/2), Math.floor(20+2*stndTxt), Math.ceil(bw/2)+1, Math.ceil(bw)+1);
+							drawTopShips();
 							placingSelected='patrol';
 							context.fillStyle = "green";
 							context.fillRect(Math.floor(bw+10+bw/2), Math.floor(20+8*stndTxt), Math.ceil(bw/5)+1, Math.ceil(bw/10)+1);
@@ -725,7 +747,10 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 			if (horizontalDisplay){
 				if (x>=2*bw+10&&x<=3*bw+10&&y>=10&&y<=bw+10){
 					var square=getRow(y)+getColumnRight(x);
-					if (shotSelected==''){
+					if (square==shotSelected){
+						clearBottomHighlights();
+					    shotSelected='';
+					} else {
 						var i = myMoves.length;
 					    while (i--) {
 					       if (myMoves[i] == square) {
@@ -733,17 +758,18 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 					    	   return;
 					       }
 					    }
+						clearBottomHighlights();
 					    highlightSquareRight(square, 'red');
 					    shotSelected=square;
-					} else if (square==shotSelected){
-						clearRightHighlights();
-					    shotSelected='';
 					}
 				}
 			} else {
 				if (x>=bw+10&&y>=bw+10){
 					var square=getRowBottom(y)+getColumnBottom(x);
-					if (shotSelected==''){
+					if (square==shotSelected){
+						clearBottomHighlights();
+					    shotSelected='';
+					} else {
 						var i = myMoves.length;
 					    while (i--) {
 					       if (myMoves[i] == square) {
@@ -751,11 +777,9 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 					    	   return;
 					       }
 					    }
+						clearBottomHighlights();
 					    highlightSquareBottom(square, 'red');
 					    shotSelected=square;
-					} else if (square==shotSelected){
-						clearBottomHighlights();
-					    shotSelected='';
 					}
 				}
 			}
