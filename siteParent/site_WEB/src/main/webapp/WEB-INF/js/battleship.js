@@ -25,6 +25,7 @@ var updateInterval;
 var particles = [];
 var fireParticles = [];
 var horizontalDisplay=false;
+var animSquare='';
 function initBoardLoad(){
 	
 	bw = Math.min(window.innerHeight-80, (window.innerWidth-20)/3);
@@ -134,7 +135,9 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 					drawHit(oppMoves[i].loc, 0, false);
 				}*/
 			} else if (oppMoves[i].status=='miss'){
-				if (oppMoves[i].status==lastMove){
+				if (oppMoves[i].loc==animSquare){
+					continue;
+				} else if (oppMoves[i].status==lastMove){
 					drawMiss(oppMoves[i].loc, 0, true);
 				} else {
 					drawMiss(oppMoves[i].loc, 0, false);
@@ -753,7 +756,7 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 					} else {
 						var i = myMoves.length;
 					    while (i--) {
-					       if (myMoves[i] == square) {
+					       if (myMoves[i].loc == square) {
 					           //repeat
 					    	   return;
 					       }
@@ -772,7 +775,7 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 					} else {
 						var i = myMoves.length;
 					    while (i--) {
-					       if (myMoves[i] == square) {
+					       if (myMoves[i].loc == square) {
 					           //repeat
 					    	   return;
 					       }
@@ -960,7 +963,7 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 						dif=reqSquares-1;
 					}
 				}
-				if (Math.abs(dif)!=draggedSquares){//&&!dragVert){
+				if (Math.abs(dif)!=draggedSquares){
 					dragVert=false;
 					draggedSquares=-1;
 					clearTopHighlights();
@@ -990,7 +993,7 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 						dif=reqSquares-1;
 					}
 				}
-				if (Math.abs(dif)!=draggedSquares){//&&!dragVert){
+				if (Math.abs(dif)!=draggedSquares){
 					dragVert=true;
 					draggedSquares=-1;
 					clearTopHighlights();
@@ -1047,6 +1050,7 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 				createExplosion(getXCoord(square)+offset+bw/20, getYCoord(square)+offset+bw/20, "#FFA318", offset);
 			}
 		} else if (status=='miss'){
+			animSquare=square;
 			waterRipple(square, offset);
 		}
 	}
@@ -1187,9 +1191,6 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 /**
  * Code for Explosions
  */
-	/*
-	 * A single explosion particle
-	 */
 	function Particle (offset)
 	{
 		this.scale = 1.0;
@@ -1248,9 +1249,6 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 	
 	function update (frameDelay)
 	{
-		// draw a white background to clear canvas
-		//context.fillStyle = "#FFF";
-		//context.fillRect(0, 0, context.canvas.width, context.canvas.height);
 		clearTopHighlights();
 		if (particles.length>0){
 			if (horizontalDisplay){
@@ -1260,7 +1258,6 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 			}
 		}
 
-		// update and draw particles
 		for (var i=0; i<particles.length; i++)
 		{
 			var particle = particles[i];
@@ -1345,9 +1342,6 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 	        last_map[i] = ripplemap[i] = 0;
 	    }
 	    
-	    /**
-	     * Main loop
-	     */
 	    var loopCounter=0;
 	    var runInterval;
 	    function run() {
@@ -1362,12 +1356,10 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 	    		} else {
 		        	drawMiss(square, offset, true);
 	    		}
+	    		animSquare='';
 	        }
 	    }
 	    
-	    /**
-	     * Disturb water at specified point
-	     */
 	    function disturb(dx, dy) {
 	        dx <<= 0;
 	        dy <<= 0;
@@ -1379,9 +1371,6 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 	        }
 	    }
 	    
-	    /**
-	     * Generates new ripples
-	     */
 	    function newframe() {
 	        var a, b, data, cur_pixel, new_pixel, old_data;
 	        
@@ -1455,8 +1444,6 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 
     function randomValue(max)
     {
-        // protip: a double bitwise not (~~) is much faster than
-        // Math.floor() for truncating floating point values into "ints"
         return ~~(Math.random() * max);
     };
 	
@@ -1472,12 +1459,8 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 		}
 	}
 
-	//var canvasDemo = new FireCanvas(); 
 	function FireCanvas(size, square, isvert)
 	{
-	    //var context;
-	    //var buffer;
-	    //var bufferContext;
 	    this.fireData;
 	    this.firePallete;
 	    this.fireWidth=size;
@@ -1491,28 +1474,16 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 	    this.vert=isvert;
 	    this.context=context;
 
-	    //this.canvas = document.getElementById('canvas');
-
 	    this.initFire = function()
 	    {
-	        //context = canvas.getContext('2d');
-
-	        //fireWidth = canvas.width / scale;
-	        //fireHeight = canvas.height / scale;
-
-	        //colorMap = Array(fireWidth * fireHeight);
 	        this.fireData = this.context.getImageData(this.xStart, this.yStart, this.fireWidth, this.fireHeight);
 
 	        for(var i = 0; i < this.colorMap.length; i++)
 	        	this.colorMap[i] = 0;
 
 	        this.initPalette();
-	        //initBuffer();
-
-	        //setInterval(updateFire,20);
 	    };
 
-	    // init firePallete from warm to white hot colors
 	    this.initPalette = function()
 	    {
 	        this.firePallete = Array(256);
@@ -1526,44 +1497,19 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 	        }
 	    };
 	    
-	    // because "two-dimensional" arrays in JavaScript suck
 	    this.toIndex = function(x, y)
 	    {
-	    	//if (this.vert){
-	    	//	(x * this.fireWidth + y)
-	    	//} else {
-	    		return (y * this.fireWidth + x);
-	    	//}
+	    	return (y * this.fireWidth + x);
 	    };
 
-	    // offscreen buffer for rendering and scaling
-	    /*var initBuffer = function()
-	    {
-	        buffer = document.createElement('canvas');
-	        buffer.width = fireWidth;
-	        buffer.height = fireHeight;
-	        buffer.style.visibility = 'hidden';
-	        
-	        bufferContext = buffer.getContext("2d");
-	        fireData = bufferContext.createImageData(fireWidth, fireHeight);
-	    };*/
-
-	    // main render loop
 	    this.updateFire = function()
 	    {
 	        this.fireData = this.context.getImageData(this.xStart, this.yStart, this.fireWidth, this.fireHeight);
-	    	//clearTopHighlights();
 	    	this.smooth();
 	    	this.draw();
 
 	    };
 
-	    // take the middle pixel and average it with the surrounding pixels
-	    // then write it one veritcal pixel up
-	    //
-	    // v1|v2|v3
-	    // v4|**|v5
-	    // v6|v7|v8
 	    this.smooth = function()
 	    {
 	    	if (this.vert){
@@ -1646,11 +1592,7 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 	    // draw colormap->firePallete values to screen
 	    this.draw = function()
 	    {
-	        // render the image data to the offscreen buffer...
-	        //bufferContext.putImageData(fireData, 0, 0);
-	    	this.context.putImageData(this.fireData, this.xStart, this.yStart);
-	        // ...then draw it to scale to the onscreen canvas
-	        //context.drawImage(buffer, 0, 0, fireWidth * scale, fireHeight * scale);
+	       this.context.putImageData(this.fireData, this.xStart, this.yStart);
 	    };
 
 	    // set pixels in imageData
@@ -1669,6 +1611,5 @@ function initGame(root, gameID, identifier, turnStatus, mymoves, oppmoves, mysun
 	        this.fireData.data[offset + 3] = 255;
 	    	}
 	    };
-
 	};
 	
