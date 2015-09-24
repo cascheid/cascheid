@@ -29,6 +29,8 @@
 			#stats #fps { background: transparent !important }
 			#stats #fps #fpsText { color: #888 !important }
 			#stats #fps #fpsGraph { display: none }
+			
+			#map { position: absolute; top:0; left: 80%; z-index:1000 }
 		</style>
 	</head>
 
@@ -40,7 +42,10 @@
 			veyron by <a href="http://artist-3d.com/free_3d_models/dnm/model_disp.php?uid=1129" target="_blank">Troyano</a> -
 			gallardo by <a href="http://artist-3d.com/free_3d_models/dnm/model_disp.php?uid=1711" target="_blank">machman_3d</a>
 		</div>
-
+		
+		<div id="map">
+			<canvas id="mapCanvas"></canvas>
+		</div>
 		<div id="footer">
 			cars control: <span class="h">WASD</span> / <span class="h">arrows</span>
 
@@ -144,17 +149,37 @@
 
 			var sphereRadius=30000;
 			var ball;
-			var goal1Loc=new THREE.Vector3( -2000, 100, -1000 );
+			var goal1Loc=new THREE.Vector3( -20000, 400, -300 );
+			var goal2Loc=new THREE.Vector3( 20000, 400, 300 );
+			var ballTrajectory=null;
 
 			init();
 			animate();
 
 			function shoot(){
-				
+				ball.lookAt(goal1Loc);
+				ballTrajectory=goal1Loc.clone().sub(currentCar.root.position);
+				ball.position.set(currentCar.root.position.x, currentCar.root.position.y, currentCar.root.position.z);
 			}
 
 			function init() {
 
+				var mapCanvas = document.getElementById('mapCanvas');
+				var context = mapCanvas.getContext('2d');
+				mapCanvas.height=window.innerWidth*.2;
+				mapCanvas.width=window.innerWidth*.2;
+
+				context.rect(0,0,mapCanvas.width,mapCanvas.width);
+				context.fillStyle="grey";
+				context.fill();
+			      context.beginPath();
+			      context.arc(mapCanvas.width/2, mapCanvas.width/2, mapCanvas.width/2, 0, 2 * Math.PI, false);
+			      context.fillStyle = 'blue';
+			      context.fill();
+			      //context.lineWidth = 5;
+			      //context.strokeStyle = '#003300';
+			      //context.stroke();
+			      
 				container = document.getElementById( 'container' );
 
 				camera = new THREE.PerspectiveCamera( 18, SCREEN_WIDTH / SCREEN_HEIGHT, 1, 100000 );
@@ -216,7 +241,7 @@
 
 				//ambientLight = new THREE.AmbientLight( 0x555555 );
 				ambientLight = new THREE.AmbientLight( 0xffffff );
-				scene.add( ambientLight );
+				scene.add(ambientLight);
 
 				spotLight = new THREE.SpotLight( 0xffffff, 1, 0, Math.PI/2, 1 );
 				spotLight.position.set( 0, 1800, 1500 );
@@ -901,7 +926,7 @@
 
 					case 78: /*N*/   vdir *= -1; break;
 
-					case 66: /*B*/   blur = !blur; break;
+					case 66: /*B*/   shoot(); break;
 
 				}
 
@@ -995,6 +1020,20 @@
 			function render() {
 
 				var delta = clock.getDelta();
+
+				if (ballTrajectory!=null){
+					var maxBallMove=5000*delta;
+					var lengthLeft=ballTrajectory.length();
+					if (maxBallMove>=lengthLeft){
+						ball.position.addVectors(ball.position, ballTrajectory);
+						ballTrajectory=null;
+					} else {
+						var scale = maxBallMove/lengthLeft;
+						var mv = ballTrajectory.clone().multiplyScalar(scale);
+						ball.position.addVectors(ball.position, mv);
+						ballTrajectory.sub(mv);
+					}
+				}
 
 				// day / night
 
