@@ -152,33 +152,57 @@
 			var goal1Loc=new THREE.Vector3( -20000, 400, -300 );
 			var goal2Loc=new THREE.Vector3( 20000, 400, 300 );
 			var ballTrajectory=null;
+			var teamWithBall=1;
 
+			//MINIMAP
+			var mapCanvas;
+			var mapContext;
+			
 			init();
 			animate();
 
 			function shoot(){
-				ball.lookAt(goal1Loc);
-				ballTrajectory=goal1Loc.clone().sub(currentCar.root.position);
+				if (teamWithBall==1){
+					ball.lookAt(goal1Loc);
+					ballTrajectory=goal1Loc.clone().sub(currentCar.root.position);
+					teamWithBall=2;
+				} else{
+					ball.lookAt(goal2Loc);
+					ballTrajectory=goal2Loc.clone().sub(currentCar.root.position);
+					teamWithBall=1;
+				}
 				ball.position.set(currentCar.root.position.x, currentCar.root.position.y, currentCar.root.position.z);
+			}
+
+			function pass(destination){
+				ballTrajectory=destination.root.position.clone().sub(currentCar.root.position);
+				ball.position.set(currentCar.root.position.x, currentCar.root.position.y, currentCar.root.position.z);
+				//currentCar=destination;
+			}
+
+			function testPass(){
+				if (currentCar==gallardo){
+					pass(veyron);
+				} else {
+					pass(gallardo);
+				}
 			}
 
 			function init() {
 
-				var mapCanvas = document.getElementById('mapCanvas');
-				var context = mapCanvas.getContext('2d');
+				mapCanvas = document.getElementById('mapCanvas');
+				mapContext = mapCanvas.getContext('2d');
 				mapCanvas.height=window.innerWidth*.2;
 				mapCanvas.width=window.innerWidth*.2;
 
-				context.rect(0,0,mapCanvas.width,mapCanvas.width);
-				context.fillStyle="grey";
-				context.fill();
-			      context.beginPath();
-			      context.arc(mapCanvas.width/2, mapCanvas.width/2, mapCanvas.width/2, 0, 2 * Math.PI, false);
-			      context.fillStyle = 'blue';
-			      context.fill();
-			      //context.lineWidth = 5;
-			      //context.strokeStyle = '#003300';
-			      //context.stroke();
+				mapContext.rect(0,0,mapCanvas.width,mapCanvas.width);
+				mapContext.fillStyle="grey";
+				mapContext.fill();
+				mapContext.beginPath();
+				mapContext.arc(mapCanvas.width/2, mapCanvas.width/2, mapCanvas.width/2, 0, 2 * Math.PI, false);
+				mapContext.closePath();
+				mapContext.fillStyle = 'blue';
+				mapContext.fill();
 			      
 				container = document.getElementById( 'container' );
 
@@ -924,7 +948,7 @@
 					case 53: /*5*/	setCurrentCar( "gallardo", "back" ); break;
 					case 54: /*6*/	setCurrentCar( "veyron", "back" ); break;
 
-					case 78: /*N*/   vdir *= -1; break;
+					case 78: /*N*/   testPass(); break;
 
 					case 66: /*B*/   shoot(); break;
 
@@ -1015,6 +1039,52 @@
 				render();
 				stats.update();
 
+			}
+
+			function updateMinimap(){
+				//reset canvas
+				mapContext.beginPath();
+				mapContext.arc(mapCanvas.width/2, mapCanvas.width/2, mapCanvas.width/2, 0, 2 * Math.PI, false);
+				mapContext.closePath();
+				mapContext.fillStyle = 'blue';
+				mapContext.fill();
+
+				//yellow team
+				var rot=veyron.root.rotation.y+Math.PI/2;
+				var x1=mapCanvas.width*(20000+veyron.root.position.x)/40000-Math.cos(rot)*mapCanvas.width/10;
+				var y1=mapCanvas.width*(20000-veyron.root.position.z)/40000-Math.sin(rot)*mapCanvas.width/10;
+				var x2=x1+Math.cos(rot-Math.PI/16)*(mapCanvas.width/10);
+				var y2=y1+Math.sin(rot-Math.PI/16)*(mapCanvas.width/10);
+				var x3=x1+Math.cos(rot+Math.PI/16)*(mapCanvas.width/10);
+				var y3=y1+Math.sin(rot+Math.PI/16)*(mapCanvas.width/10);
+				mapContext.beginPath();
+				mapContext.moveTo(x1, mapCanvas.width-y1);
+				mapContext.lineTo(x2, mapCanvas.width-y2);
+				mapContext.lineTo(x3, mapCanvas.width-y3);
+				mapContext.lineTo(x1, mapCanvas.width-y1);
+				mapContext.closePath();
+				mapContext.stroke();
+				mapContext.fillStyle = "#FFCC00";
+				mapContext.fill();
+
+
+				//red team
+				var rot=gallardo.root.rotation.y+Math.PI/2;
+				var x1=mapCanvas.width*(20000+gallardo.root.position.x)/40000-Math.cos(rot)*mapCanvas.width/10;
+				var y1=mapCanvas.width*(20000-gallardo.root.position.z)/40000-Math.sin(rot)*mapCanvas.width/10;
+				var x2=x1+Math.cos(rot-Math.PI/16)*(mapCanvas.width/10);
+				var y2=y1+Math.sin(rot-Math.PI/16)*(mapCanvas.width/10);
+				var x3=x1+Math.cos(rot+Math.PI/16)*(mapCanvas.width/10);
+				var y3=y1+Math.sin(rot+Math.PI/16)*(mapCanvas.width/10);
+				mapContext.beginPath();
+				mapContext.moveTo(x1, mapCanvas.width-y1);
+				mapContext.lineTo(x2, mapCanvas.width-y2);
+				mapContext.lineTo(x3, mapCanvas.width-y3);
+				mapContext.lineTo(x1, mapCanvas.width-y1);
+				mapContext.closePath();
+				mapContext.stroke();
+				mapContext.fillStyle = "#FF0000";
+				mapContext.fill();
 			}
 
 			function render() {
@@ -1146,6 +1216,7 @@
 
 				//renderer.shadowMap.enabled = false;
 
+				updateMinimap();
 			}
 
 		</script>
