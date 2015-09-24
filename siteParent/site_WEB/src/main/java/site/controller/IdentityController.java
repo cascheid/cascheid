@@ -40,6 +40,18 @@ public class IdentityController {
 		return mv;
 	}
 	
+	@RequestMapping("/blitzballGame")
+	public ModelAndView getBlitzballGame() {
+		ModelAndView mv = new ModelAndView("blitzballGame");
+		return mv;
+	}
+	
+	@RequestMapping("/testwater")
+	public ModelAndView getTestPage() {
+		ModelAndView mv = new ModelAndView("testwater");
+		return mv;
+	}
+	
 	@RequestMapping("/gamesIndex")
 	public ModelAndView getGamesIndex(@CookieValue(value = "identifier", defaultValue = "0") Long identifier,
 			@RequestParam(value = "sError", required=false) String sError){
