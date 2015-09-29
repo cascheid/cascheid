@@ -27,16 +27,19 @@
 
 	<body style="margin:0px;padding:0px;overflow:hidden">
 		
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js"></script>
-
+		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r71/three.min.js"></script>
+		 -->
+		<script src="js/three.js"></script>
 		<script src="js/FresnelShader.js"></script>
 
 		<script src="js/Detector.js"></script>
 
 		<script src="js/blitzballMenu.js?version=0.1"></script>
 
-		<iframe id="blitzMenuFrame" name="blitzMenuFrame" frameborder=0 height="100%" width="100%" src="blitzballMenu" allowtransparency="true" onload="focusFrame()"></iframe>
-		<script>
+		<!-- <iframe id="blitzMenuFrame" name="blitzMenuFrame" frameborder=0 height="100%" width="100%" src="blitzballMenu" allowtransparency="true" onload="focusFrame()"></iframe>
+		 -->
+		 <iframe id="blitzMenuFrame" name="blitzMenuFrame" frameborder=0 height="100%" width="100%" src="blitzballLeagueGame" allowtransparency="true" onload="focusFrame()"></iframe>
+		 <script>
 		function focusFrame(){
 			document.getElementById('blitzMenuFrame').focus();
 		}

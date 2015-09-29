@@ -1,7 +1,5 @@
 package site.blitzball;
 
-import java.util.List;
-
 public class BlitzballTeam implements java.io.Serializable {
 
 	private static final long serialVersionUID = 9069740686801226048L;
@@ -14,7 +12,8 @@ public class BlitzballTeam implements java.io.Serializable {
 	private BlitzballPlayer rightBack;
 	private BlitzballPlayer leftBack;
 	private BlitzballPlayer keeper;
-	private List<BlitzballPlayer> benchPlayers;
+	private BlitzballPlayer bench1;
+	private BlitzballPlayer bench2;
 	private Integer wins;
 	private Integer losses;
 	private Integer availableCash;
@@ -72,11 +71,17 @@ public class BlitzballTeam implements java.io.Serializable {
 	public void setKeeper(BlitzballPlayer keeper) {
 		this.keeper = keeper;
 	}
-	public List<BlitzballPlayer> getBenchPlayers() {
-		return benchPlayers;
+	public BlitzballPlayer getBench1() {
+		return bench1;
 	}
-	public void setBenchPlayers(List<BlitzballPlayer> benchPlayers) {
-		this.benchPlayers = benchPlayers;
+	public void setBench1(BlitzballPlayer bench1) {
+		this.bench1 = bench1;
+	}
+	public BlitzballPlayer getBench2() {
+		return bench2;
+	}
+	public void setBench2(BlitzballPlayer bench2) {
+		this.bench2 = bench2;
 	}
 	public Integer getWins() {
 		return wins;

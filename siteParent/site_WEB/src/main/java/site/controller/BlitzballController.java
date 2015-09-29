@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import site.blitzball.BlitzballGameRoster;
 import site.blitzball.BlitzballInfo;
 import site.blitzball.BlitzballLeague;
 import site.blitzball.BlitzballTeam;
@@ -36,6 +39,10 @@ public class BlitzballController {
 		if (identity==null||identity.getIdentifier()!=identifier){
 			identity=IdentityUtils.getIdentityByIdentifier(identifier);
 			blitzballInfo=BlitzballUtils.getBlitsballInfo(identifier);
+			activeLeague=BlitzballUtils.getActiveLeague(blitzballInfo);
+		}
+		if (activeLeague==null||activeLeague.getWeeksComplete()>=10){
+			activeLeague=BlitzballUtils.getActiveLeague(blitzballInfo);
 		}
 		return mv;
 	}
@@ -115,10 +122,16 @@ public class BlitzballController {
 			return new ModelAndView("timeout");
 		}
 		ModelAndView mv = new ModelAndView("blitzballStart");
-		mv.addObject("myTeam", blitzballInfo.getTeam());
-		activeOpponent=blitzballInfo.getTeam();//TODO BlitzballUtils.getLeagueOpponentByID(activeLeague);
-		mv.addObject("oppTeam", activeOpponent);
-		//mv.addObject("gameType", "league");
+		activeOpponent=BlitzballUtils.getLeagueOpponentByID(activeLeague);
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			mv.addObject("myTeam", objectMapper.writeValueAsString(blitzballInfo.getTeam()));
+			mv.addObject("oppTeam", objectMapper.writeValueAsString(activeOpponent));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		mv.addObject("blitzballGameRoster", new BlitzballGameRoster());
 		return mv;
 	}
 	
@@ -130,6 +143,24 @@ public class BlitzballController {
 		ModelAndView mv = new ModelAndView("blitzball");
 		mv.addObject("myTeam", blitzballInfo.getTeam());
 		mv.addObject("oppTeam", activeOpponent);
+		return mv;
+	}
+	
+	@RequestMapping("/setBBGameTechs")
+	public ModelAndView loadGameTechScreen(@ModelAttribute("blitzballGameRoster") BlitzballGameRoster blitzballGameRoster){
+		if (identity==null||blitzballInfo==null){
+			return new ModelAndView("timeout");
+		}
+		ModelAndView mv = new ModelAndView("blitzballGameTechs");
+		
+		blitzballInfo.setTeam(BlitzballUtils.getGameStartingTeam(blitzballInfo.getTeam(), blitzballGameRoster));
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			mv.addObject("myTeam", objectMapper.writeValueAsString(blitzballInfo.getTeam()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return mv;
 	}
 }

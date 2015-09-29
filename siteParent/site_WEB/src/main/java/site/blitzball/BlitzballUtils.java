@@ -149,4 +149,103 @@ public class BlitzballUtils {
 		league.setDivisionOpponents(dao.getDivisionsOpponents(leagueID));
 		return league;
 	}
+	
+	public static BlitzballTeam getGameStartingTeam(BlitzballTeam origTeam, BlitzballGameRoster selectedRoster){
+		BlitzballTeam adjustedTeam = new BlitzballTeam();
+		adjustedTeam.setTeamID(origTeam.getTeamID());
+		adjustedTeam.setTeamName(origTeam.getTeamName());
+		adjustedTeam.setAvailableCash(origTeam.getAvailableCash());
+		adjustedTeam.setWins(origTeam.getWins());
+		adjustedTeam.setLosses(origTeam.getLosses());
+		
+		List<BlitzballPlayer> teamPlayers = new ArrayList<BlitzballPlayer>();
+		teamPlayers.add(origTeam.getLeftWing());
+		teamPlayers.add(origTeam.getRightWing());
+		teamPlayers.add(origTeam.getMidfielder());
+		teamPlayers.add(origTeam.getLeftBack());
+		teamPlayers.add(origTeam.getRightBack());
+		teamPlayers.add(origTeam.getKeeper());
+		if (origTeam.getBench1()!=null){
+			teamPlayers.add(origTeam.getBench1());
+			if (origTeam.getBench2()!=null){
+				teamPlayers.add(origTeam.getBench2());
+			}
+		}
+
+		Iterator<BlitzballPlayer> it = teamPlayers.iterator();
+		Integer playerID=selectedRoster.getLeftWing();
+		while (it.hasNext()){
+			BlitzballPlayer currPlayer = it.next();
+			if (currPlayer.getPlayerID().equals(playerID)){
+				adjustedTeam.setLeftWing(currPlayer);
+				it.remove();
+				break;
+			}
+		}
+		
+		it = teamPlayers.iterator();
+		playerID=selectedRoster.getRightWing();
+		while (it.hasNext()){
+			BlitzballPlayer currPlayer = it.next();
+			if (currPlayer.getPlayerID().equals(playerID)){
+				adjustedTeam.setRightWing(currPlayer);
+				it.remove();
+				break;
+			}
+		}
+		
+		it = teamPlayers.iterator();
+		playerID=selectedRoster.getMidfielder();
+		while (it.hasNext()){
+			BlitzballPlayer currPlayer = it.next();
+			if (currPlayer.getPlayerID().equals(playerID)){
+				adjustedTeam.setMidfielder(currPlayer);
+				it.remove();
+				break;
+			}
+		}
+		
+		it = teamPlayers.iterator();
+		playerID=selectedRoster.getLeftBack();
+		while (it.hasNext()){
+			BlitzballPlayer currPlayer = it.next();
+			if (currPlayer.getPlayerID().equals(playerID)){
+				adjustedTeam.setLeftBack(currPlayer);
+				it.remove();
+				break;
+			}
+		}
+		
+		it = teamPlayers.iterator();
+		playerID=selectedRoster.getRightBack();
+		while (it.hasNext()){
+			BlitzballPlayer currPlayer = it.next();
+			if (currPlayer.getPlayerID().equals(playerID)){
+				adjustedTeam.setRightBack(currPlayer);
+				it.remove();
+				break;
+			}
+		}
+		
+		it = teamPlayers.iterator();
+		playerID=selectedRoster.getKeeper();
+		while (it.hasNext()){
+			BlitzballPlayer currPlayer = it.next();
+			if (currPlayer.getPlayerID().equals(playerID)){
+				adjustedTeam.setKeeper(currPlayer);
+				it.remove();
+				break;
+			}
+		}
+
+		it = teamPlayers.iterator();
+		if (it.hasNext()){
+			adjustedTeam.setBench1(it.next());
+			if (it.hasNext()){
+				adjustedTeam.setBench2(it.next());
+			}
+		}
+		
+		return adjustedTeam;
+	}
 }
