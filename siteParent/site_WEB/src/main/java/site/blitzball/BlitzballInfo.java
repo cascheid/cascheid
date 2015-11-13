@@ -7,7 +7,7 @@ public class BlitzballInfo implements java.io.Serializable {
 	
 	private Long userID;
 	private BlitzballTeam team;
-	private List<Long> opponentIDs;
+	private List<BlitzballTeam> opponents;
 	private Integer totalWins;
 	private Integer totalLosses;
 	private Integer totalGoals;
@@ -31,12 +31,12 @@ public class BlitzballInfo implements java.io.Serializable {
 		this.team = team;
 	}
 
-	public List<Long> getOpponentIDs() {
-		return opponentIDs;
+	public List<BlitzballTeam> getOpponents() {
+		return opponents;
 	}
 
-	public void setOpponentIDs(List<Long> opponentIDs) {
-		this.opponentIDs = opponentIDs;
+	public void setOpponents(List<BlitzballTeam> opponents) {
+		this.opponents = opponents;
 	}
 
 	public Integer getTotalWins() {

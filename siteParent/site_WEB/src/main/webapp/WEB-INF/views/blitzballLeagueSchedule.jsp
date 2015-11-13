@@ -9,7 +9,6 @@
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link rel="stylesheet" type="text/css" href="css/blitzball.css?version=1.00"/>
 		<style>
-			
 			#blitzMenu{
 				top:20%;
 				width:32vmin;
@@ -53,55 +52,32 @@
 			</div>
 		</div>
 		
-		<div id="standings">
-			<div id="div1Standings" style="position:absolute; left:40%; top:20vmin; width:40%; font-size:6vmin; text-align:center">
-				<label>League Standings</label>
-			</div>
-			<div id="div1Standings" style="display:table; position:absolute; left:40%; top:30vmin; width:40%">
-				<div style="display:table-caption; text-align:center">
-					<label>Division 1</label>
-				</div>
-				<div style="display:table-row; border-bottom: 1px solid white">
-					<div style="display:table-cell; width:4vmin;"><label></label></div>
-					<div style="display:table-cell;"><label>Team Name</label></div>
-					<div style="display:table-cell; width:4vmin; text-align:center"><label>W</label></div>
-					<div style="display:table-cell; width:4vmin; text-align:center"><label>L</label></div>
-					<div style="display:table-cell; width:4vmin; text-align:center"><label>T</label></div>
-					<div style="display:table-cell; width:4vmin; text-align:center"><label>Pts</label></div>
-				</div>
-			<c:forEach var="team" items="${standings.division1Standings}"  varStatus="num">
+		<div id="schedule">
+			<div id="weekNavigator" style="display:table; position:absolute; left:40%; top:20%; width:50%;">
+				<img id="weekSelector" class="selector" src="img/blitzball/arrow.png" style="display:none"/>
 				<div style="display:table-row">
-					<div style="display:table-cell; width:4vmin;"><label>${num.count}.</label></div>
-					<div style="display:table-cell;"><label>${team.teamName}</label></div>
-					<div style="display:table-cell; width:4vmin; text-align:center"><label>${team.wins}</label></div>
-					<div style="display:table-cell; width:4vmin; text-align:center"><label>${team.losses}</label></div>
-					<div style="display:table-cell; width:4vmin; text-align:center"><label>${team.ties}</label></div>
-					<div style="display:table-cell; width:4vmin; text-align:center"><label>${team.points}</label></div>
+					<div style="display:table-cell; text-align:left; width:12%; text-decoration:underline"><label>Prev</label></div>
+					<div style="display:table-cell; width:76%; text-align:center"><label id="weekNoDisplay">Week ${week}</label></div>
+					<div style="display:table-cell; text-align:right; width:12%; text-decoration:underline"><label>Next</label></div>
 				</div>
-			</c:forEach>
 			</div>
-			<div id="div2Standings" style="display:table; position:absolute; left:40%; top:60vmin; width:40%">
-				<div style="display:table-caption; text-align:center">
-					<label>Division 2</label>
-				</div>
-				<div style="display:table-row; border-bottom: 1px solid white">
-					<div style="display:table-cell; width:4vmin;"><label></label></div>
-					<div style="display:table-cell;"><label>Team Name</label></div>
-					<div style="display:table-cell; width:4vmin; text-align:center"><label>W</label></div>
-					<div style="display:table-cell; width:4vmin; text-align:center"><label>L</label></div>
-					<div style="display:table-cell; width:4vmin; text-align:center"><label>T</label></div>
-					<div style="display:table-cell; width:4vmin; text-align:center"><label>Pts</label></div>
-				</div>
-			<c:forEach var="team" items="${standings.division2Standings}"  varStatus="num">
-				<div style="display:table-row">
-					<div style="display:table-cell; width:4vmin;"><label>${num.count}.</label></div>
-					<div style="display:table-cell;"><label>${team.teamName}</label></div>
-					<div style="display:table-cell; width:4vmin; text-align:center"><label>${team.wins}</label></div>
-					<div style="display:table-cell; width:4vmin; text-align:center"><label>${team.losses}</label></div>
-					<div style="display:table-cell; width:4vmin; text-align:center"><label>${team.ties}</label></div>
-					<div style="display:table-cell; width:4vmin; text-align:center"><label>${team.points}</label></div>
-				</div>
-			</c:forEach>
+			<div id="displayedWeek" style="position:absolute; left:40%; top:30%; width:50%">
+				<c:forEach var="weekList" items="${schedule}" varStatus="weekNo">
+					<div id="week${weekList.key}" style="display:none; position:absolute; left:0; top:0; width:100%">
+					<c:forEach var="game" items="${weekList.value}" varStatus="gameNo">
+						<div style="display:table-row">
+							<div style="display:table-cell; text-align:left; width:38%"><label>${game.team1.teamName}</label></div>
+							<div style="display:table-cell; width:8%; text-align:right"><label>${game.team1Score}</label></div>
+							<div style="display:table-cell; width:8%; text-align:center"><label>-</label></div>
+							<div style="display:table-cell; width:8%; text-align:left"><label>${game.team2Score}</label></div>
+							<div style="display:table-cell; text-align:right; width:38%"><label>${game.team2.teamName}</label></div>
+						</div>
+						<div style="display:table-row">
+							<br/>
+						</div>
+					</c:forEach>
+					</div>
+				</c:forEach>
 			</div>
 		</div>
 		
@@ -126,6 +102,10 @@
 		var MAXITEMS=5;
 		var popupOpen=false;
 		var onOKButton=true;
+		var weekSelecting=false;
+		var weekOnPrev=true;
+		var currentWeek='${week}';
+		
 		document.body.onkeydown = function(e){
 		    onKeyDown(e);
 		};
@@ -134,12 +114,12 @@
 			if (popupOpen){
 				if (onOKButton){
 					onOKButton=false;
-					document.getElementById('confSelector').style.top='12vh';
+					document.getElementById('confSelector').style.top='12vmin';
 				} else {
 					onOKButton=true;
-					document.getElementById('confSelector').style.top='8vh';
+					document.getElementById('confSelector').style.top='8vmin';
 				}
-			} else {
+			} else if (!weekSelecting){
 				if (menuSelection<=1){
 					menuSelection=MAXITEMS;
 				} else {
@@ -153,18 +133,46 @@
 			if (popupOpen){
 				if (onOKButton){
 					onOKButton=false;
-					document.getElementById('confSelector').style.top='12vh';
+					document.getElementById('confSelector').style.top='12vmin';
 				} else {
 					onOKButton=true;
-					document.getElementById('confSelector').style.top='8vh';
+					document.getElementById('confSelector').style.top='8vmin';
 				}
-			} else {
+			} else if (!weekSelecting){
 				if (menuSelection>=MAXITEMS){
 					menuSelection=1;
 				} else {
 					menuSelection++;
 				}
 				document.getElementById('selector').style.top=(menuSelection-1)*4+'vmin';
+			}
+		}
+
+		function leftButtonPressed(){
+			if (weekSelecting){
+				if (weekOnPrev){
+					weekSelecting=false;
+					document.getElementById('weekSelector').style.display='none';
+					document.getElementById('selector').style.display='';
+				} else {
+					weekOnPrev=true;
+					document.getElementById('weekSelector').style.left='-5vmin';
+				}
+			}
+		}
+
+		function rightButtonPressed(){
+			if (weekSelecting){
+				if (weekOnPrev){
+					weekOnPrev=false;
+					document.getElementById('weekSelector').style.left='88%';
+				}
+			} else {
+				weekSelecting=true;
+				weekOnPrev=true;
+				document.getElementById('selector').style.display='none';
+				document.getElementById('weekSelector').style.left='-5vmin';
+				document.getElementById('weekSelector').style.display='';
 			}
 		}
 
@@ -179,6 +187,19 @@
 					document.getElementById('confirmDiv').style.display='none';
 					document.getElemenyById('selector').style.display='';
 				}
+			} else if (weekSelecting) {
+				document.getElementById('week'+currentWeek).style.display='none';
+				if (weekOnPrev){
+					if (currentWeek>1){
+						currentWeek=Number(currentWeek)-1;
+					}
+				} else {
+					if (currentWeek<10){
+						currentWeek=Number(currentWeek)+1;
+					}
+				}
+				document.getElementById('week'+currentWeek).style.display='table';
+				document.getElementById('weekNoDisplay').innerHTML='Week '+currentWeek;
 			} else {
 				if (menuSelection==1){
 					document.getElementById('confirmDiv').style.display='';
@@ -199,7 +220,15 @@
 		function cancelButtonPressed(){
 			if (popupOpen){
 				onOKButton=false;
-				document.getElementById('confSelector').style.top='12vh';
+				document.getElementById('confSelector').style.top='12vmin';
+			} else if (weekSelecting) {
+				weekSelecting=false;
+				document.getElementById('weekSelector').style.display='none';
+				weekOnPrev=true;
+				document.getElementById('weekSelector').style.left='-5vmin';
+				menuSelection=MAXITEMS;
+				document.getElementById('selector').style.display='';
+				document.getElementById('selector').style.top=(menuSelection-1)*4+'vmin';
 			} else {
 				menuSelection=MAXITEMS;
 				document.getElementById('selector').style.top=(menuSelection-1)*4+'vmin';
@@ -213,6 +242,12 @@
 			} else if (event.keyCode==38){
 				event.preventDefault();
 				upButtonPressed();
+			} else if (event.keyCode==39){
+				event.preventDefault();
+				rightButtonPressed();
+			} else if (event.keyCode==37){
+				event.preventDefault();
+				leftButtonPressed();
 			} else if (event.keyCode==90){
 				event.preventDefault();
 				selectButtonPressed();
@@ -220,6 +255,9 @@
 				event.preventDefault();
 				cancelButtonPressed();
 			}
+		}
+		window.onload = function(){
+			document.getElementById('week'+currentWeek).style.display='table';
 		}
 
 		</script>

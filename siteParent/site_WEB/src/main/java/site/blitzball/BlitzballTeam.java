@@ -16,6 +16,7 @@ public class BlitzballTeam implements java.io.Serializable {
 	private BlitzballPlayer bench2;
 	private Integer wins;
 	private Integer losses;
+	private Integer ties;
 	private Integer availableCash;
 	
 	public BlitzballTeam(){}
@@ -94,6 +95,12 @@ public class BlitzballTeam implements java.io.Serializable {
 	}
 	public void setLosses(Integer losses) {
 		this.losses = losses;
+	}
+	public Integer getTies() {
+		return ties;
+	}
+	public void setTies(Integer ties) {
+		this.ties = ties;
 	}
 	public Integer getAvailableCash() {
 		return availableCash;

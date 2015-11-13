@@ -18,6 +18,11 @@ import site.identity.IdentityUtils;
 public class IdentityController {
 	Identity identity=null;
 	
+	@RequestMapping(value="/test")
+	public ModelAndView getTestPage(){
+		return new ModelAndView("test");
+	}
+	
 	@RequestMapping(value={"/", "/index"})
 	public ModelAndView getIndex( @CookieValue(value = "identifier", defaultValue = "0") Long identifier,
             HttpServletResponse response) {
@@ -47,7 +52,7 @@ public class IdentityController {
 	}
 	
 	@RequestMapping("/testwater")
-	public ModelAndView getTestPage() {
+	public ModelAndView getTestWaterPage() {
 		ModelAndView mv = new ModelAndView("testwater");
 		return mv;
 	}

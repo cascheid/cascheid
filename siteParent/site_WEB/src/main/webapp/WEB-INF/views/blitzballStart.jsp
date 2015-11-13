@@ -17,21 +17,21 @@
 			}
 			
 			#playerMenu{
-				font-size:3.5vh;
+				font-size:3.5vmin;
 				color: #ffffff;
 				position:absolute;
-				top:15vh;
+				top:15vmin;
 				width:20%;
 				left:20%;
 				z-index:1000;
-				line-height:4vh;
+				line-height:4vmin;
 				padding:0px;
 			}
 			
 			#centerDisplay{
-				font-size:3.5vh;
+				font-size:3.5vmin;
 				position:absolute;
-				top:15vh;
+				top:15vmin;
 				width:20%;
 				left:40%;
 				background:none transparent;
@@ -39,10 +39,10 @@
 			}
 			
 			#rightDisplay{
-				font-size:3.5vh;
+				font-size:3.5vmin;
 				color: #ffffff;
 				position:absolute;
-				top:15vh;
+				top:11vmin;
 				width:20%;
 				left:60%;
 				background:none transparent;
@@ -50,11 +50,11 @@
 			}
 			
 			#infoDiv{
-				font-size:3.5vh;
-				line-height:4vh;
+				font-size:3.5vmin;
+				line-height:4vmin;
 				color: #ffffff;
 				position:absolute;
-				top:55vh;
+				top:55vmin;
 				left:40%;
 				background:none transparent;
 				z-index:1000;
@@ -62,25 +62,33 @@
 			
 			#selector{
 				position:absolute;
-				left:-5vh;
-				top:0vh;
-				width:5vh;
-				height:3.5vh;
+				left:-5vmin;
+				top:0vmin;
+				width:5vmin;
+				height:3.5vmin;
 			}
 			
 			#confSelector{
 				position:absolute;
-				left:0vh;
-				top:4vh;
-				width:5vh;
-				height:3.5vh;
+				left:0vmin;
+				top:4vmin;
+				width:5vmin;
+				height:3.5vmin;
+			}
+			
+			#returnSelector{
+				position:absolute;
+				left:0vmin;
+				top:4vmin;
+				width:5vmin;
+				height:3.5vmin;
 			}
 			
 			#confirmDiv{
 				position:absolute;
 				color: #ffffff;
-				font-size:3.5vh;
-				line-height:4vh;
+				font-size:3.5vmin;
+				line-height:4vmin;
 				top:40%;
 				width:10%;
 				height:15%;
@@ -91,21 +99,41 @@
 				z-index:1001;
 			}
 			
+			#returnDiv{
+				position:absolute;
+				color: #ffffff;
+				font-size:3.5vmin;
+				line-height:4vmin;
+				top:40%;
+				width:20%;
+				height:12vmin;
+				left:40%;
+				background-color:#6B238E;
+				background-image: url("img/blitzball/cracks.png");
+				border: 5px double white;
+				z-index:1001;
+			}
+			
 			.crossDiv{
 				position:absolute;
 				background: rgba(0,0,0,.75);
-				border: .2vh solid rgba(255, 255, 255, .75);
-				box-shadow: 0 0 2vh #000000;
+				border: .2vmin solid rgba(255, 255, 255, .75);
+				box-shadow: 0 0 2vmin #000000;
 			}
 			
 			.stat{
 				text-align:left;
 				color: #87CEFA;
+				display: table-cell; 
+				width:8vmin;
+				padding-left:0.5vmin
 			}
 			
 			.num{
 				text-align:right;
 				color: #FFFF66;
+				display: table-cell; 
+				width:8vmin;
 			}
 		</style>
 	</head>
@@ -146,12 +174,50 @@
 				<label id="hplayers8" style="display:none"></label>
 			</div>
 		</div>
-		<div class="crossDiv" style="left:38%; top:0; width:2vh; height:100%"></div>
+		<div class="crossDiv" style="left:38%; top:0; width:2vmin; height:100%"></div>
 		<div id="centerDisplay">
 			<div>
 				<label id="displayName" style="color:#ffffff;"></label>
 			</div>
-			<table id="displayTable">
+			<div id="displayTable" style="display:table;">
+				<div style="display:table-row">
+					<div class="stat"></div>
+					<div class="stat"></div>
+					<div class="stat" style="text-align:right;"><label>Lv</label></div>
+					<div class="num" style="text-align:left; padding-left:0.5vmin"><label id="lvlDisplay"></label></div>
+				</div>
+				<div style="display:table-row">
+					<div class="stat"></div>
+					<div class="num"><label id="expDisplay"></label></div>
+					<div class="stat"><label>EXP</label></div>
+					<div class="stat"><label>LEFT</label></div>
+				</div>
+				<div style="display:table-row">
+					<div class="num"><label id="spdDisplay"></label></div>
+					<div class="stat"><label>SPD</label></div>
+					<div class="num"><label id="hpDisplay"></label></div>
+					<div class="stat"><label>HP</label></div>
+				</div>
+				<div style="display:table-row">
+					<div class="num" style=""><label id="endDisplay" ></label></div>
+					<div class="stat"><label >END</label></div>
+					<div class="num"><label id="atkDisplay"></label></div>
+					<div class="stat"><label>ATK</label></div>
+				</div>
+				<div style="display:table-row">
+					<div class="num"><label id="pasDisplay"></label></div>
+					<div class="stat"><label>PAS</label></div>
+					<div class="num"><label id="blkDisplay"></label></div>
+					<div class="stat"><label>BLK</label></div>
+				</div>
+				<div style="display:table-row">
+					<div class="num"><label id="shtDisplay"></label></div>
+					<div class="stat"><label>SHT</label></div>
+					<div class="num"><label id="catDisplay"></label></div>
+					<div class="stat"><label>CAT</label></div>
+				</div>
+			</div>
+			<!--  <table id="displayTable">
 				<tr>
 					<td/><td/>
 					<td class="stat" style="text-align:right;">Lv</td>
@@ -186,12 +252,12 @@
 					<td id="catDisplay" class="num"></td>
 					<td class="stat">CAT</td>
 				</tr>
-			</table>
+			</table>-->
 		</div>
-		<div class="crossDiv" style="left:60%; top:0; width:10vh; height:47.7vh"></div>
-		<div class="crossDiv" style="left:0; top:48vh; width:100%; height:2vh"></div>
+		<div class="crossDiv" style="left:60%; top:0; width:10vmin; height:47.7vmin"></div>
+		<div class="crossDiv" style="left:0; top:48vmin; width:100%; height:2vmin"></div>
 		<div id="rightDisplay">
-			<form:form id="rosterForm" action="setBBGameTechs" commandName="blitzballGameRoster">
+			<form:form id="rosterForm" action="setBBGameRoster" commandName="blitzballGameRoster">
 			<table id="selectedTable">
 				<form:hidden id="hselected1" path="leftWing" value=""></form:hidden>
 				<form:hidden id="hselected2" path="rightWing" value=""></form:hidden>
@@ -200,30 +266,30 @@
 				<form:hidden id="hselected5" path="rightBack" value=""></form:hidden>
 				<form:hidden id="hselected6" path="keeper" value=""></form:hidden>
 				<tr>
-					<td style="width:10vh"/><td>Positions</td>
+					<td style="width:10vmin"/><td>Positions</td>
 				</tr>
 				<tr>
-					<td style="padding-left:2vh;">LF</td>
+					<td style="padding-left:2vmin;">LF</td>
 					<td><form:label id="selected1" path="leftWing" value="1"></form:label></td>
 				</tr>
 				<tr>
-					<td style="padding-left:2vh;">RF</td>
+					<td style="padding-left:2vmin;">RF</td>
 					<td><form:label id="selected2" path="rightWing"></form:label></td>
 				</tr>
 				<tr>
-					<td style="padding-left:2vh;">MF</td>
+					<td style="padding-left:2vmin;">MF</td>
 					<td><form:label  id="selected3" path="midfielder"></form:label></td>
 				</tr>
 				<tr>
-					<td style="padding-left:2vh;">LD</td>
+					<td style="padding-left:2vmin;">LD</td>
 					<td><form:label  id="selected4" path="leftBack"></form:label></td>
 				</tr>
 				<tr>
-					<td style="padding-left:2vh;">RD</td>
+					<td style="padding-left:2vmin;">RD</td>
 					<td><form:label  id="selected5" path="rightBack"></form:label></td>
 				</tr>
 				<tr>
-					<td style="padding-left:2vh;">GK</td>
+					<td style="padding-left:2vmin;">GK</td>
 					<td><form:label  id="selected6" path="keeper"></form:label></td>
 				</tr>
 			</table>
@@ -238,28 +304,42 @@
 		Defender (LD), Right Defender<br/>
 		(RD), and Goalkeeper (GK)<br/>
 		</p>
+		</div>
 		
-		<div id="confirmDiv">
+		<div id="confirmDiv" style="display:none">
 			<img id="confSelector" src="img/blitzball/arrow.png" />
-			<div style="width:100%; padding-left:2.5vh">
+			<div style="width:100%; padding-left:2.5vmin">
 			<label>Proceed?</label>
 			</div>
-			<div style="width:100%; padding-left:5vh">
+			<div style="width:100%; padding-left:5vmin">
 			<label>Yes</label>
 			</div>
-			<div style="width:100%; padding-left:5vh">
+			<div style="width:100%; padding-left:5vmin">
+			<label>No</label>
+			</div>
+		</div>
+		
+		<div id="returnDiv" style="display:none">
+			<img id="returnSelector" src="img/blitzball/arrow.png" />
+			<div style="width:100%; padding-left:2.5vmin">
+			<label>Return to Main Menu?</label>
+			</div>
+			<div style="width:100%; padding-left:5vmin">
+			<label>Yes</label>
+			</div>
+			<div style="width:100%; padding-left:5vmin">
 			<label>No</label>
 			</div>
 		</div>
 		
 		<script>
 
-		document.getElementById('confirmDiv').style.display='none';
 		var menuSelection=1;
 		var MAXITEMS=6;
 		var prompted=false;
 		var promptOnOK=true;
 		var playersSelected=0;
+		var returnPrompted=false;
 		
 		document.getElementById('players1').focus();
 		document.body.onkeydown = function(e){
@@ -270,10 +350,18 @@
 			if (prompted){
 				if (promptOnOK){
 					promptOnOK=false;
-					document.getElementById('confSelector').style.top='8vh';
+					document.getElementById('confSelector').style.top='8vmin';
 				} else {
 					promptOnOK=true;
-					document.getElementById('confSelector').style.top='4vh';
+					document.getElementById('confSelector').style.top='4vmin';
+				}
+			} else if (returnPrompted){
+				if (promptOnOK){
+					promptOnOK=false;
+					document.getElementById('returnSelector').style.top='8vmin';
+				} else {
+					promptOnOK=true;
+					document.getElementById('returnSelector').style.top='4vmin';
 				}
 			} else {
 				if (menuSelection<=1){
@@ -284,7 +372,7 @@
 				if (document.getElementById('players'+menuSelection).style.visibility=='hidden'){
 					upButtonPressed();
 				} else {
-					document.getElementById('selector').style.top=(menuSelection-1)*4+'vh';
+					document.getElementById('selector').style.top=(menuSelection-1)*4+'vmin';
 					changeHighlightedPlayer(menuSelection);
 				}
 			}
@@ -294,10 +382,18 @@
 			if (prompted){
 				if (promptOnOK){
 					promptOnOK=false;
-					document.getElementById('confSelector').style.top='8vh';
+					document.getElementById('confSelector').style.top='8vmin';
 				} else {
 					promptOnOK=true;
-					document.getElementById('confSelector').style.top='4vh';
+					document.getElementById('confSelector').style.top='4vmin';
+				}
+			} else if (returnPrompted){
+				if (promptOnOK){
+					promptOnOK=false;
+					document.getElementById('returnSelector').style.top='8vmin';
+				} else {
+					promptOnOK=true;
+					document.getElementById('returnSelector').style.top='4vmin';
 				}
 			} else {
 				if (menuSelection>=MAXITEMS){
@@ -308,7 +404,7 @@
 				if (document.getElementById('players'+menuSelection).style.visibility=='hidden'){
 					downButtonPressed();
 				} else {
-					document.getElementById('selector').style.top=(menuSelection-1)*4+'vh';
+					document.getElementById('selector').style.top=(menuSelection-1)*4+'vmin';
 					changeHighlightedPlayer(menuSelection);
 				}
 			}
@@ -321,6 +417,16 @@
 				} else {
 					resetChoices();
 				}
+			} else if (returnPrompted){
+				if (promptOnOK){
+					window.open("blitzballMenu", "_self");
+				} else {
+					document.getElementById('returnDiv').style.display='none';
+					document.getElementById('selector').style.display='';
+					document.getElementById('returnSelector').style.top='4vmin';
+					promptOnOK=true;
+					returnPrompted=false;
+				}
 			} else {
 				selectPlayer();
 			}
@@ -329,9 +435,18 @@
 		function cancelButtonPressed(){
 			if (prompted){
 				promptOnOK=false;
-				document.getElementById('confSelector').style.top='8vh';
+				document.getElementById('confSelector').style.top='8vmin';
+			} else if (returnPrompted) {
+				promptOnOK=false;
+				document.getElementById('returnSelector').style.top='8vmin';
 			} else {
-				unSelectLastPlayer();
+				if (playersSelected>0){
+					unSelectLastPlayer();
+				} else {
+					document.getElementById('returnDiv').style.display='';
+					document.getElementById('selector').style.display='none';
+					returnPrompted=true;
+				}
 			}
 		}
 
@@ -346,6 +461,7 @@
 				event.preventDefault();
 				selectButtonPressed();
 			} else if (event.keyCode==88){
+				event.preventDefault();
 				cancelButtonPressed();
 			}
 		}
@@ -470,8 +586,8 @@
 
 			document.getElementById('confirmDiv').style.display='none';
 			document.getElementById('selector').style.display='';
-			document.getElementById('selector').style.top='0vh';
-			document.getElementById('confSelector').style.top='4vh';
+			document.getElementById('selector').style.top='0vmin';
+			document.getElementById('confSelector').style.top='4vmin';
 			
 			menuSelection=1;
 			prompted=false;

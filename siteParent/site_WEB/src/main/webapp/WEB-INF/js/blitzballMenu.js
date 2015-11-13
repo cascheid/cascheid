@@ -14,6 +14,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 			var windowHalfX = window.innerWidth / 2;
 			var windowHalfY = window.innerHeight / 2;
+			var playerObject;
 
 			//document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
@@ -33,6 +34,9 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 				scene = new THREE.Scene();
 				sceneCube = new THREE.Scene();
 
+
+				var ambient = new THREE.AmbientLight( 0xffffff );
+				scene.add( ambient );
 
 				var geometry = new THREE.SphereGeometry( 50, 16, 8 );
 
@@ -135,6 +139,8 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 				render();
 
 			}
+			
+			var lastTimer= 0.0001 * Date.now();;
 
 			function render() {
 
@@ -155,9 +161,76 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 					sphere.position.y = 5000 * ((timer + i * 1.1 )%2)-5000;
 
 				}
+				
+				if (playerObject!=null){
+					playerObject.rotation.y=playerObject.rotation.y+((timer-lastTimer)*Math.PI);
+				}
 
 				renderer.clear();
 				renderer.render( sceneCube, cameraCube );
 				renderer.render( scene, camera );
 
+				lastTimer=timer;
+			}
+
+			
+			function loadPlayer(model){
+				
+				var onProgress = function ( xhr ) {
+					if ( xhr.lengthComputable ) {
+						var percentComplete = xhr.loaded / xhr.total * 100;
+						console.log( Math.round(percentComplete, 2) + '% downloaded' );
+					}
+				};
+
+				var onError = function ( xhr ) {
+					console.log('failed to load '+model);
+				};
+
+
+				THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
+				
+				var loader = new THREE.OBJMTLLoader();
+				loader.load( 'img/blitzball/male02.obj', 'img/blitzball/male02_dds.mtl', function ( object ) {
+
+					object.position.y = -800;
+					object.position.x = -1000;
+					object.scale.x=8;
+					object.scale.y=8;
+					object.scale.z=8;
+					object.position.z = 1500;
+					scene.add( object );
+					
+					playerObject=object;
+
+				}, onProgress, onError );
+
+				//
+
+				/*renderer = new THREE.WebGLRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				container.appendChild( renderer.domElement );*/
+			}
+			
+			function unloadPlayer(){
+				scene.remove(playerObject);
+				if (playerObject.geometry) {
+					playerObject.geometry.dispose();
+                }
+
+                if (playerObject.material) {
+                    /*if (obj.material instanceof THREE.MeshFaceMaterial) {
+                        $.each(obj.material.materials, function(idx, obj) {
+                            obj.dispose();
+                        });
+                    } else {*/
+                	playerObject.material.dispose();
+                    //}
+                }
+
+                if (playerObject.dispose) {
+                	playerObject.dispose();
+                }
+                playerObject=null;
 			}

@@ -28,17 +28,33 @@
 				outline: 0;
 			}
 			
-			#blitzMenu{
+			#infoDiv{
+				font-size:3.5vh;
+				line-height:4vh;
+				color: #ffffff;
 				position:absolute;
-				top:20%;
+				top:68vmin;
+				left:40%;
+				width:30%;
+				background:none transparent;
+				z-index:1000;
+				display:none;
+			}
+			
+			#blitzMenu{
+				font-size:3.5vmin;
+				color: #ffffff;
+				position:absolute;
+				top:20vmin;
 				width:12%;
-				height:190px;
+				height:28vmin;
 				left:44%;
 				background-color:#6B238E;
 				background-image: url("img/cracks.png");
 				border: 5px double white;
 				display:none;
-				padding:25px;
+				line-height:4vmin;
+				padding-left:5vmin;
 				z-index:1000;
 			}
 
@@ -54,11 +70,11 @@
 				}
 			
 			#selector{
-			position:absolute;
-			left:5px;
-			top:40px;
-			width:40px;
-			height:25px;
+				position:absolute;
+				left:-5vmin;
+				top:0vmin;
+				width:5vmin;
+				height:3.5vmin;
 			}
 			
 			.selectedLink{
@@ -69,68 +85,98 @@
 
 	<body>
 		<div id="blitzMenu">
+			<div style="position:absolute; top:4vmin; left:5vmin">
 			<img id="selector" src="img/blitzball/arrow.png" />
-			<div class="menuitems" style="top:30px">
-				<a id="menu1" href="blitzballLeague" target="_self" onfocus="onFocusMenu(1)">League</a>
+			<div>
+				<label id="menu1">League</label>
 			</div>
-			<div class="menuitems" style="top:70px">
-				<a id="menu2" href="blitzballTourney" target="_self" onfocus="onFocusMenu(2)">Tournament</a>
+			<div>
+				<label id="menu2">Tournament</label>
 			</div>
-			<div class="menuitems" style="top:110px">
-				<a id="menu3" href="blitzballTeamInfo" target="_self" onfocus="onFocusMenu(3)">Team Data</a>
+			<div>
+				<label id="menu3">Team Data</label>
 			</div>
-			<div class="menuitems" style="top:150px">
-				<a id="menu4" href="blitzballRecruit" target="_self" onfocus="onFocusMenu(4)">Recruit</a>
+			<div>
+				<label id="menu4">Recruit</label>
 			</div>
+			<div>
+				<label id="menu5">Back to Site</label>
+			</div>
+			</div>
+		</div>
+		
+		<div id="infoDiv">
+			<p>Controls: <br/>
+			Arrow Keys: Navigate Menu <br/>
+			Z: Select/OK <br/>
+			X: Cancel/Back <br/>
+			</p>
 		</div>
 		
 		<script>
 		var menuSelection=1;
-		var MAXITEMS=4;
+		var MAXITEMS=5;
 		document.getElementById('menu1').focus();
 		document.body.onkeydown = function(e){
 		    onKeyDown(e);
 		};
 
-		function onFocusMenu(multiplier){
-			menuSelection=multiplier;
-			document.getElementById('selector').style.top=40*multiplier+'px';
-			document.getElementById('menu'+multiplier).focus();
+		function upButtonPressed(){
+			if (menuSelection<=1){
+				menuSelection=MAXITEMS;
+			} else {
+				menuSelection--;
+			}
+			document.getElementById('selector').style.top=(menuSelection-1)*4+'vmin';
+		}
+
+		function downButtonPressed(){
+			if (menuSelection>=MAXITEMS){
+				menuSelection=1;
+			} else {
+				menuSelection++;
+			}
+			document.getElementById('selector').style.top=(menuSelection-1)*4+'vmin';
+		}
+
+		function selectButtonPressed(){
+			if (menuSelection==1){
+				window.open('blitzballLeague', '_self');
+			} else if (menuSelection==2){
+				window.open('blitzballTourney', '_self');
+			} else if (menuSelection==3){
+				window.open('blitzballTeamInfo', '_self');
+			} else if (menuSelection==4){
+				window.open('blitzballRecruit', '_self');
+			} else if (menuSelection==5){
+				window.open('gamesIndex', '_parent');
+			}
+		}
+
+		function cancelButtonPressed(){
+			menuSelection=MAXITEMS;
+			document.getElementById('selector').style.top=(menuSelection-1)*4+'vmin';
 		}
 
 		function onKeyDown(event){
 			if (event.keyCode==40){
 				event.preventDefault();
-				if (menuSelection>=MAXITEMS){
-					menuSelection=1;
-				} else {
-					menuSelection++;
-				}
+				downButtonPressed();
 			} else if (event.keyCode==38){
 				event.preventDefault();
-				if (menuSelection<=1){
-					menuSelection=MAXITEMS;
-				} else {
-					menuSelection--;
-				}
-			} else if (event.keyCode==13){
+				upButtonPressed();
+			} else if (event.keyCode==90){
 				event.preventDefault();
-				if (menuSelection==1){
-					window.open('blitzballLeague', '_self');
-				} else if (menuSelection==2){
-					window.open('blitzballTourney', '_self');
-				} else if (menuSelection==3){
-					window.open('blitzballTeamInfo', '_self');
-				} else if (menuSelection==4){
-					window.open('blitzballRecruit', '_self');
-				}
+				selectButtonPressed();
+			} else if (event.keyCode==88){
+				event.preventDefault();
+				cancelButtonPressed();
 			}
-			document.getElementById('selector').style.top=menuSelection*40+'px';
-			document.getElementById('menu'+menuSelection).focus();
 		}
 
 		setTimeout(function(){
 			document.getElementById('blitzMenu').style.display='inline';
+			document.getElementById('infoDiv').style.display='inline';
 			}, 2000);
 
 		</script>

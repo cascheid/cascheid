@@ -34,25 +34,53 @@ public class BlitzballUtils {
 		BlitzballDao dao = new BlitzballDaoImpl();
 		BlitzballLeague league=null;
 		try {
-			league=dao.getActiveLeagueByTeamID(info.getTeam().getTeamID());
-			league.setDivisionOpponents(dao.getDivisionsOpponents(league.getLeagueID()));
+			league=dao.getActiveLeagueByTeamID(info);
+			//league.setDivisionOpponents(dao.getDivisionsOpponents(league.getLeagueID()));
+			//league.setNonDivisionOpponents(dao.getNonDivisionsOpponents(info, league.getLeagueID()));
 			league.setSchedule(dao.getLeagueSchedule(league.getLeagueID()));
 			league.setPlayerStatistics(dao.getLeaguePlayerStatistics(league.getLeagueID()));
 		} catch (Exception e){//TODO get specific catch
-			league=generateRandomLeague(info);
+			e.printStackTrace();
+			Long newLeagueID=generateRandomLeague(info);
+			league=dao.getActiveLeagueByTeamID(info);
+			league.setSchedule(dao.getLeagueSchedule(league.getLeagueID()));
+			league.setPlayerStatistics(dao.getLeaguePlayerStatistics(league.getLeagueID()));
+			//league=generateRandomLeague(info);
 		}
 		return league;
 	}
 	
 	public static BlitzballTeam getLeagueOpponentByID(BlitzballLeague leagueInfo){
-		BlitzballDao dao = new BlitzballDaoImpl();
-		return dao.getLeagueOpponent(leagueInfo);
+		BlitzballTeam leagueOpponent=null;
+		List<BlitzballGame> weeksGames=leagueInfo.getSchedule().get(leagueInfo.getWeeksComplete()+1);
+		outer:
+		for (BlitzballGame game : weeksGames){
+			if (game.getTeam1().getTeamID()==leagueInfo.getGameID()){
+				for (BlitzballTeam team : leagueInfo.getDivisionOpponents()){
+					if (team.getTeamID()==game.getTeam2().getTeamID()){
+						leagueOpponent=team;
+						break outer;
+					}
+				}
+				for (BlitzballTeam team : leagueInfo.getNonDivisionOpponents()){
+					if (team.getTeamID()==game.getTeam2().getTeamID()){
+						leagueOpponent=team;
+						break outer;
+					}
+				}
+				break;//TODO print exception here?
+			}
+		}
+		return leagueOpponent;
 	}
 	
-	public static BlitzballLeague generateRandomLeague(BlitzballInfo info){
-		BlitzballLeague league=new BlitzballLeague();
+	public static Long generateRandomLeague(BlitzballInfo info){
+		//BlitzballLeague league=new BlitzballLeague();
 		BlitzballDao dao = new BlitzballDaoImpl();
-		List<Long> teamIDs = new ArrayList<Long>(info.getOpponentIDs());
+		List<Long> teamIDs = new ArrayList<Long>();
+		for (BlitzballTeam opp : info.getOpponents()){
+			teamIDs.add(opp.getTeamID());
+		}
 		Collections.shuffle(teamIDs);
 		List<Long> divisionOppIDs = Arrays.asList(teamIDs.get(0), teamIDs.get(1), teamIDs.get(2));
 		List<Long> nonDivOppIDs = Arrays.asList(teamIDs.get(3), teamIDs.get(4), teamIDs.get(5), teamIDs.get(6));
@@ -142,15 +170,16 @@ public class BlitzballUtils {
 			}
 			schedule.put(i, weekGames);
 		}
-		league.setSchedule(schedule);
-		league.setWeeksComplete(0);
+		//league.setSchedule(schedule);
+		//league.setWeeksComplete(0);
 		Long leagueID=dao.insertNewLeague(info.getTeam().getTeamID(), divisionOppIDs, schedule);
-		league.setLeagueID(leagueID);
-		league.setDivisionOpponents(dao.getDivisionsOpponents(leagueID));
-		return league;
+		//league.setLeagueID(leagueID);
+		//league.setGameID(info.getTeam().getTeamID());
+		//league.setDivisionOpponents(dao.getDivisionsOpponents(leagueID));
+		return leagueID;
 	}
 	
-	public static BlitzballTeam getGameStartingTeam(BlitzballTeam origTeam, BlitzballGameRoster selectedRoster){
+	public static BlitzballTeam getUpdatedRoster(BlitzballTeam origTeam, BlitzballGameRoster selectedRoster){
 		BlitzballTeam adjustedTeam = new BlitzballTeam();
 		adjustedTeam.setTeamID(origTeam.getTeamID());
 		adjustedTeam.setTeamName(origTeam.getTeamName());
@@ -245,7 +274,93 @@ public class BlitzballUtils {
 				adjustedTeam.setBench2(it.next());
 			}
 		}
+		if (adjustedTeam.getLeftWing()==null||adjustedTeam.getRightWing()==null||adjustedTeam.getMidfielder()==null
+				||adjustedTeam.getLeftBack()==null||adjustedTeam.getRightBack()==null||adjustedTeam.getKeeper()==null){
+			throw new IllegalStateException("Adjusted Team does not have proper number of players");
+		}
 		
 		return adjustedTeam;
+	}
+	
+	public static BlitzballTeam getUpdatedTeamTechs(BlitzballTeam team, BlitzballGameTechs techs){
+		team.getLeftWing().setTech1(techs.getLeftWingTech1());
+		team.getLeftWing().setTech2(techs.getLeftWingTech2());
+		team.getLeftWing().setTech3(techs.getLeftWingTech3());
+		team.getLeftWing().setTech4(techs.getLeftWingTech4());
+		team.getLeftWing().setTech5(techs.getLeftWingTech5());
+		team.getRightWing().setTech1(techs.getRightWingTech1());
+		team.getRightWing().setTech2(techs.getRightWingTech2());
+		team.getRightWing().setTech3(techs.getRightWingTech3());
+		team.getRightWing().setTech4(techs.getRightWingTech4());
+		team.getRightWing().setTech5(techs.getRightWingTech5());
+		team.getMidfielder().setTech1(techs.getMidfielderTech1());
+		team.getMidfielder().setTech2(techs.getMidfielderTech2());
+		team.getMidfielder().setTech3(techs.getMidfielderTech3());
+		team.getMidfielder().setTech4(techs.getMidfielderTech4());
+		team.getMidfielder().setTech5(techs.getMidfielderTech5());
+		team.getLeftBack().setTech1(techs.getLeftBackTech1());
+		team.getLeftBack().setTech2(techs.getLeftBackTech2());
+		team.getLeftBack().setTech3(techs.getLeftBackTech3());
+		team.getLeftBack().setTech4(techs.getLeftBackTech4());
+		team.getLeftBack().setTech5(techs.getLeftBackTech5());
+		team.getRightBack().setTech1(techs.getRightBackTech1());
+		team.getRightBack().setTech2(techs.getRightBackTech2());
+		team.getRightBack().setTech3(techs.getRightBackTech3());
+		team.getRightBack().setTech4(techs.getRightBackTech4());
+		team.getRightBack().setTech5(techs.getRightBackTech5());
+		team.getKeeper().setTech1(techs.getKeeperTech1());
+		team.getKeeper().setTech2(techs.getKeeperTech2());
+		team.getKeeper().setTech3(techs.getKeeperTech3());
+		team.getKeeper().setTech4(techs.getKeeperTech4());
+		team.getKeeper().setTech5(techs.getKeeperTech5());
+		return team;
+	}
+	
+	public static List<BlitzballTech> getTechList(){
+		BlitzballDao dao = new BlitzballDaoImpl();
+		return dao.getFullBlitzballTechList();
+	}
+	
+	public static BlitzballPlayer getBlitzballPlayer(BlitzballInfo info, Integer playerID){
+		BlitzballPlayer selectedPlayer = null;
+		if (info.getTeam().getLeftWing().getPlayerID()==playerID){
+			return info.getTeam().getLeftWing();
+		} else if (info.getTeam().getRightWing().getPlayerID()==playerID){
+			return info.getTeam().getRightWing();
+		} else if (info.getTeam().getMidfielder().getPlayerID()==playerID){
+			return info.getTeam().getMidfielder();
+		} else if (info.getTeam().getLeftBack().getPlayerID()==playerID){
+			return info.getTeam().getLeftBack();
+		} else if (info.getTeam().getRightBack().getPlayerID()==playerID){
+			return info.getTeam().getRightBack();
+		} else if (info.getTeam().getKeeper().getPlayerID()==playerID){
+			return info.getTeam().getKeeper();
+		} else if (info.getTeam().getBench1()!=null&&info.getTeam().getBench1().getPlayerID()==playerID){
+			return info.getTeam().getBench1();
+		} else if (info.getTeam().getBench2()!=null&&info.getTeam().getBench2().getPlayerID()==playerID){
+			return info.getTeam().getBench2();
+		}
+		for (BlitzballTeam team : info.getOpponents()){
+			if (team.getLeftWing().getPlayerID()==playerID){
+				selectedPlayer = team.getLeftWing();
+				break;
+			} else if (team.getRightWing().getPlayerID()==playerID){
+				selectedPlayer = team.getRightWing();
+				break;
+			} else if (team.getMidfielder().getPlayerID()==playerID){
+				selectedPlayer = team.getMidfielder();
+				break;
+			} else if (team.getLeftBack().getPlayerID()==playerID){
+				selectedPlayer = team.getLeftBack();
+				break;
+			} else if (team.getRightBack().getPlayerID()==playerID){
+				selectedPlayer = team.getRightBack();
+				break;
+			} else if (team.getKeeper().getPlayerID()==playerID){
+				selectedPlayer = team.getKeeper();
+				break;
+			}
+		}
+		return selectedPlayer;
 	}
 }

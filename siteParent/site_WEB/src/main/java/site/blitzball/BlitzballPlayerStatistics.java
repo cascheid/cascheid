@@ -7,6 +7,7 @@ public class BlitzballPlayerStatistics implements Serializable{
 	private static final long serialVersionUID = 7686223340965135147L;
 
 	private Long playerID;
+	private String playerName;
 	private Integer goals;
 	private Integer shots;
 	private Integer assists;
@@ -30,11 +31,21 @@ public class BlitzballPlayerStatistics implements Serializable{
 		this.breaks=0;
 		this.turnovers=0;
 	}
+	public BlitzballPlayerStatistics(Long playerID, String playerName){
+		this(playerID);
+		this.setPlayerName(playerName);
+	}
 	public Long getPlayerID() {
 		return playerID;
 	}
 	public void setPlayerID(Long playerID) {
 		this.playerID = playerID;
+	}
+	public String getPlayerName() {
+		return playerName;
+	}
+	public void setPlayerName(String playerName) {
+		this.playerName = playerName;
 	}
 	public Integer getGoals() {
 		return goals;

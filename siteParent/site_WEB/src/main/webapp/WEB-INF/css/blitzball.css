@@ -1,0 +1,37 @@
+body {
+	background:none transparent;
+	padding:0;
+	margin:0;
+	font-weight: bold;
+	overflow:hidden;
+	line-height:4vmin;
+	font-size:3.5vmin;
+	color: #ffffff;
+	white-space:nowrap;
+}
+
+.promptLabel{
+	width:100%; 
+	padding-left:2.5vmin;
+}
+
+.promptOptions{
+	width:100%; 
+	padding-left:5vmin;
+}
+
+.menu{
+	position:absolute;
+	background-color:#6B238E;
+	background-image: url("../img/blitzball/cracks.png");
+	border: 5px double white;
+	z-index:1000;
+}
+
+.selector{
+	position:absolute;
+	left:-5vmin;
+	top:0vmin;
+	width:5vmin;
+	height:4vmin;
+}
