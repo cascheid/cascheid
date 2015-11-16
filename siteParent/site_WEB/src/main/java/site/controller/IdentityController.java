@@ -45,12 +45,6 @@ public class IdentityController {
 		return mv;
 	}
 	
-	@RequestMapping("/blitzballGame")
-	public ModelAndView getBlitzballGame() {
-		ModelAndView mv = new ModelAndView("blitzballGame");
-		return mv;
-	}
-	
 	@RequestMapping("/testwater")
 	public ModelAndView getTestWaterPage() {
 		ModelAndView mv = new ModelAndView("testwater");

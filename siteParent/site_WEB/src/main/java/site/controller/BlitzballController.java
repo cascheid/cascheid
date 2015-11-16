@@ -195,6 +195,22 @@ public class BlitzballController {
 		return mv;
 	}
 	
+	@RequestMapping("/blitzballGame")
+	public ModelAndView getBlitzballGame() {
+		if (identity==null||blitzballInfo==null){
+			return new ModelAndView("timeout");
+		}
+		ModelAndView mv = new ModelAndView("blitzballGame");
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			mv.addObject("myTeam", objectMapper.writeValueAsString(blitzballInfo.getTeam()));
+			mv.addObject("oppTeam", objectMapper.writeValueAsString(activeOpponent));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return mv;
+	}
+	
 	@RequestMapping("/setBBGameRoster")
 	public ModelAndView loadGameTechScreen(@ModelAttribute("blitzballGameRoster") BlitzballGameRoster blitzballGameRoster){
 		if (identity==null||blitzballInfo==null){

@@ -83,7 +83,7 @@
 		<script src="js/postprocessing/MaskPass.js"></script>
 		<script src="js/postprocessing/SavePass.js"></script>
 
-		<script src="js/Car.js"></script>
+		<script src="js/BBPlayer.js"></script>
 		<script src="js/Detector.js"></script>
 		<script src="js/stats.min.js"></script>
 
@@ -110,27 +110,83 @@
 
 			var clock = new THREE.Clock();
 
-			var controlsGallardo = {
-
+			var myLWControls = {
 				moveForward: false,
 				moveBackward: false,
 				moveLeft: false,
 				moveRight: false
-
 			};
-
-			var controlsVeyron = {
-
+			
+			var myRWControls = {
 				moveForward: false,
 				moveBackward: false,
 				moveLeft: false,
 				moveRight: false
-
+			};
+			
+			var myMFControls = {
+				moveForward: false,
+				moveBackward: false,
+				moveLeft: false,
+				moveRight: false
+			};
+			
+			var myLBControls = {
+				moveForward: false,
+				moveBackward: false,
+				moveLeft: false,
+				moveRight: false
+			};
+			
+			var myRBControls = {
+				moveForward: false,
+				moveBackward: false,
+				moveLeft: false,
+				moveRight: false
+			};
+			
+			var oppLWControls = {
+				moveForward: false,
+				moveBackward: false,
+				moveLeft: false,
+				moveRight: false
+			};
+			
+			var oppRWControls = {
+				moveForward: false,
+				moveBackward: false,
+				moveLeft: false,
+				moveRight: false
+			};
+			
+			var oppMFControls = {
+				moveForward: false,
+				moveBackward: false,
+				moveLeft: false,
+				moveRight: false
+			};
+			
+			var oppLBControls = {
+				moveForward: false,
+				moveBackward: false,
+				moveLeft: false,
+				moveRight: false
+			};
+			
+			var oppRBControls = {
+				moveForward: false,
+				moveBackward: false,
+				moveLeft: false,
+				moveRight: false
 			};
 
 			var mlib;
 
 			var gallardo, veyron, currentCar;
+			var myTeamLW, myTeamRW, myTeamMF, myTeamLB, myTeamRB, myTeamGK;
+			var oppTeamLW, oppTeamRW, oppTeamMF, oppTeamLB, oppTeamRB, oppTeamGK;
+			var myTeam=[];
+			var oppTeam=[];
 
 			var effectDirt, hblur, vblur, effectBloom, effectKeep, effectBlend, effectFXAA;
 
@@ -374,45 +430,127 @@
 				var ballMaterial = new THREE.MeshBasicMaterial( { map: ballTexture } );
 				ball = new THREE.Mesh( ballGeometry, ballMaterial );
 				scene.add(ball);
+				var myTeamJSON=JSON.parse('${myTeam}');
+				var oppTeamJSON=JSON.parse('${myTeam}');
 				
 				// CARS - VEYRON
-
-				veyron = new THREE.Car();
-
-				veyron.modelScale = 3;
-				veyron.backWheelOffset = 2;
-
-				veyron.callback = function( object ) {
-
-					addCar( object, -300, -215, 0, 0 );
+				myTeamLW = new THREE.BBPlayer(myTeamJSON.leftWing);
+				myTeamLW.modelScale = 3;
+				myTeamLW.backWheelOffset = 2;
+				myTeamLW.callback = function( object ) {
+					addCar( object, 2000, 0, -12000, 0 );
 					setMaterialsVeyron( object );
-
 				};
-
-				veyron.loadPartsBinary( "js/veyron_body_bin.js", "js/veyron_wheel_bin.js" );
+				myTeamLW.loadPartsBinary( "js/veyron_body_bin.js", "js/veyron_wheel_bin.js" );
+				myTeam.push(myTeamLW);
+				myTeamRW = new THREE.BBPlayer(myTeamJSON.rightWing);
+				myTeamRW.modelScale = 3;
+				myTeamRW.backWheelOffset = 2;
+				myTeamRW.callback = function( object ) {
+					addCar( object, 2000, 0, 12000, 0 );
+					setMaterialsVeyron( object );
+				};
+				myTeamRW.loadPartsBinary( "js/veyron_body_bin.js", "js/veyron_wheel_bin.js" );
+				myTeam.push(myTeamRW);
+				myTeamMF = new THREE.BBPlayer(myTeamJSON.midfielder);
+				myTeamMF.modelScale = 3;
+				myTeamMF.backWheelOffset = 2;
+				myTeamMF.callback = function( object ) {
+					addCar( object, 6000, 0, 0, 0 );
+					setMaterialsVeyron( object );
+				};
+				myTeamMF.loadPartsBinary( "js/veyron_body_bin.js", "js/veyron_wheel_bin.js" );
+				myTeam.push(myTeamMF);
+				myTeamLB = new THREE.BBPlayer(myTeamJSON.leftBack);
+				myTeamLB.modelScale = 3;
+				myTeamLB.backWheelOffset = 2;
+				myTeamLB.callback = function( object ) {
+					addCar( object, 12000, 0, -2000, 0 );
+					setMaterialsVeyron( object );
+				};
+				myTeamLB.loadPartsBinary( "js/veyron_body_bin.js", "js/veyron_wheel_bin.js" );
+				myTeam.push(myTeamLB);
+				myTeamRB = new THREE.BBPlayer(myTeamJSON.rightBack);
+				myTeamRB.modelScale = 3;
+				myTeamRB.backWheelOffset = 2;
+				myTeamRB.callback = function( object ) {
+					addCar( object, 12000, 0, -2000, 0 );
+					setMaterialsVeyron( object );
+				};
+				myTeamRB.loadPartsBinary( "js/veyron_body_bin.js", "js/veyron_wheel_bin.js" );
+				myTeam.push(myTeamRB);
+				myTeamGK = new THREE.BBPlayer(myTeamJSON.keeper);
+				myTeamGK.modelScale = 3;
+				myTeamGK.backWheelOffset = 2;
+				myTeamGK.callback = function( object ) {
+					addCar( object, 19000, 0, 0, 0 );
+					setMaterialsVeyron( object );
+				};
+				myTeamGK.loadPartsBinary( "js/veyron_body_bin.js", "js/veyron_wheel_bin.js" );
+				myTeam.push(myTeamGK);
 
 				// CARS - GALLARDO
 
-				gallardo = new THREE.Car();
-
-				gallardo.modelScale = 2;
-				gallardo.backWheelOffset = 45;
-
-				gallardo.callback = function( object ) {
-
-					addCar( object, 300, -110, 0, -110 );
+				oppTeamLW = new THREE.BBPlayer(oppTeamJSON.leftWing);
+				oppTeamLW.modelScale = 2;
+				oppTeamLW.backWheelOffset = 45;
+				oppTeamLW.callback = function( object ) {
+					addCar( object, -2000, 0, -12000, 0 );
 					setMaterialsGallardo( object );
-
 				};
-
-				gallardo.loadPartsBinary( "js/gallardo_body_bin.js", "js/gallardo_wheel_bin.js" );
-
+				oppTeamLW.loadPartsBinary( "js/gallardo_body_bin.js", "js/gallardo_wheel_bin.js" );
+				oppTeam.push(oppTeamLW);
+				oppTeamRW = new THREE.BBPlayer(oppTeamJSON.rightWing);
+				oppTeamRW.modelScale = 2;
+				oppTeamRW.backWheelOffset = 45;
+				oppTeamRW.callback = function( object ) {
+					addCar( object, -2000, 0, 12000, 0 );
+					setMaterialsGallardo( object );
+				};
+				oppTeamRW.loadPartsBinary( "js/gallardo_body_bin.js", "js/gallardo_wheel_bin.js" );
+				oppTeam.push(oppTeamRW);
+				oppTeamMF = new THREE.BBPlayer(oppTeamJSON.midfielder);
+				oppTeamMF.modelScale = 2;
+				oppTeamMF.backWheelOffset = 45;
+				oppTeamMF.callback = function( object ) {
+					addCar( object, -6000, 0, 0, 0 );
+					setMaterialsGallardo( object );
+				};
+				oppTeamMF.loadPartsBinary( "js/gallardo_body_bin.js", "js/gallardo_wheel_bin.js" );
+				oppTeam.push(oppTeamMF);
+				oppTeamLB = new THREE.BBPlayer(oppTeamJSON.leftBack);
+				oppTeamLB.modelScale = 2;
+				oppTeamLB.backWheelOffset = 45;
+				oppTeamLB.callback = function( object ) {
+					addCar( object, -12000, 0, 2000, 0 );
+					setMaterialsGallardo( object );
+				};
+				oppTeamLB.loadPartsBinary( "js/gallardo_body_bin.js", "js/gallardo_wheel_bin.js" );
+				oppTeam.push(oppTeamLB);
+				oppTeamRB = new THREE.BBPlayer(oppTeamJSON.rightBack);
+				oppTeamRB.modelScale = 2;
+				oppTeamRB.backWheelOffset = 45;
+				oppTeamRB.callback = function( object ) {
+					addCar( object, -12000, 0, -2000, 0 );
+					setMaterialsGallardo( object );
+				};
+				oppTeamRB.loadPartsBinary( "js/gallardo_body_bin.js", "js/gallardo_wheel_bin.js" );
+				oppTeam.push(oppTeamRB);
+				oppTeamGK = new THREE.BBPlayer(oppTeamJSON.keeper);
+				oppTeamGK.modelScale = 2;
+				oppTeamGK.backWheelOffset = 45;
+				oppTeamGK.callback = function( object ) {
+					addCar( object, -19000, 0, 0, 0 );
+					setMaterialsGallardo( object );
+				};
+				oppTeamGK.loadPartsBinary( "js/gallardo_body_bin.js", "js/gallardo_wheel_bin.js" );
+				oppTeam.push(oppTeamGK);
 				//
 
-				config[ "gallardo" ].model = gallardo;
-				config[ "veyron" ].model = veyron;
+				config[ "gallardo" ].model = oppTeamMF;
+				config[ "veyron" ].model = myTeamMF;
 
-				currentCar = gallardo;
+				currentCar = oppTeamMF;
 
 				// EVENTS
 
@@ -740,54 +878,115 @@
 			//
 
 			function onKeyDown ( event ) {
+				if (teamWithBall==1){
+					var controls;
+					if (currentCar==myTeamLW){
+						controls=myLWControls;
+					} else if (currentCar==myTeamRW){
+						controls=myRWControls;
+					} else if (currentCar==myTeamMF){
+						controls=myMFControls;
+					} else if (currentCar==myTeamLB){
+						controls=myLBControls;
+					} else if (currentCar==myTeamRB){
+						controls=myRBControls;
+					}
+					
+					switch( event.keyCode ) {
 
-				switch( event.keyCode ) {
+						case 38: /*up*/	controls.moveForward = true; break;
+						case 40: /*down*/controls.moveBackward = true; break;
+						case 37: /*left*/controls.moveLeft = true; break;
+						case 39: /*right*/controls.moveRight = true; break;
 
-					case 38: /*up*/	controlsGallardo.moveForward = true; break;
-					case 87: /*W*/ 	controlsVeyron.moveForward = true; break;
+						case 49: /*1*/	setCurrentCar( "gallardo", "center" ); break;
+						case 50: /*2*/	setCurrentCar( "veyron", "center" ); break;
+						case 51: /*3*/	setCurrentCar( "gallardo", "front" ); break;
+						case 52: /*4*/	setCurrentCar( "veyron", "front" ); break;
+						case 53: /*5*/	setCurrentCar( "gallardo", "back" ); break;
+						case 54: /*6*/	setCurrentCar( "veyron", "back" ); break;
 
-					case 40: /*down*/controlsGallardo.moveBackward = true; break;
-					case 83: /*S*/ 	 controlsVeyron.moveBackward = true; break;
+						case 78: /*N*/   testPass(); break;
 
-					case 37: /*left*/controlsGallardo.moveLeft = true; break;
-					case 65: /*A*/   controlsVeyron.moveLeft = true; break;
+						case 66: /*B*/   shoot(); break;
+					}
+				} else if (teamWithBall==2){
+					var controls;
+					if (currentCar==oppTeamLW){
+						controls=oppLWControls;
+					} else if (currentCar==oppTeamRW){
+						controls=oppRWControls;
+					} else if (currentCar==oppTeamMF){
+						controls=oppMFControls;
+					} else if (currentCar==oppTeamLB){
+						controls=oppLBControls;
+					} else if (currentCar==oppTeamRB){
+						controls=oppRBControls;
+					}
+					
+					switch( event.keyCode ) {
 
-					case 39: /*right*/controlsGallardo.moveRight = true; break;
-					case 68: /*D*/    controlsVeyron.moveRight = true; break;
+						case 38: /*up*/	controls.moveForward = true; break;
+						case 40: /*down*/controls.moveBackward = true; break;
+						case 37: /*left*/controls.moveLeft = true; break;
+						case 39: /*right*/controls.moveRight = true; break;
 
-					case 49: /*1*/	setCurrentCar( "gallardo", "center" ); break;
-					case 50: /*2*/	setCurrentCar( "veyron", "center" ); break;
-					case 51: /*3*/	setCurrentCar( "gallardo", "front" ); break;
-					case 52: /*4*/	setCurrentCar( "veyron", "front" ); break;
-					case 53: /*5*/	setCurrentCar( "gallardo", "back" ); break;
-					case 54: /*6*/	setCurrentCar( "veyron", "back" ); break;
+						case 49: /*1*/	setCurrentCar( "gallardo", "center" ); break;
+						case 50: /*2*/	setCurrentCar( "veyron", "center" ); break;
+						case 51: /*3*/	setCurrentCar( "gallardo", "front" ); break;
+						case 52: /*4*/	setCurrentCar( "veyron", "front" ); break;
+						case 53: /*5*/	setCurrentCar( "gallardo", "back" ); break;
+						case 54: /*6*/	setCurrentCar( "veyron", "back" ); break;
 
-					case 78: /*N*/   testPass(); break;
+						case 78: /*N*/   testPass(); break;
 
-					case 66: /*B*/   shoot(); break;
-
+						case 66: /*B*/   shoot(); break;
+					}
 				}
-
 			}
 
 			function onKeyUp ( event ) {
+				if (teamWithBall==1){
+					var controls;
+					if (currentCar==myTeamLW){
+						controls=myLWControls;
+					} else if (currentCar==myTeamRW){
+						controls=myRWControls;
+					} else if (currentCar==myTeamMF){
+						controls=myMFControls;
+					} else if (currentCar==myTeamLB){
+						controls=myLBControls;
+					} else if (currentCar==myTeamRB){
+						controls=myRBControls;
+					}
 
-				switch( event.keyCode ) {
+					switch( event.keyCode ) {
+						case 38: /*up*/controls.moveForward = false; break;
+						case 40: /*down*/controls.moveBackward = false; break;
+						case 37: /*left*/controls.moveLeft = false; break;
+						case 39: /*right*/controls.moveRight = false; break;
+					}
+				} else if (teamWithBall==2){
+					var controls;
+					if (currentCar==oppTeamLW){
+						controls=oppLWControls;
+					} else if (currentCar==oppTeamRW){
+						controls=oppRWControls;
+					} else if (currentCar==oppTeamMF){
+						controls=oppMFControls;
+					} else if (currentCar==oppTeamLB){
+						controls=oppLBControls;
+					} else if (currentCar==oppTeamRB){
+						controls=oppRBControls;
+					}
 
-					case 38: /*up*/controlsGallardo.moveForward = false; break;
-					case 87: /*W*/ controlsVeyron.moveForward = false; break;
-
-					case 40: /*down*/controlsGallardo.moveBackward = false; break;
-					case 83: /*S*/ 	 controlsVeyron.moveBackward = false; break;
-
-					case 37: /*left*/controlsGallardo.moveLeft = false; break;
-					case 65: /*A*/ 	 controlsVeyron.moveLeft = false; break;
-
-					case 39: /*right*/controlsGallardo.moveRight = false; break;
-					case 68: /*D*/ 	  controlsVeyron.moveRight = false; break;
-
+					switch( event.keyCode ) {
+						case 38: /*up*/controls.moveForward = false; break;
+						case 40: /*down*/controls.moveBackward = false; break;
+						case 37: /*left*/controls.moveLeft = false; break;
+						case 39: /*right*/controls.moveRight = false; break;
+					}
 				}
-
 			}
 
 
@@ -890,6 +1089,135 @@
 				mapContext.fill();
 			}
 
+			function computeRestingPositions(){
+				if (currentCar.root.position.x<0){
+					if (currentCar!=myTeamLW){
+						myLWControls.restingX=-12000;
+						myLWControls.restingY=-2000;
+					}
+					if (currentCar!=myTeamRW){
+						myRWControls.restingX=-12000;
+						myRWControls.restingY=2000;
+					}
+					if (currentCar!=myTeamMF){
+						myMFControls.restingX=-6000;
+						myMFControls.restingY=0;
+					}
+					if (currentCar!=myTeamLB){
+						myLBControls.restingX=2000;
+						myLBControls.restingY=-2000;
+					}
+					if (currentCar!=myTeamRB){
+						myRBControls.restingX=2000;
+						myRBControls.restingY=2000;
+					}
+					if (currentCar!=oppTeamLW){
+						oppLWControls.restingX=-2000;
+						oppLWControls.restingY=-2000;
+					}
+					if (currentCar!=oppTeamRW){
+						oppRWControls.restingX=-2000;
+						oppRWControls.restingY=2000;
+					}
+					if (currentCar!=oppTeamMF){
+						oppMFControls.restingX=-6000;
+						oppMFControls.restingY=0;
+					}
+					if (currentCar!=oppTeamLB){
+						oppLBControls.restingX=-12000;
+						oppLBControls.restingY=2000;
+					}
+					if (currentCar!=oppTeamRB){
+						oppRBControls.restingX=-12000;
+						oppRBControls.restingY=-2000;
+					}
+				} else if (currentCar.root.position.x>0){
+					if (currentCar!=myTeamLW){
+						myLWControls.restingX=12000;
+						myLWControls.restingY=2000;
+					}
+					if (currentCar!=myTeamRW){
+						myRWControls.restingX=12000;
+						myRWControls.restingY=-2000;
+					}
+					if (currentCar!=myTeamMF){
+						myMFControls.restingX=6000;
+						myMFControls.restingY=0;
+					}
+					if (currentCar!=myTeamLB){
+						myLBControls.restingX=-2000;
+						myLBControls.restingY=2000;
+					}
+					if (currentCar!=myTeamRB){
+						myRBControls.restingX=-2000;
+						myRBControls.restingY=-2000;
+					}
+					if (currentCar!=oppTeamLW){
+						oppLWControls.restingX=2000;
+						oppLWControls.restingY=-2000;
+					}
+					if (currentCar!=oppTeamRW){
+						oppRWControls.restingX=2000;
+						oppRWControls.restingY=2000;
+					}
+					if (currentCar!=oppTeamMF){
+						oppMFControls.restingX=6000;
+						oppMFControls.restingY=0;
+					}
+					if (currentCar!=oppTeamLB){
+						oppLBControls.restingX=12000;
+						oppLBControls.restingY=-2000;
+					}
+					if (currentCar!=oppTeamRB){
+						oppRBControls.restingX=12000;
+						oppRBControls.restingY=2000;
+					}
+				}
+				if (teamWithBall==1){
+					if (oppTeamLW.root.position.distanceTo(currentCar.root.position)<6000){
+						oppLWControls.restingX=currentCar.root.position.x;
+						oppLWControls.restingY=currentCar.root.position.z;
+					}
+					if (oppTeamRW.root.position.distanceTo(currentCar.root.position)<6000){
+						oppRWControls.restingX=currentCar.root.position.x;
+						oppRWControls.restingY=currentCar.root.position.z;
+					}
+					if (oppTeamMF.root.position.distanceTo(currentCar.root.position)<6000){
+						oppMFControls.restingX=currentCar.root.position.x;
+						oppMFControls.restingY=currentCar.root.position.z;
+					}
+					if (oppTeamLB.root.position.distanceTo(currentCar.root.position)<6000){
+						oppLBControls.restingX=currentCar.root.position.x;
+						oppLBControls.restingY=currentCar.root.position.z;
+					}
+					if (oppTeamRB.root.position.distanceTo(currentCar.root.position)<6000){
+						oppRBControls.restingX=currentCar.root.position.x;
+						oppRBControls.restingY=currentCar.root.position.z;
+					}
+				} else if (teamWithBall==2){
+					if (myTeamLW.root.position.distanceTo(currentCar.root.position)<6000){
+						myLWControls.restingX=currentCar.root.position.x;
+						myLWControls.restingY=currentCar.root.position.z;
+					}
+					if (myTeamRW.root.position.distanceTo(currentCar.root.position)<6000){
+						myRWControls.restingX=currentCar.root.position.x;
+						myRWControls.restingY=currentCar.root.position.z;
+					}
+					if (myTeamMF.root.position.distanceTo(currentCar.root.position)<6000){
+						myMFControls.restingX=currentCar.root.position.x;
+						myMFControls.restingY=currentCar.root.position.z;
+					}
+					if (myTeamLB.root.position.distanceTo(currentCar.root.position)<6000){
+						myLBControls.restingX=currentCar.root.position.x;
+						myLBControls.restingY=currentCar.root.position.z;
+					}
+					if (myTeamRB.root.position.distanceTo(currentCar.root.position)<6000){
+						myRBControls.restingX=currentCar.root.position.x;
+						myRBControls.restingY=currentCar.root.position.z;
+					}
+				}
+			}
+
 			function render() {
 
 				var delta = clock.getDelta();
@@ -911,25 +1239,34 @@
 					}
 				}
 
-				if ( veyron.loaded ) {
-
-					veyron.bodyMaterials[ 1 ] = mlib[ "Chrome" ];
-					veyron.bodyMaterials[ 2 ] = mlib[ "Chrome" ];
-
-					veyron.wheelMaterials[ 0 ] = mlib[ "Chrome" ];
-
+				for (var i=0; i<myTeam.length; i++){
+					if ( myTeam[i].loaded ) {
+						myTeam[i].bodyMaterials[ 1 ] = mlib[ "Chrome" ];
+						myTeam[i].bodyMaterials[ 2 ] = mlib[ "Chrome" ];
+						myTeam[i].wheelMaterials[ 0 ] = mlib[ "Chrome" ];
+					}
+					//myTeam[i].updateCarModel( delta, controlsVeyron );
 				}
 
-				if ( gallardo.loaded ) {
-
-					gallardo.wheelMaterials[ 0 ] = mlib[ "Chrome" ];
-
+				for (var i=0; i<oppTeam.length; i++){
+					if ( oppTeam[i].loaded ) {
+						oppTeam[i].wheelMaterials[ 0 ] = mlib[ "Chrome" ];
+					}
+					//oppTeam[i].updateCarModel( delta, controlsGallardo );
 				}
+				myTeamLW.updateCarModel(delta, myLWControls);
+				myTeamRW.updateCarModel(delta, myRWControls);
+				myTeamMF.updateCarModel(delta, myMFControls);
+				myTeamLB.updateCarModel(delta, myLBControls);
+				myTeamRB.updateCarModel(delta, myRBControls);
+				oppTeamLW.updateCarModel(delta, oppLWControls);
+				oppTeamRW.updateCarModel(delta, oppRWControls);
+				oppTeamMF.updateCarModel(delta, oppMFControls);
+				oppTeamLB.updateCarModel(delta, oppLBControls);
+				oppTeamRB.updateCarModel(delta, oppRBControls);
 
 				// update car model
 
-				veyron.updateCarModel( delta, controlsVeyron );
-				gallardo.updateCarModel( delta, controlsGallardo );
 
 				// update camera
 
@@ -961,8 +1298,12 @@
 
 				if ( updateCubemap ) {
 
-					veyron.setVisible( false );
-					gallardo.setVisible( false );
+					for (var i=0; i<oppTeam.length; i++){
+						oppTeam[i].setVisible( false );
+					}
+					for (var i=0; i<myTeam.length; i++){
+						myTeam[i].setVisible( false );
+					}
 
 					cubeCamera.position.copy( currentCar.root.position );
 					var cameraPos=camera.position.x;
@@ -971,8 +1312,12 @@
 					renderer.autoClear = true;
 					cubeCamera.updateCubeMap( renderer, scene );
 
-					veyron.setVisible( true );
-					gallardo.setVisible( true );
+					for (var i=0; i<oppTeam.length; i++){
+						oppTeam[i].setVisible( true );
+					}
+					for (var i=0; i<myTeam.length; i++){
+						myTeam[i].setVisible( true );
+					}
 
 				}
 
@@ -987,7 +1332,7 @@
 				renderer.clear();
 				composer.render( 0.1 );
 
-				updateMinimap();
+				//updateMinimap();
 			}
 
 		</script>
