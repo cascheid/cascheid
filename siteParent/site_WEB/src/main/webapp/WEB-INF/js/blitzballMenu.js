@@ -15,8 +15,10 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 			var windowHalfX = window.innerWidth / 2;
 			var windowHalfY = window.innerHeight / 2;
 			var playerObject;
+			
+			var clock;
 
-			//document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+			window.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
 			init();
 			animate();
@@ -27,7 +29,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 				document.body.appendChild( container );
 
 				camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 100000 );
-				camera.position.z = 3200;
+				camera.position.z = 100;
 
 				cameraCube = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, 1, 100000 );
 
@@ -66,7 +68,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 					mesh.position.x = Math.random() * 10000 - 5000;
 					mesh.position.y = Math.random() * 10000 - 5000;
-					mesh.position.z = (Math.random()/2) * 10000 - 5000;
+					mesh.position.z = (Math.random()/2) * 10000 - 10000;
 
 					mesh.scale.x = mesh.scale.y = mesh.scale.z = Math.random() * 3 + 1;
 
@@ -148,6 +150,8 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 				camera.position.x += ( mouseX - camera.position.x ) * .05;
 				camera.position.y += ( - mouseY - camera.position.y ) * .05;
+				//camera.position.x = (Math.cos( timer + i ));
+				//camera.position.y = (Math.sin( timer + i ));
 
 				camera.lookAt( scene.position );
 
@@ -163,7 +167,13 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 				}
 				
 				if (playerObject!=null){
+
+					//camera.position.x = Math.cos( timer ) * 10;
+					//camera.position.y = 2;
+					//camera.position.z = Math.sin( timer ) * 10;
 					playerObject.rotation.y=playerObject.rotation.y+((timer-lastTimer)*Math.PI);
+
+					THREE.AnimationHandler.update( clock.getDelta()/15 );
 				}
 
 				renderer.clear();
@@ -188,7 +198,38 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 				};
 
 
-				THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
+
+				var loader = new THREE.ColladaLoader();
+				loader.options.convertUpAxis = true;
+				loader.load( 'obj/stormtrooper/stormtrooper.dae', function ( collada ) {
+
+					dae = collada.scene;
+					var trooper = dae.children[1];
+					trooper.children[0].material.reflectivity=0;
+					trooper.children[0].material.shininess=0;
+					trooper.children[0].material.side=THREE.DoubleSide;
+					var animation = new THREE.BBAnimation( trooper.children[0], trooper.children[0].geometry.animation );
+					animation.playTreadAnimation();
+
+					dae.scale.x = dae.scale.y = dae.scale.z = 17;
+
+					//camera.position.y=800;
+					//camera.position.z=1000;
+					dae.position.y = -18;
+					dae.position.x = -25;
+					dae.position.z = 50;
+					//dae.position.z = 1500;
+					dae.updateMatrix();
+					scene.add( dae );
+
+					clock = new THREE.Clock();
+					playerObject=dae;
+
+					//init();
+					//animate();
+
+				}, onProgress, onError  );
+				/*THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
 				
 				var loader = new THREE.OBJMTLLoader();
 				loader.load( 'img/blitzball/male02.obj', 'img/blitzball/male02_dds.mtl', function ( object ) {
@@ -203,7 +244,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 					
 					playerObject=object;
 
-				}, onProgress, onError );
+				}, onProgress, onError );*/
 
 				//
 

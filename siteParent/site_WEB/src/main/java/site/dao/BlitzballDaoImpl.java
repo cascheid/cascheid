@@ -29,6 +29,7 @@ import site.blitzball.BlitzballPlayer;
 import site.blitzball.BlitzballPlayerStatistics;
 import site.blitzball.BlitzballTeam;
 import site.blitzball.BlitzballTech;
+import site.blitzball.BlitzballUtils;
 
 public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 
@@ -73,14 +74,14 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 								player.setCat(rs.getInt("CAT"));
 								player.setSalary(rs.getInt("SALARY"));
 								player.setContractLength(rs.getInt("CONTRACT_LENGTH"));
-								player.setTech1(rs.getInt("TECH1"));
-								player.setTech2(rs.getInt("TECH2"));
-								player.setTech3(rs.getInt("TECH3"));
-								player.setTech4(rs.getInt("TECH4"));
-								player.setTech5(rs.getInt("TECH5"));
-								player.setKeyTech1(rs.getInt("KEYTECH1"));
-								player.setKeyTech2(rs.getInt("KEYTECH2"));
-								player.setKeyTech3(rs.getInt("KEYTECH3"));
+								player.setTech1(BlitzballUtils.getTechFromTechID(rs.getInt("TECH1")));
+								player.setTech2(BlitzballUtils.getTechFromTechID(rs.getInt("TECH2")));
+								player.setTech3(BlitzballUtils.getTechFromTechID(rs.getInt("TECH3")));
+								player.setTech4(BlitzballUtils.getTechFromTechID(rs.getInt("TECH4")));
+								player.setTech5(BlitzballUtils.getTechFromTechID(rs.getInt("TECH5")));
+								player.setKeyTech1(BlitzballUtils.getTechFromTechID(rs.getInt("KEYTECH1")));
+								player.setKeyTech2(BlitzballUtils.getTechFromTechID(rs.getInt("KEYTECH2")));
+								player.setKeyTech3(BlitzballUtils.getTechFromTechID(rs.getInt("KEYTECH3")));
 								player.setLearnableTechs(jdbcTemplate.queryForList("SELECT TECH_ID FROM BB_PLAYER_TECHS WHERE GAME_ID=? AND PLAYER_ID=? AND LEARNED=FALSE", new Object[]{gameID, player.getPlayerID()}, Integer.class));
 								player.setLearnedTechs(jdbcTemplate.queryForList("SELECT TECH_ID FROM BB_PLAYER_TECHS WHERE GAME_ID=? AND PLAYER_ID=? AND LEARNED=TRUE", new Object[]{gameID, player.getPlayerID()}, Integer.class));
 								return player;
@@ -251,14 +252,14 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 						player.setCat(rs.getInt("CAT"));
 						player.setSalary(rs.getInt("SALARY"));
 						player.setContractLength(rs.getInt("CONTRACT_LENGTH"));
-						player.setTech1(rs.getInt("TECH1"));
-						player.setTech2(rs.getInt("TECH2"));
-						player.setTech3(rs.getInt("TECH3"));
-						player.setTech4(rs.getInt("TECH4"));
-						player.setTech5(rs.getInt("TECH5"));
-						player.setKeyTech1(rs.getInt("KEYTECH1"));
-						player.setKeyTech2(rs.getInt("KEYTECH2"));
-						player.setKeyTech3(rs.getInt("KEYTECH3"));
+						player.setTech1(BlitzballUtils.getTechFromTechID(rs.getInt("TECH1")));
+						player.setTech2(BlitzballUtils.getTechFromTechID(rs.getInt("TECH2")));
+						player.setTech3(BlitzballUtils.getTechFromTechID(rs.getInt("TECH3")));
+						player.setTech4(BlitzballUtils.getTechFromTechID(rs.getInt("TECH4")));
+						player.setTech5(BlitzballUtils.getTechFromTechID(rs.getInt("TECH5")));
+						player.setKeyTech1(BlitzballUtils.getTechFromTechID(rs.getInt("KEYTECH1")));
+						player.setKeyTech2(BlitzballUtils.getTechFromTechID(rs.getInt("KEYTECH2")));
+						player.setKeyTech3(BlitzballUtils.getTechFromTechID(rs.getInt("KEYTECH3")));
 						player.setLearnableTechs(jdbcTemplate.queryForList("SELECT TECH_ID FROM BB_PLAYER_TECHS WHERE GAME_ID=? AND PLAYER_ID=? AND LEARNED=FALSE", new Object[]{league.getGameID(), player.getPlayerID()}, Integer.class));
 						player.setLearnedTechs(jdbcTemplate.queryForList("SELECT TECH_ID FROM BB_PLAYER_TECHS WHERE GAME_ID=? AND PLAYER_ID=? AND LEARNED=TRUE", new Object[]{league.getGameID(), player.getPlayerID()}, Integer.class));
 						return player;

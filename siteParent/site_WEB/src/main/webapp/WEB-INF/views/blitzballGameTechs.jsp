@@ -608,9 +608,9 @@
 			var techsPerPage=(MAXCOLS*MAXROWS)-1;
 
 			document.getElementById('currHP').innerHTML=currPlayer.hp;
-			document.getElementById('keyTechs').innerHTML=techList[currPlayer.keyTech1-1].techName+'&nbsp&nbsp&nbsp&nbsp&nbsp'+techList[currPlayer.keyTech2-1].techName+'&nbsp&nbsp&nbsp&nbsp&nbsp'+techList[currPlayer.keyTech3-1].techName;
-			//document.getElementById('keyTech2').innerHTML=techList[currPlayer.keyTech2-1].techName;
-			//document.getElementById('keyTech3').innerHTML=techList[currPlayer.keyTech3-1].techName;
+			document.getElementById('keyTechs').innerHTML=techList[currPlayer.keyTech1.techID-1].techName+'&nbsp&nbsp&nbsp&nbsp&nbsp'+techList[currPlayer.keytech2.techID-1].techName+'&nbsp&nbsp&nbsp&nbsp&nbsp'+techList[currPlayer.keytech3.techID-1].techName;
+			//document.getElementById('keyTech2').innerHTML=techList[currPlayer.keytech2.techID-1].techName;
+			//document.getElementById('keyTech3').innerHTML=techList[currPlayer.keytech3.techID-1].techName;
 			
 			for (var i=1; i<=2*techsPerPage; i++){
 				//document.getElementById('learnable'+i).style.display='';
@@ -777,30 +777,30 @@
 					document.getElementById(currPrefix+'TechSlot3').style.visibility='';
 					document.getElementById(currPrefix+'TechSlot4').style.visibility='';
 					document.getElementById(currPrefix+'TechSlot5').style.visibility='';
-					if (playerInfo.tech1==null||playerInfo.tech1==0){
+					if (playerInfo.tech1==null||playerInfo.tech1.techID==0){
 						document.getElementById(currPrefix+'TechSlot1').innerHTML=emptyDashString;
 					} else {
-						document.getElementById(currPrefix+'TechSlot1').innerHTML=techList[playerInfo.tech1-1].techName;
+						document.getElementById(currPrefix+'TechSlot1').innerHTML=techList[playerInfo.tech1.techID-1].techName;
 					}
-					if (playerInfo.tech2==null||playerInfo.tech2==0){
+					if (playerInfo.tech2==null||playerInfo.tech2.techID==0){
 						document.getElementById(currPrefix+'TechSlot2').innerHTML=emptyDashString;
 					} else {
-						document.getElementById(currPrefix+'TechSlot2').innerHTML=techList[playerInfo.tech2-1].techName;
+						document.getElementById(currPrefix+'TechSlot2').innerHTML=techList[playerInfo.tech2.techID-1].techName;
 					}
-					if (playerInfo.tech3==null||playerInfo.tech3==0){
+					if (playerInfo.tech3==null||playerInfo.tech3.techID==0){
 						document.getElementById(currPrefix+'TechSlot3').innerHTML=emptyDashString;
 					} else {
-						document.getElementById(currPrefix+'TechSlot3').innerHTML=techList[playerInfo.tech3-1].techName;
+						document.getElementById(currPrefix+'TechSlot3').innerHTML=techList[playerInfo.tech3.techID-1].techName;
 					}
-					if (playerInfo.tech4==null||playerInfo.tech4==0){
+					if (playerInfo.tech4==null||playerInfo.tech4.techID==0){
 						document.getElementById(currPrefix+'TechSlot4').innerHTML=emptyDashString;
 					} else {
-						document.getElementById(currPrefix+'TechSlot4').innerHTML=techList[playerInfo.tech4-1].techName;
+						document.getElementById(currPrefix+'TechSlot4').innerHTML=techList[playerInfo.tech4.techID-1].techName;
 					}
-					if (playerInfo.tech5==null||playerInfo.tech5==0){
+					if (playerInfo.tech5==null||playerInfo.tech5.techID==0){
 						document.getElementById(currPrefix+'TechSlot5').innerHTML=emptyDashString;
 					} else {
-						document.getElementById(currPrefix+'TechSlot5').innerHTML=techList[playerInfo.tech5-1].techName;
+						document.getElementById(currPrefix+'TechSlot5').innerHTML=techList[playerInfo.tech5.techID-1].techName;
 					}
 				} else if (playerInfo.level>=20){
 					document.getElementById(currPrefix+'TechSlot1').style.visibility='';
@@ -808,25 +808,25 @@
 					document.getElementById(currPrefix+'TechSlot3').style.visibility='';
 					document.getElementById(currPrefix+'TechSlot4').style.visibility='';
 					document.getElementById(currPrefix+'TechSlot5').style.visibility='hidden';
-					if (playerInfo.tech1==null||playerInfo.tech1==0){
+					if (playerInfo.tech1==null||playerInfo.tech1.techID==0){
 						document.getElementById(currPrefix+'TechSlot1').innerHTML=emptyDashString;
 					} else {
-						document.getElementById(currPrefix+'TechSlot1').innerHTML=techList[playerInfo.tech1-1].techName;
+						document.getElementById(currPrefix+'TechSlot1').innerHTML=techList[playerInfo.tech1.techID-1].techName;
 					}
-					if (playerInfo.tech2==null||playerInfo.tech2==0){
+					if (playerInfo.tech2==null||playerInfo.tech2.techID==0){
 						document.getElementById(currPrefix+'TechSlot2').innerHTML=emptyDashString;
 					} else {
-						document.getElementById(currPrefix+'TechSlot2').innerHTML=techList[playerInfo.tech2-1].techName;
+						document.getElementById(currPrefix+'TechSlot2').innerHTML=techList[playerInfo.tech2.techID-1].techName;
 					}
-					if (playerInfo.tech3==null||playerInfo.tech3==0){
+					if (playerInfo.tech3==null||playerInfo.tech3.techID==0){
 						document.getElementById(currPrefix+'TechSlot3').innerHTML=emptyDashString;
 					} else {
-						document.getElementById(currPrefix+'TechSlot3').innerHTML=techList[playerInfo.tech3-1].techName;
+						document.getElementById(currPrefix+'TechSlot3').innerHTML=techList[playerInfo.tech3.techID-1].techName;
 					}
-					if (playerInfo.tech4==null||playerInfo.tech4==0){
+					if (playerInfo.tech4==null||playerInfo.tech4.techID==0){
 						document.getElementById(currPrefix+'TechSlot4').innerHTML=emptyDashString;
 					} else {
-						document.getElementById(currPrefix+'TechSlot4').innerHTML=techList[playerInfo.tech4-1].techName;
+						document.getElementById(currPrefix+'TechSlot4').innerHTML=techList[playerInfo.tech4.techID-1].techName;
 					}
 				} else if (playerInfo.level>=12){
 					document.getElementById(currPrefix+'TechSlot1').style.visibility='';
@@ -834,20 +834,20 @@
 					document.getElementById(currPrefix+'TechSlot3').style.visibility='';
 					document.getElementById(currPrefix+'TechSlot4').style.visibility='hidden';
 					document.getElementById(currPrefix+'TechSlot5').style.visibility='hidden';
-					if (playerInfo.tech1==null||playerInfo.tech1==0){
+					if (playerInfo.tech1==null||playerInfo.tech1.techID==0){
 						document.getElementById(currPrefix+'TechSlot1').innerHTML=emptyDashString;
 					} else {
-						document.getElementById(currPrefix+'TechSlot1').innerHTML=techList[playerInfo.tech1-1].techName;
+						document.getElementById(currPrefix+'TechSlot1').innerHTML=techList[playerInfo.tech1.techID-1].techName;
 					}
-					if (playerInfo.tech2==null||playerInfo.tech2==0){
+					if (playerInfo.tech2==null||playerInfo.tech2.techID==0){
 						document.getElementById(currPrefix+'TechSlot2').innerHTML=emptyDashString;
 					} else {
-						document.getElementById(currPrefix+'TechSlot2').innerHTML=techList[playerInfo.tech2-1].techName;
+						document.getElementById(currPrefix+'TechSlot2').innerHTML=techList[playerInfo.tech2.techID-1].techName;
 					}
-					if (playerInfo.tech3==null||playerInfo.tech3==0){
+					if (playerInfo.tech3==null||playerInfo.tech3.techID==0){
 						document.getElementById(currPrefix+'TechSlot3').innerHTML=emptyDashString;
 					} else {
-						document.getElementById(currPrefix+'TechSlot3').innerHTML=techList[playerInfo.tech3-1].techName;
+						document.getElementById(currPrefix+'TechSlot3').innerHTML=techList[playerInfo.tech3.techID-1].techName;
 					}
 				} else if (playerInfo.level>=7){
 					document.getElementById(currPrefix+'TechSlot1').style.visibility='';
@@ -855,15 +855,15 @@
 					document.getElementById(currPrefix+'TechSlot3').style.visibility='hidden';
 					document.getElementById(currPrefix+'TechSlot4').style.visibility='hidden';
 					document.getElementById(currPrefix+'TechSlot5').style.visibility='hidden';
-					if (playerInfo.tech1==null||playerInfo.tech1==0){
+					if (playerInfo.tech1==null||playerInfo.tech1.techID==0){
 						document.getElementById(currPrefix+'TechSlot1').innerHTML=emptyDashString;
 					} else {
-						document.getElementById(currPrefix+'TechSlot1').innerHTML=techList[playerInfo.tech1-1].techName;
+						document.getElementById(currPrefix+'TechSlot1').innerHTML=techList[playerInfo.tech1.techID-1].techName;
 					}
-					if (playerInfo.tech2==null||playerInfo.tech2==0){
+					if (playerInfo.tech2==null||playerInfo.tech2.techID==0){
 						document.getElementById(currPrefix+'TechSlot2').innerHTML=emptyDashString;
 					} else {
-						document.getElementById(currPrefix+'TechSlot2').innerHTML=techList[playerInfo.tech2-1].techName;
+						document.getElementById(currPrefix+'TechSlot2').innerHTML=techList[playerInfo.tech2.techID-1].techName;
 					}
 				} else if (playerInfo.level>=3){
 					document.getElementById(currPrefix+'TechSlot1').style.visibility='';
@@ -871,10 +871,10 @@
 					document.getElementById(currPrefix+'TechSlot3').style.visibility='hidden';
 					document.getElementById(currPrefix+'TechSlot4').style.visibility='hidden';
 					document.getElementById(currPrefix+'TechSlot5').style.visibility='hidden';
-					if (playerInfo.tech1==null||playerInfo.tech1==0){
+					if (playerInfo.tech1==null||playerInfo.tech1.techID==0){
 						document.getElementById(currPrefix+'TechSlot1').innerHTML=emptyDashString;
 					} else {
-						document.getElementById(currPrefix+'TechSlot1').innerHTML=techList[playerInfo.tech1-1].techName;
+						document.getElementById(currPrefix+'TechSlot1').innerHTML=techList[playerInfo.tech1.techID-1].techName;
 					}
 				} else {
 					document.getElementById(currPrefix+'TechSlot1').style.visibility='hidden';

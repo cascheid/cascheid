@@ -20,7 +20,6 @@ import site.blitzball.BlitzballInfo;
 import site.blitzball.BlitzballLeague;
 import site.blitzball.BlitzballPlayerStatistics;
 import site.blitzball.BlitzballTeam;
-import site.blitzball.BlitzballTech;
 import site.blitzball.BlitzballUtils;
 import site.blitzball.TeamName;
 import site.identity.Identity;
@@ -34,7 +33,6 @@ public class BlitzballController {
 	BlitzballLeague activeLeague=null;
 	String activeType=null;
 	BlitzballTeam activeOpponent=null;
-	List<BlitzballTech> techList;
 
 	@RequestMapping("/blitzball")
 	public ModelAndView getBlizballMenuBackground(@CookieValue(value = "identifier", defaultValue = "0") Long identifier){
@@ -125,13 +123,10 @@ public class BlitzballController {
 			return new ModelAndView("timeout");
 		}
 		ModelAndView mv = new ModelAndView("blitzballLeagueStatistics");
-		if (techList==null){
-			techList=BlitzballUtils.getTechList();//TODO static in blitzballutils? singleton?
-		}
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
-			mv.addObject("techList", objectMapper.writeValueAsString(techList));
+			mv.addObject("techList", objectMapper.writeValueAsString(BlitzballUtils.getTechList()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -217,16 +212,13 @@ public class BlitzballController {
 			return new ModelAndView("timeout");
 		}
 		ModelAndView mv = new ModelAndView("blitzballGameTechs");
-		if (techList==null){
-			techList=BlitzballUtils.getTechList();//TODO static in blitzballutils? singleton?
-		}
 		
 		blitzballInfo.setTeam(BlitzballUtils.getUpdatedRoster(blitzballInfo.getTeam(), blitzballGameRoster));
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
 			mv.addObject("myTeam", objectMapper.writeValueAsString(blitzballInfo.getTeam()));
-			mv.addObject("techList", objectMapper.writeValueAsString(techList));
+			mv.addObject("techList", objectMapper.writeValueAsString(BlitzballUtils.getTechList()));
 			mv.addObject("blitzballGameTechs", new BlitzballGameTechs());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -247,7 +239,7 @@ public class BlitzballController {
 		try {
 			mv.addObject("myTeam", objectMapper.writeValueAsString(blitzballInfo.getTeam()));
 			mv.addObject("oppTeam", objectMapper.writeValueAsString(activeOpponent));
-			mv.addObject("techList", objectMapper.writeValueAsString(techList));
+			mv.addObject("techList", objectMapper.writeValueAsString(BlitzballUtils.getTechList()));
 			mv.addObject("blitzballGameMarks", new BlitzballGameMarks());
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -23,14 +23,14 @@ public class BlitzballPlayer implements java.io.Serializable {
 	private Integer contractLength;
 	private List<Integer> learnedTechs;
 	private List<Integer> learnableTechs;
-	private Integer tech1;
-	private Integer tech2;
-	private Integer tech3;
-	private Integer tech4;
-	private Integer tech5;
-	private Integer keyTech1;
-	private Integer keyTech2;
-	private Integer keyTech3;
+	private BlitzballTech tech1;
+	private BlitzballTech tech2;
+	private BlitzballTech tech3;
+	private BlitzballTech tech4;
+	private BlitzballTech tech5;
+	private BlitzballTech keyTech1;
+	private BlitzballTech keyTech2;
+	private BlitzballTech keyTech3;
 	
 	public BlitzballPlayer(){}
 	
@@ -136,52 +136,52 @@ public class BlitzballPlayer implements java.io.Serializable {
 	public void setLearnableTechs(List<Integer> learnableTechs) {
 		this.learnableTechs = learnableTechs;
 	}
-	public Integer getTech1() {
+	public BlitzballTech getTech1() {
 		return tech1;
 	}
-	public void setTech1(Integer tech1) {
+	public void setTech1(BlitzballTech tech1) {
 		this.tech1 = tech1;
 	}
-	public Integer getTech2() {
+	public BlitzballTech getTech2() {
 		return tech2;
 	}
-	public void setTech2(Integer tech2) {
+	public void setTech2(BlitzballTech tech2) {
 		this.tech2 = tech2;
 	}
-	public Integer getTech3() {
+	public BlitzballTech getTech3() {
 		return tech3;
 	}
-	public void setTech3(Integer tech3) {
+	public void setTech3(BlitzballTech tech3) {
 		this.tech3 = tech3;
 	}
-	public Integer getTech4() {
+	public BlitzballTech getTech4() {
 		return tech4;
 	}
-	public void setTech4(Integer tech4) {
+	public void setTech4(BlitzballTech tech4) {
 		this.tech4 = tech4;
 	}
-	public Integer getTech5() {
+	public BlitzballTech getTech5() {
 		return tech5;
 	}
-	public void setTech5(Integer tech5) {
+	public void setTech5(BlitzballTech tech5) {
 		this.tech5 = tech5;
 	}
-	public Integer getKeyTech1() {
+	public BlitzballTech getKeyTech1() {
 		return keyTech1;
 	}
-	public void setKeyTech1(Integer keyTech1) {
+	public void setKeyTech1(BlitzballTech keyTech1) {
 		this.keyTech1 = keyTech1;
 	}
-	public Integer getKeyTech2() {
+	public BlitzballTech getKeyTech2() {
 		return keyTech2;
 	}
-	public void setKeyTech2(Integer keyTech2) {
+	public void setKeyTech2(BlitzballTech keyTech2) {
 		this.keyTech2 = keyTech2;
 	}
-	public Integer getKeyTech3() {
+	public BlitzballTech getKeyTech3() {
 		return keyTech3;
 	}
-	public void setKeyTech3(Integer keyTech3) {
+	public void setKeyTech3(BlitzballTech keyTech3) {
 		this.keyTech3 = keyTech3;
 	}
 }

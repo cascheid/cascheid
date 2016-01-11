@@ -11,6 +11,7 @@ import site.dao.BlitzballDao;
 import site.dao.BlitzballDaoImpl;
 
 public class BlitzballUtils {
+	private static List<BlitzballTech> techList;
 
 	public static BlitzballInfo getBlitsballInfo(Long identifier){
 		BlitzballDao dao = new BlitzballDaoImpl();
@@ -282,43 +283,58 @@ public class BlitzballUtils {
 		return adjustedTeam;
 	}
 	
+	public static BlitzballTech getTechFromTechID(Integer techID){
+		if (techList==null){
+			getTechList();
+		}
+		for (BlitzballTech tech : techList){
+			if (tech.getTechID()==techID){
+				return tech;
+			}
+		}
+		return null;
+	}
+	
 	public static BlitzballTeam getUpdatedTeamTechs(BlitzballTeam team, BlitzballGameTechs techs){
-		team.getLeftWing().setTech1(techs.getLeftWingTech1());
-		team.getLeftWing().setTech2(techs.getLeftWingTech2());
-		team.getLeftWing().setTech3(techs.getLeftWingTech3());
-		team.getLeftWing().setTech4(techs.getLeftWingTech4());
-		team.getLeftWing().setTech5(techs.getLeftWingTech5());
-		team.getRightWing().setTech1(techs.getRightWingTech1());
-		team.getRightWing().setTech2(techs.getRightWingTech2());
-		team.getRightWing().setTech3(techs.getRightWingTech3());
-		team.getRightWing().setTech4(techs.getRightWingTech4());
-		team.getRightWing().setTech5(techs.getRightWingTech5());
-		team.getMidfielder().setTech1(techs.getMidfielderTech1());
-		team.getMidfielder().setTech2(techs.getMidfielderTech2());
-		team.getMidfielder().setTech3(techs.getMidfielderTech3());
-		team.getMidfielder().setTech4(techs.getMidfielderTech4());
-		team.getMidfielder().setTech5(techs.getMidfielderTech5());
-		team.getLeftBack().setTech1(techs.getLeftBackTech1());
-		team.getLeftBack().setTech2(techs.getLeftBackTech2());
-		team.getLeftBack().setTech3(techs.getLeftBackTech3());
-		team.getLeftBack().setTech4(techs.getLeftBackTech4());
-		team.getLeftBack().setTech5(techs.getLeftBackTech5());
-		team.getRightBack().setTech1(techs.getRightBackTech1());
-		team.getRightBack().setTech2(techs.getRightBackTech2());
-		team.getRightBack().setTech3(techs.getRightBackTech3());
-		team.getRightBack().setTech4(techs.getRightBackTech4());
-		team.getRightBack().setTech5(techs.getRightBackTech5());
-		team.getKeeper().setTech1(techs.getKeeperTech1());
-		team.getKeeper().setTech2(techs.getKeeperTech2());
-		team.getKeeper().setTech3(techs.getKeeperTech3());
-		team.getKeeper().setTech4(techs.getKeeperTech4());
-		team.getKeeper().setTech5(techs.getKeeperTech5());
+		team.getLeftWing().setTech1(getTechFromTechID(techs.getLeftWingTech1()));
+		team.getLeftWing().setTech2(getTechFromTechID(techs.getLeftWingTech2()));
+		team.getLeftWing().setTech3(getTechFromTechID(techs.getLeftWingTech3()));
+		team.getLeftWing().setTech4(getTechFromTechID(techs.getLeftWingTech4()));
+		team.getLeftWing().setTech5(getTechFromTechID(techs.getLeftWingTech5()));
+		team.getRightWing().setTech1(getTechFromTechID(techs.getRightWingTech1()));
+		team.getRightWing().setTech2(getTechFromTechID(techs.getRightWingTech2()));
+		team.getRightWing().setTech3(getTechFromTechID(techs.getRightWingTech3()));
+		team.getRightWing().setTech4(getTechFromTechID(techs.getRightWingTech4()));
+		team.getRightWing().setTech5(getTechFromTechID(techs.getRightWingTech5()));
+		team.getMidfielder().setTech1(getTechFromTechID(techs.getMidfielderTech1()));
+		team.getMidfielder().setTech2(getTechFromTechID(techs.getMidfielderTech2()));
+		team.getMidfielder().setTech3(getTechFromTechID(techs.getMidfielderTech3()));
+		team.getMidfielder().setTech4(getTechFromTechID(techs.getMidfielderTech4()));
+		team.getMidfielder().setTech5(getTechFromTechID(techs.getMidfielderTech5()));
+		team.getLeftBack().setTech1(getTechFromTechID(techs.getLeftBackTech1()));
+		team.getLeftBack().setTech2(getTechFromTechID(techs.getLeftBackTech2()));
+		team.getLeftBack().setTech3(getTechFromTechID(techs.getLeftBackTech3()));
+		team.getLeftBack().setTech4(getTechFromTechID(techs.getLeftBackTech4()));
+		team.getLeftBack().setTech5(getTechFromTechID(techs.getLeftBackTech5()));
+		team.getRightBack().setTech1(getTechFromTechID(techs.getRightBackTech1()));
+		team.getRightBack().setTech2(getTechFromTechID(techs.getRightBackTech2()));
+		team.getRightBack().setTech3(getTechFromTechID(techs.getRightBackTech3()));
+		team.getRightBack().setTech4(getTechFromTechID(techs.getRightBackTech4()));
+		team.getRightBack().setTech5(getTechFromTechID(techs.getRightBackTech5()));
+		team.getKeeper().setTech1(getTechFromTechID(techs.getKeeperTech1()));
+		team.getKeeper().setTech2(getTechFromTechID(techs.getKeeperTech2()));
+		team.getKeeper().setTech3(getTechFromTechID(techs.getKeeperTech3()));
+		team.getKeeper().setTech4(getTechFromTechID(techs.getKeeperTech4()));
+		team.getKeeper().setTech5(getTechFromTechID(techs.getKeeperTech5()));
 		return team;
 	}
 	
 	public static List<BlitzballTech> getTechList(){
-		BlitzballDao dao = new BlitzballDaoImpl();
-		return dao.getFullBlitzballTechList();
+		if (techList==null){
+			BlitzballDao dao = new BlitzballDaoImpl();
+			techList = dao.getFullBlitzballTechList();
+		}
+		return techList;
 	}
 	
 	public static BlitzballPlayer getBlitzballPlayer(BlitzballInfo info, Integer playerID){

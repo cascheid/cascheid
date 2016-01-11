@@ -37,6 +37,10 @@
 		<script src="js/DDSLoader.js"></script>
 		<script src="js/MTLLoader.js"></script>
 		<script src="js/OBJMTLLoader.js"></script>
+		<script src="js/BBAnimation.js"></script>
+		<script src="js/AnimationHandler.js"></script>
+		<script src="js/KeyFrameAnimation.js"></script>
+		<script src="js/ColladaLoader.js"></script>
 		<script src="js/blitzballMenu.js?version=0.1"></script>
 
 		<iframe id="blitzMenuFrame" name="blitzMenuFrame" frameborder=0 height="100%" width="100%" src="blitzballMenu" allowtransparency="true" onload="focusFrame()"></iframe>

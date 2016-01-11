@@ -30,6 +30,8 @@ http://www.springframework.org/schema/websocket/spring-websocket-4.0.xsd">
 	<mvc:resources mapping="/js/*" location="/WEB-INF/js/" />
 	<mvc:resources mapping="/js/shaders/*" location="/WEB-INF/js/shaders/" />
 	<mvc:resources mapping="/js/postprocessing/*" location="/WEB-INF/js/postprocessing/" />
+	<mvc:resources mapping="/obj/*" location="/WEB-INF/obj/" />
+	<mvc:resources mapping="/obj/stormtrooper/*" location="/WEB-INF/obj/stormtrooper/" />
 	<mvc:resources mapping="/img/*" location="/WEB-INF/img/" />
 	<mvc:resources mapping="/img/cars/*" location="/WEB-INF/img/cars/" />
 	<mvc:resources mapping="/img/misc/*" location="/WEB-INF/img/misc/" />

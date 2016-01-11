@@ -12,10 +12,10 @@
   </asset>
   <library_images>
     <image id="Stormtrooper_D_tga" name="Stormtrooper_D_tga">
-      <init_from>Stormtrooper_D.tga</init_from>
+      <init_from>Stormtrooper_D.jpg</init_from>
     </image>
     <image id="Stormtrooper_N_tga" name="Stormtrooper_N_tga">
-      <init_from>Stormtrooper_N.tga</init_from>
+      <init_from>Stormtrooper_N.jpg</init_from>
     </image>
   </library_images>
   <library_effects>

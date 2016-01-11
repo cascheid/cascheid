@@ -1,7 +1,9 @@
 
-THREE.BBPlayer = function (player) {
+THREE.BBPlayer = function (player, startingPos, is3d) {
 
 	var scope = this;
+	var sqrt2=Math.sqrt(2);
+	var origin = new THREE.Vector3(0.1,0.1,0.1);
 
 	// car geometry manual parameters
 
@@ -23,7 +25,7 @@ THREE.BBPlayer = function (player) {
 	
 	this.level=player.level;
 	this.name=player.name;
-	//this.speed = player.spd;
+	this.speed = player.speed;
 	this.endurance=player.endurance;
 	this.hp=player.hp;
 	this.attack=player.attack;
@@ -31,10 +33,35 @@ THREE.BBPlayer = function (player) {
 	this.shot=player.shot;
 	this.block=player.block;
 	this.cat=player.cat;
+	this.techs=[];
+	if (player.tech1!=null){
+		this.techs.push(player.tech1);
+	}
+	if (player.tech2!=null){
+		this.techs.push(player.tech2);
+	}
+	if (player.tech3!=null){
+		this.techs.push(player.tech3);
+	}
+	if (player.tech4!=null){
+		this.techs.push(player.tech4);
+	}
+	if (player.tech5!=null){
+		this.techs.push(player.tech5);
+	}
+	this.restingPosition = startingPos.clone();//Vector3
+	this.currentPosition = startingPos;
+	this.currentRotation=0;
+	if (startingPos.x>0){
+		this.currentRotation=Math.PI;
+	}
+	this.has3DModel=is3d;
+	this.hasBall=false;
+	this.root=null;
 
 	// car "feel" parameters
 
-	this.MAX_SPEED = 2200;
+	/*this.MAX_SPEED = 2200;
 	this.MAX_REVERSE_SPEED = - 1500;
 
 	this.MAX_WHEEL_ROTATION = 0.6;
@@ -58,34 +85,37 @@ THREE.BBPlayer = function (player) {
 	this.acceleration = 0;
 
 	this.wheelOrientation = 0;
-	this.carOrientation = 0;
+	this.carOrientation = 0;*/
 
 	// car rigging
+	if (this.has3DModel){
+		//this.root = new THREE.Object3D();
+		//this.root.position=this.currentPosition;
 
-	this.root = new THREE.Object3D();
+		this.frontLeftWheelRoot = new THREE.Object3D();
+		this.frontRightWheelRoot = new THREE.Object3D();
 
-	this.frontLeftWheelRoot = new THREE.Object3D();
-	this.frontRightWheelRoot = new THREE.Object3D();
+		this.bodyMesh = null;
 
-	this.bodyMesh = null;
+		this.frontLeftWheelMesh = null;
+		this.frontRightWheelMesh = null;
 
-	this.frontLeftWheelMesh = null;
-	this.frontRightWheelMesh = null;
+		this.backLeftWheelMesh = null;
+		this.backRightWheelMesh = null;
 
-	this.backLeftWheelMesh = null;
-	this.backRightWheelMesh = null;
+		this.bodyGeometry = null;
+		this.wheelGeometry = null;
 
-	this.bodyGeometry = null;
-	this.wheelGeometry = null;
-
-	this.bodyMaterials = null;
-	this.wheelMaterials = null;
+		this.bodyMaterials = null;
+		this.wheelMaterials = null;
+		
+		this.meshes = [];
+	}
 
 	// internal helper variables
 
 	this.loaded = false;
 
-	this.meshes = [];
 
 	// API
 
@@ -111,6 +141,32 @@ THREE.BBPlayer = function (player) {
 
 	};
 
+	var myAnimation;
+	this.loadPlayer = function (callback){
+		scope.callback=callback;
+		var loader = new THREE.ColladaLoader();
+		loader.options.convertUpAxis = true;
+		loader.load( 'obj/stormtrooper/stormtrooper.dae', function ( collada ) {
+
+			scope.root = collada.scene;
+			scope.root.position = scope.currentPosition;
+			var trooper = scope.root.children[1];
+			trooper.children[0].material.reflectivity=0;
+			trooper.children[0].material.shininess=0;
+			trooper.children[0].material.side=THREE.DoubleSide;
+			myAnimation= new THREE.BBAnimation( trooper.children[0], trooper.children[0].geometry.animation );
+			//myAnimation.play();
+
+			scope.root.scale.x = scope.root.scale.y = scope.root.scale.z = 10;
+			scope.root.updateMatrix();
+
+			//scene.add( dae );
+
+			if ( scope.callback ) {
+				scope.callback();
+			}
+		} );
+	}
 	this.loadPartsJSON = function ( bodyURL, wheelURL ) {
 
 		var loader = new THREE.JSONLoader();
@@ -144,6 +200,54 @@ THREE.BBPlayer = function (player) {
 		} );
 
 	};
+	
+	this.updatePlayer = function(delta, controls){
+		var trajectory;
+		if (this.hasBall){
+			if (controls.moveForward&&!controls.moveBackward){
+				if (controls.moveLeft&&!controls.moveRight){
+					trajectory=new THREE.Vector3(-50*sqrt2*this.speed*delta, 0, 50*sqrt2*this.speed*delta);
+				} else if (controls.moveRight&&!controls.moveLeft){
+					trajectory=new THREE.Vector3(50*sqrt2*this.speed*delta, 0, 50*sqrt2*this.speed*delta);
+				} else {
+					trajectory=new THREE.Vector3(0, 0, 50*this.speed*delta);
+				}
+			} else if (controls.moveBackward&&!controls.moveForward){
+				if (controls.moveLeft&&!controls.moveRight){
+					trajectory=new THREE.Vector3(-50*sqrt2*this.speed*delta, 0, -50*sqrt2*this.speed*delta);
+				} else if (controls.moveRight&&!controls.moveLeft){
+					trajectory=new THREE.Vector3(50*sqrt2*this.speed*delta, 0, -50*sqrt2*this.speed*delta);
+				} else {
+					trajectory=new THREE.Vector3(0, 0, -50*this.speed*delta);
+				}
+			} else if (controls.moveLeft&&!controls.moveRight){
+				trajectory=new THREE.Vector3(-50*this.speed*delta, 0, 0);
+			} else if (controls.moveRight&&!controls.moveLeft){
+				trajectory=new THREE.Vector3(50*this.speed*delta, 0, 0);
+			}
+		} else {
+			if (this.restingPosition!=this.currentPosition){
+				trajectory=this.restingPosition.clone().sub(this.currentPosition);
+			}
+		}
+		if (trajectory!=null){
+			var maxMove=50*this.speed*delta;
+			var lengthLeft=trajectory.length();
+			if (maxMove>=lengthLeft){
+				this.currentPosition.addVectors(this.currentPosition, trajectory);
+			} else {
+				var scale = maxMove/lengthLeft;
+				var mv = trajectory.multiplyScalar(scale);
+				this.currentPosition.addVectors(this.currentPosition, mv);
+			}
+			var newRot = Math.atan2(trajectory.z, trajectory.x);
+			this.currentRotation=newRot;
+			if (this.loaded){
+				this.root.lookAt(this.currentPosition);
+				this.root.position=this.currentPosition;
+			}
+		}
+	}
 
 	this.updateCarModel = function ( delta, controls ) {
 

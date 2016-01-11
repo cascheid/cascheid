@@ -116,7 +116,6 @@
 		<script>
 		var menuSelection=1;
 		var MAXITEMS=5;
-		document.getElementById('menu1').focus();
 		document.body.onkeydown = function(e){
 		    onKeyDown(e);
 		};
@@ -175,6 +174,7 @@
 		}
 
 		setTimeout(function(){
+			document.getElementById('menu1').focus();
 			document.getElementById('blitzMenu').style.display='inline';
 			document.getElementById('infoDiv').style.display='inline';
 			}, 2000);

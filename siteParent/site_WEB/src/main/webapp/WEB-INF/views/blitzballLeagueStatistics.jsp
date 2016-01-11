@@ -671,7 +671,7 @@
 			var numTechs=64;
 
 			document.getElementById('currHP').innerHTML=currPlayer.hp;
-			document.getElementById('keyTechs').innerHTML=techList[currPlayer.keyTech1-1].techName+'&nbsp&nbsp&nbsp&nbsp&nbsp'+techList[currPlayer.keyTech2-1].techName+'&nbsp&nbsp&nbsp&nbsp&nbsp'+techList[currPlayer.keyTech3-1].techName;
+			document.getElementById('keyTechs').innerHTML=techList[currPlayer.keyTech1.techID-1].techName+'&nbsp&nbsp&nbsp&nbsp&nbsp'+techList[currPlayer.keyTech2.techID-1].techName+'&nbsp&nbsp&nbsp&nbsp&nbsp'+techList[currPlayer.keyTech3.techID-1].techName;
 			
 			for (var i=1; i<=numTechs; i++){
 				document.getElementById('tech'+i).innerHTML='&nbsp';

@@ -1,3 +1,5 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -36,6 +38,7 @@
 		<script src="js/Animation.js"></script>
 		<script src="js/AnimationHandler.js"></script>
 		<script src="js/KeyFrameAnimation.js"></script>
+		<script src="js/TGALoader.js"></script>
 
 		<script src="js/ColladaLoader.js?version=1.00"></script>
 
@@ -58,7 +61,12 @@
 
 				dae = collada.scene;
 				var trooper = dae.children[1];
-				var path = "img/blitzball/";
+				trooper.children[0].material.reflectivity=0;
+				trooper.children[0].material.shininess=0;
+				trooper.children[0].material.side=THREE.DoubleSide;
+				//trooper.children[0].material.combine=THREE.MixOperation;
+				//trooper.children[0].material.refractionRatio=0;
+				/*var path = "img/blitzball/";
 				var format = '.jpg';
 				var urls = [
 						path + 'px' + format, path + 'nx' + format,
@@ -76,7 +84,7 @@
 				trooper.children[0].combine=THREE.MixOperation;
 				//trooper.children[0].material = new THREE.MeshPhongMaterial( { map: trooper.children[0].material.map } );
 				var animation = new THREE.Animation( trooper.children[0], trooper.children[0].geometry.animation );
-						animation.play();
+						animation.play();*/
 
 				/*dae.traverse( function ( child ) {
 
@@ -131,22 +139,22 @@
 
 				scene.add( dae );
 
-				particleLight = new THREE.Mesh( new THREE.SphereGeometry( 4, 8, 8 ), new THREE.MeshBasicMaterial( { color: 0xffffff } ) );
-				scene.add( particleLight );
+				//particleLight = new THREE.Mesh( new THREE.SphereGeometry( 4, 8, 8 ), new THREE.MeshBasicMaterial( { color: 0xffffff } ) );
+				//scene.add( particleLight );
 
 				// Lights
 
 				scene.add( new THREE.AmbientLight( 0xcccccc ) );
 
-				var directionalLight = new THREE.DirectionalLight(/*Math.random() * 0xffffff*/0xeeeeee );
-				directionalLight.position.x = Math.random() - 0.5;
-				directionalLight.position.y = Math.random() - 0.5;
-				directionalLight.position.z = Math.random() - 0.5;
-				directionalLight.position.normalize();
-				scene.add( directionalLight );
+				//var directionalLight = new THREE.DirectionalLight(/*Math.random() * 0xffffff*/0xeeeeee );
+				//directionalLight.position.x = Math.random() - 0.5;
+				//directionalLight.position.y = Math.random() - 0.5;
+				//directionalLight.position.z = Math.random() - 0.5;
+				//directionalLight.position.normalize();
+				//scene.add( directionalLight );
 
-				var pointLight = new THREE.PointLight( 0xffffff, 4 );
-				particleLight.add( pointLight );
+				//var pointLight = new THREE.PointLight( 0xffffff, 4 );
+				//particleLight.add( pointLight );
 
 				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
@@ -196,11 +204,11 @@
 
 				camera.lookAt( scene.position );
 
-				particleLight.position.x = Math.sin( timer * 4 ) * 3009;
-				particleLight.position.y = Math.cos( timer * 5 ) * 4000;
-				particleLight.position.z = Math.cos( timer * 4 ) * 3009;
+				//particleLight.position.x = Math.sin( timer * 4 ) * 3009;
+				//particleLight.position.y = Math.cos( timer * 5 ) * 4000;
+				//particleLight.position.z = Math.cos( timer * 4 ) * 3009;
 
-				THREE.AnimationHandler.update( clock.getDelta() );
+				//THREE.AnimationHandler.update( clock.getDelta()/15 );
 
 				renderer.render( scene, camera );
 
