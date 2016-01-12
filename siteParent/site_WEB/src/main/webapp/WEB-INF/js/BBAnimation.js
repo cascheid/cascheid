@@ -4,7 +4,7 @@
  * @author alteredq / http://alteredqualia.com/
  */
 
-THREE.BBAnimation = function ( root, data ) {
+THREE.BBAnimation = function ( root, data, playerSpeed ) {
 
 	this.root = root;
 	this.data = THREE.AnimationHandler.init( data );
@@ -16,6 +16,7 @@ THREE.BBAnimation = function ( root, data ) {
 	this.isPlaying = false;
 	this.loop = true;
 	this.weight = 0;
+	this.playerSpeed=playerSpeed;
 
 	this.interpolationType = THREE.AnimationHandler.LINEAR;
 	
@@ -38,6 +39,20 @@ THREE.BBAnimation.prototype = {
 		this.weight = 1;
 		this.isPlaying=true;
 		this.animPlaying="tread";
+		this.loop=true;
+
+		this.reset();
+
+		THREE.AnimationHandler.play( this );
+	},
+	
+	playSwimAnimation: function(){
+		this.currentTime = 0;
+		this.beginTime = 0;
+		this.endTime=0.135;//TODO find right value
+		this.weight = 1;
+		this.isPlaying=true;
+		this.animPlaying="swim";
 		this.loop=true;
 
 		this.reset();
@@ -213,8 +228,12 @@ THREE.BBAnimation.prototype = {
 		return function ( delta ) {
 
 			if ( this.isPlaying === false ) return;
-
-			this.currentTime += delta * this.timeScale;
+			
+			if (this.animPlaying=="swim"){
+				this.currentTime += delta * this.timeScale * (this.playerSpeed/60);
+			} else {
+				this.currentTime += delta * this.timeScale;
+			}
 
 			if ( this.weight === 0 )
 				return;
@@ -242,6 +261,12 @@ THREE.BBAnimation.prototype = {
 
 				}
 
+			}
+			
+			if (this.animPlaying=='tread'){
+				this.root.position.y=0.1*Math.sin(2*Math.PI*(this.currentTime-this.beginTime)/(this.endTime-this.beginTime));
+			} else {
+				this.root.position.y=0;
 			}
 
 			for ( var h = 0, hl = this.hierarchy.length; h < hl; h ++ ) {

@@ -38,9 +38,9 @@
 		<script src="js/BBAnimation.js"></script>
 		<script src="js/AnimationHandler.js"></script>
 		<script src="js/KeyFrameAnimation.js"></script>
-		<script src="js/TGALoader.js"></script>
 
 		<script src="js/ColladaLoader.js?version=1.00"></script>
+		<script src="js/BBPlayer2.js?version=1.00"></script>
 
 		<script src="js/Detector.js"></script>
 		<script src="js/stats.min.js"></script>
@@ -55,7 +55,7 @@
 			var particleLight;
 			var dae;
 			var cameraTarget = new THREE.Vector3(0,0,0);
-			var controls = {
+			var cameraControls = {
 					moveForward: false,
 					moveBackward: false,
 					moveLeft: false,
@@ -71,63 +71,74 @@
 				moveRight:false
 			}
 
-			var loader = new THREE.ColladaLoader();
-			loader.options.convertUpAxis = true;
-			loader.load( 'obj/stormtrooper/stormtrooper.dae', function ( collada ) {
+			var sphereRadius=100;
 
-				dae = collada.scene;
-				var trooper = dae.children[1];
-				trooper.children[0].material.reflectivity=0;
-				trooper.children[0].material.shininess=0;
-				trooper.children[0].material.side=THREE.DoubleSide;
-				//trooper.children[0].material.combine=THREE.MixOperation;
-				//trooper.children[0].material.refractionRatio=0;
-				/*var path = "img/blitzball/";
-				var format = '.jpg';
-				var urls = [
-						path + 'px' + format, path + 'nx' + format,
-						path + 'py' + format, path + 'ny' + format,
-						path + 'pz' + format, path + 'nz' + format
-					];
-				var reflectionCube = THREE.ImageUtils.loadTextureCube( urls );
-				//var cubeMaterial3 = new THREE.MeshPhongMaterial( { color: 0x000000, specular:0xaa0000, envMap: reflectionCube, combine: THREE.MixOperation, reflectivity: 0.25 } );
-				trooper.children[0].material.envMap =reflectionCube;//cubeMaterial3;
-				//trooper.children[0].material.color.setHex(0xffffff);// =THREE.Color(0x000000);
-				//trooper.children[0].material.specular.setHex(0xffffff);//=THREE.Color(0xaa0000);
-				trooper.children[0].material.emissive.setHex(0xffffff);//=THREE.Color(0xaa0000);
-				trooper.children[0].material.reflectivity=0.75;
-				//trooper.children[0].material.refractionRatio=0;
-				trooper.children[0].combine=THREE.MixOperation;
-				//trooper.children[0].material = new THREE.MeshPhongMaterial( { map: trooper.children[0].material.map } );*/
-				var animation = new THREE.BBAnimation( trooper.children[0], trooper.children[0].geometry.animation );
-				animation.playTreadAnimation();
+			var myTeam = [];
+			var myTeamLW = new THREE.BBPlayer(null, new THREE.Vector3(20, 0, 50), true);
+			myTeamLW.loadPlayer(function(){addPlayer(myTeamLW);});
+			myTeam.push(myTeamLW);
+			var myTeamRW = new THREE.BBPlayer(null, new THREE.Vector3(20, 0, -50), true);
+			myTeamRW.loadPlayer(function(){addPlayer(myTeamRW);});
+			myTeam.push(myTeamRW);
+			var myTeamMF = new THREE.BBPlayer(null, new THREE.Vector3(40, 0, 0), true);
+			myTeamMF.loadPlayer(function(){addPlayer(myTeamMF);});
+			myTeam.push(myTeamMF);
+			var myTeamLB = new THREE.BBPlayer(null, new THREE.Vector3(60, 0, 20), true);
+			myTeamLB.loadPlayer(function(){addPlayer(myTeamLB);});
+			myTeam.push(myTeamLB);
+			var myTeamRB = new THREE.BBPlayer(null, new THREE.Vector3(60, 0, -20), true);
+			myTeamRB.loadPlayer(function(){addPlayer(myTeamRB);});
+			myTeam.push(myTeamRB);
+			var myTeamGK = new THREE.BBPlayer(null, new THREE.Vector3(95, 0, 0), true);
+			myTeamGK.loadPlayer(function(){addPlayer(myTeamGK);});
 
-				/*dae.traverse( function ( child ) {
+			var oppTeam = [];
+			var oppTeamLW = new THREE.BBPlayer(null, new THREE.Vector3(-20, 0, -50), true);
+			oppTeamLW.loadPlayer(function(){addPlayer(oppTeamLW);});
+			oppTeam.push(oppTeamLW);
+			var oppTeamRW = new THREE.BBPlayer(null, new THREE.Vector3(20, 0, 50), true);
+			oppTeamRW.loadPlayer(function(){addPlayer(oppTeamRW);});
+			oppTeam.push(oppTeamRW);
+			var oppTeamMF = new THREE.BBPlayer(null, new THREE.Vector3(-40, 0, 0), true);
+			oppTeamMF.loadPlayer(function(){addPlayer(oppTeamMF);});
+			oppTeam.push(oppTeamMF);
+			var oppTeamLB = new THREE.BBPlayer(null, new THREE.Vector3(-60, 0, -20), true);
+			oppTeamLB.loadPlayer(function(){addPlayer(oppTeamLB);});
+			oppTeam.push(oppTeamLB);
+			var oppTeamRB = new THREE.BBPlayer(null, new THREE.Vector3(-60, 0, 20), true);
+			oppTeamRB.loadPlayer(function(){addPlayer(oppTeamRB);});
+			oppTeam.push(oppTeamRB);
+			var oppTeamGK = new THREE.BBPlayer(null, new THREE.Vector3(-95, 0, 0), true);
+			oppTeamGK.loadPlayer(function(){addPlayer(oppTeamGK);});
 
-					if ( child instanceof THREE.SkinnedMesh ) {
+			var allPlayers=[];
+			for (var i=0; i<myTeam.length; i++){
+				allPlayers.push(myTeam[i]);
+			}
+			allPlayers.push(myTeamGK);
+			for (var i=0; i<oppTeam.length; i++){
+				allPlayers.push(oppTeam[i]);
+			}
+			allPlayers.push(oppTeamGK);
 
-						var animation = new THREE.Animation( child, child.geometry.animation );
-						animation.play();
-
-					}
-
-				} );*/
-
-				dae.scale.x = dae.scale.y = dae.scale.z = 2;
-				dae.updateMatrix();
-
-				init();
-				animate();
-
-			} );
-
+			var clock = null;
+			var loadedCount=0;
+			
+			function addPlayer(bbPlayer){
+				//dae = bbPlayer.root;
+				loadedCount++;
+				if (loadedCount>=12){
+					init();
+				}
+			}
+			
 			function init() {
 
 				container = document.createElement( 'div' );
 				document.body.appendChild( container );
 
 				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
-				camera.position.set( 0, 2, 10 );
+				camera.position.set( 0, 2, 30 );
 
 				scene = new THREE.Scene();
 
@@ -152,23 +163,14 @@
 				scene.add( line );
 
 				// Add the COLLADA
-
-				scene.add( dae );
+				for (var i=0; i<allPlayers.length; i++){
+					scene.add(allPlayers[i].root);
+				}
+				//scene.add( dae );
 
 				//skybox
 				var cubeMap = new THREE.CubeTexture( [] );
 				cubeMap.format = THREE.RGBFormat;
-
-				var onProgress = function ( xhr ) {
-					if ( xhr.lengthComputable ) {
-						var percentComplete = xhr.loaded / xhr.total * 100;
-						console.log( Math.round(percentComplete, 2) + '% downloaded' );
-					}
-				};
-
-				var onError = function ( xhr ) {
-					console.log('failed to load ');
-				};
 
 				var loader = new THREE.ImageLoader();
 				loader.load( 'img/blitzball/skybox.jpg', function ( image ) {
@@ -196,7 +198,17 @@
 					cubeMap.images[ 5 ] = getSide( 3, 1 ); // nz
 					cubeMap.needsUpdate = true;
 
-				}, onProgress, onError   );
+					startGame();
+				}, 
+				function ( xhr ) {
+					if ( xhr.lengthComputable ) {
+						var percentComplete = xhr.loaded / xhr.total * 100;
+						console.log('Downloading skybox:' + Math.round(percentComplete, 2) + '%' );
+					}
+				}, 
+				function ( xhr ) {
+					console.log('failed to load skybox');
+				});
 
 				var cubeShader = THREE.ShaderLib[ 'cube' ];
 				cubeShader.uniforms[ 'tCube' ].value = cubeMap;
@@ -210,51 +222,21 @@
 				} );
 
 				var skyBox = new THREE.Mesh(
-					new THREE.BoxGeometry( 100, 100, 100 ),
+					new THREE.BoxGeometry( sphereRadius*3, sphereRadius*3, sphereRadius*3 ),
 					skyBoxMaterial
 				);
 
 				scene.add( skyBox );
 				
 				//sphere
-				var sphereRadius=40;
-				var urls = [
-			                    'img/blitzball/water_xflip.jpg',
-			                    'img/blitzball/water_xflip.jpg',
-			                    'img/blitzball/water_yflip.jpg',
-			                    'img/blitzball/water_yflip.jpg',
-			                    'img/blitzball/water.jpg',
-			                    'img/blitzball/water.jpg'
-			                  ];
-	  		    var textureCube = THREE.ImageUtils.loadTextureCube(urls);//, THREE.CubeRefractionMapping, onCubeLoad, onCubeError);
-				textureCube.format = THREE.RGBFormat;
-				//var sphereMaterial = new THREE.MeshLambertMaterial( { color: 0x00acc8, envMap: cubeMap, refractionRatio: 0.75, side:THREE.DoubleSide } );
-
-				var sphereTexture = THREE.ImageUtils.loadTexture('img/blitzball/water.jpg');
-				var sphereMaterial = new THREE.MeshLambertMaterial( { color: 0xffffff, map: sphereTexture,  side:THREE.DoubleSide, opacity:0.5, transparent:true } );
-
-				//var sphereMaterial = new THREE.LineBasicMaterial({color: 0x00acc8, side:THREE.DoubleSide, opacity:0.5, transparent:true});
+				var sphereTexture = THREE.ImageUtils.loadTexture('img/blitzball/water.jpg');//TODO real texture
+				var sphereMaterial = new THREE.MeshLambertMaterial( { color: 0xffffff, map: sphereTexture,  side:THREE.BackSide, opacity:0.5, transparent:true } );
 				var sphereGeometry = new THREE.SphereGeometry( sphereRadius, 64, 64 );
-
-				var mesh = new THREE.Mesh( sphereGeometry, sphereMaterial );
-				scene.add( mesh );
-
-				//particleLight = new THREE.Mesh( new THREE.SphereGeometry( 4, 8, 8 ), new THREE.MeshBasicMaterial( { color: 0xffffff } ) );
-				//scene.add( particleLight );
+				var sphereMesh = new THREE.Mesh( sphereGeometry, sphereMaterial );
+				scene.add( sphereMesh );
 
 				// Lights
-
 				scene.add( new THREE.AmbientLight( 0xffffff ) );
-
-				//var directionalLight = new THREE.DirectionalLight(/*Math.random() * 0xffffff*/0xeeeeee );
-				//directionalLight.position.x = Math.random() - 0.5;
-				//directionalLight.position.y = Math.random() - 0.5;
-				//directionalLight.position.z = Math.random() - 0.5;
-				//directionalLight.position.normalize();
-				//scene.add( directionalLight );
-
-				//var pointLight = new THREE.PointLight( 0xffffff, 4 );
-				//particleLight.add( pointLight );
 
 				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
@@ -266,14 +248,19 @@
 				stats.domElement.style.top = '0px';
 				container.appendChild( stats.domElement );
 
-				//
-
 				window.addEventListener( 'resize', onWindowResize, false );
 				window.addEventListener('keydown', onKeyDown, true);
 				window.addEventListener('keyup', onKeyUp, true);
+			}
 
+			function startGame(){
 				cameraTarget.set(scene.position.x, scene.position.y, scene.position.z);
 
+				clock=new THREE.Clock();
+				for (var i=0; i<allPlayers.length; i++){
+					allPlayers[i].animation.playTreadAnimation();
+				}
+				animate();
 			}
 
 			function onWindowResize() {
@@ -298,12 +285,12 @@
 
 			function onKeyDown(event){
 				switch(event.keyCode) {
-				case 87: /*w*/	controls.moveForward=true; break;
-				case 83: /*s*/controls.moveBackward = true; break;
-				case 65: /*a*/controls.moveLeft = true; break;
-				case 68: /*d*/controls.moveRight = true; break;
-				case 81: /*q*/	controls.moveUp=true; break;
-				case 69: /*e*/	controls.moveDown=true; break;
+				case 87: /*w*/	cameraControls.moveForward=true; break;
+				case 83: /*s*/cameraControls.moveBackward = true; break;
+				case 65: /*a*/cameraControls.moveLeft = true; break;
+				case 68: /*d*/cameraControls.moveRight = true; break;
+				case 81: /*q*/	cameraControls.moveUp=true; break;
+				case 69: /*e*/	cameraControls.moveDown=true; break;
 				
 				case 38: /*up*/trooperControls.moveForward = true; break;
 				case 40: /*down*/trooperControls.moveBackward = true; break;
@@ -314,12 +301,12 @@
 
 			function onKeyUp(event){
 				switch(event.keyCode) {
-				case 87: /*w*/	controls.moveForward=false; break;
-				case 83: /*s*/controls.moveBackward = false; break;
-				case 65: /*a*/controls.moveLeft = false; break;
-				case 68: /*d*/controls.moveRight = false; break;
-				case 81: /*q*/	controls.moveUp=false; break;
-				case 69: /*e*/	controls.moveDown=false; break;
+				case 87: /*w*/	cameraControls.moveForward=false; break;
+				case 83: /*s*/cameraControls.moveBackward = false; break;
+				case 65: /*a*/cameraControls.moveLeft = false; break;
+				case 68: /*d*/cameraControls.moveRight = false; break;
+				case 81: /*q*/	cameraControls.moveUp=false; break;
+				case 69: /*e*/	cameraControls.moveDown=false; break;
 				
 				case 38: /*up*/trooperControls.moveForward = false; break;
 				case 40: /*down*/trooperControls.moveBackward = false; break;
@@ -328,49 +315,37 @@
 				}
 			}
 
-			var clock = new THREE.Clock();
-
 			function render() {
 
 				//var timer = Date.now() * 0.0005;
 				var delta = clock.getDelta()*3;
 
-				if (controls.moveForward){
+				if (cameraControls.moveForward){
 					camera.position.z -= delta;
-				} else if (controls.moveBackward){
+				} else if (cameraControls.moveBackward){
 					camera.position.z += delta;
 				}
-				if (controls.moveLeft){
+				if (cameraControls.moveLeft){
 					camera.position.x -= delta;
-				} else if (controls.moveRight){
+				} else if (cameraControls.moveRight){
 					camera.position.x += delta;
 				}
-				if (controls.lookLeft){
+				if (cameraControls.lookLeft){
 					cameraTarget.x -= delta;
-				} else if (controls.lookRight){
+				} else if (cameraControls.lookRight){
 					cameraTarget.x += delta;
 				}
-				if (controls.moveUp){
+				if (cameraControls.moveUp){
 					cameraTarget.y += delta;
-				} else if (controls.moveDown){
+				} else if (cameraControls.moveDown){
 					cameraTarget.y -= delta;
 				}
 				//camera.position.x = Math.cos( timer ) * 10;
 				camera.position.y = 2;
 				//camera.position.z = Math.sin( timer ) * 10;
-
-				if (trooperControls.moveForward){
-					dae.position.z-=delta;
-				} else if (trooperControls.moveBackward){
-					dae.position.z+=delta;
-				}
-				if (trooperControls.moveLeft){
-					dae.position.x-=delta;
-				} else if (trooperControls.moveRight){
-					dae.position.x+=delta;
-				}
+				
 				if (trooperControls.moveForward||trooperControls.moveBackward||trooperControls.moveLeft||trooperControls.moveRight){
-					cameraTarget.set(dae.position.x, dae.position.y, dae.position.z);
+					cameraTarget.set(myTeamLW.root.position.x, myTeamLW.root.position.y, myTeamLW.root.position.z);
 				}
 				camera.lookAt(cameraTarget);
 				//camera.lookAt( scene.position );
@@ -379,7 +354,11 @@
 				//particleLight.position.y = Math.cos( timer * 5 ) * 4000;
 				//particleLight.position.z = Math.cos( timer * 4 ) * 3009;
 
-				THREE.AnimationHandler.update( delta/30 );
+				myTeamLW.hasBall=true;
+				for (var i=0; i<allPlayers.length; i++){
+					allPlayers[i].updatePlayer(delta/30, trooperControls);
+				}
+				//THREE.AnimationHandler.update( delta/30 );
 
 				renderer.render( scene, camera );
 
