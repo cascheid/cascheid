@@ -292,10 +292,10 @@
 				case 81: /*q*/	cameraControls.moveUp=true; break;
 				case 69: /*e*/	cameraControls.moveDown=true; break;
 				
-				case 38: /*up*/trooperControls.moveForward = true; break;
-				case 40: /*down*/trooperControls.moveBackward = true; break;
-				case 37: /*left*/trooperControls.moveLeft = true; break;
-				case 39: /*right*/trooperControls.moveRight = true; break;
+				case 38: /*up*/event.preventDefault(); trooperControls.moveForward = true; break;
+				case 40: /*down*/event.preventDefault(); trooperControls.moveBackward = true; break;
+				case 37: /*left*/event.preventDefault(); trooperControls.moveLeft = true; break;
+				case 39: /*right*/event.preventDefault(); trooperControls.moveRight = true; break;
 				}
 			}
 
@@ -308,10 +308,10 @@
 				case 81: /*q*/	cameraControls.moveUp=false; break;
 				case 69: /*e*/	cameraControls.moveDown=false; break;
 				
-				case 38: /*up*/trooperControls.moveForward = false; break;
-				case 40: /*down*/trooperControls.moveBackward = false; break;
-				case 37: /*left*/trooperControls.moveLeft = false; break;
-				case 39: /*right*/trooperControls.moveRight = false; break;
+				case 38: /*up*/event.preventDefault(); trooperControls.moveForward = false; break;
+				case 40: /*down*/event.preventDefault(); trooperControls.moveBackward = false; break;
+				case 37: /*left*/event.preventDefault(); trooperControls.moveLeft = false; break;
+				case 39: /*right*/event.preventDefault(); trooperControls.moveRight = false; break;
 				}
 			}
 

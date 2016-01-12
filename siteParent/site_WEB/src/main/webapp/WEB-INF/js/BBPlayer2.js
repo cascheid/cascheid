@@ -121,13 +121,13 @@ THREE.BBPlayer = function (player, startingPos, is3d) {
 		if (trajectory!=null){
 			var maxMove=moveScale*this.speed*delta;
 			var lengthLeft=trajectory.length();
-			trajectory = checkSphereBounds(trajectory);
+			trajectory = this.checkSphereBounds(trajectory);
 			if (maxMove>=lengthLeft){
-				this.newPosition.addVectors(this.currentPosition, trajectory);
+				this.currentPosition.addVectors(this.currentPosition, trajectory);
 			} else {
 				var scale = maxMove/lengthLeft;
 				var mv = trajectory.multiplyScalar(scale);
-				this.newPosition.addVectors(this.currentPosition, mv);
+				this.currentPosition.addVectors(this.currentPosition, mv);
 			}
 			var newRot = Math.atan2(trajectory.z, trajectory.x);
 			this.currentRotation=newRot;
@@ -149,11 +149,11 @@ THREE.BBPlayer = function (player, startingPos, is3d) {
 		this.animation.playTreadAnimation();
 	}
 	
-	function checkSphereBounds(trajectory){
+	this.checkSphereBounds = function(trajectory){
 		if ((trajectory.x+this.currentPosition.x)*(trajectory.x+this.currentPosition.x)
 				+(trajectory.z+this.currentPosition.z)*(trajectory.z+this.currentPosition.z)<sphereRadius*sphereRadius){
-			this.currentPosition.x=this.newPosition.x;
-			this.currentPosition.z=this.newPosition.z;
+			this.currentPosition.x+=trajectory.x;
+			this.currentPosition.z+=trajectory.z;
 			this.newPosition=null;
 		} else if (this.currentPosition.x>0){
 			if (trajectory.x>0&&trajectory.z==0){//going right
