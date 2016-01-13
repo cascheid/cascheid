@@ -8,10 +8,57 @@
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<style>
 			body {
-				font-family: Monospace;
-				background-color: #000000;
-				margin: 0px;
+				background: #000;
+				color: #333;
+				padding: 0;
+				margin: 0;
 				overflow: hidden;
+				font-family: georgia;
+				font-size:1em;
+				text-align: center;
+			}
+			
+			#selector{
+				position:absolute;
+				left:-5vmin;
+				top:0vmin;
+				width:5vmin;
+				height:3.5vmin;
+			}
+			
+			#actionMenu{
+				font-size:3.5vmin;
+				color: #ffffff;
+				position:absolute;
+				top:20vmin;
+				width:16%;
+				height:12vmin;
+				left:24%;
+				background-color:#6B238E;
+				background-image: url("img/blitzball/cracks.png");
+				border: 5px double white;
+				line-height:4vmin;
+				padding-left:5vmin;
+				text-align:left;
+				z-index:1000;
+			}
+			
+			#allStats{
+				font-size:3.5vmin;
+				color: #ffffff;
+				position:absolute;
+				top:10vmin;
+				width:40%;
+				height:24vmin;
+				left:55%;
+				background-color:#6B238E;
+				background-image: url("img/blitzball/cracks.png");
+				border: 5px double white;
+				line-height:4vmin;
+				padding-left:5vmin;
+				text-align:left;
+				display:table;
+				z-index:1000;
 			}
 
 			#info {
@@ -32,6 +79,103 @@
 		<div id="info">
 			<a href="http://threejs.org" target="_blank">three.js</a> -
 			monster by <a href="http://www.3drt.com/downloads.htm" target="_blank">3drt</a>
+		</div>
+		
+		<div id="actionMenu" style="display:none">
+			<div style="position:absolute; left:5vmin">
+			<img id="selector" src="img/blitzball/arrow.png" />
+				<div>
+					<label id="menu1">Pass</label>
+				</div>
+				<div>
+					<label id="menu2">Shoot</label>
+				</div>
+				<div>
+					<label id="menu3">Dribble</label>
+				</div>
+				<div>
+					<label id="menu4"></label>
+				</div>
+				<div>
+					<label id="menu5"></label>
+				</div>
+				<div>
+					<label id="menu6"></label>
+				</div>
+			</div>
+		</div>
+		
+		<div id="allStats">
+		<div id="playerStats" style="display:table-row;">
+			<div style="display:table-cell; width:20%"><label id="playerName"></label></div>
+			<div style="display:table-cell; width:10%"><label>HP:</label></div>
+			<div style="display:table-cell; width:10%"><label id="playerHP"></label></div>
+			<div style="display:table-cell; width:10%"><label>END:</label></div>
+			<div style="display:table-cell; width:10%"><label id="playerEND"></label></div>
+			<div style="display:table-cell; width:10%"><label>PAS:</label></div>
+			<div style="display:table-cell; width:10%"><label id="playerPAS"></label></div>
+			<div style="display:table-cell; width:10%"><label>SHT:</label></div>
+			<div style="display:table-cell; width:10%"><label id="playerSHT"></label></div>
+		</div>
+		<div id="break1Stats" style="display:none;">
+			<div style="display:table-cell"><label id="break1Name"></label></div>
+			<div style="display:table-cell"><label>HP:</label></div>
+			<div style="display:table-cell"><label id="break1HP"></label></div>
+			<div style="display:table-cell"><label>ATK:</label></div>
+			<div style="display:table-cell"><label id="break1ATK"></label></div>
+			<div style="display:table-cell"><label>BLK:</label></div>
+			<div style="display:table-cell"><label id="break1BLK"></label></div>
+			<div style="display:table-cell"></div>
+			<div style="display:table-cell"></div>
+		</div>
+		<div id="break2Stats" style="display:none;">
+			<div style="display:table-cell"><label id="break2Name"></label></div>
+			<div style="display:table-cell"><label>HP:</label></div>
+			<div style="display:table-cell"><label id="break2HP"></label></div>
+			<div style="display:table-cell"><label>ATK:</label></div>
+			<div style="display:table-cell"><label id="break2ATK"></label></div>
+			<div style="display:table-cell"><label>BLK:</label></div>
+			<div style="display:table-cell"><label id="break2BLK"></label></div>
+			<div style="display:table-cell"></div>
+			<div style="display:table-cell"></div>
+		</div>
+		<div id="break3Stats" style="display:none;">
+			<div style="display:table-cell"><label id="break3Name"></label></div>
+			<div style="display:table-cell"><label>HP:</label></div>
+			<div style="display:table-cell"><label id="break3HP"></label></div>
+			<div style="display:table-cell"><label>ATK:</label></div>
+			<div style="display:table-cell"><label id="break3ATK"></label></div>
+			<div style="display:table-cell"><label>BLK:</label></div>
+			<div style="display:table-cell"><label id="break3BLK"></label></div>
+			<div style="display:table-cell"></div>
+			<div style="display:table-cell"></div>
+		</div>
+		<div id="break4Stats" style="display:none;">
+			<div style="display:table-cell"><label id="break4Name"></label></div>
+			<div style="display:table-cell"><label>HP:</label></div>
+			<div style="display:table-cell"><label id="break4HP"></label></div>
+			<div style="display:table-cell"><label>ATK:</label></div>
+			<div style="display:table-cell"><label id="break4ATK"></label></div>
+			<div style="display:table-cell"><label>BLK:</label></div>
+			<div style="display:table-cell"><label id="break4BLK"></label></div>
+			<div style="display:table-cell"></div>
+			<div style="display:table-cell"></div>
+		</div>
+		<div id="break5Stats" style="display:none;">
+			<div style="display:table-cell"><label id="break5Name"></label></div>
+			<div style="display:table-cell"><label>HP:</label></div>
+			<div style="display:table-cell"><label id="break5HP"></label></div>
+			<div style="display:table-cell"><label>ATK:</label></div>
+			<div style="display:table-cell"><label id="break5ATK"></label></div>
+			<div style="display:table-cell"><label>BLK:</label></div>
+			<div style="display:table-cell"><label id="break5BLK"></label></div>
+			<div style="display:table-cell"></div>
+			<div style="display:table-cell"></div>
+		</div>
+		</div>
+		
+		<div style="position: absolute; bottom:0; left: 80%; z-index:1000">
+			<canvas id="minimapCanvas"></canvas>
 		</div>
 
 		<script src="js/three73.js?version=1.00"></script>
@@ -64,7 +208,7 @@
 					moveDown: false
 			};
 
-			var trooperControls = {
+			var controls = {
 				moveForward: false,
 				moveBackward:false,
 				moveLeft: false,
@@ -72,43 +216,50 @@
 			}
 
 			var sphereRadius=100;
+			var currAnimation="none";
+			var currAction="none";
+			var gameActive=false;
+			var teamWithBall=1;
+
+			var menuSelection=1;
+			var MAXITEMS=3;
 
 			var myTeam = [];
-			var myTeamLW = new THREE.BBPlayer(null, new THREE.Vector3(20, 0, 50), true);
+			var myTeamLW = new THREE.BBPlayer(null, new THREE.Vector3(20, 0, 50), triggerBreak);
 			myTeamLW.loadPlayer(function(){addPlayer(myTeamLW);});
 			myTeam.push(myTeamLW);
-			var myTeamRW = new THREE.BBPlayer(null, new THREE.Vector3(20, 0, -50), true);
+			var myTeamRW = new THREE.BBPlayer(null, new THREE.Vector3(20, 0, -50), triggerBreak);
 			myTeamRW.loadPlayer(function(){addPlayer(myTeamRW);});
 			myTeam.push(myTeamRW);
-			var myTeamMF = new THREE.BBPlayer(null, new THREE.Vector3(40, 0, 0), true);
+			var myTeamMF = new THREE.BBPlayer(null, new THREE.Vector3(40, 0, 0), triggerBreak);
 			myTeamMF.loadPlayer(function(){addPlayer(myTeamMF);});
 			myTeam.push(myTeamMF);
-			var myTeamLB = new THREE.BBPlayer(null, new THREE.Vector3(60, 0, 20), true);
+			var myTeamLB = new THREE.BBPlayer(null, new THREE.Vector3(60, 0, 20), triggerBreak);
 			myTeamLB.loadPlayer(function(){addPlayer(myTeamLB);});
 			myTeam.push(myTeamLB);
-			var myTeamRB = new THREE.BBPlayer(null, new THREE.Vector3(60, 0, -20), true);
+			var myTeamRB = new THREE.BBPlayer(null, new THREE.Vector3(60, 0, -20), triggerBreak);
 			myTeamRB.loadPlayer(function(){addPlayer(myTeamRB);});
 			myTeam.push(myTeamRB);
-			var myTeamGK = new THREE.BBPlayer(null, new THREE.Vector3(95, 0, 0), true);
+			var myTeamGK = new THREE.BBPlayer(null, new THREE.Vector3(95, 0, 0), triggerBreak);
 			myTeamGK.loadPlayer(function(){addPlayer(myTeamGK);});
 
 			var oppTeam = [];
-			var oppTeamLW = new THREE.BBPlayer(null, new THREE.Vector3(-20, 0, -50), true);
+			var oppTeamLW = new THREE.BBPlayer(null, new THREE.Vector3(-20, 0, -50), triggerBreak);
 			oppTeamLW.loadPlayer(function(){addPlayer(oppTeamLW);});
 			oppTeam.push(oppTeamLW);
-			var oppTeamRW = new THREE.BBPlayer(null, new THREE.Vector3(20, 0, 50), true);
+			var oppTeamRW = new THREE.BBPlayer(null, new THREE.Vector3(-20, 0, 50), triggerBreak);
 			oppTeamRW.loadPlayer(function(){addPlayer(oppTeamRW);});
 			oppTeam.push(oppTeamRW);
-			var oppTeamMF = new THREE.BBPlayer(null, new THREE.Vector3(-40, 0, 0), true);
+			var oppTeamMF = new THREE.BBPlayer(null, new THREE.Vector3(-40, 0, 0), triggerBreak);
 			oppTeamMF.loadPlayer(function(){addPlayer(oppTeamMF);});
 			oppTeam.push(oppTeamMF);
-			var oppTeamLB = new THREE.BBPlayer(null, new THREE.Vector3(-60, 0, -20), true);
+			var oppTeamLB = new THREE.BBPlayer(null, new THREE.Vector3(-60, 0, -20), triggerBreak);
 			oppTeamLB.loadPlayer(function(){addPlayer(oppTeamLB);});
 			oppTeam.push(oppTeamLB);
-			var oppTeamRB = new THREE.BBPlayer(null, new THREE.Vector3(-60, 0, 20), true);
+			var oppTeamRB = new THREE.BBPlayer(null, new THREE.Vector3(-60, 0, 20), triggerBreak);
 			oppTeamRB.loadPlayer(function(){addPlayer(oppTeamRB);});
 			oppTeam.push(oppTeamRB);
-			var oppTeamGK = new THREE.BBPlayer(null, new THREE.Vector3(-95, 0, 0), true);
+			var oppTeamGK = new THREE.BBPlayer(null, new THREE.Vector3(-95, 0, 0), triggerBreak);
 			oppTeamGK.loadPlayer(function(){addPlayer(oppTeamGK);});
 
 			var allPlayers=[];
@@ -121,14 +272,33 @@
 			}
 			allPlayers.push(oppTeamGK);
 
+			var currentPlayer=null;
+
 			var clock = null;
 			var loadedCount=0;
+
+			var minimapCanvas;
+			var minimapContext;
 			
 			function addPlayer(bbPlayer){
 				//dae = bbPlayer.root;
 				loadedCount++;
 				if (loadedCount>=12){
 					init();
+				}
+			}
+
+			function pause(){
+				gameActive=false;
+				for (var i=0; i<allPlayers.length; i++){
+					allPlayers[i].gameActive=false;
+				}
+			}
+
+			function unpause(){
+				gameActive=true;
+				for (var i=0; i<allPlayers.length; i++){
+					allPlayers[i].gameActive=true;
 				}
 			}
 			
@@ -161,6 +331,21 @@
 
 				var line = new THREE.LineSegments( geometry, material );
 				scene.add( line );
+
+				//minimap
+				minimapCanvas = document.getElementById('minimapCanvas');
+				minimapContext = minimapCanvas.getContext('2d');
+				minimapCanvas.height=window.innerWidth*.2;
+				minimapCanvas.width=window.innerWidth*.2;
+
+				minimapContext.rect(0,0,minimapCanvas.width,minimapCanvas.width);
+				minimapContext.fillStyle="grey";
+				minimapContext.fill();
+				minimapContext.beginPath();
+				minimapContext.arc(minimapCanvas.width/2, minimapCanvas.width/2, minimapCanvas.width/2, 0, 2 * Math.PI, false);
+				minimapContext.closePath();
+				minimapContext.fillStyle = 'blue';
+				minimapContext.fill();
 
 				// Add the COLLADA
 				for (var i=0; i<allPlayers.length; i++){
@@ -231,7 +416,7 @@
 				//sphere
 				var sphereTexture = THREE.ImageUtils.loadTexture('img/blitzball/water.jpg');//TODO real texture
 				var sphereMaterial = new THREE.MeshLambertMaterial( { color: 0xffffff, map: sphereTexture,  side:THREE.BackSide, opacity:0.5, transparent:true } );
-				var sphereGeometry = new THREE.SphereGeometry( sphereRadius, 64, 64 );
+				var sphereGeometry = new THREE.SphereGeometry( sphereRadius*1.1, 64, 64 );
 				var sphereMesh = new THREE.Mesh( sphereGeometry, sphereMaterial );
 				scene.add( sphereMesh );
 
@@ -259,7 +444,11 @@
 				clock=new THREE.Clock();
 				for (var i=0; i<allPlayers.length; i++){
 					allPlayers[i].animation.playTreadAnimation();
+					allPlayers[i].gameActive=true;
 				}
+				currentPlayer=myTeamLW;
+				teamWithBall=1;
+				gameActive=true;
 				animate();
 			}
 
@@ -280,10 +469,15 @@
 
 				render();
 				stats.update();
+				updateMinimap();
 
 			}
 
 			function onKeyDown(event){
+				//dev
+				if (!event.keyCode==123){
+					event.preventDefault();
+				}
 				switch(event.keyCode) {
 				case 87: /*w*/	cameraControls.moveForward=true; break;
 				case 83: /*s*/cameraControls.moveBackward = true; break;
@@ -292,10 +486,14 @@
 				case 81: /*q*/	cameraControls.moveUp=true; break;
 				case 69: /*e*/	cameraControls.moveDown=true; break;
 				
-				case 38: /*up*/event.preventDefault(); trooperControls.moveForward = true; break;
-				case 40: /*down*/event.preventDefault(); trooperControls.moveBackward = true; break;
-				case 37: /*left*/event.preventDefault(); trooperControls.moveLeft = true; break;
-				case 39: /*right*/event.preventDefault(); trooperControls.moveRight = true; break;
+				case 38: /*up*/ upButtonPressed(); break;
+				case 40: /*down*/ downButtonPressed(); break;
+				case 37: /*left*/ leftButtonPressed(); break;
+				case 39: /*right*/ rightButtonPressed(); break;
+
+				case 32: /*spacebar*/ if (gameActive){gameActive=false;} else {gameActive=true;} break;
+
+				case 90: /*z*/ selectButtonPressed(); break;
 				}
 			}
 
@@ -308,10 +506,260 @@
 				case 81: /*q*/	cameraControls.moveUp=false; break;
 				case 69: /*e*/	cameraControls.moveDown=false; break;
 				
-				case 38: /*up*/event.preventDefault(); trooperControls.moveForward = false; break;
-				case 40: /*down*/event.preventDefault(); trooperControls.moveBackward = false; break;
-				case 37: /*left*/event.preventDefault(); trooperControls.moveLeft = false; break;
-				case 39: /*right*/event.preventDefault(); trooperControls.moveRight = false; break;
+				case 38: /*up*/event.preventDefault(); controls.moveForward = false; break;
+				case 40: /*down*/event.preventDefault(); controls.moveBackward = false; break;
+				case 37: /*left*/event.preventDefault(); controls.moveLeft = false; break;
+				case 39: /*right*/event.preventDefault(); controls.moveRight = false; break;
+				}
+			}
+			
+			function downButtonPressed(){
+				if (gameActive&&teamWithBall==1){
+					controls.moveBackward = true;
+				} else if (!gameActive&&teamWithBall==1){
+					if (menuSelection>=MAXITEMS){
+						menuSelection=1;
+					} else {
+						menuSelection++;
+					}
+					document.getElementById('selector').style.top=(menuSelection-1)*4+'vmin';
+				}
+			}
+			
+			function upButtonPressed(){
+				if (gameActive&&teamWithBall==1){
+					controls.moveForward = true;
+				} else if (!gameActive&&teamWithBall==1){
+					if (menuSelection<=1){
+						menuSelection=MAXITEMS;
+					} else {
+						menuSelection--;
+					}
+					document.getElementById('selector').style.top=(menuSelection-1)*4+'vmin';
+				}
+			}
+
+			function rightButtonPressed(){
+				if (gameActive&&teamWithBall==1){
+					controls.moveRight = true;
+				}
+			}
+
+			function leftButtonPressed(){
+				if (gameActive&&teamWithBall==1){
+					controls.moveLeft = true;
+				}
+			}
+
+			function triggerBreak(){
+				controls.moveForward=false;
+				controls.moveBackward=false;
+				controls.moveLeft=false;
+				controls.moveRight=false;
+				defendingPlayers = [];
+				if (teamWithBall==1){
+					for (var i=0; i<oppTeam.length; i++){
+						if (oppTeam[i].testEncounter(currentPlayer.currentPosition, defendingPlayers.length)){
+							defendingPlayers.push(oppTeam[i]);
+						}
+					}
+				} else {
+					for (var i=0; i<myTeam.length; i++){
+						if (myTeam[i].testEncounter(currentPlayer.currentPosition, defendingPlayers.length)){
+							defendingPlayers.push(myTeam[i]);
+						}
+					}
+				}
+				defendingPlayers.sort(function(a,b) {return (b.attack > a.attack) ? 1 : ((a.attack > b.attack) ? -1 : 0);});
+				pause();
+				showBreakMenu();
+			}
+			
+			function selectButtonPressed(){
+				if (gameActive&&teamWithBall==1){
+					triggerBreak();
+				} else if (!gameActive&&currAction=="break"){
+					if (menuSelection==MAXITEMS){
+						showMainActionMenu();
+					} else {
+						animateBreak(menuSelection);
+					}
+				} else if (!gameActive&&currAction=="main"){
+					if (menuSelection==1){
+						techOptions=[];
+						for (var i=0; i<currentPlayer.techs.length; i++){
+							if (currentPlayer.techs[i].techType=="pass"){
+								techOptions.push(currentPlayer.techs[i]);
+							}
+						}
+						document.getElementById('actionMenu').style.height=((techOptions+2)*4)+"vmin";
+						for (var i=0; i<techOptions.length; i++){
+							document.getElementById('menu'+(i+2)).style.display='';
+							document.getElementById('menu'+(i+2)).innerHTML=techOptions[i].techName;
+						}
+						document.getElementById('menu1').innerHTML='Normal Pass';
+						document.getElementById('menu'+(techOptions.length+2)).innerHTML='Back';
+						currAction="pass";
+					} else if (menuSelection==2){
+						techOptions=[];
+						for (var i=0; i<currentPlayer.techs.length; i++){
+							if (currentPlayer.techs[i].techType=="shot"){
+								techOptions.push(currentPlayer.techs[i]);
+							}
+						}
+						document.getElementById('actionMenu').style.height=((techOptions+2)*4)+"vmin";
+						for (var i=0; i<techOptions.length; i++){
+							document.getElementById('menu'+(i+2)).style.display='';
+							document.getElementById('menu'+(i+2)).innerHTML=techOptions[i].techName;
+						}
+						document.getElementById('menu1').innerHTML='Normal Shot';
+						document.getElementById('menu'+(techOptions.length+2)).innerHTML='Back';
+						currAction="shoot";
+					} else if (menuSelection==3){
+						document.getElementById('actionMenu').style.display='none';
+						currAction="none";
+						updateCurrentPlayer(currentPlayer);
+						unpause();
+					}
+				} else if (!gameActive&&currAction=="pass"){
+					if (menuSelection==MAXITEMS){
+						showMainActionMenu();
+					} else {
+						if (menuSelection>1){
+							selectedTech=techOptions[menuSelection-1];
+						}
+						var j=0;
+						for (var i=0; i<myTeam.length; i++){
+							if (myTeam[i]!=currentPlayer){
+								j++;
+								document.getElementById('menu'+j).style.display='';
+								document.getElementById('menu'+j).innerHTML=myTeam[i].name;
+							}
+						}
+						MAXITEMS=4;
+						document.getElementById('actionMenu').style.height=(MAXITEMS*4)+'vmin';
+						currAction="targetting";
+					}
+				} else if (!gameActive&&currAction=="targetting"){
+					var j=0;
+					for (var i=0; i<myTeam.length; i++){
+						if (myTeam[i]!=currentPlayer){
+							j++;
+							if (j==menuSelection){
+								targettedPlayer=myTeam[i];
+								break;
+							}
+						}
+					}
+					pass();
+				} else if (!gameActive&&currAction=="shoot"){
+					if (menuSelection==MAXITEMS){
+						showMainActionMenu();
+					} else {
+						if (menuSelection>1){
+							selectedTech=techOptions[menuSelection-1];
+						}
+						shoot();
+					}
+				}
+			}
+
+			function cancelButtonPressed(){
+				if (!gameActive){
+					menuSelection=MAXITEMS;
+					document.getElementById('selector').style.top=(menuSelection-1)*4+'vmin';
+				}
+			}
+
+			function clearMenu(){
+				document.getElementById('menu1').innerHTML='';
+				document.getElementById('menu2').innerHTML='';
+				document.getElementById('menu3').innerHTML='';
+				document.getElementById('menu4').innerHTML='';
+				document.getElementById('menu5').innerHTML='';
+				document.getElementById('menu3').style.display='none';
+				document.getElementById('menu4').style.display='none';
+				document.getElementById('menu5').style.display='none';
+				menuSelection=1;
+				document.getElementById('selector').style.top=(menuSelection-1)*4+'vmin';
+			}
+			
+			function showBreakMenu(){
+				if (defendingPlayers!=null&&defendingPlayers.length>0){
+					clearMenu();
+					MAXITEMS=1;
+					for (var i=0; i<defendingPlayers.length; i++){
+						document.getElementById('menu'+(i+1)).style.display='';
+						document.getElementById('menu'+(i+1)).innerHTML='Break to '+defendingPlayers[i].name;
+						document.getElementById('break'+(i+1)+'Name').innerHTML=defendingPlayers[i].name;
+						document.getElementById('break'+(i+1)+'HP').innerHTML=defendingPlayers[i].hp;
+						document.getElementById('break'+(i+1)+'ATK').innerHTML=defendingPlayers[i].attack;
+						document.getElementById('break'+(i+1)+'BLK').innerHTML=defendingPlayers[i].block;
+						document.getElementById('break'+(i+1)+'Stats').style.display='table-row';
+						MAXITEMS++;
+					}
+					document.getElementById('menu'+MAXITEMS).style.display='';
+					document.getElementById('menu'+MAXITEMS).innerHTML='No Break';
+					currAction="break";
+					document.getElementById('actionMenu').style.height=(MAXITEMS*4)+'vmin';
+					document.getElementById('actionMenu').style.display='';
+				} else {
+					showMainActionMenu();
+				}
+			}
+
+			function showMainActionMenu(){
+				clearMenu();
+				document.getElementById('menu1').innerHTML='Pass';
+				document.getElementById('menu2').innerHTML='Shoot';
+				if (defendingPlayers.length>0){
+					document.getElementById('menu3').style.display='none';
+					MAXITEMS=2;
+				} else {
+					document.getElementById('menu3').style.display='';
+					document.getElementById('menu3').innerHTML='Dribble';
+					MAXITEMS=3;
+				}
+				currAction="main";
+				document.getElementById('actionMenu').style.display='';
+				document.getElementById('actionMenu').style.height=(MAXITEMS*4)+'vmin';
+			}
+
+			function resumeActiveGame(){
+				unpause();
+			}
+
+			var breakingPlayer;
+
+			function onBreakResult(numLeft){
+				var currEnd = Number(document.getElementById('playerEND').innerHTML);
+				currEnd-=Math.round((.5+Math.random())*player.attack);
+				if (currEnd<0){
+					currEnd=0;
+					document.getElementById('playerEND').innerHTML=currEnd;
+					if (teamWithBall==1){
+						teamWithBall=2;
+					} else {
+						teamWithBall=1;
+					}
+					currentPlayer.lostBall(resumeActiveGame);
+					updateCurrentPlayer(breakingPlayer);
+				} else {
+					currentPlayer.continueBreak(animateBreak(numLeft));
+				}
+			}
+
+			function animateBreak(numLeft){
+				if (numLeft>0){
+					if (defendingPlayers!=null&&defendingPlayers.length>=numLeft){
+						console.log('invalid number of break attempts: ' + numLeft);
+						showMainActionMenu();
+					}
+					breakingPlayer=defendingPlayers.shift();
+					currentPlayer.animateEndure(onBreakResult(numLeft-1));
+					breakingPlayer.animateTackle(currentPlayer.position);
+				} else {
+					showMainActionMenu();
 				}
 			}
 
@@ -344,7 +792,7 @@
 				camera.position.y = 2;
 				//camera.position.z = Math.sin( timer ) * 10;
 				
-				if (trooperControls.moveForward||trooperControls.moveBackward||trooperControls.moveLeft||trooperControls.moveRight){
+				if (controls.moveForward||controls.moveBackward||controls.moveLeft||controls.moveRight){
 					cameraTarget.set(myTeamLW.root.position.x, myTeamLW.root.position.y, myTeamLW.root.position.z);
 				}
 				camera.lookAt(cameraTarget);
@@ -356,12 +804,73 @@
 
 				myTeamLW.hasBall=true;
 				for (var i=0; i<allPlayers.length; i++){
-					allPlayers[i].updatePlayer(delta/30, trooperControls);
+					allPlayers[i].updatePlayer(delta/30, controls);
 				}
 				//THREE.AnimationHandler.update( delta/30 );
 
 				renderer.render( scene, camera );
 
+			}
+
+			function updateMinimap(){
+				//reset canvas
+				minimapContext.rect(0,0,minimapCanvas.width,minimapCanvas.width);
+				minimapContext.fillStyle="grey";
+				minimapContext.fill();
+				minimapContext.beginPath();
+				minimapContext.arc(minimapCanvas.width/2, minimapCanvas.width/2, minimapCanvas.width/2, 0, 2 * Math.PI, false);
+				minimapContext.closePath();
+				minimapContext.fillStyle = 'blue';
+				minimapContext.fill();
+
+				//yellow team
+				for (var i=0; i<myTeam.length; i++){
+					var rot=myTeam[i].currentRotation+Math.PI/2;
+					var x1=minimapCanvas.width*(110+myTeam[i].currentPosition.x)/220-Math.cos(rot)*minimapCanvas.width/12;
+					var y1=minimapCanvas.width*(110-myTeam[i].currentPosition.z)/220-Math.sin(rot)*minimapCanvas.width/12;
+					var x2=x1+Math.cos(rot-Math.PI/12)*(minimapCanvas.width/12);
+					var y2=y1+Math.sin(rot-Math.PI/12)*(minimapCanvas.width/12);
+					var x3=x1+Math.cos(rot+Math.PI/12)*(minimapCanvas.width/12);
+					var y3=y1+Math.sin(rot+Math.PI/12)*(minimapCanvas.width/12);
+					minimapContext.beginPath();
+					minimapContext.moveTo(x1, minimapCanvas.width-y1);
+					minimapContext.lineTo(x2, minimapCanvas.width-y2);
+					minimapContext.lineTo(x3, minimapCanvas.width-y3);
+					minimapContext.lineTo(x1, minimapCanvas.width-y1);
+					minimapContext.closePath();
+					minimapContext.stroke();
+					minimapContext.fillStyle = "#FFCC00";
+					minimapContext.fill();
+				}
+
+				//red team
+				for (var i=0; i<oppTeam.length; i++){
+					var rot=oppTeam[i].currentRotation+Math.PI/2;
+					var x1=minimapCanvas.width*(110+oppTeam[i].currentPosition.x)/220-Math.cos(rot)*minimapCanvas.width/12;
+					var y1=minimapCanvas.width*(110-oppTeam[i].currentPosition.z)/220-Math.sin(rot)*minimapCanvas.width/12;
+					var x2=x1+Math.cos(rot-Math.PI/12)*(minimapCanvas.width/12);
+					var y2=y1+Math.sin(rot-Math.PI/12)*(minimapCanvas.width/12);
+					var x3=x1+Math.cos(rot+Math.PI/12)*(minimapCanvas.width/12);
+					var y3=y1+Math.sin(rot+Math.PI/12)*(minimapCanvas.width/12);
+					minimapContext.beginPath();
+					minimapContext.moveTo(x1, minimapCanvas.width-y1);
+					minimapContext.lineTo(x2, minimapCanvas.width-y2);
+					minimapContext.lineTo(x3, minimapCanvas.width-y3);
+					minimapContext.lineTo(x1, minimapCanvas.width-y1);
+					minimapContext.closePath();
+					//minimapContext.arc(minimapCanvas.width*(100+oppTeam[i].currentPosition.x)/200, minimapCanvas.width*(100+oppTeam[i].currentPosition.z)/200, minimapCanvas.width/40, 0, 2 * Math.PI, false);
+					minimapContext.stroke();
+					minimapContext.fillStyle = "#FF0000";
+					minimapContext.fill();
+				}
+
+				if (currAnimation=="passedBall"||currAnimation=="shotBall"){
+					minimapContext.beginPath();
+					minimapContext.arc(minimapCanvas.width*(100+ballPosition.x)/200, minimapCanvas.width*(100-ballPosition.z)/200, minimapCanvas.width/50, 0, 2 * Math.PI, false);
+					minimapContext.closePath();
+					minimapContext.fillStyle = 'white';
+					minimapContext.fill();
+				}
 			}
 
 		</script>

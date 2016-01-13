@@ -23,6 +23,8 @@ THREE.BBAnimation = function ( root, data, playerSpeed ) {
 	this.animPlaying;
 	this.endTime;
 	this.beginTime;
+	this.animTarget=null;
+	this.callback=null;
 
 };
 
@@ -60,7 +62,7 @@ THREE.BBAnimation.prototype = {
 		THREE.AnimationHandler.play( this );
 	},
 	
-	playPassAnimation: function(){
+	playPassAnimation: function(){//TODO implement
 		this.currentTime = 0.135;
 		this.beginTime = 0.135;
 		this.endTime=0.1666;
@@ -71,6 +73,42 @@ THREE.BBAnimation.prototype = {
 
 		this.reset();
 
+		THREE.AnimationHandler.play( this );
+	},
+	
+	playEndureAnimation: function(){//TODO implement
+		this.currentTime = 0.135;
+		this.beginTime = 0.135;
+		this.endTime=0.1666;
+		this.weight = 1;
+		this.isPlaying=true;
+		this.animPlaying="endure";
+		this.loop=false;
+		this.reset();
+		THREE.AnimationHandler.play( this );
+	},
+	
+	playTackleAnimation: function(){//TODO implement
+		this.currentTime = 0.135;
+		this.beginTime = 0.135;
+		this.endTime=0.1666;
+		this.weight = 1;
+		this.isPlaying=true;
+		this.animPlaying="tackle";
+		this.loop=false;
+		this.reset();
+		THREE.AnimationHandler.play( this );
+	},
+	
+	playShootAnimation: function(){//TODO implement
+		this.currentTime = 0.135;
+		this.beginTime = 0.135;
+		this.endTime=0.1666;
+		this.weight = 1;
+		this.isPlaying=true;
+		this.animPlaying="shoot";
+		this.loop=false;
+		this.reset();
 		THREE.AnimationHandler.play( this );
 	},
 
@@ -258,6 +296,10 @@ THREE.BBAnimation.prototype = {
 
 					//this.stop();
 					this.playTreadAnimation();
+					if (this.callback!=null){
+						this.callback();
+						this.callback=null;
+					}
 
 				}
 
