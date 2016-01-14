@@ -306,9 +306,9 @@ THREE.BBAnimation.prototype = {
 			}
 			
 			if (this.animPlaying=='tread'){
-				this.root.position.y=0.1*Math.sin(2*Math.PI*(this.currentTime-this.beginTime)/(this.endTime-this.beginTime));
+				this.root.position.y=0.1*Math.sin(2*Math.PI*(this.currentTime-this.beginTime)/(this.endTime-this.beginTime))-1;
 			} else {
-				this.root.position.y=0;
+				this.root.position.y=-1;
 			}
 
 			for ( var h = 0, hl = this.hierarchy.length; h < hl; h ++ ) {

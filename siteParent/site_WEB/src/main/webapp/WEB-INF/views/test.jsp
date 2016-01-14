@@ -224,6 +224,9 @@
 			var menuSelection=1;
 			var MAXITEMS=3;
 
+			var goal1Loc=new THREE.Vector3(100, 0, 0);
+			var goal2Loc=new THREE.Vector3(-100, 0, 0);
+
 			var myTeam = [];
 			var myTeamLW = new THREE.BBPlayer(null, new THREE.Vector3(20, 0, 50), triggerBreak);
 			myTeamLW.loadPlayer(function(){addPlayer(myTeamLW);});
@@ -279,6 +282,10 @@
 
 			var minimapCanvas;
 			var minimapContext;
+
+			var cameraZoom=null;
+			var zoomLeft=0;
+			var inMenu=false;
 			
 			function addPlayer(bbPlayer){
 				//dae = bbPlayer.root;
@@ -308,7 +315,7 @@
 				document.body.appendChild( container );
 
 				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
-				camera.position.set( 0, 2, 30 );
+				camera.position.set( 0, 0, 30 );
 
 				scene = new THREE.Scene();
 
@@ -571,6 +578,78 @@
 					}
 				}
 				defendingPlayers.sort(function(a,b) {return (b.attack > a.attack) ? 1 : ((a.attack > b.attack) ? -1 : 0);});
+				if (defendingPlayers.length>0){
+					if (teamWithBall==1){
+						var distToGoal=goal2Loc.clone().sub(currentPlayer.currentPosition).length();
+						if (distToGoal<11){
+							currentPlayer.chasingPosition = currentPlayer.currentPosition.clone();
+							while (distToGoal<11){
+								currentPlayer.chasingPosition.x += 1;
+								distToGoal=goal2Loc.clone().sub(currentPlayer.chasingPosition).length();
+							}
+							cameraTarget=currentPlayer.chasingPosition.clone();
+						}
+						currentPlayer.root.lookAt(goal2Loc);
+						currentPlayer.currentRotation==currentPlayer.root.rotation.y;
+					} else if (teamWithBall==2){
+						var distToGoal=goal1Loc.clone().sub(currentPlayer.currentPosition).length();
+						if (distToGoal<11){
+							currentPlayer.chasingPosition = currentPlayer.currentPosition.clone();
+							while (distToGoal<11){
+								currentPlayer.chasingPosition.x -= 1;
+								distToGoal=goal2Loc.clone().sub(currentPlayer.chasingPosition).length();
+							}
+							cameraTarget=currentPlayer.chasingPosition.clone();
+						}
+						currentPlayer.root.lookAt(goal1Loc);
+						currentPlayer.currentRotation==currentPlayer.root.rotation.y;
+					}
+					var odd=(defendingPlayers.length%2==1);
+					var baseX=currentPlayer.currentPosition.x;
+					var baseZ=currentPlayer.currentPosition.z;
+					if (currentPlayer.chasingPosition!=null){
+						baseX=currentPlayer.chasingPosition.x;
+						basey=currentPlayer.chasingPosition.z;
+					}
+					for (var i=0; i<defendingPlayers.length; i++){
+						var baseRot=0;
+						if (teamWithBall==1){
+							baseRot=Math.PI;
+						}
+						if (i==0){
+							if (!odd){
+								baseRot+=Math.PI/20;
+							}
+						} else if (i==1){
+							if (odd){
+								baseRot+=Math.PI/10;
+							} else {
+								baseRot-=Math.PI/20;
+							}
+						} else if (i==2){
+							if (odd){
+								baseRot-=Math.PI/10;
+							} else {
+								baseRot+=3*Math.PI/20;
+							}
+						} else if (i==3){
+							if (odd){
+								baseRot+=Math.PI/5;
+							} else {
+								baseRot-=3*Math.PI/20;
+							}
+						} else if (i==4){
+							if (odd){
+								baseRot-=Math.PI/5;
+							}
+						}
+						defendingPlayers[i].chasingPosition=new THREE.Vector3(baseX+10*Math.cos(baseRot+currentPlayer.currentRotation), 0, baseZ+10*Math.sin(baseRot+currentPlayer.currentRotation));
+					}
+				}
+				cameraZoom = cameraTarget.clone().sub(camera.position);
+				cameraZoom.multiplyScalar((cameraZoom.length()-15)/cameraZoom.length());
+				zoomLeft=0.5;
+				inMenu=true;
 				pause();
 				showBreakMenu();
 			}
@@ -762,11 +841,59 @@
 					showMainActionMenu();
 				}
 			}
+			var rotTimer=0;
 
 			function render() {
 
 				//var timer = Date.now() * 0.0005;
-				var delta = clock.getDelta()*3;
+				var delta = clock.getDelta();
+
+				if (cameraZoom!=null){
+					if (delta>=zoomLeft){
+						camera.position.addVectors(camera.position, cameraZoom);
+						if (currentPlayer.chasingPosition!=null){
+							currentPlayer.zoomChase(1);
+							currentPlayer.chasingPosition=null;
+						}
+						if (teamWithBall==1){
+							currentPlayer.root.lookAt(goal2Loc);//TODO move to BBPlayer
+							currentPlayer.currentRotation=currentPlayer.root.rotation.y;
+						} else {
+							currentPlayer.root.lookAt(goal2Loc);//TODO move to BBPlayer
+							currentPlayer.currentRotation=currentPlayer.root.rotation.y;
+						}
+						if (defendingPlayers.length>0){
+							for (var i=0; i<defendingPlayers.length; i++){
+								defendingPlayers[i].zoomChase(1);
+								defendingPlayers[i].chasingPosition=null;
+								defendingPlayers[i].root.lookAt(currentPlayer.root);
+							}
+						}
+						cameraZoom=null;
+						zoomLeft=0;
+						rotTimer=0;
+					} else {
+						var curMove = cameraZoom.clone().multiplyScalar(delta/zoomLeft);
+						camera.position.addVectors(camera.position, curMove);
+						cameraZoom=cameraZoom.sub(curMove);
+						if (currentPlayer.chasingPosition!=null){
+							currentPlayer.zoomChase(delta/zoomLeft);
+						}
+
+						if (defendingPlayers.length>0){
+							for (var i=0; i<defendingPlayers.length; i++){
+								defendingPlayers[i].zoomChase(delta/zoomLeft);
+							}
+						}
+						zoomLeft-=delta;
+					}
+					
+				} else if (!gameActive&&inMenu){
+					rotTimer += delta;
+					camera.position.x = cameraTarget.x+Math.cos( rotTimer/5 ) * 15;
+					camera.position.y = 0;
+					camera.position.z = cameraTarget.z+Math.sin( rotTimer/5 ) * 15;
+				}
 
 				if (cameraControls.moveForward){
 					camera.position.z -= delta;
@@ -789,7 +916,7 @@
 					cameraTarget.y -= delta;
 				}
 				//camera.position.x = Math.cos( timer ) * 10;
-				camera.position.y = 2;
+				camera.position.y = 0;
 				//camera.position.z = Math.sin( timer ) * 10;
 				
 				if (controls.moveForward||controls.moveBackward||controls.moveLeft||controls.moveRight){
@@ -804,7 +931,7 @@
 
 				myTeamLW.hasBall=true;
 				for (var i=0; i<allPlayers.length; i++){
-					allPlayers[i].updatePlayer(delta/30, controls);
+					allPlayers[i].updatePlayer(delta/10, controls);
 				}
 				//THREE.AnimationHandler.update( delta/30 );
 

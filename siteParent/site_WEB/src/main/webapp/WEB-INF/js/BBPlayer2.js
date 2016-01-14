@@ -76,6 +76,7 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 			scope.animation= new THREE.BBAnimation( object3d.children[0], object3d.children[0].geometry.animation, scope.speed );
 			
 			scope.root.position.x = scope.currentPosition.x;
+			scope.root.position.y = -1;
 			scope.root.position.z = scope.currentPosition.z;
 			scope.root.rotation.y = scope.currentRotation;
 			scope.root.scale.x = scope.root.scale.y = scope.root.scale.z = 2;
@@ -85,6 +86,10 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 				scope.callback();
 			}
 		} );
+	}
+	
+	this.zoomChase = function(percentage){
+		this.currentPosition.add(this.chasingPosition.clone().sub(this.currentPosition).multiplyScalar(percentage));
 	}
 	
 	this.updatePlayer = function(delta, controls){
@@ -283,11 +288,11 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 	
 	this.testEncounter = function(playerLocation, existingDefCount){
 		if (this.currentPosition.distanceTo(playerLocation)<20){//TODO work in skills
-			var vecToGoal = myGoal.clone().sub(playerLocation);
-			var scale = 20/vecToGoal.length();
-			vecToGoal=vecToGoal.multiplyScalar(scale);
-			this.chasingPosition = new Vector3(playerLocation.x+vecToGoal.x, 0, playerLocation.z+vecToGoal.z);
-			this.speedUpChase=true;
+			//var vecToGoal = this.myGoal.clone().sub(playerLocation);
+			//var scale = 20/vecToGoal.length();
+			//vecToGoal=vecToGoal.multiplyScalar(scale);
+			//this.chasingPosition = new Vector3(playerLocation.x+vecToGoal.x, 0, playerLocation.z+vecToGoal.z);
+			//this.speedUpChase=true;
 			return true;
 		} else {
 			return false;
