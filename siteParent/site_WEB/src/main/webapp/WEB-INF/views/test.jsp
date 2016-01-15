@@ -453,7 +453,7 @@
 					allPlayers[i].animation.playTreadAnimation();
 					allPlayers[i].gameActive=true;
 				}
-				currentPlayer=myTeamLW;
+				updateCurrentPlayer(myTeamLW);
 				teamWithBall=1;
 				gameActive=true;
 				animate();
@@ -589,8 +589,8 @@
 							}
 							cameraTarget=currentPlayer.chasingPosition.clone();
 						}
-						currentPlayer.root.lookAt(goal2Loc);
-						currentPlayer.currentRotation==currentPlayer.root.rotation.y;
+						//currentPlayer.root.lookAt(goal2Loc);
+						//currentPlayer.currentRotation==currentPlayer.root.rotation.y;
 					} else if (teamWithBall==2){
 						var distToGoal=goal1Loc.clone().sub(currentPlayer.currentPosition).length();
 						if (distToGoal<11){
@@ -601,8 +601,8 @@
 							}
 							cameraTarget=currentPlayer.chasingPosition.clone();
 						}
-						currentPlayer.root.lookAt(goal1Loc);
-						currentPlayer.currentRotation==currentPlayer.root.rotation.y;
+						//currentPlayer.root.lookAt(goal1Loc);
+						//currentPlayer.currentRotation==currentPlayer.root.rotation.y;
 					}
 					var odd=(defendingPlayers.length%2==1);
 					var baseX=currentPlayer.currentPosition.x;
@@ -611,39 +611,47 @@
 						baseX=currentPlayer.chasingPosition.x;
 						basey=currentPlayer.chasingPosition.z;
 					}
+
+					var rotToGoal;
+					if (teamWithBall==1){
+						rotToGoal=Math.atan2(-1*(goal2Loc.z-baseZ), goal2Loc.x-baseX);
+					} else {
+						rotToGoal=Math.atan2(-1*(goal1Loc.z-baseZ), goal1Loc.x-baseX);
+					}
+					
 					for (var i=0; i<defendingPlayers.length; i++){
 						var baseRot=0;
-						if (teamWithBall==1){
-							baseRot=Math.PI;
-						}
+						//if (teamWithBall==1){
+							//baseRot=Math.PI;
+						//}
 						if (i==0){
 							if (!odd){
-								baseRot+=Math.PI/20;
+								baseRot+=Math.PI/16;
 							}
 						} else if (i==1){
 							if (odd){
-								baseRot+=Math.PI/10;
+								baseRot+=Math.PI/6;
 							} else {
-								baseRot-=Math.PI/20;
+								baseRot-=Math.PI/12;
 							}
 						} else if (i==2){
 							if (odd){
-								baseRot-=Math.PI/10;
+								baseRot-=Math.PI/6;
 							} else {
-								baseRot+=3*Math.PI/20;
+								baseRot+=Math.PI/4;
 							}
 						} else if (i==3){
 							if (odd){
-								baseRot+=Math.PI/5;
+								baseRot+=Math.PI/3;
 							} else {
-								baseRot-=3*Math.PI/20;
+								baseRot-=Math.PI/4;
 							}
 						} else if (i==4){
 							if (odd){
-								baseRot-=Math.PI/5;
+								baseRot-=Math.PI/3;
 							}
 						}
-						defendingPlayers[i].chasingPosition=new THREE.Vector3(baseX+10*Math.cos(baseRot+currentPlayer.currentRotation), 0, baseZ+10*Math.sin(baseRot+currentPlayer.currentRotation));
+						defendingPlayers[i].chasingPosition=new THREE.Vector3(baseX+10*Math.cos(baseRot+rotToGoal), 0, baseZ-10*Math.sin(baseRot+rotToGoal));
 					}
 				}
 				cameraZoom = cameraTarget.clone().sub(camera.position);
@@ -828,6 +836,74 @@
 				}
 			}
 
+			function updateMinimap(){
+				//reset canvas
+				minimapContext.rect(0,0,minimapCanvas.width,minimapCanvas.width);
+				minimapContext.fillStyle="grey";
+				minimapContext.fill();
+				minimapContext.beginPath();
+				minimapContext.arc(minimapCanvas.width/2, minimapCanvas.width/2, minimapCanvas.width/2, 0, 2 * Math.PI, false);
+				minimapContext.closePath();
+				minimapContext.fillStyle = 'blue';
+				minimapContext.fill();
+
+				//yellow team
+				for (var i=0; i<myTeam.length; i++){
+					var rot=myTeam[i].currentRotation+Math.PI;
+					var x1=minimapCanvas.width*(110+myTeam[i].currentPosition.x)/220-Math.cos(rot)*minimapCanvas.width/12;
+					var y1=minimapCanvas.width*(110-myTeam[i].currentPosition.z)/220-Math.sin(rot)*minimapCanvas.width/12;
+					var x2=x1+Math.cos(rot-Math.PI/12)*(minimapCanvas.width/12);
+					var y2=y1+Math.sin(rot-Math.PI/12)*(minimapCanvas.width/12);
+					var x3=x1+Math.cos(rot+Math.PI/12)*(minimapCanvas.width/12);
+					var y3=y1+Math.sin(rot+Math.PI/12)*(minimapCanvas.width/12);
+					minimapContext.beginPath();
+					minimapContext.moveTo(x1, minimapCanvas.width-y1);
+					minimapContext.lineTo(x2, minimapCanvas.width-y2);
+					minimapContext.lineTo(x3, minimapCanvas.width-y3);
+					minimapContext.lineTo(x1, minimapCanvas.width-y1);
+					minimapContext.closePath();
+					minimapContext.stroke();
+					minimapContext.fillStyle = "#FFCC00";
+					minimapContext.fill();
+				}
+
+				//red team
+				for (var i=0; i<oppTeam.length; i++){
+					var rot=oppTeam[i].currentRotation+Math.PI;
+					var x1=minimapCanvas.width*(110+oppTeam[i].currentPosition.x)/220-Math.cos(rot)*minimapCanvas.width/12;
+					var y1=minimapCanvas.width*(110-oppTeam[i].currentPosition.z)/220-Math.sin(rot)*minimapCanvas.width/12;
+					var x2=x1+Math.cos(rot-Math.PI/12)*(minimapCanvas.width/12);
+					var y2=y1+Math.sin(rot-Math.PI/12)*(minimapCanvas.width/12);
+					var x3=x1+Math.cos(rot+Math.PI/12)*(minimapCanvas.width/12);
+					var y3=y1+Math.sin(rot+Math.PI/12)*(minimapCanvas.width/12);
+					minimapContext.beginPath();
+					minimapContext.moveTo(x1, minimapCanvas.width-y1);
+					minimapContext.lineTo(x2, minimapCanvas.width-y2);
+					minimapContext.lineTo(x3, minimapCanvas.width-y3);
+					minimapContext.lineTo(x1, minimapCanvas.width-y1);
+					minimapContext.closePath();
+					//minimapContext.arc(minimapCanvas.width*(100+oppTeam[i].currentPosition.x)/200, minimapCanvas.width*(100+oppTeam[i].currentPosition.z)/200, minimapCanvas.width/40, 0, 2 * Math.PI, false);
+					minimapContext.stroke();
+					minimapContext.fillStyle = "#FF0000";
+					minimapContext.fill();
+				}
+
+				//dev
+				minimapContext.beginPath();
+				minimapContext.arc(minimapCanvas.width*(110+camera.position.x)/220, minimapCanvas.width*(110+camera.position.z)/220, minimapCanvas.width/50, 0, 2 * Math.PI, false);
+				minimapContext.closePath();
+				minimapContext.fillStyle = 'white';
+				minimapContext.fill();
+
+				if (currAnimation=="passedBall"||currAnimation=="shotBall"){
+					minimapContext.beginPath();
+					minimapContext.arc(minimapCanvas.width*(100+ballPosition.x)/200, minimapCanvas.width*(100-ballPosition.z)/200, minimapCanvas.width/50, 0, 2 * Math.PI, false);
+					minimapContext.closePath();
+					minimapContext.fillStyle = 'white';
+					minimapContext.fill();
+				}
+			}
+
 			function animateBreak(numLeft){
 				if (numLeft>0){
 					if (defendingPlayers!=null&&defendingPlayers.length>=numLeft){
@@ -841,8 +917,61 @@
 					showMainActionMenu();
 				}
 			}
-			var rotTimer=0;
 
+			function updateCurrentPlayer(player){
+				if (currentPlayer!=null){
+					currentPlayer.hasBall=false;
+				}
+				currentPlayer=player;
+				document.getElementById('playerName').innerHTML=player.name;
+				document.getElementById('playerHP').innerHTML=player.hp;
+				document.getElementById('playerEND').innerHTML=player.endurance;
+				document.getElementById('playerPAS').innerHTML=player.pass;
+				document.getElementById('playerSHT').innerHTML=player.shot;
+				document.getElementById('break1Stats').style.display='none';
+				document.getElementById('break2Stats').style.display='none';
+				document.getElementById('break3Stats').style.display='none';
+				document.getElementById('break4Stats').style.display='none';
+				document.getElementById('break5Stats').style.display='none';
+				currentPlayer.hasBall=true;
+			}
+
+			function triggerBallMove(){
+				if (currAction=="passing"){
+					ballTrajectory=targettedPlayer.currentPosition.clone().sub(currentPlayer.currentPosition);
+					ballPosition.set(currentCar.currentPosition.x, currentCar.currentPosition.y, currentCar.currentPosition.z);
+					if (is3DMode){
+						ball.position=ballPosition;
+					} else {
+						animatePassBlock();
+					}
+				}
+			}
+
+			function animatePassBlock(){
+				if (defendingPlayers==null||defendingPlayers.length==0){
+					currAnimation="passedBall";
+					ballMoveIteration=0;
+					currAction="passing";
+					triggerBallMove();
+				} else {
+					currAnimation="block";
+					animatingPlayer=defendingPlayers[0];
+					//TODO this should happen in the middle of animation
+					currStat = currStat-((.5+Math.random())*defendingPlayers[0].block);
+					defendingPlayers.shift();
+					setTimeout(animatePassBlock, '1500');
+				}
+			}
+
+			function pass(){
+				currentPlayer.lookAt(targettedPlayer);
+				currentPlayer.animatePass(animatePassBlock);
+				currStat=currentPlayer.pass;
+				//currentCar=destination;
+			}
+
+			var rotTimer=0;
 			function render() {
 
 				//var timer = Date.now() * 0.0005;
@@ -856,22 +985,24 @@
 							currentPlayer.chasingPosition=null;
 						}
 						if (teamWithBall==1){
-							currentPlayer.root.lookAt(goal2Loc);//TODO move to BBPlayer
-							currentPlayer.currentRotation=currentPlayer.root.rotation.y;
+							currentPlayer.lookAt(goal2Loc);
+							//currentPlayer.currentRotation=currentPlayer.root.rotation.y;
 						} else {
-							currentPlayer.root.lookAt(goal2Loc);//TODO move to BBPlayer
-							currentPlayer.currentRotation=currentPlayer.root.rotation.y;
+							currentPlayer.lookAt(goal1Loc);
+							//currentPlayer.currentRotation=currentPlayer.root.rotation.y;
 						}
 						if (defendingPlayers.length>0){
 							for (var i=0; i<defendingPlayers.length; i++){
 								defendingPlayers[i].zoomChase(1);
 								defendingPlayers[i].chasingPosition=null;
-								defendingPlayers[i].root.lookAt(currentPlayer.root);
+								defendingPlayers[i].lookAt(currentPlayer.currentPosition);
 							}
 						}
+
+						rotTimer=Math.atan2(-1*(camera.position.z-cameraTarget.z), camera.position.x-cameraTarget.x);
 						cameraZoom=null;
 						zoomLeft=0;
-						rotTimer=0;
+						//rotTimer=0;
 					} else {
 						var curMove = cameraZoom.clone().multiplyScalar(delta/zoomLeft);
 						camera.position.addVectors(camera.position, curMove);
@@ -889,10 +1020,10 @@
 					}
 					
 				} else if (!gameActive&&inMenu){
-					rotTimer += delta;
-					camera.position.x = cameraTarget.x+Math.cos( rotTimer/5 ) * 15;
+					camera.position.x = cameraTarget.x+Math.cos( rotTimer ) * 15;
 					camera.position.y = 0;
-					camera.position.z = cameraTarget.z+Math.sin( rotTimer/5 ) * 15;
+					camera.position.z = cameraTarget.z-Math.sin( rotTimer ) * 15;
+					rotTimer += delta/5;
 				}
 
 				if (cameraControls.moveForward){
@@ -937,67 +1068,6 @@
 
 				renderer.render( scene, camera );
 
-			}
-
-			function updateMinimap(){
-				//reset canvas
-				minimapContext.rect(0,0,minimapCanvas.width,minimapCanvas.width);
-				minimapContext.fillStyle="grey";
-				minimapContext.fill();
-				minimapContext.beginPath();
-				minimapContext.arc(minimapCanvas.width/2, minimapCanvas.width/2, minimapCanvas.width/2, 0, 2 * Math.PI, false);
-				minimapContext.closePath();
-				minimapContext.fillStyle = 'blue';
-				minimapContext.fill();
-
-				//yellow team
-				for (var i=0; i<myTeam.length; i++){
-					var rot=myTeam[i].currentRotation+Math.PI/2;
-					var x1=minimapCanvas.width*(110+myTeam[i].currentPosition.x)/220-Math.cos(rot)*minimapCanvas.width/12;
-					var y1=minimapCanvas.width*(110-myTeam[i].currentPosition.z)/220-Math.sin(rot)*minimapCanvas.width/12;
-					var x2=x1+Math.cos(rot-Math.PI/12)*(minimapCanvas.width/12);
-					var y2=y1+Math.sin(rot-Math.PI/12)*(minimapCanvas.width/12);
-					var x3=x1+Math.cos(rot+Math.PI/12)*(minimapCanvas.width/12);
-					var y3=y1+Math.sin(rot+Math.PI/12)*(minimapCanvas.width/12);
-					minimapContext.beginPath();
-					minimapContext.moveTo(x1, minimapCanvas.width-y1);
-					minimapContext.lineTo(x2, minimapCanvas.width-y2);
-					minimapContext.lineTo(x3, minimapCanvas.width-y3);
-					minimapContext.lineTo(x1, minimapCanvas.width-y1);
-					minimapContext.closePath();
-					minimapContext.stroke();
-					minimapContext.fillStyle = "#FFCC00";
-					minimapContext.fill();
-				}
-
-				//red team
-				for (var i=0; i<oppTeam.length; i++){
-					var rot=oppTeam[i].currentRotation+Math.PI/2;
-					var x1=minimapCanvas.width*(110+oppTeam[i].currentPosition.x)/220-Math.cos(rot)*minimapCanvas.width/12;
-					var y1=minimapCanvas.width*(110-oppTeam[i].currentPosition.z)/220-Math.sin(rot)*minimapCanvas.width/12;
-					var x2=x1+Math.cos(rot-Math.PI/12)*(minimapCanvas.width/12);
-					var y2=y1+Math.sin(rot-Math.PI/12)*(minimapCanvas.width/12);
-					var x3=x1+Math.cos(rot+Math.PI/12)*(minimapCanvas.width/12);
-					var y3=y1+Math.sin(rot+Math.PI/12)*(minimapCanvas.width/12);
-					minimapContext.beginPath();
-					minimapContext.moveTo(x1, minimapCanvas.width-y1);
-					minimapContext.lineTo(x2, minimapCanvas.width-y2);
-					minimapContext.lineTo(x3, minimapCanvas.width-y3);
-					minimapContext.lineTo(x1, minimapCanvas.width-y1);
-					minimapContext.closePath();
-					//minimapContext.arc(minimapCanvas.width*(100+oppTeam[i].currentPosition.x)/200, minimapCanvas.width*(100+oppTeam[i].currentPosition.z)/200, minimapCanvas.width/40, 0, 2 * Math.PI, false);
-					minimapContext.stroke();
-					minimapContext.fillStyle = "#FF0000";
-					minimapContext.fill();
-				}
-
-				if (currAnimation=="passedBall"||currAnimation=="shotBall"){
-					minimapContext.beginPath();
-					minimapContext.arc(minimapCanvas.width*(100+ballPosition.x)/200, minimapCanvas.width*(100-ballPosition.z)/200, minimapCanvas.width/50, 0, 2 * Math.PI, false);
-					minimapContext.closePath();
-					minimapContext.fillStyle = 'white';
-					minimapContext.fill();
-				}
 			}
 
 		</script>

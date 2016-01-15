@@ -48,10 +48,10 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 	this.restingPosition = startingPos.clone();//Vector3
 	this.currentPosition = startingPos;
 	this.chasingPosition = null;
-	this.currentRotation=Math.PI/2;
+	this.currentRotation=0;//Math.PI/2;
 	this.myGoal = new THREE.Vector3(-100, 0, 0);
 	if (startingPos.x>0){
-		this.currentRotation=-1*Math.PI/2;
+		this.currentRotation=Math.PI//-1*Math.PI/2;
 		this.myGoal.x=100;
 	}
 	this.has3DModel=false;
@@ -60,6 +60,7 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 	this.animation=null;
 	this.speedUpChase=false;
 	this.gameActive=false;
+	this.rotationTarget=null;
 
 	// internal helper variables
 
@@ -78,7 +79,7 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 			scope.root.position.x = scope.currentPosition.x;
 			scope.root.position.y = -1;
 			scope.root.position.z = scope.currentPosition.z;
-			scope.root.rotation.y = scope.currentRotation;
+			scope.root.rotation.y = scope.currentRotation+Math.PI/2;
 			scope.root.scale.x = scope.root.scale.y = scope.root.scale.z = 2;
 			scope.root.updateMatrix();
 
@@ -90,6 +91,8 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 	
 	this.zoomChase = function(percentage){
 		this.currentPosition.add(this.chasingPosition.clone().sub(this.currentPosition).multiplyScalar(percentage));
+		this.root.position.x=this.currentPosition.x;
+		this.root.position.z=this.currentPosition.z;
 	}
 	
 	this.updatePlayer = function(delta, controls){
@@ -119,14 +122,12 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 				trajectory=new THREE.Vector3(moveScale*(this.speed/60)*delta, 0, 0);
 			}
 		} else {
-			if (this.chasingPosition!=null){
-				if (this.speedUpChase||this.gameActive){
+			if (this.gameActive&&this.chasingPosition!=null){
 					trajectory=this.chasingPosition.clone().sub(this.currentPosition);
 					if (trajectory.length<5&&this.gameActive){
 						this.triggerEncounter();
 					}
-				}
-			} else if (this.restingPosition.x!=this.currentPosition.x||this.restingPosition.z!=this.currentPosition.z){
+			} else if (this.gameActive&&(this.restingPosition.x!=this.currentPosition.x||this.restingPosition.z!=this.currentPosition.z)){
 				trajectory=this.restingPosition.clone().sub(this.currentPosition);
 			}
 		}
@@ -142,8 +143,8 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 			this.checkSphereBounds(trajectory);
 			
 			var newRot = Math.atan2(-1*trajectory.z, trajectory.x);
-			this.currentRotation=newRot+Math.PI/2;//position seems to be based off of vertical axis, not horizontal
-			this.root.rotation.y=this.currentRotation;
+			this.currentRotation=newRot;//position seems to be based off of vertical axis, not horizontal
+			this.root.rotation.y=this.currentRotation+Math.PI/2;
 			this.root.position.x=this.currentPosition.x;
 			this.root.position.z=this.currentPosition.z;
 
@@ -153,33 +154,52 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 		} else if (this.animation.animPlaying=="swim"){
 			this.animation.playTreadAnimation();
 		}
+		if (this.rotationTarget!=null){
+			var rotToGo=this.rotationTarget-this.currentRotation;
+			var maxRot=5*Math.PI*delta;
+			if (maxRot>=Math.abs(rotToGo)){
+				this.currentRotation=this.rotationTarget;
+				this.rotationTarget=null;
+			} else {
+				if (rotToGo<0){
+					this.currentRotation-=maxRot;
+				} else {
+					this.currentRotation+=maxRot;
+				}
+			}
+			this.root.rotation.y=this.currentRotation+Math.PI/2;
+		}
+	}
+	
+	this.lookAt = function(vector){
+		this.rotationTarget=Math.atan2(-1*(vector.z-this.currentPosition.z), vector.x-this.currentPosition.x);
 	}
 	
 	this.playTreadAnimation = function(){
 		this.animation.playTreadAnimation();
 	}
 	
-	this.blockSuccessfully = function(){
+	this.animateBlockSuccess = function(){
 		//this.animation.playBlockSuccessAnimation();
 	}
 	
-	this.blockFail = function(){
+	this.animateBlockFail = function(){
 		//this.animation.playBlockFailAnimation();
 	}
 	
-	this.shoot = function(){
+	this.animateShoot = function(){
 		//this.animation.playShotAnimation();
 	}
 	
-	this.pass = function(){
+	this.animatePass = function(){
 		//this.animation.playPassAnimation();
 	}
 	
-	this.playGoalieTreadAnimation = function(){
+	this.animateGoalieTread = function(){
 		//this.animation.playGoalieAnimation();
 	}
 	
-	this.playShotSaveAnimation = function(){
+	this.animateShotSave = function(){
 		//this.animation.playShotSaveAnimation();
 	}
 	
