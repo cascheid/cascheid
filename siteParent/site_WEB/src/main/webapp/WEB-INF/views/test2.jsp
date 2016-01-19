@@ -57,7 +57,7 @@
 
 			var loader = new THREE.ColladaLoader();
 			loader.options.convertUpAxis = true;
-			loader.load( 'obj/stormtrooper/stormtrooper.dae', function ( collada ) {
+			loader.load( 'obj/stormtrooper/stormtrooper17.dae', function ( collada ) {
 
 				dae = collada.scene;
 				var trooper = dae.children[1];
@@ -86,7 +86,7 @@
 				var animation = new THREE.Animation( trooper.children[0], trooper.children[0].geometry.animation );
 						animation.play();*/
 
-				/*dae.traverse( function ( child ) {
+				dae.traverse( function ( child ) {
 
 					if ( child instanceof THREE.SkinnedMesh ) {
 
@@ -95,7 +95,7 @@
 
 					}
 
-				} );*/
+				} );
 
 				dae.scale.x = dae.scale.y = dae.scale.z = 2;
 				dae.updateMatrix();
@@ -111,7 +111,7 @@
 				document.body.appendChild( container );
 
 				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
-				camera.position.set( 2, 2, 3 );
+				camera.position.set( 0, 2, 10 );
 
 				scene = new THREE.Scene();
 
@@ -193,22 +193,33 @@
 			}
 
 			var clock = new THREE.Clock();
+			var totalTimer=0;
 
 			function render() {
 
 				var timer = Date.now() * 0.0005;
 
-				camera.position.x = Math.cos( timer ) * 10;
-				camera.position.y = 2;
-				camera.position.z = Math.sin( timer ) * 10;
+				//camera.position.x = Math.cos( timer ) * 10;
+				//camera.position.y = 2;
+				//camera.position.z = Math.sin( timer ) * 10;
+				camera.position.x=7.5;
+				camera.position.z=7.5;
 
-				camera.lookAt( scene.position );
+				var delta=clock.getDelta();
+				totalTimer+=delta;
+				if (totalTimer>=10){
+					totalTimer-=10;
+					//dae.children[3].children[0].visible=!dae.children[3].children[0].visible;
+				}
+				//dae.rotation.y+=delta;
+
+				camera.lookAt(scene.position);
 
 				//particleLight.position.x = Math.sin( timer * 4 ) * 3009;
 				//particleLight.position.y = Math.cos( timer * 5 ) * 4000;
 				//particleLight.position.z = Math.cos( timer * 4 ) * 3009;
 
-				//THREE.AnimationHandler.update( clock.getDelta()/15 );
+				THREE.AnimationHandler.update( delta/15 );
 
 				renderer.render( scene, camera );
 
