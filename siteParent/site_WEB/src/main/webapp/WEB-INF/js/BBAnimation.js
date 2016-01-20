@@ -11,7 +11,7 @@ THREE.BBAnimation = function ( root, data, playerSpeed ) {
 	this.hierarchy = THREE.AnimationHandler.parse( root );
 
 	this.currentTime = 0;
-	this.timeScale = 1;
+	this.timeScale = 0.3;
 
 	this.isPlaying = false;
 	this.loop = true;
@@ -37,7 +37,7 @@ THREE.BBAnimation.prototype = {
 	playTreadAnimation: function(){
 		this.currentTime = 0;
 		this.beginTime = 0;
-		this.endTime=0.135;//TODO find right value
+		this.endTime=.54;//TODO find right value
 		this.weight = 1;
 		this.isPlaying=true;
 		this.animPlaying="tread";
@@ -49,13 +49,27 @@ THREE.BBAnimation.prototype = {
 	},
 	
 	playSwimAnimation: function(){
-		this.currentTime = 0;
-		this.beginTime = 0;
-		this.endTime=0.135;//TODO find right value
+		this.currentTime = .55;
+		this.beginTime = .6666666;
+		this.endTime=1.27;//TODO find right value
 		this.weight = 1;
 		this.isPlaying=true;
 		this.animPlaying="swim";
 		this.loop=true;
+
+		this.reset();
+
+		THREE.AnimationHandler.play( this );
+	},
+	
+	playGrabBallAnimation: function(){
+		this.currentTime = 1.272;
+		this.beginTime = 1.272;
+		this.endTime=1.8;//TODO find right value
+		this.weight = 1;
+		this.isPlaying=true;
+		this.animPlaying="grab";
+		this.loop=false;
 
 		this.reset();
 
@@ -306,9 +320,9 @@ THREE.BBAnimation.prototype = {
 			}
 			
 			if (this.animPlaying=='tread'){
-				this.root.position.y=0.1*Math.sin(2*Math.PI*(this.currentTime-this.beginTime)/(this.endTime-this.beginTime))-1;
+				this.root.parent.parent.position.y=0.1*Math.sin(2*Math.PI*(this.currentTime-this.beginTime)/(this.endTime-this.beginTime))-1;
 			} else {
-				this.root.position.y=-1;
+				this.root.parent.parent.position.y=-1;
 			}
 
 			for ( var h = 0, hl = this.hierarchy.length; h < hl; h ++ ) {

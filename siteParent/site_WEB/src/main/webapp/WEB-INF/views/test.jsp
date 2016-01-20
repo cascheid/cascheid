@@ -227,6 +227,21 @@
 			var goal1Loc=new THREE.Vector3(100, 0, 0);
 			var goal2Loc=new THREE.Vector3(-100, 0, 0);
 
+
+			var blitzball=null;
+			var loader = new THREE.ColladaLoader();
+			loader.options.convertUpAxis = true;
+			loader.load( 'obj/stormtrooper/blitzball.dae', function ( collada ) {
+
+				blitzball = collada.scene;
+				blitzball.children[0].children[0].material.side=THREE.DoubleSide;
+				
+				blitzball.updateMatrix();
+
+				addPlayer(blitzball);
+			} );
+
+
 			var myTeam = [];
 			var myTeamLW = new THREE.BBPlayer(null, new THREE.Vector3(20, 0, 50), triggerBreak);
 			myTeamLW.loadPlayer(function(){addPlayer(myTeamLW);});
@@ -290,7 +305,7 @@
 			function addPlayer(bbPlayer){
 				//dae = bbPlayer.root;
 				loadedCount++;
-				if (loadedCount>=12){
+				if (loadedCount>=13){
 					init();
 				}
 			}
@@ -359,6 +374,7 @@
 					scene.add(allPlayers[i].root);
 				}
 				//scene.add( dae );
+				scene.add(blitzball);
 
 				//skybox
 				var cubeMap = new THREE.CubeTexture( [] );
@@ -449,11 +465,11 @@
 				cameraTarget.set(scene.position.x, scene.position.y, scene.position.z);
 
 				clock=new THREE.Clock();
+				updateCurrentPlayer(myTeamLW);
 				for (var i=0; i<allPlayers.length; i++){
-					allPlayers[i].animation.playTreadAnimation();
+					allPlayers[i].playTreadAnimation();
 					allPlayers[i].gameActive=true;
 				}
-				updateCurrentPlayer(myTeamLW);
 				teamWithBall=1;
 				gameActive=true;
 				animate();
@@ -912,7 +928,7 @@
 					}
 					breakingPlayer=defendingPlayers.shift();
 					currentPlayer.animateEndure(onBreakResult(numLeft-1));
-					breakingPlayer.animateTackle(currentPlayer.position);
+					breakingPlayer.animateTackle(currentPlayer.currentPosition);
 				} else {
 					showMainActionMenu();
 				}
@@ -972,6 +988,41 @@
 			}
 
 			var rotTimer=0;
+
+			function updateCameraTarget(){
+				if (currAction=="none"){
+					cameraTarget.set(currentPlayer.currentPosition.x, 0, currentPlayer.currentPosition.z);
+					if (currentPlayer.currentPosition.x<-40){
+						camera.position.x=-75;
+						if (currentPlayer.currentPosition.z<=-75){
+							camera.position.z=-60;
+						} else {
+							camera.position.z=currentPlayer.currentPosition.z+15;
+						}
+					} else if (currentPlayer.currentPosition.x>40){
+						camera.position.x=75;
+						if (currentPlayer.currentPosition.z<=-75){
+							camera.position.z=-60;
+						} else {
+							camera.position.z=currentPlayer.currentPosition.z+15;
+						}
+					} else {
+						if (currentPlayer.currentPosition.x>15){
+							camera.position.x=currentPlayer.currentPosition.x-15;
+						} else if (currentPlayer.currentPosition.x<-15){
+							camera.position.x=currentPlayer.currentPosition.x+15;
+						}else {
+							camera.position.x=0;
+						}
+						if (currentPlayer.currentPosition.z<=-75){
+							camera.position.z=-60;
+						} else {
+							camera.position.z=currentPlayer.currentPosition.z+15;
+						}
+					}
+				}
+			}
+			
 			function render() {
 
 				//var timer = Date.now() * 0.0005;
@@ -1050,9 +1101,10 @@
 				camera.position.y = 0;
 				//camera.position.z = Math.sin( timer ) * 10;
 				
-				if (controls.moveForward||controls.moveBackward||controls.moveLeft||controls.moveRight){
-					cameraTarget.set(myTeamLW.root.position.x, myTeamLW.root.position.y, myTeamLW.root.position.z);
-				}
+				updateCameraTarget();
+				//if (controls.moveForward||controls.moveBackward||controls.moveLeft||controls.moveRight){
+					//cameraTarget.set(myTeamLW.root.position.x, myTeamLW.root.position.y, myTeamLW.root.position.z);
+				//}
 				camera.lookAt(cameraTarget);
 				//camera.lookAt( scene.position );
 
@@ -1062,7 +1114,7 @@
 
 				myTeamLW.hasBall=true;
 				for (var i=0; i<allPlayers.length; i++){
-					allPlayers[i].updatePlayer(delta/10, controls);
+					allPlayers[i].updatePlayer(delta, controls);
 				}
 				//THREE.AnimationHandler.update( delta/30 );
 
