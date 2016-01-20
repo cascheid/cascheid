@@ -37,7 +37,7 @@ THREE.BBAnimation.prototype = {
 	playTreadAnimation: function(){
 		this.currentTime = 0;
 		this.beginTime = 0;
-		this.endTime=.54;//TODO find right value
+		this.endTime=.533333;
 		this.weight = 1;
 		this.isPlaying=true;
 		this.animPlaying="tread";
@@ -51,7 +51,7 @@ THREE.BBAnimation.prototype = {
 	playSwimAnimation: function(){
 		this.currentTime = .55;
 		this.beginTime = .6666666;
-		this.endTime=1.27;//TODO find right value
+		this.endTime=1.333333;
 		this.weight = 1;
 		this.isPlaying=true;
 		this.animPlaying="swim";
@@ -63,9 +63,9 @@ THREE.BBAnimation.prototype = {
 	},
 	
 	playGrabBallAnimation: function(){
-		this.currentTime = 1.272;
-		this.beginTime = 1.272;
-		this.endTime=1.8;//TODO find right value
+		this.currentTime = 1.3666667;
+		this.beginTime = 1.3666667;
+		this.endTime=1.9;//TODO find right value
 		this.weight = 1;
 		this.isPlaying=true;
 		this.animPlaying="grab";

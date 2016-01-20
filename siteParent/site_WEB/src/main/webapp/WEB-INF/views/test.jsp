@@ -71,6 +71,20 @@
 				display:block;
 
 			}
+			
+			#overlay{
+				background:none transparent;
+				font-family: "Trebuchet MS", Verdana, sans-serif;
+				font-weight: bold;
+				font-style:italic;
+				font-size: 5vmin;
+				text-align:center;
+				position:absolute;
+				left:40%;
+				top:40%;
+				width:20%;
+				color:gold;
+			}
 
 			a { color: skyblue }
 		</style>
@@ -173,6 +187,8 @@
 			<div style="display:table-cell"></div>
 		</div>
 		</div>
+		
+		<div id="overlay" style="display:none">Blitzoff!</div>
 		
 		<div style="position: absolute; bottom:0; left: 80%; z-index:1000">
 			<canvas id="minimapCanvas"></canvas>
@@ -465,13 +481,14 @@
 				cameraTarget.set(scene.position.x, scene.position.y, scene.position.z);
 
 				clock=new THREE.Clock();
-				updateCurrentPlayer(myTeamLW);
+				//updateCurrentPlayer(myTeamLW);
 				for (var i=0; i<allPlayers.length; i++){
 					allPlayers[i].playTreadAnimation();
 					allPlayers[i].gameActive=true;
 				}
-				teamWithBall=1;
-				gameActive=true;
+				//teamWithBall=1;
+				//gameActive=true;
+				blitzoff();
 				animate();
 			}
 
@@ -828,7 +845,12 @@
 				document.getElementById('actionMenu').style.height=(MAXITEMS*4)+'vmin';
 			}
 
+			function delayResumeGame(){
+				setTimeout(resumeActiveGame, '1000');
+			}
+
 			function resumeActiveGame(){
+				currAction="none";
 				unpause();
 			}
 
@@ -987,6 +1009,33 @@
 				//currentCar=destination;
 			}
 
+			var trackTimer=0;
+			
+			function blitzoff(){
+				currAction="blitzoff";
+				camera.position.set(0,0,3);
+				cameraTarget.set(0,0,0);
+				document.getElementById('overlay').innerHTML="Blitzoff!";
+				document.getElementById('overlay').style.display="";
+				trackTimer=0;
+			}
+
+			function endBlitzoff(){
+				if (Math.random()<1){//TODO .5
+					currAction="grab";
+					teamWithBall=1;
+					document.getElementById('overlay').innerHTML="";
+					document.getElementById('overlay').style.display="none";
+					updateCurrentPlayer(myTeamMF);
+					cameraTarget.x=currentPlayer.currentPosition.x;
+					cameraTarget.z=currentPlayer.currentPosition.z;
+					cameraTarget.y=0;
+					camera.position.x=currentPlayer.currentPosition.x-7;
+					camera.position.z=currentPlayer.currentPosition.z+7;
+					myTeamMF.animateGrabBall(delayResumeGame);
+				}
+			}
+
 			var rotTimer=0;
 
 			function updateCameraTarget(){
@@ -1027,6 +1076,20 @@
 
 				//var timer = Date.now() * 0.0005;
 				var delta = clock.getDelta();
+
+				if (currAction=="blitzoff"){
+					trackTimer+=delta;
+					if (trackTimer>=1){
+						blitzball.rotation.y+=delta*10;
+					}
+					if (trackTimer>=3){
+						blitzball.position.y+=delta*10;
+						cameraTarget.y=blitzball.position.y;
+					}
+					if (trackTimer>=5){
+						endBlitzoff();
+					}
+				}
 
 				if (cameraZoom!=null){
 					if (delta>=zoomLeft){
