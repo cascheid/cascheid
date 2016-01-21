@@ -223,8 +223,8 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 	this.animateCatchBall = function(){
 		this.hasBall=true;
 		this.ball.visible=true;
-		this.animation.playCatchAnimation();
-		this.ballAnimation.playCatchAnimation();
+		this.animation.playGrabBallAnimation();
+		this.ballAnimation.playGrabBallAnimation();
 	}
 	
 	this.animateBlockFail = function(){
@@ -237,8 +237,10 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 		//this.animation.playShotAnimation();
 	}
 	
-	this.animatePass = function(){
-		//this.animation.playPassAnimation();
+	this.animatePass = function(callback){
+		this.animation.playPassAnimation();
+		this.ballAnimation.playPassAnimation();
+		this.ballAnimation.callback=callback;
 	}
 	
 	this.animateGoalieTread = function(){

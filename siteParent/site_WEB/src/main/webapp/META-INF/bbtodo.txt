@@ -1,0 +1,36 @@
+
+test-
+Pass method
+Shoot method
+Tackle method loop
+Blocking method loop
+-sleep
+Ball travelling via pass/shot
+goalie save/fail
+Score transition
+Faceoff
+AI of resting positions/chasing
+AI of computer controlled ball
+Camera controlling
+Techcopy
+
+graphical:
+All animations, new models
+Sphere with water/glyphs/goal logo
+Glyphs on playing field
+Goals
+effects on block/shot/faceoff
+final skybox
+
+
+Cleanup
+Make BBPlayer read from json
+-stats/model(scale?)
+Remove unnecessary test variables
+disable f12
+
+761799587780156 for 1.75
+31323868427822043 for .25 probably right
+7687103310361184 for 1.25
+5044727586324597 for .5 right
+5499664878784232 for 1.5

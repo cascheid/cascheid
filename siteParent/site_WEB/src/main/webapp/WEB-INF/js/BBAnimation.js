@@ -65,7 +65,7 @@ THREE.BBAnimation.prototype = {
 	playGrabBallAnimation: function(){
 		this.currentTime = 1.3666667;
 		this.beginTime = 1.3666667;
-		this.endTime=1.9;//TODO find right value
+		this.endTime=1.9;
 		this.weight = 1;
 		this.isPlaying=true;
 		this.animPlaying="grab";
@@ -77,9 +77,9 @@ THREE.BBAnimation.prototype = {
 	},
 	
 	playPassAnimation: function(){//TODO implement
-		this.currentTime = 0.135;
-		this.beginTime = 0.135;
-		this.endTime=0.1666;
+		this.currentTime = 1.3666667;
+		this.beginTime = 1.3666667;
+		this.endTime=1.9;
 		this.weight = 1;
 		this.isPlaying=true;
 		this.animPlaying="pass";

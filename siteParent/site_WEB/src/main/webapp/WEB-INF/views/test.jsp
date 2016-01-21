@@ -307,6 +307,8 @@
 			allPlayers.push(oppTeamGK);
 
 			var currentPlayer=null;
+			var animatingPlayer=null;
+			var targettedPlayer=null
 
 			var clock = null;
 			var loadedCount=0;
@@ -933,9 +935,9 @@
 				minimapContext.fillStyle = 'white';
 				minimapContext.fill();
 
-				if (currAnimation=="passedBall"||currAnimation=="shotBall"){
+				if (currAction=="passedBall"||currAction=="shotBall"){
 					minimapContext.beginPath();
-					minimapContext.arc(minimapCanvas.width*(100+ballPosition.x)/200, minimapCanvas.width*(100-ballPosition.z)/200, minimapCanvas.width/50, 0, 2 * Math.PI, false);
+					minimapContext.arc(minimapCanvas.width*(100+blitzball.position.x)/200, minimapCanvas.width*(100-blitzball.position.z)/200, minimapCanvas.width/50, 0, 2 * Math.PI, false);
 					minimapContext.closePath();
 					minimapContext.fillStyle = 'white';
 					minimapContext.fill();
@@ -974,10 +976,85 @@
 				currentPlayer.hasBall=true;
 			}
 
+
+			function onBallArrive(){
+				if (currAction=="shotBall"){
+					var keeper;
+					if (teamWithBall==1){
+						keeper=oppTeamGK;
+					} else {
+						keeper=myTeamGK;
+					}
+					var goalNum=Math.round(currStat-((.5+Math.random())*keeper.cat));
+					if (teamWithBall==1){
+						if (goalNum>0){
+							team1Score++;
+							lastScoredTeam=1;
+							faceOff();
+						} else {
+							goalNum=0;
+							teamWithBall=2;
+							updateCurrentPlayer(oppTeam[Math.ceil(Math.random()*5)]);
+							gameActive=true;
+						}
+					} else {
+						if (goalNum>0){
+							team2Score++;
+							lastScoredTeam=2;
+							faceOff();
+						} else {
+							goalNum=0;
+							teamWithBall=1;
+							updateCurrentPlayer(oppTeam[Math.ceil(Math.random()*5)]);
+							gameActive=true;
+						}
+					}
+				} else if (currAction=="passedBall"){
+					if (currStat>0){
+						currAction="catching";
+						var vec = currentPlayer.currentPosition.clone().sub(targettedPlayer.currentPosition);
+						vec.multiplyScalar(15/vec.length());
+						camera.position.addVectors(targettedPlayer.currentPosition, vec);
+						updateCurrentPlayer(targettedPlayer);
+						cameraTarget.set(currentPlayer.currentPosition.x, 0, currentPlayer.currentPosition.z);
+						currentPlayer.animateCatchBall(delayResumeGame);
+						targettedPlayer=null;
+						currStat=0;
+					} else {
+						var currReceiver;
+						var minDistance=50000;
+						for (var i=0; i<myTeam.length; i++){
+							if (myTeam[i]!=targettedPlayer){
+								if (myTeam[i].currentPosition.distanceTo(targettedPlayer.currentPosition)<minDistance){
+									currReceiver=myTeam[i];
+									minDistance=myTeam[i].currentPosition.distanceTo(targettedPlayer.currentPosition);
+								}
+							}
+						}
+						for (var i=0; i<oppTeam.length; i++){
+							if (oppTeam[i].currentPosition.distanceTo(targettedPlayer.currentPosition)<minDistance){
+								currReceiver=oppTeam[i];
+								minDistance=oppTeam[i].currentPosition.distanceTo(targettedPlayer.currentPosition);
+							}
+						}
+						currAction="droppedBall";
+						updateCurrentPlayer(currReceiver);
+						targettedPlayer=null;
+						currStat=0;
+						if (teamWithBall==1){
+							teamWithBall==2;
+						} else {
+							teamWithBall==1;
+						}
+						gameActive=true;
+					}
+				}
+			}
+
 			function triggerBallMove(){
 				if (currAction=="passing"){
 					ballTrajectory=targettedPlayer.currentPosition.clone().sub(currentPlayer.currentPosition);
-					ballPosition.set(currentCar.currentPosition.x, currentCar.currentPosition.y, currentCar.currentPosition.z);
+					ballPosition.set(currentPlayer.currentPosition.x, currentPlayer.currentPosition.y, currentPlayer.currentPosition.z);
 					if (is3DMode){
 						ball.position=ballPosition;
 					} else {
@@ -986,34 +1063,68 @@
 				}
 			}
 
+			function passBlockInterim(){
+				document.getElementById('playerPAS').innerHTML=currStat;
+				if (currStat>0){
+					setTimeout(animatePassBlock, '1000');
+				} else {
+					delayResumeGame();
+				}
+			}
+
 			function animatePassBlock(){
 				if (defendingPlayers==null||defendingPlayers.length==0){
-					currAnimation="passedBall";
+					currAction="passedBall";
 					ballMoveIteration=0;
-					currAction="passing";
-					triggerBallMove();
+					ballTrajectory=targettedPlayer.currentPosition.clone().sub(currentPlayer.currentPosition);
+					var ballmv = ballTrajectory.clone().sub(blitzball.position).multiplyScalar(1/ballTrajectory.length());
+					blitzball.position.addVectors(currentPlayer.currentPosition, ballmv);
 				} else {
-					currAnimation="block";
-					animatingPlayer=defendingPlayers[0];
-					//TODO this should happen in the middle of animation
+					currAction="blockPass";
+					/*animatingPlayer=defendingPlayers[0];
 					currStat = currStat-((.5+Math.random())*defendingPlayers[0].block);
 					defendingPlayers.shift();
-					setTimeout(animatePassBlock, '1500');
+					setTimeout(animatePassBlock, '1500');*/
+					animatingPlayer=defendingPlayers.shift();
+					currStat = currStat-Math.round((.5+Math.random())*defendingPlayers[0].block);
+					if (teamWithBall==1){
+						camera.position.x=animatingPlayer.currentPosition.x+7;
+					} else {
+						camera.position.x=animatingPlayer.currentPosition.x-7;
+					}
+					camera.position.y=0;
+					camera.position.z=animatingPlayer.currentPosition.z+7;
+					cameraTarget.set(animatingPlayer.currentPosition.x, 0, animatingPlayer.currentPosition.z)
+					if (currStat>0){
+						animatingPlayer.animateBlockFail(passBlockInterim);
+					} else {
+						updateCurrentPlayer(animatingPlayer);
+						animatingPlayer.animateGrabBall(passBlockInterim);
+					}
 				}
 			}
 
 			function pass(){
-				currentPlayer.lookAt(targettedPlayer);
+				currAction="animPass";
+				currentPlayer.lookAt(targettedPlayer.currentPosition);
+				if (targettedPlayer.currentPosition.x<currentPlayer.currentPosition.x){
+					camera.position.x=currentPlayer.currentPosition.x-7;
+				} else {
+					camera.position.x=currentPlayer.currentPosition.x+7;
+				}
+				camera.position.y=0;
+				camera.position.z=currentPlayer.currentPosition.z+7;
+				cameraTarget.set(currentPlayer.currentPosition.x, 0, currentPlayer.currentPosition.z);
 				currentPlayer.animatePass(animatePassBlock);
 				currStat=currentPlayer.pass;
-				//currentCar=destination;
+				//currentPlayer=destination;
 			}
 
 			var trackTimer=0;
 			
 			function blitzoff(){
 				currAction="blitzoff";
-				camera.position.set(0,0,3);
+				camera.position.set(0,1,3);
 				cameraTarget.set(0,0,0);
 				document.getElementById('overlay').innerHTML="Blitzoff!";
 				document.getElementById('overlay').style.display="";
@@ -1088,6 +1199,32 @@
 					}
 					if (trackTimer>=5){
 						endBlitzoff();
+					}
+				}
+
+				if (currAction=="passedBall"||currAction=="shotBall"){
+					var maxBallMove=20*delta;
+					var lengthLeft=ballTrajectory.length();
+					if (maxBallMove>=lengthLeft){
+						blitzball.position.add(ballTrajectory);
+						ballMoveIteration+=ballTrajectory.length();
+						ballTrajectory=null;
+						if (ballMoveIteration>=5000){
+							updateActiveNumbers();
+						}
+						ballMoveIteration=0;
+						onBallArrive();
+					} else {
+						var scale = maxBallMove/lengthLeft;
+						var mv = ballTrajectory.clone().multiplyScalar(scale);
+						ballMoveIteration+=mv.length();
+						if (ballMoveIteration>=5000){
+							updateActiveNumbers();
+							ballMoveIteration-=5000;
+						}
+						blitzball.position.add(mv);
+						ballTrajectory.sub(mv);
+						cameraTarget.set(blitzball.position.x, blitzball.position.y, blitzball.position.z);
 					}
 				}
 
@@ -1175,7 +1312,6 @@
 				//particleLight.position.y = Math.cos( timer * 5 ) * 4000;
 				//particleLight.position.z = Math.cos( timer * 4 ) * 3009;
 
-				myTeamLW.hasBall=true;
 				for (var i=0; i<allPlayers.length; i++){
 					allPlayers[i].updatePlayer(delta, controls);
 				}
