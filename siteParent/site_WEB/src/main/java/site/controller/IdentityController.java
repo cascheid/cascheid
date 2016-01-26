@@ -28,6 +28,11 @@ public class IdentityController {
 		return new ModelAndView("test2");
 	}
 	
+	@RequestMapping(value="/test3")
+	public ModelAndView getTestPage3(){
+		return new ModelAndView("test3");
+	}
+	
 	@RequestMapping(value={"/", "/index"})
 	public ModelAndView getIndex( @CookieValue(value = "identifier", defaultValue = "0") Long identifier,
             HttpServletResponse response) {

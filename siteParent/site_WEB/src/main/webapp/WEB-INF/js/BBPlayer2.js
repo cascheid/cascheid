@@ -11,7 +11,7 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 	this.level=3;
 	this.name='Test Player';
 	this.speed=60;
-	this.endurance=10;
+	this.endurance=15;
 	this.hp=150;
 	this.attack=10;
 	this.pass=10;
@@ -70,17 +70,17 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 		scope.callback=callback;
 		var loader = new THREE.ColladaLoader();
 		loader.options.convertUpAxis = true;
-		loader.load( 'obj/stormtrooper/stormtrooper17.dae', function ( collada ) {
+		loader.load( 'obj/stormtrooper/stormtrooper19.dae', function ( collada ) {
 
 			scope.root = collada.scene;
 			scope.has3DModel=true;
 			var playerModel = scope.root.children[1];
 			playerModel.children[0].material.side=THREE.DoubleSide;
-			scope.animation= new THREE.BBAnimation( playerModel.children[0], playerModel.children[0].geometry.animation, scope.speed );
+			scope.animation= new THREE.BBAnimation( scope, playerModel.children[0].geometry.animation, scope.speed, false );
 			scope.ball = scope.root.children[3];
 			scope.ball.children[0].material.side=THREE.DoubleSide;
 			scope.ball.visible=false;
-			scope.ballAnimation= new THREE.BBAnimation( scope.ball.children[0], scope.ball.children[0].geometry.animation, scope.speed );
+			scope.ballAnimation= new THREE.BBAnimation( scope.ball.children[0], scope.ball.children[0].geometry.animation, scope.speed, true );
 
 			/*scope.root.traverse( function ( child ) {
 
@@ -166,9 +166,10 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 			
 			var newRot = Math.atan2(-1*trajectory.z, trajectory.x);
 			this.currentRotation=newRot;//position seems to be based off of vertical axis, not horizontal
+			if (this.currentRotation<0){
+				this.currentRotation+=Math.PI*2;
+			}
 			this.root.rotation.y=this.currentRotation+Math.PI/2;
-			this.root.position.x=this.currentPosition.x;
-			this.root.position.z=this.currentPosition.z;
 
 			if (this.animation.animPlaying!="swim"){
 				this.playSwimAnimation();
@@ -178,11 +179,12 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 		}
 		if (this.rotationTarget!=null){
 			var rotToGo=this.rotationTarget-this.currentRotation;
-			var maxRot=5*Math.PI*delta;
+			var maxRot=2*Math.PI*delta;
 			if (maxRot>=Math.abs(rotToGo)){
 				this.currentRotation=this.rotationTarget;
 				this.rotationTarget=null;
 			} else {
+				//this.currentRotation+=maxRot;
 				if (rotToGo<0){
 					this.currentRotation-=maxRot;
 				} else {
@@ -191,10 +193,15 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 			}
 			this.root.rotation.y=this.currentRotation+Math.PI/2;
 		}
+		this.root.position.x=this.currentPosition.x;
+		this.root.position.z=this.currentPosition.z;
 	}
 	
 	this.lookAt = function(vector){
 		this.rotationTarget=Math.atan2(-1*(vector.z-this.currentPosition.z), vector.x-this.currentPosition.x);
+		if (this.rotationTarget<0){
+			this.rotationTarget+=Math.PI*2;
+		}
 	}
 	
 	this.playTreadAnimation = function(){
@@ -202,6 +209,10 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 		if (this.hasBall){
 			this.ballAnimation.playTreadAnimation();
 		}
+	}
+	
+	this.playGoalieTreadAnimation = function(){
+		this.animation.playGoalieTreadAnimation();
 	}
 	
 	this.playSwimAnimation = function(){
@@ -220,11 +231,14 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 		this.ballAnimation.callback=callback;
 	}
 	
-	this.animateCatchBall = function(){
+	this.animateCatchBall = function(callback){
 		this.hasBall=true;
 		this.ball.visible=true;
-		this.animation.playGrabBallAnimation();
-		this.ballAnimation.playGrabBallAnimation();
+		//this.animation.playGrabBallAnimation();
+		//this.ballAnimation.playGrabBallAnimation();
+		this.animation.playCatchAnimation();
+		this.ballAnimation.playCatchAnimation();
+		this.ballAnimation.callback=callback;
 	}
 	
 	this.animateBlockFail = function(){
@@ -238,8 +252,8 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 	}
 	
 	this.animatePass = function(callback){
-		this.animation.playPassAnimation();
-		this.ballAnimation.playPassAnimation();
+		this.animation.playPassAnimation(null);
+		this.ballAnimation.playPassAnimation(function(){scope.ball.visible=false;});
 		this.ballAnimation.callback=callback;
 	}
 	
@@ -256,13 +270,30 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 	}
 	
 	this.animateEndure = function(callback){
-		this.animation.playEndureAnimation();
+		this.animation.playEndureAnimation(null);
+		this.ballAnimation.playEndureAnimation(callback);
+		//this.ballAnimation.callback=callback;
+	}
+	
+	this.continueEndure = function(keptBall, callback){
+		if (!keptBall){
+			this.ball.visible=false;
+			this.hasBall=false;
+		}
 		this.animation.callback=callback;
 	}
 	
 	this.animateTackle = function(target){
-		this.animation.playTackleAnimation();
-		this.animation.animTarget=target;
+		this.animation.playTackleAnimation(target);
+		this.ballAnimation.playTackleAnimation(target);
+	}
+	
+	this.continueTackle = function(wonBall){
+		if (wonBall){
+			this.ball.visible=true;
+			this.hasBall=true;
+		}
+		//this.ballAnimation.callback=callback;
 	}
 	
 	this.lostBall = function(callback){

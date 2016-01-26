@@ -44,21 +44,24 @@
 			}
 			
 			#allStats{
-				font-size:3.5vmin;
 				color: #ffffff;
 				position:absolute;
 				top:10vmin;
-				width:40%;
+				width:35%;
 				height:24vmin;
-				left:55%;
-				background-color:#6B238E;
-				background-image: url("img/blitzball/cracks.png");
-				border: 5px double white;
-				line-height:4vmin;
+				left:65%;
 				padding-left:5vmin;
 				text-align:left;
 				display:table;
 				z-index:1000;
+				font-size:1vw;
+				line-height:2.5vw;
+			}
+			
+			#backup{
+				background-color:#6B238E;
+				background-image: url("img/blitzball/cracks.png");
+				border: 5px double white;
 			}
 
 			#info {
@@ -85,6 +88,28 @@
 				width:20%;
 				color:gold;
 			}
+			
+			.statHolder {
+				background:rgba(0,0,255,0.5);
+    			border-radius: 1vmin;
+			}
+			
+			.num {
+				background:rgba(0,0,255,0.5);
+				color:#FFFF66; 
+				font-size:2vw;
+				text-align:right;
+				display:table-cell;
+			}
+			
+			.stat {
+				background:rgba(0,0,255,0.5);
+				color: #87CEFA; 
+				font-size:1vw;
+				text-align:left;
+				display:table-cell;
+			}
+			
 
 			a { color: skyblue }
 		</style>
@@ -120,73 +145,86 @@
 		</div>
 		
 		<div id="allStats">
-		<div id="playerStats" style="display:table-row;">
-			<div style="display:table-cell; width:20%"><label id="playerName"></label></div>
-			<div style="display:table-cell; width:10%"><label>HP:</label></div>
-			<div style="display:table-cell; width:10%"><label id="playerHP"></label></div>
-			<div style="display:table-cell; width:10%"><label>END:</label></div>
-			<div style="display:table-cell; width:10%"><label id="playerEND"></label></div>
-			<div style="display:table-cell; width:10%"><label>PAS:</label></div>
-			<div style="display:table-cell; width:10%"><label id="playerPAS"></label></div>
-			<div style="display:table-cell; width:10%"><label>SHT:</label></div>
-			<div style="display:table-cell; width:10%"><label id="playerSHT"></label></div>
+		<div id="playerStats" style="display:table-row; visibility:hidden">
+			<div style="color:#FFFF66; text-align:right; padding-right:0.5vw; display:table-cell; width:20%;"><label id="playerName"></label></div>
+			<div class="num" style="width:15%; border-top-left-radius: 1vw; border-bottom-left-radius: 1vw;"><label id="playerHP"></label></div>
+			<div class="stat" style="width:7%"><label>HP</label></div>
+			<div class="num" style="width:7%"><label id="playerEND"></label></div>
+			<div class="stat" style="width:7%"><label>END</label></div>
+			<div class="num" style="width:7%"><label id="playerPAS"></label></div>
+			<div class="stat" style="width:7%"><label>PAS</label></div>
+			<div class="num" style="width:7%"><label id="playerSHT"></label></div>
+			<div class="stat" style="width:23%"><label>SHT</label></div>
 		</div>
-		<div id="break1Stats" style="display:none;">
-			<div style="display:table-cell"><label id="break1Name"></label></div>
-			<div style="display:table-cell"><label>HP:</label></div>
-			<div style="display:table-cell"><label id="break1HP"></label></div>
-			<div style="display:table-cell"><label>ATK:</label></div>
-			<div style="display:table-cell"><label id="break1ATK"></label></div>
-			<div style="display:table-cell"><label>BLK:</label></div>
-			<div style="display:table-cell"><label id="break1BLK"></label></div>
-			<div style="display:table-cell"></div>
-			<div style="display:table-cell"></div>
+		<div id="break1Stats" style="visibility:hidden; display:table-row;">
+			<div style="color:#FFFF66; text-align:right; padding-right:0.5vw; display:table-cell; width:20%;"><label id="break1Name"></label></div>
+			<div class="num" style="width:15%; border-top-left-radius: 1vw; border-bottom-left-radius: 1vw;"><label id="break1HP"></label></div>
+			<div class="stat" style="width:7%"><label>HP</label></div>
+			<div class="num" style="width:7%"><label id="break1ATK"></label></div>
+			<div class="stat" style="width:7%"><label>ATK</label></div>
+			<div class="num" style="width:7%"><label id="break1BLK"></label></div>
+			<div class="stat" style="width:7%"><label>BLK</label></div>
+			<div class="num" style="width:7%"></div>
+			<div class="stat" style="width:23%"></div>
 		</div>
-		<div id="break2Stats" style="display:none;">
-			<div style="display:table-cell"><label id="break2Name"></label></div>
-			<div style="display:table-cell"><label>HP:</label></div>
-			<div style="display:table-cell"><label id="break2HP"></label></div>
-			<div style="display:table-cell"><label>ATK:</label></div>
-			<div style="display:table-cell"><label id="break2ATK"></label></div>
-			<div style="display:table-cell"><label>BLK:</label></div>
-			<div style="display:table-cell"><label id="break2BLK"></label></div>
-			<div style="display:table-cell"></div>
-			<div style="display:table-cell"></div>
+		<div id="break2Stats" style="visibility:hidden; display:table-row;">
+			<div style="color:#FFFF66; text-align:right; padding-right:0.5vw; display:table-cell; width:20%;"><label id="break2Name"></label></div>
+			<div class="num" style="width:15%; border-top-left-radius: 1vw; border-bottom-left-radius: 1vw;"><label id="break2HP"></label></div>
+			<div class="stat" style="width:7%"><label>HP</label></div>
+			<div class="num" style="width:7%"><label id="break2ATK"></label></div>
+			<div class="stat" style="width:7%"><label>ATK</label></div>
+			<div class="num" style="width:7%"><label id="break2BLK"></label></div>
+			<div class="stat" style="width:7%"><label>BLK</label></div>
+			<div class="num" style="width:7%"></div>
+			<div class="stat" style="width:23%"></div>
 		</div>
-		<div id="break3Stats" style="display:none;">
-			<div style="display:table-cell"><label id="break3Name"></label></div>
-			<div style="display:table-cell"><label>HP:</label></div>
-			<div style="display:table-cell"><label id="break3HP"></label></div>
-			<div style="display:table-cell"><label>ATK:</label></div>
-			<div style="display:table-cell"><label id="break3ATK"></label></div>
-			<div style="display:table-cell"><label>BLK:</label></div>
-			<div style="display:table-cell"><label id="break3BLK"></label></div>
-			<div style="display:table-cell"></div>
-			<div style="display:table-cell"></div>
+		<div id="break3Stats" style="visibility:hidden; display:table-row;">
+			<div style="color:#FFFF66; text-align:right; padding-right:0.5vw; display:table-cell; width:20%;"><label id="break3Name"></label></div>
+			<div class="num" style="width:15%; border-top-left-radius: 1vw; border-bottom-left-radius: 1vw;"><label id="break3HP"></label></div>
+			<div class="stat" style="width:7%"><label>HP</label></div>
+			<div class="num" style="width:7%"><label id="break3ATK"></label></div>
+			<div class="stat" style="width:7%"><label>ATK</label></div>
+			<div class="num" style="width:7%"><label id="break3BLK"></label></div>
+			<div class="stat" style="width:7%"><label>BLK</label></div>
+			<div class="num" style="width:7%"></div>
+			<div class="stat" style="width:23%"></div>
 		</div>
-		<div id="break4Stats" style="display:none;">
-			<div style="display:table-cell"><label id="break4Name"></label></div>
-			<div style="display:table-cell"><label>HP:</label></div>
-			<div style="display:table-cell"><label id="break4HP"></label></div>
-			<div style="display:table-cell"><label>ATK:</label></div>
-			<div style="display:table-cell"><label id="break4ATK"></label></div>
-			<div style="display:table-cell"><label>BLK:</label></div>
-			<div style="display:table-cell"><label id="break4BLK"></label></div>
-			<div style="display:table-cell"></div>
-			<div style="display:table-cell"></div>
+		<div id="break4Stats" style="visibility:hidden; display:table-row;">
+			<div style="color:#FFFF66; text-align:right; padding-right:0.5vw; display:table-cell; width:20%;"><label id="break4Name"></label></div>
+			<div class="num" style="width:15%; border-top-left-radius: 1vw; border-bottom-left-radius: 1vw;"><label id="break4HP"></label></div>
+			<div class="stat" style="width:7%"><label>HP</label></div>
+			<div class="num" style="width:7%"><label id="break4ATK"></label></div>
+			<div class="stat" style="width:7%"><label>ATK</label></div>
+			<div class="num" style="width:7%"><label id="break4BLK"></label></div>
+			<div class="stat" style="width:7%"><label>BLK</label></div>
+			<div class="num" style="width:7%"></div>
+			<div class="stat" style="width:23%"></div>
 		</div>
-		<div id="break5Stats" style="display:none;">
-			<div style="display:table-cell"><label id="break5Name"></label></div>
-			<div style="display:table-cell"><label>HP:</label></div>
-			<div style="display:table-cell"><label id="break5HP"></label></div>
-			<div style="display:table-cell"><label>ATK:</label></div>
-			<div style="display:table-cell"><label id="break5ATK"></label></div>
-			<div style="display:table-cell"><label>BLK:</label></div>
-			<div style="display:table-cell"><label id="break5BLK"></label></div>
-			<div style="display:table-cell"></div>
-			<div style="display:table-cell"></div>
+		<div id="break5Stats" style="visibility:hidden; display:table-row;">
+			<div style="color:#FFFF66; text-align:right; padding-right:0.5vw; display:table-cell; width:20%;"><label id="break5Name"></label></div>
+			<div class="num" style="width:15%; border-top-left-radius: 1vw; border-bottom-left-radius: 1vw;"><label id="break5HP"></label></div>
+			<div class="stat" style="width:7%"><label>HP</label></div>
+			<div class="num" style="width:7%"><label id="break5ATK"></label></div>
+			<div class="stat" style="width:7%"><label>ATK</label></div>
+			<div class="num" style="width:7%"><label id="break5BLK"></label></div>
+			<div class="stat" style="width:7%"><label>BLK</label></div>
+			<div class="num" style="width:7%"></div>
+			<div class="stat" style="width:23%"></div>
+		</div>
+		<div id="break6Stats" style="visibility:hidden; display:table-row;">
+			<div style="color:#FFFF66; text-align:right; padding-right:0.5vw; display:table-cell; width:20%;"><label id="break6Name"></label></div>
+			<div class="num" style="width:15%; border-top-left-radius: 1vw; border-bottom-left-radius: 1vw;"><label id="break6HP"></label></div>
+			<div class="stat" style="width:7%"><label>HP</label></div>
+			<div class="num" style="width:7%"><label id="break6ATK"></label></div>
+			<div class="stat" style="width:7%"><label>ATK</label></div>
+			<div class="num" style="width:7%"><label id="break6BLK"></label></div>
+			<div class="stat" style="width:7%"><label>BLK</label></div>
+			<div class="num" style="width:7%"></div>
+			<div class="stat" style="width:23%"></div>
 		</div>
 		</div>
+		
+		<div id="infoText" style="color:white; position:absolute; top:20vmin; left:20vmin"></div>
 		
 		<div id="overlay" style="display:none">Blitzoff!</div>
 		
@@ -245,6 +283,8 @@
 
 
 			var blitzball=null;
+			var goal1=null;
+			var goal2=null;
 			var loader = new THREE.ColladaLoader();
 			loader.options.convertUpAxis = true;
 			loader.load( 'obj/stormtrooper/blitzball.dae', function ( collada ) {
@@ -255,6 +295,36 @@
 				blitzball.updateMatrix();
 
 				addPlayer(blitzball);
+			} );
+
+			loader.load( 'obj/stormtrooper/goal.dae', function ( collada ) {
+
+				goal1 = collada.scene;
+				//dae.children[0].children[0].material.side=THREE.DoubleSide;
+				goal1.traverse( function ( child ) {
+
+				if ( child instanceof THREE.Mesh ) {
+					child.material.side=THREE.DoubleSide
+					if (child.material.name=='netmat'){
+						child.material.transparent=true;
+						child.material.opacity=0.5;
+					}
+				}
+
+				} );
+				goal1.scale.x = goal1.scale.y = goal1.scale.z = 4;
+				
+				goal2=goal1.clone();
+				goal1.position.set(goal1Loc.x, goal1Loc.y, goal1Loc.z);
+				goal2.position.set(goal2Loc.x, goal2Loc.y, goal2Loc.z);
+				goal1.rotation.y=-Math.PI/2;
+				goal2.rotation.y=Math.PI/2;
+				
+				goal1.updateMatrix();
+				goal2.updateMatrix();
+				addPlayer(goal1);
+
+				//addPlayer(blitzball);
 			} );
 
 
@@ -323,7 +393,7 @@
 			function addPlayer(bbPlayer){
 				//dae = bbPlayer.root;
 				loadedCount++;
-				if (loadedCount>=13){
+				if (loadedCount>=14){
 					init();
 				}
 			}
@@ -336,10 +406,20 @@
 			}
 
 			function unpause(){
+				clearInfo();
 				gameActive=true;
 				for (var i=0; i<allPlayers.length; i++){
 					allPlayers[i].gameActive=true;
 				}
+			}
+
+			function clearInfo(){
+				document.getElementById('infoText').innerHTML="";
+			}
+
+			function writeInfo(inText){
+				var text=document.getElementById('infoText').innerHTML+"<br />"+inText;
+				document.getElementById('infoText').innerHTML=text;
 			}
 			
 			function init() {
@@ -393,6 +473,8 @@
 				}
 				//scene.add( dae );
 				scene.add(blitzball);
+				scene.add(goal1);
+				scene.add(goal2);
 
 				//skybox
 				var cubeMap = new THREE.CubeTexture( [] );
@@ -455,10 +537,12 @@
 				scene.add( skyBox );
 				
 				//sphere
-				var sphereTexture = THREE.ImageUtils.loadTexture('img/blitzball/water.jpg');//TODO real texture
+				var sphereTexture = THREE.ImageUtils.loadTexture('img/blitzball/stadium5.jpg');//TODO real texture
 				var sphereMaterial = new THREE.MeshLambertMaterial( { color: 0xffffff, map: sphereTexture,  side:THREE.BackSide, opacity:0.5, transparent:true } );
 				var sphereGeometry = new THREE.SphereGeometry( sphereRadius*1.1, 64, 64 );
 				var sphereMesh = new THREE.Mesh( sphereGeometry, sphereMaterial );
+				sphereMesh.rotation.y=Math.PI/2;
+				//sphereMesh.rotation.x=Math.PI/2;
 				scene.add( sphereMesh );
 
 				// Lights
@@ -484,10 +568,18 @@
 
 				clock=new THREE.Clock();
 				//updateCurrentPlayer(myTeamLW);
-				for (var i=0; i<allPlayers.length; i++){
-					allPlayers[i].playTreadAnimation();
-					allPlayers[i].gameActive=true;
+				for (var i=0; i<myTeam.length; i++){
+					myTeam[i].playTreadAnimation();
+					myTeam[i].gameActive=true;
 				}
+				for (var i=0; i<oppTeam.length; i++){
+					oppTeam[i].playTreadAnimation();
+					oppTeam[i].gameActive=true;
+				}
+				myTeamGK.playGoalieTreadAnimation();
+				myTeamGK.gameActive=true;
+				oppTeamGK.playGoalieTreadAnimation();
+				oppTeamGK.gameActive=true;
 				//teamWithBall=1;
 				//gameActive=true;
 				blitzoff();
@@ -565,6 +657,9 @@
 						menuSelection++;
 					}
 					document.getElementById('selector').style.top=(menuSelection-1)*4+'vmin';
+					if (currAction=="break"){
+						highlightBreakInfo();
+					}
 				}
 			}
 			
@@ -578,6 +673,9 @@
 						menuSelection--;
 					}
 					document.getElementById('selector').style.top=(menuSelection-1)*4+'vmin';
+					if (currAction=="break"){
+						highlightBreakInfo();
+					}
 				}
 			}
 
@@ -704,6 +802,7 @@
 					if (menuSelection==MAXITEMS){
 						showMainActionMenu();
 					} else {
+						document.getElementById('actionMenu').style.display='none';
 						animateBreak(menuSelection);
 					}
 				} else if (!gameActive&&currAction=="main"){
@@ -817,7 +916,7 @@
 						document.getElementById('break'+(i+1)+'HP').innerHTML=defendingPlayers[i].hp;
 						document.getElementById('break'+(i+1)+'ATK').innerHTML=defendingPlayers[i].attack;
 						document.getElementById('break'+(i+1)+'BLK').innerHTML=defendingPlayers[i].block;
-						document.getElementById('break'+(i+1)+'Stats').style.display='table-row';
+						document.getElementById('break'+(i+1)+'Stats').style.visibility='';
 						MAXITEMS++;
 					}
 					document.getElementById('menu'+MAXITEMS).style.display='';
@@ -848,6 +947,7 @@
 			}
 
 			function delayResumeGame(){
+				clearInfo();
 				setTimeout(resumeActiveGame, '1000');
 			}
 
@@ -857,22 +957,52 @@
 			}
 
 			var breakingPlayer;
+			var statUpdating=null;
+			function updateStat(statName, value){
+				trackTimer=0;
+				statUpdating=statName;
+				document.getElementById(statName).innerHTML=value;
+				document.getElementById(statName).style.color='red';
+				document.getElementById(statName).style.fontSize='5vmin';
+			}
+
+
+			function highlightBreakInfo(){
+				var numDefenders=menuSelection-1;
+				if (defendingPlayers!=null&&defendingPlayers.length>0){
+					for (var i=0; i<defendingPlayers.length; i++){
+						if (i<numDefenders){
+							document.getElementById('break'+(i+1)+'ATK').style.color='#FFFF66';
+							document.getElementById('break'+(i+1)+'BLK').style.color='#708090';
+						} else {
+							document.getElementById('break'+(i+1)+'ATK').style.color='#708090';
+							document.getElementById('break'+(i+1)+'BLK').style.color='#FFFF66';
+						}
+							
+					}
+				}
+			}
 
 			function onBreakResult(numLeft){
 				var currEnd = Number(document.getElementById('playerEND').innerHTML);
-				currEnd-=Math.round((.5+Math.random())*player.attack);
-				if (currEnd<0){
+				currEnd-=Math.round((.5+Math.random())*breakingPlayer.attack);
+				if (currEnd<=0){
 					currEnd=0;
-					document.getElementById('playerEND').innerHTML=currEnd;
+					//document.getElementById('playerEND').innerHTML=currEnd;
+					updateStat('playerEND', currEnd);
+					writeInfo(breakingPlayer.name + " steals the ball!");
 					if (teamWithBall==1){
 						teamWithBall=2;
 					} else {
 						teamWithBall=1;
 					}
-					currentPlayer.lostBall(resumeActiveGame);
-					updateCurrentPlayer(breakingPlayer);
+					currentPlayer.continueEndure(false, function(){updateCurrentPlayer(breakingPlayer); resumeActiveGame();});
+					breakingPlayer.continueTackle(true);
+					//updateCurrentPlayer(breakingPlayer);
 				} else {
-					currentPlayer.continueBreak(animateBreak(numLeft));
+					//document.getElementById('playerEND').innerHTML=currEnd;
+					updateStat('playerEND', currEnd);
+					currentPlayer.continueEndure(true, function(){animateBreak(numLeft)});
 				}
 			}
 
@@ -946,13 +1076,15 @@
 
 			function animateBreak(numLeft){
 				if (numLeft>0){
-					if (defendingPlayers!=null&&defendingPlayers.length>=numLeft){
+					/*if (defendingPlayers!=null&&defendingPlayers.length>=numLeft){
 						console.log('invalid number of break attempts: ' + numLeft);
 						showMainActionMenu();
-					}
+					}*/
 					breakingPlayer=defendingPlayers.shift();
-					currentPlayer.animateEndure(onBreakResult(numLeft-1));
-					breakingPlayer.animateTackle(currentPlayer.currentPosition);
+					writeInfo(currentPlayer.name + " breaks to " + breakingPlayer.name);
+					currentPlayer.animateEndure(function(){onBreakResult(numLeft-1)});
+					var mv=currentPlayer.currentPosition.clone().sub(breakingPlayer.currentPosition).multiplyScalar(1.5);
+					breakingPlayer.animateTackle(mv);
 				} else {
 					showMainActionMenu();
 				}
@@ -968,16 +1100,18 @@
 				document.getElementById('playerEND').innerHTML=player.endurance;
 				document.getElementById('playerPAS').innerHTML=player.pass;
 				document.getElementById('playerSHT').innerHTML=player.shot;
-				document.getElementById('break1Stats').style.display='none';
-				document.getElementById('break2Stats').style.display='none';
-				document.getElementById('break3Stats').style.display='none';
-				document.getElementById('break4Stats').style.display='none';
-				document.getElementById('break5Stats').style.display='none';
+				document.getElementById('playerStats').style.visibility='';
+				document.getElementById('break1Stats').style.visibility='hidden';
+				document.getElementById('break2Stats').style.visibility='hidden';
+				document.getElementById('break3Stats').style.visibility='hidden';
+				document.getElementById('break4Stats').style.visibility='hidden';
+				document.getElementById('break5Stats').style.visibility='hidden';
 				currentPlayer.hasBall=true;
 			}
 
 
 			function onBallArrive(){
+				blitzball.visible=false;
 				if (currAction=="shotBall"){
 					var keeper;
 					if (teamWithBall==1){
@@ -1076,9 +1210,12 @@
 				if (defendingPlayers==null||defendingPlayers.length==0){
 					currAction="passedBall";
 					ballMoveIteration=0;
+					blitzball.visible=true;
 					ballTrajectory=targettedPlayer.currentPosition.clone().sub(currentPlayer.currentPosition);
+					targettedPlayer.lookAt(currentPlayer.currentPosition);
 					var ballmv = ballTrajectory.clone().sub(blitzball.position).multiplyScalar(1/ballTrajectory.length());
 					blitzball.position.addVectors(currentPlayer.currentPosition, ballmv);
+					blitzball.position.y=3;
 				} else {
 					currAction="blockPass";
 					/*animatingPlayer=defendingPlayers[0];
@@ -1115,7 +1252,8 @@
 				camera.position.y=0;
 				camera.position.z=currentPlayer.currentPosition.z+7;
 				cameraTarget.set(currentPlayer.currentPosition.x, 0, currentPlayer.currentPosition.z);
-				currentPlayer.animatePass(animatePassBlock);
+				document.getElementById('actionMenu').style.display='none';
+				setTimeout(function(){currentPlayer.animatePass(animatePassBlock);}, '1000');
 				currStat=currentPlayer.pass;
 				//currentPlayer=destination;
 			}
@@ -1132,6 +1270,7 @@
 			}
 
 			function endBlitzoff(){
+				blitzball.visible=false;
 				if (Math.random()<1){//TODO .5
 					currAction="grab";
 					teamWithBall=1;
@@ -1147,8 +1286,17 @@
 				}
 			}
 
-			var rotTimer=0;
+			function updateActiveNumbers(){
+				var change=Math.round(currStat/5);
+				currStat-=change;
+				if (currAction=="shotBall"){
+					document.getElementById('playerSHT').innerHTML=currStat;
+				} else if (currAction=="passedBall"){
+					document.getElementById('playerPAS').innerHTML=currStat;
+				}
+			}
 
+			var rotTimer=0;
 			function updateCameraTarget(){
 				if (currAction=="none"){
 					cameraTarget.set(currentPlayer.currentPosition.x, 0, currentPlayer.currentPosition.z);
@@ -1186,7 +1334,7 @@
 			function render() {
 
 				//var timer = Date.now() * 0.0005;
-				var delta = clock.getDelta();
+				var delta = Math.min(clock.getDelta(), 0.3);
 
 				if (currAction=="blitzoff"){
 					trackTimer+=delta;
@@ -1202,6 +1350,18 @@
 					}
 				}
 
+				if (statUpdating!=null){
+					trackTimer+=delta;
+					if (trackTimer<1){
+						document.getElementById(statUpdating).style.fontSize=(3-trackTimer)+'vw';
+					} else {
+						document.getElementById(statUpdating).style.fontSize='2vw';
+						document.getElementById(statUpdating).style.color="#FFFF66";
+						statUpdating=null;
+						trackTimer=0;
+					}
+				}
+
 				if (currAction=="passedBall"||currAction=="shotBall"){
 					var maxBallMove=20*delta;
 					var lengthLeft=ballTrajectory.length();
@@ -1209,7 +1369,7 @@
 						blitzball.position.add(ballTrajectory);
 						ballMoveIteration+=ballTrajectory.length();
 						ballTrajectory=null;
-						if (ballMoveIteration>=5000){
+						if (ballMoveIteration>=20){
 							updateActiveNumbers();
 						}
 						ballMoveIteration=0;
@@ -1218,9 +1378,9 @@
 						var scale = maxBallMove/lengthLeft;
 						var mv = ballTrajectory.clone().multiplyScalar(scale);
 						ballMoveIteration+=mv.length();
-						if (ballMoveIteration>=5000){
+						if (ballMoveIteration>=20){
 							updateActiveNumbers();
-							ballMoveIteration-=5000;
+							ballMoveIteration-=20;
 						}
 						blitzball.position.add(mv);
 						ballTrajectory.sub(mv);
