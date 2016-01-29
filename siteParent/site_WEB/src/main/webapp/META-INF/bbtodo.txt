@@ -1,22 +1,22 @@
 
 test-
-Pass method
-Shoot method
-Tackle method loop
-Blocking method loop
+xPass method
+xShoot method
+xTackle method loop
+xBlocking method loop
 -sleep
-Ball travelling via pass/shot
-goalie save/fail
-Score transition
-Faceoff
+xBall travelling via pass/shot
+xgoalie save/fail
+xScore transition
+xFaceoff
 AI of resting positions/chasing
 AI of computer controlled ball
-Camera controlling
+xCamera controlling
 Techcopy
 
 graphical:
 All animations, new models
-Sphere with water/glyphs/goal logo
+xSphere with water/glyphs/goal logo
 Glyphs on playing field
 Goals
 effects on block/shot/faceoff

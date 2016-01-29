@@ -12,10 +12,10 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 	this.name='Test Player';
 	this.speed=60;
 	this.endurance=15;
-	this.hp=150;
+	this.hp=1150;
 	this.attack=10;
-	this.pass=10;
-	this.shot=10;
+	this.pass=15;
+	this.shot=70;
 	this.block=10;
 	this.cat=10;
 	this.techs=[];
@@ -63,6 +63,15 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 	this.gameActive=false;
 	this.rotationTarget=null;
 	this.ball=null;
+	this.fieldOfVision=40;
+	this.brawler=false;
+	for (var i = 0; i < this.techs.length; i++) {
+        if (this.techs[i].techID === 50){//Elite Defense
+            this.fieldOfVision=55;
+        } else if (this.techs[i].techID == 51){
+        	this.brawler=true;
+        }
+    }
 
 	// internal helper variables
 
@@ -119,9 +128,11 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 		var trajectory;
 		this.animation.resetBlendWeights();
 		this.animation.update(delta);
-		if (this.hasBall){
+		if (this.ball.visible){
 			this.ballAnimation.resetBlendWeights();
 			this.ballAnimation.update(delta);
+		}
+		if (this.hasBall){
 			if (controls.moveForward&&!controls.moveBackward){
 				if (controls.moveLeft&&!controls.moveRight){
 					trajectory=new THREE.Vector3(-1*moveScale*sqrt2*(this.speed/60)*delta, 0, -1*moveScale*sqrt2*(this.speed/60)*delta);
@@ -146,7 +157,7 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 		} else {
 			if (this.gameActive&&this.chasingPosition!=null){
 					trajectory=this.chasingPosition.clone().sub(this.currentPosition);
-					if (trajectory.length<5&&this.gameActive){
+					if (trajectory.length()<5&&this.gameActive){
 						this.triggerEncounter();
 					}
 			} else if (this.gameActive&&(this.restingPosition.x!=this.currentPosition.x||this.restingPosition.z!=this.currentPosition.z)){
@@ -217,17 +228,23 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 	
 	this.playSwimAnimation = function(){
 		this.animation.playSwimAnimation();
-		this.ball.visible=true;
 		if (this.hasBall){
 			this.ballAnimation.playSwimAnimation();
 		}
 	}
 	
-	this.animateGrabBall = function(callback){
+	this.animateGrabBall = function(callback, interimCallback){
 		this.hasBall=true;
 		this.ball.visible=true;
-		this.animation.playGrabBallAnimation();
-		this.ballAnimation.playGrabBallAnimation(true);
+		this.animation.playGrabBallAnimation(null);
+		this.ballAnimation.playGrabBallAnimation(interimCallback);
+		this.ballAnimation.callback=callback;
+	}
+	
+	this.animateBlockFail = function(callback, interimCallback){
+		this.ball.visible=true;
+		this.animation.playGrabBallAnimation(null);
+		this.ballAnimation.playGrabBallAnimation(interimCallback);
 		this.ballAnimation.callback=callback;
 	}
 	
@@ -241,28 +258,54 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 		this.ballAnimation.callback=callback;
 	}
 	
-	this.animateBlockFail = function(){
-		this.animation.playGrabBallAnimation();
-		this.ballAnimation.playGrabBallAnimation(false);
-		this.ballAnimation.callback=callback;
+	this.animateDropCatch = function(callback){
+		this.ball.visible=true;
+		this.animation.playDropCatchAnimation();
+		this.ballAnimation.playDropCatchAnimation();
+		this.ballAnimation.callback=function(){scope.ball.visible=false; callback()};
 	}
 	
-	this.animateShoot = function(){
-		//this.animation.playShotAnimation();
+	this.animateShoot = function(callback){
+		this.animation.playShootAnimation();
+		this.ballAnimation.playShootAnimation();
+		this.ballAnimation.callback=function(){scope.ball.visible=false; callback();};
 	}
 	
 	this.animatePass = function(callback){
 		this.animation.playPassAnimation(null);
 		this.ballAnimation.playPassAnimation(function(){scope.ball.visible=false;});
-		this.ballAnimation.callback=callback;
+		this.animation.callback=callback;
 	}
 	
 	this.animateGoalieTread = function(){
 		//this.animation.playGoalieAnimation();
 	}
 	
-	this.animateShotSave = function(){
-		//this.animation.playShotSaveAnimation();
+	this.animateGoalieSave = function(callback){
+		this.ball.visible=true;
+		this.animation.playGoalieSaveAnimation(null);
+		this.ballAnimation.playGoalieSaveAnimation(callback);
+	}
+	
+	this.animateGoalieFailSave = function(gameball, callback){
+		this.ball.visible=true;
+		this.animation.playGoalieSaveAnimation(null);
+		this.ballAnimation.playBallGoalieFailSaveAnimation();
+		this.ballAnimation.callback = function(){
+			if (scope.currentPosition.x<0){
+				gameball.position.set(-97, 3, 4);
+			} else {
+				gameball.position.set(97, 3, -4);
+			}
+			gameball.visible=true;
+			scope.ball.visible=false;
+		}
+		this.animation.callback=callback;
+	}
+	
+	this.continueGoalieSave = function(grabbedBall, callback){
+		//TODO change animation for deflect
+		this.ballAnimation.callback=callback;
 	}
 	
 	this.continueBreak = function(callback){
@@ -292,6 +335,7 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 		if (wonBall){
 			this.ball.visible=true;
 			this.hasBall=true;
+			this.ballAnimation.currentTime=this.animation.currentTime;
 		}
 		//this.ballAnimation.callback=callback;
 	}
@@ -386,19 +430,26 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 	}
 	
 	this.testEncounter = function(playerLocation, existingDefCount){
-		if (this.currentPosition.distanceTo(playerLocation)<20){//TODO work in skills
-			//var vecToGoal = this.myGoal.clone().sub(playerLocation);
-			//var scale = 20/vecToGoal.length();
-			//vecToGoal=vecToGoal.multiplyScalar(scale);
-			//this.chasingPosition = new Vector3(playerLocation.x+vecToGoal.x, 0, playerLocation.z+vecToGoal.z);
-			//this.speedUpChase=true;
+		var distToPlayer = this.currentPosition.distanceTo(playerLocation);
+		if (distToPlayer<20||(this.brawler&&this.distToPlayer<50&&Math.random()<.6)){
+			this.chasingPosition=null;
 			return true;
 		} else {
 			return false;
 		}
 	}
 	
+	this.testViewBallCarrier = function(ballLocation){
+		var distToCarrier = this.currentPosition.distanceTo(ballLocation);
+		if (distToCarrier<=this.fieldOfVision){
+			this.chasingPosition=ballLocation;
+		} else {
+			this.chasingPosition=null;
+		}
+	}
+	
 	this.triggerEncounter = function(){
+		this.chasingPosition=null;
 		this.triggerCallback();
 	}
 };
