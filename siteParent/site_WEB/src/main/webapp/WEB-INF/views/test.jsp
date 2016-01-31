@@ -161,9 +161,9 @@
 			<div class="num" style="width:15%; border-top-left-radius: 1vw; border-bottom-left-radius: 1vw;"><label id="break1HP"></label></div>
 			<div class="stat" style="width:7%"><label>HP</label></div>
 			<div class="num" style="width:7%"><label id="break1ATK"></label></div>
-			<div class="stat" style="width:7%"><label>ATK</label></div>
+			<div class="stat" style="width:7%"><label id="break1ATKLabel">ATK</label></div>
 			<div class="num" style="width:7%"><label id="break1BLK"></label></div>
-			<div class="stat" style="width:7%"><label>BLK</label></div>
+			<div class="stat" style="width:7%"><label id="break1BLKLabel">BLK</label></div>
 			<div class="num" style="width:7%"></div>
 			<div class="stat" style="width:23%"></div>
 		</div>
@@ -172,9 +172,9 @@
 			<div class="num" style="width:15%; border-top-left-radius: 1vw; border-bottom-left-radius: 1vw;"><label id="break2HP"></label></div>
 			<div class="stat" style="width:7%"><label>HP</label></div>
 			<div class="num" style="width:7%"><label id="break2ATK"></label></div>
-			<div class="stat" style="width:7%"><label>ATK</label></div>
+			<div class="stat" style="width:7%"><label id="break2ATKLabel">ATK</label></div>
 			<div class="num" style="width:7%"><label id="break2BLK"></label></div>
-			<div class="stat" style="width:7%"><label>BLK</label></div>
+			<div class="stat" style="width:7%"><label id="break2BLKLabel">BLK</label></div>
 			<div class="num" style="width:7%"></div>
 			<div class="stat" style="width:23%"></div>
 		</div>
@@ -183,9 +183,9 @@
 			<div class="num" style="width:15%; border-top-left-radius: 1vw; border-bottom-left-radius: 1vw;"><label id="break3HP"></label></div>
 			<div class="stat" style="width:7%"><label>HP</label></div>
 			<div class="num" style="width:7%"><label id="break3ATK"></label></div>
-			<div class="stat" style="width:7%"><label>ATK</label></div>
+			<div class="stat" style="width:7%"><label id="break3ATKLabel">ATK</label></div>
 			<div class="num" style="width:7%"><label id="break3BLK"></label></div>
-			<div class="stat" style="width:7%"><label>BLK</label></div>
+			<div class="stat" style="width:7%"><label id="break3BLKLabel">BLK</label></div>
 			<div class="num" style="width:7%"></div>
 			<div class="stat" style="width:23%"></div>
 		</div>
@@ -194,9 +194,9 @@
 			<div class="num" style="width:15%; border-top-left-radius: 1vw; border-bottom-left-radius: 1vw;"><label id="break4HP"></label></div>
 			<div class="stat" style="width:7%"><label>HP</label></div>
 			<div class="num" style="width:7%"><label id="break4ATK"></label></div>
-			<div class="stat" style="width:7%"><label>ATK</label></div>
+			<div class="stat" style="width:7%"><label id="break4ATKLabel">ATK</label></div>
 			<div class="num" style="width:7%"><label id="break4BLK"></label></div>
-			<div class="stat" style="width:7%"><label>BLK</label></div>
+			<div class="stat" style="width:7%"><label id="break4BLKLabel">BLK</label></div>
 			<div class="num" style="width:7%"></div>
 			<div class="stat" style="width:23%"></div>
 		</div>
@@ -205,9 +205,9 @@
 			<div class="num" style="width:15%; border-top-left-radius: 1vw; border-bottom-left-radius: 1vw;"><label id="break5HP"></label></div>
 			<div class="stat" style="width:7%"><label>HP</label></div>
 			<div class="num" style="width:7%"><label id="break5ATK"></label></div>
-			<div class="stat" style="width:7%"><label>ATK</label></div>
+			<div class="stat" style="width:7%"><label id="break5ATKLabel">ATK</label></div>
 			<div class="num" style="width:7%"><label id="break5BLK"></label></div>
-			<div class="stat" style="width:7%"><label>BLK</label></div>
+			<div class="stat" style="width:7%"><label id="break5BLKLabel">BLK</label></div>
 			<div class="num" style="width:7%"></div>
 			<div class="stat" style="width:23%"></div>
 		</div>
@@ -216,9 +216,9 @@
 			<div class="num" style="width:15%; border-top-left-radius: 1vw; border-bottom-left-radius: 1vw;"><label id="break6HP"></label></div>
 			<div class="stat" style="width:7%"><label>HP</label></div>
 			<div class="num" style="width:7%"><label id="break6ATK"></label></div>
-			<div class="stat" style="width:7%"><label>ATK</label></div>
+			<div class="stat" style="width:7%"><label id="break6ATKLabel">ATK</label></div>
 			<div class="num" style="width:7%"><label id="break6BLK"></label></div>
-			<div class="stat" style="width:7%"><label>BLK</label></div>
+			<div class="stat" style="width:7%"><label id="break6BLKLabel">BLK</label></div>
 			<div class="num" style="width:7%"></div>
 			<div class="stat" style="width:23%"></div>
 		</div>
@@ -274,6 +274,7 @@
 			var currAction="none";
 			var gameActive=false;
 			var teamWithBall=1;
+			var multiplayer=false;
 
 			var menuSelection=1;
 			var MAXITEMS=3;
@@ -664,6 +665,20 @@
 					if (currAction=="break"){
 						numDefenders=menuSelection-1;
 						highlightBreakInfo();
+					} else if (currAction=="main"){
+						highlightTargettedPlayer();
+					} else if (currAction=="targetting"){
+						var j=0;
+						for (var i=0; i<myTeam.length; i++){
+							if (myTeam[i]!=currentPlayer){
+								j++;
+								if (j==menuSelection){
+									targettedPlayer=myTeam[i];
+									break;
+								}
+							}
+						}
+						highlightTargettedPlayer();
 					}
 				}
 			}
@@ -681,6 +696,20 @@
 					if (currAction=="break"){
 						numDefenders=menuSelection-1;
 						highlightBreakInfo();
+					} else if (currAction=="main"){
+						highlightTargettedPlayer();
+					} else if (currAction=="targetting"){
+						var j=0;
+						for (var i=0; i<myTeam.length; i++){
+							if (myTeam[i]!=currentPlayer){
+								j++;
+								if (j==menuSelection){
+									targettedPlayer=myTeam[i];
+									break;
+								}
+							}
+						}
+						highlightTargettedPlayer();
 					}
 				}
 			}
@@ -800,7 +829,53 @@
 				inMenu=true;
 				timeSinceLastTrigger=0;
 				pause();
-				showBreakMenu();
+				if (teamWithBall==1){
+					showBreakMenu();
+				} else {
+					if (defendingPlayers!=null&&defendingPlayers.length>0){
+						var expectedBreakLeft=currentPlayer.endurance;
+						for (var i=0; i<defendingPlayers.length; i++){
+							expectedBreakLeft-=defendingPlayers[i].attack;
+							if (expectedBreakLeft<=3){
+								var expectedPassLeft=currentPlayer.pass;
+								for (var j=i; j<defendingPlayers.length; j++){
+									expectedPassLeft-=defendingPlayers[i].block;
+								}
+								if (expectedBreakLeft>=expectedPassLeft){
+									numDefenders++;
+									break;
+								} else {
+									break;
+								}
+							} else {
+								numDefenders++;
+							}
+						}
+						writeInfo(numDefenders + ' player breakthrough.');
+						setTimeout(function(){
+							if (currentPlayer.currentPosition.x<20){
+								writeInfo('Pass');
+								currAction="breaktargetting";
+							} else {
+								writeInfo('Shoot');
+								currAction="breakshoot";
+							}
+							setTimeout(function(){animateBreak(numDefenders);}, '2000');
+						}, '2000');
+					} else {
+						writeInfo('No break');
+						setTimeout(function(){
+							if (currentPlayer.currentPosition.x<20){
+								writeInfo('Pass');
+								currAction="breaktargetting";
+							} else {
+								writeInfo('Shoot');
+								currAction="breakshoot";
+							}
+							setTimeout(function(){animateBreak(0);}, '2000');
+						}, '2000');
+					}
+				}
 			}
 			
 			function selectButtonPressed(){
@@ -854,6 +929,7 @@
 					} else if (menuSelection==3){
 						document.getElementById('actionMenu').style.display='none';
 						currAction="breakdribble";
+						inMenu=false;
 						animateBreak(numDefenders);
 						//updateCurrentPlayer(currentPlayer);
 						//unpause();
@@ -877,19 +953,10 @@
 						document.getElementById('actionMenu').style.height=(MAXITEMS*4)+'vmin';
 						document.getElementById('actionMenu').style.display="none";
 						currAction="breaktargetting";
+						inMenu=false;
 						animateBreak(numDefenders);
 					}
 				} else if (!gameActive&&currAction=="targetting"){
-					var j=0;
-					for (var i=0; i<myTeam.length; i++){
-						if (myTeam[i]!=currentPlayer){
-							j++;
-							if (j==menuSelection){
-								targettedPlayer=myTeam[i];
-								break;
-							}
-						}
-					}
 					pass();
 				} else if (!gameActive&&currAction=="shoot"){
 					if (menuSelection==MAXITEMS){
@@ -899,6 +966,7 @@
 							selectedTech=techOptions[menuSelection-1];
 						}
 						currAction="breakshoot";
+						inMenu=false;
 						animateBreak(numDefenders);
 						//shoot();
 					}
@@ -937,7 +1005,9 @@
 						document.getElementById('break'+MAXITEMS+'Name').innerHTML=defendingPlayers[i].name;
 						document.getElementById('break'+MAXITEMS+'HP').innerHTML=defendingPlayers[i].hp;
 						document.getElementById('break'+MAXITEMS+'ATK').innerHTML=defendingPlayers[i].attack;
+						document.getElementById('break'+MAXITEMS+'ATKLabel').innerHTML='BLK';
 						document.getElementById('break'+MAXITEMS+'BLK').innerHTML=defendingPlayers[i].block;
+						document.getElementById('break'+MAXITEMS+'BLKLabel').innerHTML='BLK';
 						document.getElementById('break'+MAXITEMS+'Stats').style.visibility='';
 						MAXITEMS++;
 					}
@@ -1005,6 +1075,38 @@
 				}
 			}
 
+			function highlightTargettedPlayer(){
+				var num=defendingPlayers.length+1;
+				if (currAction=="targetting"){
+					document.getElementById('break'+num+'Name').innerHTML=targettedPlayer.name;
+					document.getElementById('break'+num+'HP').innerHTML=targettedPlayer.hp;
+					document.getElementById('break'+num+'ATK').innerHTML=targettedPlayer.attack;
+					document.getElementById('break'+num+'ATKLabel').innerHTML='ATK';
+					document.getElementById('break'+num+'BLK').innerHTML=targettedPlayer.block;
+					document.getElementById('break'+num+'BLKLabel').innerHTML='BLK';
+					document.getElementById('break'+num+'Stats').style.visibility='';
+					cameraTarget.set(targettedPlayer.currentPosition.x, 0, targettedPlayer.currentPosition.z);
+				} else if (currAction=="main"){
+					if (menuSelection==2){
+						var keeper=null;
+						if (teamWithBall==1){
+							keeper=oppTeamGK;
+						} else {
+							keeper=myTeamGK;
+						}
+						document.getElementById('break'+num+'Name').innerHTML=keeper.name;
+						document.getElementById('break'+num+'HP').innerHTML=keeper.hp;
+						document.getElementById('break'+num+'ATK').innerHTML='';
+						document.getElementById('break'+num+'ATKLabel').innerHTML='';
+						document.getElementById('break'+num+'BLK').innerHTML=keeper.cat;
+						document.getElementById('break'+num+'BLKLabel').innerHTML='CAT';
+						document.getElementById('break'+num+'Stats').style.visibility='';
+					} else {
+						document.getElementById('break'+num+'Stats').style.visibility='hidden';
+					}
+				}
+			}
+
 			function onBreakResult(numLeft){
 				var currEnd = Number(document.getElementById('playerEND').innerHTML);
 				currEnd-=Math.round((.5+Math.random())*breakingPlayer.attack);
@@ -1054,6 +1156,7 @@
 					minimapContext.lineTo(x3, minimapCanvas.width-y3);
 					minimapContext.lineTo(x1, minimapCanvas.width-y1);
 					minimapContext.closePath();
+					minimapContext.strokeStyle="#FFCC00";
 					minimapContext.stroke();
 					minimapContext.fillStyle = "#FFCC00";
 					minimapContext.fill();
@@ -1074,6 +1177,7 @@
 					minimapContext.lineTo(x3, minimapCanvas.width-y3);
 					minimapContext.lineTo(x1, minimapCanvas.width-y1);
 					minimapContext.closePath();
+					minimapContext.strokeStyle="#FF0000";
 					//minimapContext.arc(minimapCanvas.width*(100+oppTeam[i].currentPosition.x)/200, minimapCanvas.width*(100+oppTeam[i].currentPosition.z)/200, minimapCanvas.width/40, 0, 2 * Math.PI, false);
 					minimapContext.stroke();
 					minimapContext.fillStyle = "#FF0000";
@@ -1087,9 +1191,19 @@
 				minimapContext.fillStyle = 'white';
 				minimapContext.fill();
 
+				if (targettedPlayer!=null&&currAction=="targetting"){
+					minimapContext.beginPath();
+					minimapContext.arc(minimapCanvas.width*(110+targettedPlayer.currentPosition.x)/220, minimapCanvas.width*(110+targettedPlayer.currentPosition.z)/220, minimapCanvas.width/14, 0, 2 * Math.PI, false);
+					minimapContext.arc(minimapCanvas.width*(110+targettedPlayer.currentPosition.x)/220, minimapCanvas.width*(110+targettedPlayer.currentPosition.z)/220, minimapCanvas.width/15, 0, 2 * Math.PI, true);
+					minimapContext.closePath();
+					//minimapContext.strokeStyle="#FFCC00";
+					//minimapContext.stroke;
+					minimapContext.fillStyle = 'white';
+					minimapContext.fill();
+				}
 				if (currAction=="passedBall"||currAction=="shotBall"){
 					minimapContext.beginPath();
-					minimapContext.arc(minimapCanvas.width*(100+blitzball.position.x)/200, minimapCanvas.width*(100-blitzball.position.z)/200, minimapCanvas.width/50, 0, 2 * Math.PI, false);
+					minimapContext.arc(minimapCanvas.width*(110+blitzball.position.x)/220, minimapCanvas.width*(110+blitzball.position.z)/220, minimapCanvas.width/50, 0, 2 * Math.PI, false);
 					minimapContext.closePath();
 					minimapContext.fillStyle = 'white';
 					minimapContext.fill();
@@ -1097,6 +1211,7 @@
 			}
 
 			function animateBreak(numLeft){
+				inMenu=false;
 				if (numLeft>0){
 					/*if (defendingPlayers!=null&&defendingPlayers.length>=numLeft){
 						console.log('invalid number of break attempts: ' + numLeft);
@@ -1109,8 +1224,55 @@
 					breakingPlayer.animateTackle(mv);
 				} else {
 					if (currAction=="breaktargetting"){
-						currAction="targetting";
-						document.getElementById('actionMenu').style.display='';
+						if (teamWithBall==1){
+							currAction="targetting";
+							document.getElementById('actionMenu').style.display='';
+
+							if (currentPlayer!=myTeamLW){
+								targettedPlayer=myTeamLW;
+							} else {
+								targettedPlayer=myTeamRW;
+							}
+							highlightTargettedPlayer();
+							
+						} else {
+							var lwFreedom=0;
+							var rwFreedom=0;
+							var mfFreedom=0;
+							var lbFreedom=0;
+							var rbFreedom=0;
+							if (currentPlayer!=oppTeamLW){
+								lwFreedom = Math.random()/2*(myTeamLB.currentPosition.distanceTo(oppTeamLW.currentPosition)+myTeamRB.currentPosition.distanceTo(oppTeamLW.currentPosition)+myTeamMF.currentPosition.distanceTo(oppTeamLW.currentPosition));
+							}
+							if (currentPlayer!=oppTeamRW){
+								rwFreedom = Math.random()/2*(myTeamLB.currentPosition.distanceTo(oppTeamRW.currentPosition)+myTeamRB.currentPosition.distanceTo(oppTeamRW.currentPosition)+myTeamMF.currentPosition.distanceTo(oppTeamRW.currentPosition));
+							}
+							if (currentPlayer!=oppTeamMF){
+								mfFreedom = Math.random()/2*(myTeamLB.currentPosition.distanceTo(oppTeamMF.currentPosition)+myTeamRB.currentPosition.distanceTo(oppTeamMF.currentPosition)+myTeamMF.currentPosition.distanceTo(oppTeamMF.currentPosition));
+							}
+							if (currentPlayer!=oppTeamLB){
+								lbFreedom = Math.random()/2*(myTeamRW.currentPosition.distanceTo(oppTeamLB.currentPosition)+myTeamMF.currentPosition.distanceTo(oppTeamLB.currentPosition));
+							}
+							if (currentPlayer!=oppTeamRB){
+								lbFreedom = Math.random()/2*(myTeamRW.currentPosition.distanceTo(oppTeamRB.currentPosition)+myTeamMF.currentPosition.distanceTo(oppTeamRB.currentPosition));
+							}
+							if (lwFreedom>rwFreedom&&lwFreedom>mfFreedom&&lwFreedom>lbFreedom&&lwFreedom>rbFreedom){
+								targettedPlayer=oppTeamLW;
+							} else if (rwFreedom>lwFreedom&&rwFreedom>mfFreedom&&rwFreedom>lbFreedom&&rwFreedom>rbFreedom){
+								targettedPlayer=oppTeamRW;
+							} else if (lbFreedom>lwFreedom&&lbFreedom>mfFreedom&&lbFreedom>rwFreedom&&lbFreedom>rbFreedom){
+								targettedPlayer=oppTeamLB;
+							} else if (rbFreedom>lwFreedom&&rbFreedom>mfFreedom&&rbFreedom>lbFreedom&&rbFreedom>rwFreedom){
+								targettedPlayer=oppTeamRB;
+							} else {
+								if (currentPlayer!=oppTeamMF){
+									targettedPlayer=oppTeamMF;
+								} else {
+									targettedPlayer=oppTeamLW;
+								}
+							}
+							pass();
+						}
 					} else if (currAction=="breakshoot"){
 						shoot();
 					} else if (currAction=="breakdribble"){
@@ -1141,6 +1303,10 @@
 					allPlayers[i].chasingPosition=null;
 				}
 				ballQuadrant=0;
+
+				if (teamWithBall==2){
+					setTimeout(triggerAIStop, '2000');
+				}
 			}
 
 			var updateActiveOverride=false;
@@ -1162,50 +1328,47 @@
 						cameraTarget.set(100, 0, 0);
 					}
 					var goalNum=Math.round(currStat-((.5+Math.random())*keeper.cat));
-					if (goalNum<0){
-						keeper.animateGoalieSave(function(){
-							updateStat('playerSHT', 0);
-							writeInfo(keeper.name + ' saves the ball!');
-							if (Math.random()<.5){
-								keeper.continueGoalieSave(true, function(){
-									if (teamWithBall==1){
-										targettedPlayer=oppTeam[Math.floor(Math.random()*5)];
-										teamWithBall=2;
-									} else {
-										targettedPlayer=myTeam[Math.floor(Math.random()*5)];
+					if (goalNum<=0){
+						if (Math.random()<.5){
+							if (teamWithBall==1){
+								targettedPlayer=oppTeam[Math.floor(Math.random()*5)];
+								teamWithBall=2;
+							} else {
+								targettedPlayer=myTeam[Math.floor(Math.random()*5)];
+								teamWithBall=1;
+							}
+							keeper.animateGoalieSaveGrab(function(){
+								updateStat('playerSHT', 0);
+								writeInfo(keeper.name + ' saves the ball!');
+							}, function(){
+								targettedPlayer.lookAt(keeper.currentPosition);
+								keeper.animatePass(function(){grabLooseBall(targettedPlayer)});
+							});
+						} else {
+							keeper.animateGoalieSaveDeflect(function(){
+								updateStat('playerSHT', 0);
+								writeInfo(keeper.name + ' blocks the ball!');
+							}, function(){
+								var currDist = 200;
+								var currWinner=null;
+								for (var i=0; i<myTeam.length; i++){
+									if (myTeam[i].currentPosition.distanceTo(keeper.currentPosition)<currDist){
+										currWinner=myTeam[i];
+										currDist=myTeam[i].currentPosition.distanceTo(keeper.currentPosition);
 										teamWithBall=1;
 									}
-									//updateActiveOverride=true;
-									//updateCurrentPlayer(keeper);
-									//defendingPlayers = [];
-									//pass();
-									targettedPlayer.lookAt(keeper.currentPosition);
-									keeper.animatePass(function(){grabLooseBall(targettedPlayer)});
-								});
-							} else {
-								keeper.continueGoalieSave(false, function(){
-									writeInfo(keeper.name + ' saves the ball!');
-									var currDist = 200;
-									var currWinner=null;
-									for (var i=0; i<myTeam.length; i++){
-										if (myTeam[i].currentPosition.distanceTo(keeper.currentPosition)<currDist){
-											currWinner=myTeam[i];
-											currDist=myTeam[i].currentPosition.distanceTo(keeper.currentPosition);
-											teamWithBall=1;
-										}
+								}
+								for (var i=0; i<oppTeam.length; i++){
+									if (oppTeam[i].currentPosition.distanceTo(keeper.currentPosition)<currDist){
+										currWinner=oppTeam[i];
+										currDist=oppTeam[i].currentPosition.distanceTo(keeper.currentPosition);
+										teamWithBall=2;
 									}
-									for (var i=0; i<oppTeam.length; i++){
-										if (oppTeam[i].currentPosition.distanceTo(keeper.currentPosition)<currDist){
-											currWinner=oppTeam[i];
-											currDist=oppTeam[i].currentPosition.distanceTo(keeper.currentPosition);
-											teamWithBall=2;
-										}
-									}
-									keeper.ball.visible=false;
-									grabLooseBall(currWinner);
-								});
-							}
-						});
+								}
+								keeper.ball.visible=false;
+								grabLooseBall(currWinner);
+							});
+						}
 					} else {
 						keeper.animateGoalieFailSave(blitzball, function(){
 							updateStat('playerSHT', goalNum);
@@ -1566,6 +1729,155 @@
 				}
 			}
 
+			function triggerAIStop(){
+				if (currentPlayer.currentPosition.x>85){
+					triggerBreak();
+				} else if (currentPlayer.currentPosition.x>0){
+					if (currentPlayer==oppTeamLB||currentPlayer==oppTeamRB){
+						if (Math.random()<.85){
+							triggerBreak();
+						} else {
+							setTimeout(triggerAIStop, '1000');
+						}
+					} else {
+						if (Math.random()<.3){
+							triggerBreak();
+						} else {
+							setTimeout(triggerAIStop, '1000');
+						}
+					}
+				} else if (currentPlayer==oppTeamLB||currentPlayer==oppTeamRB){
+					if (Math.random()<.3){
+						triggerBreak();
+					} else {
+						setTimeout(triggerAIStop, '1000');
+					}
+				} else {
+					if (Math.random()<.15){
+						triggerBreak();
+					} else {
+						setTimeout(triggerAIStop, '1000');
+					}
+				}
+			}
+
+			function computeAIMove(){
+				if (currentPlayer==oppTeamLW){
+					controls.moveRight=true;
+					controls.moveLeft=false;
+					if (currentPlayer.currentPosition.z>-20){
+						controls.moveForward=true;
+						controls.moveBackward=false;
+					} else if (currentPlayer.currentPosition.z>-80){
+						controls.moveBackward=false;
+						if (myTeamRW.currentPosition.x>currentPlayer.currentPosition.x&&myTeamRW.currentPosition.z>currentPlayer.currentPosition.z){//opposing striker in front and above, escape up
+							controls.moveForward=true;
+						} else if (myTeamMF.currentPosition.x>currentPlayer.currentPosition.x&&myTeamMF.currentPosition.z>currentPlayer.currentPosition.z&&myTeamMF.chasingPosition!=null){
+							controls.moveForward=true;
+						} else {
+							controls.moveForward=false;
+						}
+					} else if (currentPlayer.currentPosition.x>50){
+						controls.moveForward=false;
+						controls.moveBackward=true;
+					} else {
+						controls.moveForward=false;
+						controls.moveBackward=false;
+					}
+				} else if (currentPlayer==oppTeamRW){
+					controls.moveRight=true;
+					controls.moveLeft=false;
+					if (currentPlayer.currentPosition.z<20){
+						controls.moveForward=false;
+						controls.moveBackward=true;
+					} else if (currentPlayer.currentPosition.z<80){
+						controls.moveForward=false;
+						if (myTeamLW.currentPosition.x>currentPlayer.currentPosition.x&&myTeamLW.currentPosition.z<currentPlayer.currentPosition.z){
+							controls.moveBackward=true;
+						} else if (myTeamMF.currentPosition.x>currentPlayer.currentPosition.x&&myTeamMF.currentPosition.z<currentPlayer.currentPosition.z&&myTeamMF.chasingPosition!=null){
+							controls.moveBackward=true;
+						} else {
+							controls.moveBackward=false;
+						}
+					} else if (currentPlayer.currentPosition.x>50){
+						controls.moveForward=true;
+						controls.moveBackward=false;
+					} else {
+						controls.moveForward=false;
+						controls.moveBackward=false;
+					}
+				} else if (currentPlayer==oppTeamMF){
+					controls.moveRight=true;
+					controls.moveLeft=false;
+					var belowCnt=0;
+					var aboveCnt;
+					for (var i=0; i<myTeam.length; i++){
+						if (myTeam[i].chasingPosition=null){
+							if (myTeam[i].currentPosition.z<currentPlayer.currentPosition.z){
+								aboveCnt++;
+							} else {
+								belowCnt++
+							}
+						}
+					}
+					if (aboveCnt<belowCnt){
+						controls.moveForward=true;
+						controls.moveBackward=false;
+					} else if (aboveCnt>belowCnt){
+						controls.moveForward=false;
+						controls.moveBackward=true;
+					} else {
+						controls.moveForward=false;
+						controls.moveBackward=false;
+					}
+				} else if (currentPlayer==oppTeamLB){
+					controls.moveRight=true;
+					controls.moveLeft=false;
+					if (currentPlayer.currentPosition.z>-20){
+						controls.moveForward=true;
+						controls.moveBackward=false;
+					} else if (currentPlayer.currentPosition.z>-70){
+						controls.moveBackward=false;
+						if (myTeamRW.currentPosition.x>currentPlayer.currentPosition.x&&myTeamRW.currentPosition.z>currentPlayer.currentPosition.z){//opposing striker in front and above, escape up
+							controls.moveForward=true;
+						} else if (myTeamMF.currentPosition.x>currentPlayer.currentPosition.x&&myTeamMF.currentPosition.z>currentPlayer.currentPosition.z&&myTeamMF.chasingPosition!=null){
+							controls.moveForward=true;
+						} else {
+							controls.moveForward=false;
+						}
+					} else if (currentPlayer.currentPosition.x>50){
+						controls.moveForward=false;
+						controls.moveBackward=true;
+					} else {
+						controls.moveForward=false;
+						controls.moveBackward=false;
+					}
+				} else if (currentPlayer==oppTeamRB){
+					controls.moveRight=true;
+					controls.moveLeft=false;
+					if (currentPlayer.currentPosition.z<20){
+						controls.moveForward=false;
+						controls.moveBackward=true;
+					} else if (currentPlayer.currentPosition.z<70){
+						controls.moveForward=false;
+						if (myTeamLW.currentPosition.x>currentPlayer.currentPosition.x&&myTeamLW.currentPosition.z<currentPlayer.currentPosition.z){
+							controls.moveBackward=true;
+						} else if (myTeamMF.currentPosition.x>currentPlayer.currentPosition.x&&myTeamMF.currentPosition.z<currentPlayer.currentPosition.z&&myTeamMF.chasingPosition!=null){
+							controls.moveBackward=true;
+						} else {
+							controls.moveBackward=false;
+						}
+					} else if (currentPlayer.currentPosition.x>50){
+						controls.moveForward=true;
+						controls.moveBackward=false;
+					} else {
+						controls.moveForward=false;
+						controls.moveBackward=false;
+					}
+				}
+			}
+			
+
 			var rotTimer=0;
 			function updateCameraTarget(){
 				if (currAction=="none"){
@@ -1609,6 +1921,10 @@
 				if (gameActive){
 					computeRestingPositions();
 					timeSinceLastTrigger+=delta;
+
+					if (teamWithBall==2&&!multiplayer){
+						computeAIMove();
+					}
 				}
 
 				if (currAction=="blitzoff"){

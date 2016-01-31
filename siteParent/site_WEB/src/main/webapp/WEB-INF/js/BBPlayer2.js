@@ -15,7 +15,7 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 	this.hp=1150;
 	this.attack=10;
 	this.pass=15;
-	this.shot=70;
+	this.shot=30;
 	this.block=10;
 	this.cat=10;
 	this.techs=[];
@@ -79,12 +79,18 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 		scope.callback=callback;
 		var loader = new THREE.ColladaLoader();
 		loader.options.convertUpAxis = true;
-		loader.load( 'obj/stormtrooper/stormtrooper19.dae', function ( collada ) {
+		loader.load( 'obj/stormtrooper/stormtrooper20.dae', function ( collada ) {
 
 			scope.root = collada.scene;
 			scope.has3DModel=true;
 			var playerModel = scope.root.children[1];
-			playerModel.children[0].material.side=THREE.DoubleSide;
+			if (playerModel.children[0].material.materials!=null&&playerModel.children[0].material.materials.length>0){
+				for (var i=0; i<playerModel.children[0].material.materials.length; i++){
+					playerModel.children[0].material.materials[i].side=THREE.DoubleSide;
+				}
+			} else {
+				playerModel.children[0].material.side=THREE.DoubleSide;
+			}
 			scope.animation= new THREE.BBAnimation( scope, playerModel.children[0].geometry.animation, scope.speed, false );
 			scope.ball = scope.root.children[3];
 			scope.ball.children[0].material.side=THREE.DoubleSide;
@@ -267,8 +273,8 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 	
 	this.animateShoot = function(callback){
 		this.animation.playShootAnimation();
-		this.ballAnimation.playShootAnimation();
-		this.ballAnimation.callback=function(){scope.ball.visible=false; callback();};
+		this.ballAnimation.playShootAnimation(function(){scope.ball.visible=false;});
+		this.ballAnimation.callback=callback;
 	}
 	
 	this.animatePass = function(callback){
@@ -281,15 +287,23 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 		//this.animation.playGoalieAnimation();
 	}
 	
-	this.animateGoalieSave = function(callback){
+	this.animateGoalieSaveGrab = function(interimCallback, callback){
 		this.ball.visible=true;
-		this.animation.playGoalieSaveAnimation(null);
-		this.ballAnimation.playGoalieSaveAnimation(callback);
+		this.animation.playGoalieGrabAnimation(null);
+		this.ballAnimation.playGoalieGrabAnimation(interimCallback);
+		this.ballAnimation.callback=callback;
+	}
+	
+	this.animateGoalieSaveDeflect = function(interimCallback, callback){
+		this.ball.visible=true;
+		this.animation.playGoalieDeflectAnimation(null);
+		this.ballAnimation.playGoalieDeflectAnimation(interimCallback);
+		this.ballAnimation.callback=function(){scope.ball.visible=false; callback()};
 	}
 	
 	this.animateGoalieFailSave = function(gameball, callback){
 		this.ball.visible=true;
-		this.animation.playGoalieSaveAnimation(null);
+		this.animation.playGoalieGrabAnimation(null);
 		this.ballAnimation.playBallGoalieFailSaveAnimation();
 		this.ballAnimation.callback = function(){
 			if (scope.currentPosition.x<0){
