@@ -1,5 +1,6 @@
 package site.blitzball;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BlitzballPlayer implements java.io.Serializable {
@@ -21,6 +22,7 @@ public class BlitzballPlayer implements java.io.Serializable {
 	private Integer cat;//catch
 	private Integer salary;
 	private Integer contractLength;
+	private String model;
 	private List<Integer> learnedTechs;
 	private List<Integer> learnableTechs;
 	private BlitzballTech tech1;
@@ -124,6 +126,14 @@ public class BlitzballPlayer implements java.io.Serializable {
 	public void setContractLength(Integer contractLength) {
 		this.contractLength = contractLength;
 	}
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
 	public List<Integer> getLearnedTechs() {
 		return learnedTechs;
 	}
@@ -183,5 +193,24 @@ public class BlitzballPlayer implements java.io.Serializable {
 	}
 	public void setKeyTech3(BlitzballTech keyTech3) {
 		this.keyTech3 = keyTech3;
+	}
+	public List<Integer> getCurrentTechs(){
+		List<Integer> returnList = new ArrayList<Integer>();
+		if (tech1!=null){
+			returnList.add(tech1.getTechID());
+		}
+		if (tech2!=null){
+			returnList.add(tech2.getTechID());
+		}
+		if (tech3!=null){
+			returnList.add(tech3.getTechID());
+		}
+		if (tech4!=null){
+			returnList.add(tech4.getTechID());
+		}
+		if (tech5!=null){
+			returnList.add(tech5.getTechID());
+		}
+		return returnList;
 	}
 }

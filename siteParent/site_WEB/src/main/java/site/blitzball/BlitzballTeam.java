@@ -1,5 +1,8 @@
 package site.blitzball;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BlitzballTeam implements java.io.Serializable {
 
 	private static final long serialVersionUID = 9069740686801226048L;
@@ -107,5 +110,15 @@ public class BlitzballTeam implements java.io.Serializable {
 	}
 	public void setAvailableCash(Integer availableCash) {
 		this.availableCash = availableCash;
+	}
+	public List<BlitzballPlayer> getActivePlayers(){
+		List<BlitzballPlayer> list = new ArrayList<BlitzballPlayer>();
+		list.add(leftWing);
+		list.add(rightWing);
+		list.add(midfielder);
+		list.add(leftBack);
+		list.add(rightBack);
+		list.add(keeper);
+		return list;
 	}
 }

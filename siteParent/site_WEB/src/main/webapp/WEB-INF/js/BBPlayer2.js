@@ -8,6 +8,7 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 	var sphereRadius=100;
 	
 	this.triggerCallback=triggerCallback;
+	/*this.playerID=1;
 	this.level=3;
 	this.name='Test Player';
 	this.speed=60;
@@ -19,7 +20,14 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 	this.block=10;
 	this.cat=10;
 	this.techs=[];
-	/*this.level=player.level;
+	this.techs.push({techID:2, techName:"Venom Shot", hpCost:50, statMod:3, techType:"shot"});
+	this.techs.push({techID:3, techName:"Nap Pass", hpCost:50, statMod:3, techType:"pass"});
+	this.techCopyTarget=1;
+	this.learnableTechs=[];
+	this.learnableTechs.push({techID:2, techName:"Venom Shot", hpCost:50, statMod:3, techType:"shot"});
+	this.learnableTechs.push({techID:3, techName:"Nap Pass", hpCost:50, statMod:3, techType:"pass"});*/
+	this.playerID=player.playerID;
+	this.level=player.level;
 	this.name=player.name;
 	this.speed = player.speed;
 	this.endurance=player.endurance;
@@ -29,6 +37,7 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 	this.shot=player.shot;
 	this.block=player.block;
 	this.cat=player.cat;
+	this.model=player.model;
 	this.techs=[];
 	if (player.tech1!=null){
 		this.techs.push(player.tech1);
@@ -44,7 +53,18 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 	}
 	if (player.tech5!=null){
 		this.techs.push(player.tech5);
-	}*/
+	}
+	this.learnableTechs=player.learnableTechs;
+	this.goals=0;
+	this.shots=1;
+	this.assists=0;
+	this.goalsAgainst=0;
+	this.shotsAgainst=0;
+	this.tackles=0;
+	this.blocks=1;
+	this.breaks=0;
+	this.turnovers=1;
+	
 	this.restingPosition = startingPos.clone();//Vector3
 	this.currentPosition = startingPos;
 	this.chasingPosition = null;
@@ -79,7 +99,7 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 		scope.callback=callback;
 		var loader = new THREE.ColladaLoader();
 		loader.options.convertUpAxis = true;
-		loader.load( 'obj/stormtrooper/stormtrooper20.dae', function ( collada ) {
+		loader.load( 'obj/stormtrooper/'+this.model, function ( collada ) {
 
 			scope.root = collada.scene;
 			scope.has3DModel=true;
@@ -274,7 +294,7 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 	this.animateShoot = function(callback){
 		this.animation.playShootAnimation();
 		this.ballAnimation.playShootAnimation(function(){scope.ball.visible=false;});
-		this.ballAnimation.callback=callback;
+		this.animation.callback=callback;
 	}
 	
 	this.animatePass = function(callback){
