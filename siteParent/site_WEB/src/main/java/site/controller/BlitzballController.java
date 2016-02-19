@@ -31,7 +31,7 @@ import site.identity.IdentityUtils;
 public class BlitzballController {
 	Identity identity=null;
 	BlitzballInfo blitzballInfo=null;
-	BlitzballLeague activeLeague=null;
+	//BlitzballLeague activeLeague=null;
 	BlitzballTeam activeOpponent=null;
 	BlitzballGame activeGame=null;
 
@@ -50,8 +50,8 @@ public class BlitzballController {
 			blitzballInfo=BlitzballUtils.getBlitsballInfo(identifier);
 			//activeLeague=BlitzballUtils.getActiveLeague(blitzballInfo);
 		}
-		if (blitzballInfo!=null&&(activeLeague==null||activeLeague.getWeeksComplete()>=10)){
-			activeLeague=BlitzballUtils.getActiveLeague(blitzballInfo);
+		if (blitzballInfo!=null&&(blitzballInfo.getLeague()==null||blitzballInfo.getLeague().getWeeksComplete()>=10)){
+			blitzballInfo=BlitzballUtils.getActiveLeague(blitzballInfo);
 		}
 		return mv;
 	}
@@ -95,11 +95,11 @@ public class BlitzballController {
 		if (identity==null||blitzballInfo==null){
 			return new ModelAndView("timeout");
 		}
-		if (activeLeague==null||activeLeague.getWeeksComplete()>=10){
-			activeLeague=BlitzballUtils.getActiveLeague(blitzballInfo);
+		if (blitzballInfo.getLeague()==null||blitzballInfo.getLeague().getWeeksComplete()>=10){
+			blitzballInfo=BlitzballUtils.getActiveLeague(blitzballInfo);
 		}
-		activeGame = BlitzballUtils.getLeagueGame(activeLeague);
-		activeOpponent=BlitzballUtils.getLeagueOpponentByID(activeLeague);
+		activeGame = BlitzballUtils.getLeagueGame(blitzballInfo.getLeague());
+		activeOpponent=BlitzballUtils.getLeagueOpponentByID(blitzballInfo.getLeague());
 		ModelAndView mv;
 		if (activeGame!=null&&activeGame.getHalvesComplete()>0){
 			//resume active game
@@ -109,7 +109,7 @@ public class BlitzballController {
 		} else {
 			//load standings
 			mv = new ModelAndView("blitzballLeague");
-			mv.addObject("standings", activeLeague.getLeagueStandings());
+			mv.addObject("standings", blitzballInfo.getLeague().getLeagueStandings());
 			mv.addObject("oppName", activeOpponent.getTeamName());
 		}
 		return mv;
@@ -121,8 +121,8 @@ public class BlitzballController {
 			return new ModelAndView("timeout");
 		}
 		ModelAndView mv = new ModelAndView("blitzballLeagueSchedule");
-		mv.addObject("week", activeLeague.getWeeksComplete()+1);
-		mv.addObject("schedule", activeLeague.getSchedule());
+		mv.addObject("week", blitzballInfo.getLeague().getWeeksComplete()+1);
+		mv.addObject("schedule", blitzballInfo.getLeague().getSchedule());
 		mv.addObject("oppName", activeOpponent.getTeamName());
 		return mv;
 	}
@@ -140,7 +140,7 @@ public class BlitzballController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		List<BlitzballPlayerStatistics> statistics = activeLeague.getPlayerStatistics();
+		List<BlitzballPlayerStatistics> statistics = blitzballInfo.getLeague().getPlayerStatistics();
 		statistics.sort(new Comparator<BlitzballPlayerStatistics>(){
 			public int compare(BlitzballPlayerStatistics p1, BlitzballPlayerStatistics p2) {
 				return p2.getGoals().compareTo(p1.getGoals());
@@ -148,7 +148,7 @@ public class BlitzballController {
 		
 		});
 		mv.addObject("oppName", activeOpponent.getTeamName());
-		mv.addObject("statistics", activeLeague.getPlayerStatistics());
+		mv.addObject("statistics", blitzballInfo.getLeague().getPlayerStatistics());
 		return mv;
 	}
 	
@@ -295,8 +295,8 @@ public class BlitzballController {
 				identity=IdentityUtils.getIdentityByIdentifier(identifier);
 				blitzballInfo=BlitzballUtils.getBlitsballInfo(identifier);
 				if (blitzballGameInfo.getLeagueGameID()!=null){
-					activeLeague=BlitzballUtils.getActiveLeague(blitzballInfo);
-					activeOpponent = BlitzballUtils.getLeagueOpponentByID(activeLeague);
+					blitzballInfo=BlitzballUtils.getActiveLeague(blitzballInfo);
+					activeOpponent = BlitzballUtils.getLeagueOpponentByID(blitzballInfo.getLeague());
 				}
 			}
 		}
@@ -340,8 +340,8 @@ public class BlitzballController {
 				identity=IdentityUtils.getIdentityByIdentifier(identifier);
 				blitzballInfo=BlitzballUtils.getBlitsballInfo(identifier);
 			}
-			if (blitzballInfo!=null&&(activeLeague==null||activeLeague.getWeeksComplete()>=10)){
-				activeLeague=BlitzballUtils.getActiveLeague(blitzballInfo);
+			if (blitzballInfo!=null&&(blitzballInfo.getLeague()==null||blitzballInfo.getLeague().getWeeksComplete()>=10)){
+				blitzballInfo=BlitzballUtils.getActiveLeague(blitzballInfo);
 			}
 		}
 		ModelAndView mv = new ModelAndView("blitzballGameStart");

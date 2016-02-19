@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.springframework.dao.EmptyResultDataAccessException;
+
 import site.dao.BlitzballDao;
 import site.dao.BlitzballDaoImpl;
 
@@ -33,7 +35,48 @@ public class BlitzballUtils {
 		return info;
 	}
 	
-	public static BlitzballLeague getActiveLeague(BlitzballInfo info){
+	public static List<BlitzballPlayer> simulateWeeksGames(BlitzballInfo info, BlitzballGame playerGame){
+		for (BlitzballGame game : info.getLeague().getSchedule().get(info.getLeague().getWeeksComplete()+1)){
+			if (playerGame==null||(!game.getTeam1().getTeamID().equals(info.getTeam().getTeamID())&&!game.getTeam2().getTeamID().equals(info.getTeam().getTeamID()))){
+				BlitzballTeam team1 = null;
+				BlitzballTeam team2 = null;
+				if (game.getTeam1().getTeamID().equals(info.getTeam().getTeamID())){
+					team1=info.getTeam();
+				} else if (game.getTeam2().getTeamID().equals(info.getTeam().getTeamID())){
+					team2=info.getTeam();
+				}
+				for (BlitzballTeam team : info.getOpponents()){
+					if (game.getTeam1().getTeamID().equals(team.getTeamID())){
+						team1=team;
+						System.out.println("Found team1");
+					} else if (game.getTeam2().getTeamID().equals(team.getTeamID())){
+						team2=team;
+					}
+				}
+				if (team1==null||team2==null){
+					throw new IllegalStateException("Null team in simulating games:"+game.getTeam1().getTeamID() + "-"+ game.getTeam2().getTeamID());
+				} else {
+					BlitzballGame newGame = BlitzballUtils.simulateGame(team1, team2);
+					game.setHalvesComplete(newGame.getHalvesComplete());
+					game.setTeam1Score(newGame.getTeam1Score());
+					game.setTeam2Score(newGame.getTeam2Score());
+					game.setPlayerStatistics(newGame.getPlayerStatistics());
+				}
+			}
+		}
+		BlitzballDao dao = new BlitzballDaoImpl();
+		info.getLeague().setWeeksComplete(info.getLeague().getWeeksComplete()+1);
+		dao.advanceLeagueWeek(info.getLeague());
+		String teamString="";
+		for (BlitzballTeam team : info.getOpponents()){
+			teamString+=team.getTeamID()+",";
+		}
+		teamString+=info.getTeam().getTeamID();
+		List<BlitzballPlayer> expiredPlayers = dao.advancePlayerContracts(info, teamString);
+		return expiredPlayers;
+	}
+	
+	public static BlitzballInfo getActiveLeague(BlitzballInfo info){
 		BlitzballDao dao = new BlitzballDaoImpl();
 		BlitzballLeague league=null;
 		try {
@@ -41,23 +84,24 @@ public class BlitzballUtils {
 			//league.setDivisionOpponents(dao.getDivisionsOpponents(league.getLeagueID()));
 			//league.setNonDivisionOpponents(dao.getNonDivisionsOpponents(info, league.getLeagueID()));
 			league.setSchedule(dao.getLeagueSchedule(league.getLeagueID()));
-			league.setPlayerStatistics(dao.getLeaguePlayerStatistics(league.getLeagueID()));
-		} catch (Exception e){//TODO get specific catch
+			league.setPlayerStatistics(dao.getLeaguePlayerStatistics(league.getLeagueID(), league.getGameID()));
+		} catch (EmptyResultDataAccessException e){
 			e.printStackTrace();
 			Long newLeagueID=generateRandomLeague(info);
 			league=dao.getActiveLeagueByTeamID(info);
 			league.setSchedule(dao.getLeagueSchedule(league.getLeagueID()));
-			league.setPlayerStatistics(dao.getLeaguePlayerStatistics(league.getLeagueID()));
+			league.setPlayerStatistics(dao.getLeaguePlayerStatistics(league.getLeagueID(), league.getGameID()));
 			//league=generateRandomLeague(info);
 		}
-		return league;
+		info.setLeague(league);
+		return info;
 	}
 	
 	public static BlitzballGame getLeagueGame(BlitzballLeague leagueInfo){
 		List<BlitzballGame> weeksGames=leagueInfo.getSchedule().get(leagueInfo.getWeeksComplete()+1);
 		BlitzballGame leagueGame = null;
 		for (BlitzballGame game : weeksGames){
-			if (game.getTeam1().getTeamID()==leagueInfo.getGameID()||game.getTeam2().getTeamID()==leagueInfo.getGameID()){
+			if (game.getTeam1().getTeamID().equals(leagueInfo.getGameID())||game.getTeam2().getTeamID().equals(leagueInfo.getGameID())){
 				leagueGame=game;
 				break;
 			}
@@ -70,15 +114,15 @@ public class BlitzballUtils {
 		List<BlitzballGame> weeksGames=leagueInfo.getSchedule().get(leagueInfo.getWeeksComplete()+1);
 		outer:
 		for (BlitzballGame game : weeksGames){
-			if (game.getTeam1().getTeamID()==leagueInfo.getGameID()){
+			if (game.getTeam1().getTeamID().equals(leagueInfo.getGameID())){
 				for (BlitzballTeam team : leagueInfo.getDivisionOpponents()){
-					if (team.getTeamID()==game.getTeam2().getTeamID()){
+					if (team.getTeamID().equals(game.getTeam2().getTeamID())){
 						leagueOpponent=team;
 						break outer;
 					}
 				}
 				for (BlitzballTeam team : leagueInfo.getNonDivisionOpponents()){
-					if (team.getTeamID()==game.getTeam2().getTeamID()){
+					if (team.getTeamID().equals(game.getTeam2().getTeamID())){
 						leagueOpponent=team;
 						break outer;
 					}

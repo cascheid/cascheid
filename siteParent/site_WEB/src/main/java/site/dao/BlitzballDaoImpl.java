@@ -46,7 +46,7 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 				info.setTotalLosses(rs.getInt("LOSSES"));
 				info.setTotalGoals(rs.getInt("GOALS"));
 				info.setTotalGoalsAgainst(rs.getInt("GOALS_AGAINST"));
-				Integer teamID=rs.getInt("GAME_ID");
+				final Integer teamID=rs.getInt("GAME_ID");
 				
 				RowMapper<BlitzballTeam> teamMapper = new RowMapper<BlitzballTeam>(){
 					public BlitzballTeam mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -88,19 +88,19 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 								return player;
 							}
 						};
-						myTeam.setRightWing(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=?" , new Object[]{rs.getLong("RWING")}, playerMapper));
-						myTeam.setLeftWing(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=?" , new Object[]{rs.getLong("LWING")}, playerMapper));
-						myTeam.setMidfielder(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=?" , new Object[]{rs.getLong("MID")}, playerMapper));
-						myTeam.setRightBack(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=?" , new Object[]{rs.getLong("RBACK")}, playerMapper));
-						myTeam.setLeftBack(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=?" , new Object[]{rs.getLong("LBACK")}, playerMapper));
-						myTeam.setKeeper(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=?" , new Object[]{rs.getLong("KEEPER")}, playerMapper));
+						myTeam.setRightWing(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=? AND GAME_ID=?" , new Object[]{rs.getLong("RWING"), teamID}, playerMapper));
+						myTeam.setLeftWing(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=? AND GAME_ID=?" , new Object[]{rs.getLong("LWING"), teamID}, playerMapper));
+						myTeam.setMidfielder(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=? AND GAME_ID=?" , new Object[]{rs.getLong("MID"), teamID}, playerMapper));
+						myTeam.setRightBack(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=? AND GAME_ID=?" , new Object[]{rs.getLong("RBACK"), teamID}, playerMapper));
+						myTeam.setLeftBack(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=? AND GAME_ID=?" , new Object[]{rs.getLong("LBACK"), teamID}, playerMapper));
+						myTeam.setKeeper(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=? AND GAME_ID=?" , new Object[]{rs.getLong("KEEPER"), teamID}, playerMapper));
 						
 						Long tempID=rs.getLong("BENCH1");
 						if (tempID!=null&&tempID>0){
-							myTeam.setBench1(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=?" , new Object[]{rs.getLong("BENCH1")}, playerMapper));
+							myTeam.setBench1(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=? AND GAME_ID=?" , new Object[]{rs.getLong("BENCH1"), teamID}, playerMapper));
 							tempID=rs.getLong("BENCH2");
 							if (tempID!=null&&tempID>0){
-								myTeam.setBench1(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=?" , new Object[]{rs.getLong("BENCH2")}, playerMapper));
+								myTeam.setBench1(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=? AND GAME_ID=?" , new Object[]{rs.getLong("BENCH2"), teamID}, playerMapper));
 							}
 						}
 						return myTeam;
@@ -131,13 +131,13 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 			setDataSource(getDataSource());
 		}
 		
-		jdbcTemplate.update("DELETE FROM BB_LEAGUE_GAME_STATS WHERE LEAGUE_GAME_ID IN (SELECT LEAGUE_GAME_ID FROM BB_LEAGUE_GAMES WHERE LEAGUE_ID IN (SELECT LEAGUE_ID FROM BB_LEAGUE WHERE GAME_ID=?))");
-		jdbcTemplate.update("DELETE FROM BB_LEAGUE_GAMES WHERE LEAGUE_ID IN (SELECT LEAGUE_ID FROM BB_LEAGUE WHERE GAME_ID=?)");
-		jdbcTemplate.update("DELETE FROM BB_LEAGUE WHERE GAME_ID=?");
-		jdbcTemplate.update("DELETE FROM BB_PLAYER_TECHS WHERE GAME_ID=?");
-		jdbcTemplate.update("DELETE FROM BB_PLAYERS WHERE GAME_ID=?");
-		jdbcTemplate.update("DELETE FROM BB_TEAM WHERE GAME_ID=?");
-		jdbcTemplate.update("DELETE FROM BB_INFO WHERE GAME_ID=?");
+		jdbcTemplate.update("DELETE FROM BB_LEAGUE_GAME_STATS WHERE LEAGUE_GAME_ID IN (SELECT LEAGUE_GAME_ID FROM BB_LEAGUE_GAMES WHERE LEAGUE_ID IN (SELECT LEAGUE_ID FROM BB_LEAGUE WHERE GAME_ID=?))", new Object[]{gameID});
+		jdbcTemplate.update("DELETE FROM BB_LEAGUE_GAMES WHERE LEAGUE_ID IN (SELECT LEAGUE_ID FROM BB_LEAGUE WHERE GAME_ID=?)", new Object[]{gameID});
+		jdbcTemplate.update("DELETE FROM BB_LEAGUE WHERE GAME_ID=?", new Object[]{gameID});
+		jdbcTemplate.update("DELETE FROM BB_PLAYER_TECHS WHERE GAME_ID=?", new Object[]{gameID});
+		jdbcTemplate.update("DELETE FROM BB_PLAYERS WHERE GAME_ID=?", new Object[]{gameID});
+		jdbcTemplate.update("DELETE FROM BB_TEAM WHERE GAME_ID=?", new Object[]{gameID});
+		jdbcTemplate.update("DELETE FROM BB_INFO WHERE GAME_ID=?", new Object[]{gameID});
 	}
 
 	@Override
@@ -231,7 +231,7 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 			Integer week = e.getKey();
 			List<BlitzballGame> weekGames = e.getValue();
 			for (BlitzballGame game : weekGames){
-				jdbcTemplate.update("INSERT INTO BB_LEAGUE_GAMES(LEAGUE_ID, WEEK, TEAM_1, TEAM_2, HALVES_COMPLETE) VALUES(?,?,?,?,0)", new Object[]{lReturn, week, game.getTeam1(), game.getTeam2()});	
+				jdbcTemplate.update("INSERT INTO BB_LEAGUE_GAMES(LEAGUE_ID, WEEK, TEAM_1, TEAM_2, HALVES_COMPLETE) VALUES(?,?,?,?,0)", new Object[]{lReturn, week, game.getTeam1().getTeamID(), game.getTeam2().getTeamID()});	
 			}
 		}
 		
@@ -281,18 +281,18 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 						return player;
 					}
 				};
-				team.setRightWing(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=?" , new Object[]{rs.getLong("RWING")}, playerMapper));
-				team.setLeftWing(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=?" , new Object[]{rs.getLong("LWING")}, playerMapper));
-				team.setMidfielder(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=?" , new Object[]{rs.getLong("MID")}, playerMapper));
-				team.setRightBack(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=?" , new Object[]{rs.getLong("RBACK")}, playerMapper));
-				team.setLeftBack(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=?" , new Object[]{rs.getLong("LBACK")}, playerMapper));
-				team.setKeeper(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=?" , new Object[]{rs.getLong("KEEPER")}, playerMapper));
+				team.setRightWing(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=? AND GAME_ID=?" , new Object[]{rs.getLong("RWING"), league.getGameID()}, playerMapper));
+				team.setLeftWing(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=? AND GAME_ID=?" , new Object[]{rs.getLong("LWING"), league.getGameID()}, playerMapper));
+				team.setMidfielder(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=? AND GAME_ID=?" , new Object[]{rs.getLong("MID"), league.getGameID()}, playerMapper));
+				team.setRightBack(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=? AND GAME_ID=?" , new Object[]{rs.getLong("RBACK"), league.getGameID()}, playerMapper));
+				team.setLeftBack(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=? AND GAME_ID=?" , new Object[]{rs.getLong("LBACK"), league.getGameID()}, playerMapper));
+				team.setKeeper(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=? AND GAME_ID=?" , new Object[]{rs.getLong("KEEPER"), league.getGameID()}, playerMapper));
 				Long tempID=rs.getLong("BENCH1");
 				if (tempID!=null&&tempID>0){
-					team.setBench1(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=?" , new Object[]{rs.getLong("BENCH1")}, playerMapper));
+					team.setBench1(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=? AND GAME_ID=?" , new Object[]{rs.getLong("BENCH1"), league.getGameID()}, playerMapper));
 					tempID=rs.getLong("BENCH2");
 					if (tempID!=null&&tempID>0){
-						team.setBench1(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=?" , new Object[]{rs.getLong("BENCH2")}, playerMapper));
+						team.setBench1(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS WHERE PLAYER_ID=? AND GAME_ID=?" , new Object[]{rs.getLong("BENCH2"), league.getGameID()}, playerMapper));
 					}
 				}
 				
@@ -332,7 +332,7 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 	}
 
 	@Override
-	public List<BlitzballPlayerStatistics> getLeaguePlayerStatistics(Long leagueID) {
+	public List<BlitzballPlayerStatistics> getLeaguePlayerStatistics(Long leagueID, Long gameID) {
 		if (jdbcTemplate==null){
 			setDataSource(getDataSource());
 		}
@@ -342,7 +342,7 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 				Integer playerID=rs.getInt("PLAYER_ID");
 				BlitzballPlayerStatistics stats = map.get(playerID);
 				if (stats==null){
-					String playerName = jdbcTemplate.queryForObject("SELECT NAME FROM BB_PLAYERS WHERE PLAYER_ID=?", new Object[]{playerID}, String.class);
+					String playerName = jdbcTemplate.queryForObject("SELECT NAME FROM BB_PLAYERS WHERE PLAYER_ID=? AND GAME_ID=?", new Object[]{playerID, gameID}, String.class);
 					stats = new BlitzballPlayerStatistics(playerID, playerName);
 					map.put(playerID, stats);
 				}
@@ -400,14 +400,14 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 		if (jdbcTemplate==null){
 			setDataSource(getDataSource());
 		}
-		for (BlitzballGame game : league.getSchedule().get(league.getWeeksComplete()-1)){
+		for (BlitzballGame game : league.getSchedule().get(league.getWeeksComplete())){
 			jdbcTemplate.update("UPDATE BB_LEAGUE_GAMES SET SCORE_1=?, SCORE_2=?, HALVES_COMPLETE=? WHERE LEAGUE_GAME_ID=?", new Object[]{game.getTeam1Score(), game.getTeam2Score(), game.getHalvesComplete(), game.getLeagueGameID()});
 			for (BlitzballPlayerStatistics stats : game.getPlayerStatistics()){
 				Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM BB_LEAGUE_GAME_STATS WHERE LEAGUE_GAME_ID=? AND PLAYER_ID=?", new Object[]{game.getLeagueGameID(), stats.getPlayerID()}, Integer.class);
 				if (count>0){
 					jdbcTemplate.update("UPDATE BB_LEAGUE_GAME_STATS SET GOALS=?, SHOTS=?, ASSISTS=?, GOALS_AGAINST=?, SHOTS_AGAINST=?, TACKLES=?, BLOCKS=?, BREAKS=?, TURNOVERS=? WHERE LEAGUE_GAME_ID=? AND PLAYER_ID=?", new Object[]{stats.getGoals(), stats.getShots(), stats.getAssists(), stats.getGoalsAgainst(), stats.getShotsAgainst(), stats.getTackles(), stats.getBlocks(), stats.getBreaks(), stats.getTurnovers(), game.getLeagueGameID(), stats.getPlayerID()});
 				} else {
-					jdbcTemplate.update("INSERT INTO BB_LEAGUE_GAME_STATS SET (LEAGUE_GAME_ID, PLAYER_ID, GOALS, SHOTS, ASSISTS, GOALS_AGAINST, SHOTS_AGAINST, TACKLES, BLOCKS, BREAKS, TURNOVERS) VALUES(?,?,?,?,?,?,?,?,?,?,?)", new Object[]{game.getLeagueGameID(), stats.getPlayerID(), stats.getGoals(), stats.getShots(), stats.getAssists(), stats.getGoalsAgainst(), stats.getShotsAgainst(), stats.getTackles(), stats.getBlocks(), stats.getBreaks()});
+					jdbcTemplate.update("INSERT INTO BB_LEAGUE_GAME_STATS (LEAGUE_GAME_ID, PLAYER_ID, GOALS, SHOTS, ASSISTS, GOALS_AGAINST, SHOTS_AGAINST, TACKLES, BLOCKS, BREAKS, TURNOVERS) VALUES(?,?,?,?,?,?,?,?,?,?,?)", new Object[]{game.getLeagueGameID(), stats.getPlayerID(), stats.getGoals(), stats.getShots(), stats.getAssists(), stats.getGoalsAgainst(), stats.getShotsAgainst(), stats.getTackles(), stats.getBlocks(), stats.getBreaks(), stats.getTurnovers()});
 				}
 				for (Integer i : stats.getTechsLearned()){
 					jdbcTemplate.update("DELETE FROM BB_PLAYER_TECHS WHERE GAME_ID=? AND PLAYER_ID=? AND TECH_ID=?", new Object[]{league.getGameID(), stats.getPlayerID(), i});
@@ -422,7 +422,7 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 		if (jdbcTemplate==null){
 			setDataSource(getDataSource());
 		}
-		jdbcTemplate.update("UPDATE BB_PLAYERS SET CONTRACT_LENGTH=(CONTRACT_LENGTH-1) WHERE GAME_ID=? AND CURR_TEAM IN (?)", new Object[]{info.getTeam().getTeamID(), teamIDString});
+		jdbcTemplate.update("UPDATE BB_PLAYERS SET CONTRACT_LENGTH=(CONTRACT_LENGTH-1) WHERE GAME_ID=? AND CURR_TEAM IN ("+teamIDString+")", new Object[]{info.getTeam().getTeamID()});
 		List<BlitzballPlayer> expiredList = jdbcTemplate.query("SELECT * FROM BB_PLAYERS WHERE GAME_ID=? AND CONTRACT_LENGTH<=0 AND CURR_TEAM IN (?)", new Object[]{info.getTeam().getTeamID(), teamIDString}, new RowMapper<BlitzballPlayer>(){
 			public BlitzballPlayer mapRow(ResultSet rs, int rowNum) throws SQLException {
 				BlitzballPlayer player = new BlitzballPlayer();

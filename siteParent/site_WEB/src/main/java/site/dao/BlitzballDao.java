@@ -18,7 +18,7 @@ public interface BlitzballDao {
 	public BlitzballLeague getActiveLeagueByTeamID(BlitzballInfo info);
 	public Long insertNewLeague(Long teamID, List<Long> divisionOpponents, HashMap<Integer, List<BlitzballGame>> schedule);
 	public HashMap<Integer, List<BlitzballGame>> getLeagueSchedule(Long leagueID);
-	public List<BlitzballPlayerStatistics> getLeaguePlayerStatistics(Long leagueID);
+	public List<BlitzballPlayerStatistics> getLeaguePlayerStatistics(Long leagueID, Long gameID);
 	public List<BlitzballTech> getFullBlitzballTechList();
 	public void saveLeagueGameInfo(BlitzballGame game);
 	public void advanceLeagueWeek(BlitzballLeague league);

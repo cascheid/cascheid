@@ -8,6 +8,7 @@ public class BlitzballInfo implements java.io.Serializable {
 	private Long userID;
 	private BlitzballTeam team;
 	private List<BlitzballTeam> opponents;
+	private BlitzballLeague league;
 	private Integer totalWins;
 	private Integer totalLosses;
 	private Integer totalGoals;
@@ -37,6 +38,14 @@ public class BlitzballInfo implements java.io.Serializable {
 
 	public void setOpponents(List<BlitzballTeam> opponents) {
 		this.opponents = opponents;
+	}
+
+	public BlitzballLeague getLeague() {
+		return league;
+	}
+
+	public void setLeague(BlitzballLeague league) {
+		this.league = league;
 	}
 
 	public Integer getTotalWins() {
