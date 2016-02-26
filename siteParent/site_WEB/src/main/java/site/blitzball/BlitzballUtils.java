@@ -16,6 +16,7 @@ import site.dao.BlitzballDaoImpl;
 
 public class BlitzballUtils {
 	private static List<BlitzballTech> techList;
+	private static HashMap<Integer, Integer> expLevels;
 
 	public static BlitzballInfo getBlitsballInfo(Long identifier){
 		BlitzballDao dao = new BlitzballDaoImpl();
@@ -35,8 +36,10 @@ public class BlitzballUtils {
 		return info;
 	}
 	
-	public static List<BlitzballPlayer> simulateWeeksGames(BlitzballInfo info, BlitzballGame playerGame){
-		for (BlitzballGame game : info.getLeague().getSchedule().get(info.getLeague().getWeeksComplete()+1)){
+	public static BlitzballWeekResults simulateWeeksGames(BlitzballInfo info, BlitzballGame playerGame){
+		BlitzballWeekResults results = new BlitzballWeekResults();
+		List<BlitzballGame> gameList = info.getLeague().getSchedule().get(info.getLeague().getWeeksComplete()+1);
+		for (BlitzballGame game : gameList){
 			if (playerGame==null||(!game.getTeam1().getTeamID().equals(info.getTeam().getTeamID())&&!game.getTeam2().getTeamID().equals(info.getTeam().getTeamID()))){
 				BlitzballTeam team1 = null;
 				BlitzballTeam team2 = null;
@@ -48,7 +51,6 @@ public class BlitzballUtils {
 				for (BlitzballTeam team : info.getOpponents()){
 					if (game.getTeam1().getTeamID().equals(team.getTeamID())){
 						team1=team;
-						System.out.println("Found team1");
 					} else if (game.getTeam2().getTeamID().equals(team.getTeamID())){
 						team2=team;
 					}
@@ -73,7 +75,22 @@ public class BlitzballUtils {
 		}
 		teamString+=info.getTeam().getTeamID();
 		List<BlitzballPlayer> expiredPlayers = dao.advancePlayerContracts(info, teamString);
-		return expiredPlayers;
+		results.setGameResults(gameList);
+		List<BlitzballPlayer> renewedPlayers = new ArrayList<BlitzballPlayer>();
+		renewedPlayers.addAll(expiredPlayers);
+		for (int i=0; i<renewedPlayers.size(); i++){
+			if (Math.random()<0.5){
+				renewedPlayers.set(i, dao.selectReplacementPlayer(renewedPlayers.get(i), info.getTeam().getTeamID()));
+			} else {
+				Integer newContractLength = 5 + (int) Math.round(Math.random()*15);
+				renewedPlayers.get(i).setContractLength(newContractLength);
+				dao.signPlayer(renewedPlayers.get(i).getPlayerID(), info.getTeam().getTeamID(), renewedPlayers.get(i).getTeamID(), newContractLength);
+			}
+		}
+		results.setExpiredPlayers(expiredPlayers);
+		results.setRenewedPlayers(renewedPlayers);
+		results.setWeekNo(info.getLeague().getWeeksComplete());
+		return results;
 	}
 	
 	public static BlitzballInfo getActiveLeague(BlitzballInfo info){
@@ -86,8 +103,8 @@ public class BlitzballUtils {
 			league.setSchedule(dao.getLeagueSchedule(league.getLeagueID()));
 			league.setPlayerStatistics(dao.getLeaguePlayerStatistics(league.getLeagueID(), league.getGameID()));
 		} catch (EmptyResultDataAccessException e){
-			e.printStackTrace();
-			Long newLeagueID=generateRandomLeague(info);
+			//e.printStackTrace();
+			generateRandomLeague(info);
 			league=dao.getActiveLeagueByTeamID(info);
 			league.setSchedule(dao.getLeagueSchedule(league.getLeagueID()));
 			league.setPlayerStatistics(dao.getLeaguePlayerStatistics(league.getLeagueID(), league.getGameID()));
@@ -242,7 +259,6 @@ public class BlitzballUtils {
 		BlitzballTeam adjustedTeam = new BlitzballTeam();
 		adjustedTeam.setTeamID(origTeam.getTeamID());
 		adjustedTeam.setTeamName(origTeam.getTeamName());
-		adjustedTeam.setAvailableCash(origTeam.getAvailableCash());
 		adjustedTeam.setWins(origTeam.getWins());
 		adjustedTeam.setLosses(origTeam.getLosses());
 		
@@ -353,6 +369,21 @@ public class BlitzballUtils {
 		return null;
 	}
 	
+	public static BlitzballPlayer advancePlayerExp(BlitzballPlayer player, Integer exp){
+		player.setExperience(player.getExperience()+exp);
+		while (player.getExperience()>getExpForLevel(player.getLevel()+1)){
+			player.setLevel(player.getLevel()+1);
+		}
+		return player;
+	}
+	
+	public static Integer getExpForLevel(Integer level){
+		if (expLevels==null){
+			getExpLevelMap();
+		}
+		return expLevels.get(level);
+	}
+	
 	public static BlitzballTeam getUpdatedTeamTechs(BlitzballTeam team, BlitzballGameTechs techs){
 		team.getLeftWing().setTech1(getTechFromTechID(techs.getLeftWingTech1()));
 		team.getLeftWing().setTech2(getTechFromTechID(techs.getLeftWingTech2()));
@@ -393,6 +424,13 @@ public class BlitzballUtils {
 			techList = dao.getFullBlitzballTechList();
 		}
 		return techList;
+	}
+	
+	public static void getExpLevelMap(){
+		if (expLevels==null){
+			BlitzballDao dao = new BlitzballDaoImpl();
+			expLevels = dao.getExpLevelMilestones();
+		}
 	}
 	
 	public static BlitzballPlayer getBlitzballPlayer(BlitzballInfo info, Integer playerID){
@@ -438,12 +476,28 @@ public class BlitzballUtils {
 		return selectedPlayer;
 	}
 	
-	public static void persistBlitzballGame(BlitzballGame game){
+	public static void persistBlitzballGame(BlitzballGame game, Long gameID){
 		BlitzballDao dao = new BlitzballDaoImpl();
+		for (BlitzballPlayer player : game.getTeam1().getActivePlayers()){
+			for (BlitzballPlayerStatistics stats : game.getPlayerStatistics()){
+				if (stats.getPlayerID().equals(player.getPlayerID())){
+					advancePlayerExp(player, stats.getExpGained());
+					break;
+				}
+			}
+		}
+		for (BlitzballPlayer player : game.getTeam2().getActivePlayers()){
+			for (BlitzballPlayerStatistics stats : game.getPlayerStatistics()){
+				if (stats.getPlayerID().equals(player.getPlayerID())){
+					advancePlayerExp(player, stats.getExpGained());
+					break;
+				}
+			}
+		}
 		if (game.getLeagueGameID()!=null&&game.getTourneyGameID()==null){
-			dao.saveLeagueGameInfo(game);
+			dao.saveLeagueGameInfo(game, gameID);
 		} else if (game.getLeagueGameID()==null&&game.getTourneyGameID()!=null){
-			//dao.saveTournamentGameInfo(game);
+			//dao.saveTournamentGameInfo(game, gameID);
 		}
 	}
 	
@@ -922,6 +976,7 @@ public class BlitzballUtils {
 						currStats.setGoals(currStats.getGoals()+1);
 						currStats.setExpGained(currStats.getExpGained()+3);
 						keeperStats.setGoalsAgainst(keeperStats.getGoalsAgainst()+1);
+						possessions++;//extra if scored
 					} else {
 						double catchChance=.5;
 						if (currOppTeam.getKeeper().getTech1()!=null&&currOppTeam.getKeeper().getTech1().getTechName().equals("Grip Gloves")||

@@ -44,7 +44,6 @@ public class BlitzballMockData {
 		player.setShot(11);
 		player.setBlock(3);
 		player.setCat(1);
-		player.setSalary(20);
 		player.setContractLength(10);
 		player.setModel("leftwing.dae");
 		player.setLearnedTechs(Arrays.asList(1));
@@ -68,7 +67,6 @@ public class BlitzballMockData {
 		player.setShot(12);
 		player.setBlock(3);
 		player.setCat(1);
-		player.setSalary(20);
 		player.setContractLength(10);
 		player.setModel("rightwing.dae");
 		player.setLearnedTechs(Arrays.asList(1));
@@ -92,7 +90,6 @@ public class BlitzballMockData {
 		player.setShot(7);
 		player.setBlock(3);
 		player.setCat(1);
-		player.setSalary(20);
 		player.setContractLength(10);
 		player.setModel("midfielder.dae");
 		player.setLearnedTechs(Arrays.asList(2));
@@ -116,7 +113,6 @@ public class BlitzballMockData {
 		player.setShot(3);
 		player.setBlock(6);
 		player.setCat(2);
-		player.setSalary(20);
 		player.setContractLength(10);
 		player.setModel("leftback.dae");
 		player.setLearnedTechs(Arrays.asList(3));
@@ -140,7 +136,6 @@ public class BlitzballMockData {
 		player.setShot(3);
 		player.setBlock(7);
 		player.setCat(2);
-		player.setSalary(20);
 		player.setContractLength(10);
 		player.setModel("rightback.dae");
 		player.setLearnedTechs(Arrays.asList(3));
@@ -164,7 +159,6 @@ public class BlitzballMockData {
 		player.setShot(3);
 		player.setBlock(6);
 		player.setCat(9);
-		player.setSalary(20);
 		player.setContractLength(10);
 		player.setModel("keeper.dae");
 		player.setLearnedTechs(Arrays.asList(4));

@@ -11,8 +11,7 @@ public class BlitzballInfo implements java.io.Serializable {
 	private BlitzballLeague league;
 	private Integer totalWins;
 	private Integer totalLosses;
-	private Integer totalGoals;
-	private Integer totalGoalsAgainst;
+	private Integer teamLevel;
 	
 	public BlitzballInfo(){}
 
@@ -64,19 +63,11 @@ public class BlitzballInfo implements java.io.Serializable {
 		this.totalLosses = totalLosses;
 	}
 
-	public Integer getTotalGoals() {
-		return totalGoals;
+	public Integer getTeamLevel() {
+		return teamLevel;
 	}
 
-	public void setTotalGoals(Integer totalGoals) {
-		this.totalGoals = totalGoals;
+	public void setTeamLevel(Integer teamLevel) {
+		this.teamLevel = teamLevel;
 	}
-
-	public Integer getTotalGoalsAgainst() {
-		return totalGoalsAgainst;
-	}
-
-	public void setTotalGoalsAgainst(Integer totalGoalsAgainst) {
-		this.totalGoalsAgainst = totalGoalsAgainst;
-	}	
 }

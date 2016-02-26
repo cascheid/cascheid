@@ -11,6 +11,7 @@ public class BlitzballPlayer implements java.io.Serializable {
 	private Long teamID;
 	private String name;
 	private Integer level;
+	private Integer experience;
 	private Integer nextExp;
 	private Integer speed;
 	private Integer endurance;
@@ -20,7 +21,6 @@ public class BlitzballPlayer implements java.io.Serializable {
 	private Integer shot;
 	private Integer block;
 	private Integer cat;//catch
-	private Integer salary;
 	private Integer contractLength;
 	private String model;
 	private List<Integer> learnedTechs;
@@ -60,6 +60,14 @@ public class BlitzballPlayer implements java.io.Serializable {
 	public void setLevel(Integer level) {
 		this.level = level;
 	}
+	public Integer getExperience() {
+		return experience;
+	}
+
+	public void setExperience(Integer experience) {
+		this.experience = experience;
+	}
+
 	public Integer getNextExp() {
 		return nextExp;
 	}
@@ -113,12 +121,6 @@ public class BlitzballPlayer implements java.io.Serializable {
 	}
 	public void setCat(Integer cat) {
 		this.cat = cat;
-	}
-	public Integer getSalary() {
-		return salary;
-	}
-	public void setSalary(Integer salary) {
-		this.salary = salary;
 	}
 	public Integer getContractLength() {
 		return contractLength;

@@ -20,7 +20,6 @@ public class BlitzballTeam implements java.io.Serializable {
 	private Integer wins;
 	private Integer losses;
 	private Integer ties;
-	private Integer availableCash;
 	
 	public BlitzballTeam(){}
 	public BlitzballTeam(Long teamID){
@@ -104,12 +103,6 @@ public class BlitzballTeam implements java.io.Serializable {
 	}
 	public void setTies(Integer ties) {
 		this.ties = ties;
-	}
-	public Integer getAvailableCash() {
-		return availableCash;
-	}
-	public void setAvailableCash(Integer availableCash) {
-		this.availableCash = availableCash;
 	}
 	public List<BlitzballPlayer> getActivePlayers(){
 		List<BlitzballPlayer> list = new ArrayList<BlitzballPlayer>();

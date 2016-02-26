@@ -302,7 +302,7 @@ public class BlitzballController {
 		}
 		ModelAndView mv = new ModelAndView("test");
 		activeGame=blitzballGameInfo;
-		BlitzballUtils.persistBlitzballGame(activeGame);
+		BlitzballUtils.persistBlitzballGame(activeGame, blitzballInfo.getTeam().getTeamID());
 		if (activeGame.getHalvesComplete()>=2){
 			if (activeGame.getLeagueGameID()!=null){
 				//league game, increment

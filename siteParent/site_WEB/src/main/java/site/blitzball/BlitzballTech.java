@@ -12,8 +12,6 @@ public class BlitzballTech implements java.io.Serializable {
 	private String techType;
 	private Integer hpCost;
 	private Integer statMod;
-	private String animation;
-	private List<Integer> targetList;
 	
 	public BlitzballTech(){}
 	
@@ -52,19 +50,5 @@ public class BlitzballTech implements java.io.Serializable {
 	}
 	public void setStatMod(Integer statMod) {
 		this.statMod = statMod;
-	}
-	public String getAnimation() {
-		return animation;
-	}
-	public void setAnimation(String animation) {
-		this.animation = animation;
-	}
-
-	public List<Integer> getTargetList() {
-		return targetList;
-	}
-
-	public void setTargetList(List<Integer> targetList) {
-		this.targetList = targetList;
 	}
 }

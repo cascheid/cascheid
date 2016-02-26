@@ -8,7 +8,6 @@ import site.blitzball.BlitzballInfo;
 import site.blitzball.BlitzballLeague;
 import site.blitzball.BlitzballPlayer;
 import site.blitzball.BlitzballPlayerStatistics;
-import site.blitzball.BlitzballTeam;
 import site.blitzball.BlitzballTech;
 
 public interface BlitzballDao {
@@ -20,7 +19,10 @@ public interface BlitzballDao {
 	public HashMap<Integer, List<BlitzballGame>> getLeagueSchedule(Long leagueID);
 	public List<BlitzballPlayerStatistics> getLeaguePlayerStatistics(Long leagueID, Long gameID);
 	public List<BlitzballTech> getFullBlitzballTechList();
-	public void saveLeagueGameInfo(BlitzballGame game);
+	public HashMap<Integer, Integer> getExpLevelMilestones();
+	public void saveLeagueGameInfo(BlitzballGame game, Long gameID);
 	public void advanceLeagueWeek(BlitzballLeague league);
 	public List<BlitzballPlayer> advancePlayerContracts(BlitzballInfo info, String teamIDString);
+	public BlitzballPlayer selectReplacementPlayer(BlitzballPlayer player, Long gameID);
+	public void signPlayer(Integer playerID, Long gameID, Long signingTeamID, Integer extension);
 }

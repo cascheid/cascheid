@@ -99,12 +99,13 @@ public class BlitzballDaoTest {
 		assertNotNull(info);
 		info = BlitzballUtils.getActiveLeague(info);
 		assertNotNull(info.getLeague());
-		while (info.getLeague().getWeeksComplete()<10){
-			BlitzballUtils.simulateWeeksGames(info, null);
-			info = dao.getBlitzballByIdentifier(junitUserID);
-			info = BlitzballUtils.getActiveLeague(info);
-			System.out.println("Week " + info.getLeague().getWeeksComplete() + " Results:");
-			for (BlitzballGame game : info.getLeague().getSchedule().get(info.getLeague().getWeeksComplete())){
+		Long origLeagueID=info.getLeague().getLeagueID();
+		for (int i=0; i<10; i++){
+			BlitzballWeekResults results = BlitzballUtils.simulateWeeksGames(info, null);
+			//info = dao.getBlitzballByIdentifier(junitUserID);
+			//info = BlitzballUtils.getActiveLeague(info);
+			System.out.println("Week " + results.getWeekNo() + " Results:");
+			for (BlitzballGame game : results.getGameResults()){
 				System.out.println("Team " + game.getTeam1().getTeamID() + ": " + game.getTeam1Score() + " - Team " + game.getTeam2().getTeamID() + ": " + game.getTeam2Score());
 				
 				BlitzballTeam team1 = null;
@@ -132,6 +133,7 @@ public class BlitzballDaoTest {
 		}
 		info = dao.getBlitzballByIdentifier(junitUserID);
 		info = BlitzballUtils.getActiveLeague(info);
-		assertEquals(info.getLeague().getWeeksComplete(), (Integer)10);
+		Long newLeagueID=info.getLeague().getLeagueID();
+		assertNotEquals(origLeagueID, newLeagueID);
 	}
 }
