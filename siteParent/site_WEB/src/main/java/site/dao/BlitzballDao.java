@@ -24,5 +24,6 @@ public interface BlitzballDao {
 	public void advanceLeagueWeek(BlitzballLeague league);
 	public List<BlitzballPlayer> advancePlayerContracts(BlitzballInfo info, String teamIDString);
 	public BlitzballPlayer selectReplacementPlayer(BlitzballPlayer player, Long gameID);
-	public void signPlayer(Integer playerID, Long gameID, Long signingTeamID, Integer extension);
+	public void signPlayer(Integer playerID, Long gameID, Long signingTeamID, Integer extension, String position);
+	public String getCurrentPositionByPlayerID(Long gameID, Integer playerID);
 }

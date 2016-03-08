@@ -84,13 +84,18 @@ public class BlitzballUtils {
 			} else {
 				Integer newContractLength = 5 + (int) Math.round(Math.random()*15);
 				renewedPlayers.get(i).setContractLength(newContractLength);
-				dao.signPlayer(renewedPlayers.get(i).getPlayerID(), info.getTeam().getTeamID(), renewedPlayers.get(i).getTeamID(), newContractLength);
+				dao.signPlayer(renewedPlayers.get(i).getPlayerID(), info.getTeam().getTeamID(), renewedPlayers.get(i).getTeamID(), newContractLength, dao.getCurrentPositionByPlayerID(info.getTeam().getTeamID(), renewedPlayers.get(i).getPlayerID()));
 			}
 		}
 		results.setExpiredPlayers(expiredPlayers);
 		results.setRenewedPlayers(renewedPlayers);
 		results.setWeekNo(info.getLeague().getWeeksComplete());
 		return results;
+	}
+	
+	public static void signPlayer(BlitzballInfo info, Integer playerID, String position, Integer contractLength){
+		BlitzballDao dao = new BlitzballDaoImpl();
+		dao.signPlayer(playerID, info.getTeam().getTeamID(), info.getTeam().getTeamID(), contractLength, position);
 	}
 	
 	public static BlitzballInfo getActiveLeague(BlitzballInfo info){

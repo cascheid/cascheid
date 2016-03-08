@@ -523,11 +523,51 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 		return newPlayer;
 	}
 	
-	public void signPlayer(Integer playerID, Long gameID, Long signingTeamID, Integer extension){
+	public void signPlayer(Integer playerID, Long gameID, Long signingTeamID, Integer extension, String position){
 		if (jdbcTemplate==null){
 			setDataSource(getDataSource());
 		}
 		jdbcTemplate.update("UPDATE BB_PLAYERS SET CONTRACT_LENGTH=(CONTRACT_LENGTH+?), CURR_TEAM=? WHERE GAME_ID=? AND PLAYER_ID=?", new Object[]{extension, signingTeamID, gameID, playerID});
+		jdbcTemplate.update("UPDATE BB_TEAM SET " + position + " = ? WHERE GAME_ID=? AND TEAM_ID=?", new Object[]{gameID, signingTeamID});
+	}
+	
+	public String getCurrentPositionByPlayerID(Long gameID, Integer playerID){
+		if (jdbcTemplate==null){
+			setDataSource(getDataSource());
+		}
+		Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM BB_TEAM WHERE GAME_ID=? AND LW=?", new Object[]{gameID, playerID}, Integer.class);
+		if (count>0){
+			return "LW";
+		}
+		count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM BB_TEAM WHERE GAME_ID=? AND RW=?", new Object[]{gameID, playerID}, Integer.class);
+		if (count>0){
+			return "RW";
+		}
+		count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM BB_TEAM WHERE GAME_ID=? AND MF=?", new Object[]{gameID, playerID}, Integer.class);
+		if (count>0){
+			return "MF";
+		}
+		count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM BB_TEAM WHERE GAME_ID=? AND LB=?", new Object[]{gameID, playerID}, Integer.class);
+		if (count>0){
+			return "LB";
+		}
+		count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM BB_TEAM WHERE GAME_ID=? AND RB=?", new Object[]{gameID, playerID}, Integer.class);
+		if (count>0){
+			return "RB";
+		}
+		count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM BB_TEAM WHERE GAME_ID=? AND GK=?", new Object[]{gameID, playerID}, Integer.class);
+		if (count>0){
+			return "GK";
+		}
+		count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM BB_TEAM WHERE GAME_ID=? AND BENCH1=?", new Object[]{gameID, playerID}, Integer.class);
+		if (count>0){
+			return "BENCH1";
+		}
+		count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM BB_TEAM WHERE GAME_ID=? AND BENCH2=?", new Object[]{gameID, playerID}, Integer.class);
+		if (count>0){
+			return "BENCH2";
+		}
+		return null;
 	}
 	
 }

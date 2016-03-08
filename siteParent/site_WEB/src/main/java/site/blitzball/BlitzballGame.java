@@ -21,6 +21,7 @@ public class BlitzballGame implements java.io.Serializable {
 	private Integer weekNumber;
 	private Integer halvesComplete;
 	private List<BlitzballPlayerStatistics> playerStatistics;
+	private Boolean isOvertimeGame;
 	
 	public BlitzballGame(){}
 	public BlitzballGame(BlitzballTeam team1, BlitzballTeam team2){
@@ -41,7 +42,8 @@ public class BlitzballGame implements java.io.Serializable {
 		playerStatistics.add(new BlitzballPlayerStatistics(team2.getLeftBack().getPlayerID()));
 		playerStatistics.add(new BlitzballPlayerStatistics(team2.getRightBack().getPlayerID()));
 		playerStatistics.add(new BlitzballPlayerStatistics(team2.getKeeper().getPlayerID()));
-		this.setHalvesComplete(0);
+		this.halvesComplete=0;
+		this.isOvertimeGame=false;
 	}
 	
 	public Long getLeagueGameID() {
@@ -101,5 +103,11 @@ public class BlitzballGame implements java.io.Serializable {
 
 	public void setPlayerStatistics(List<BlitzballPlayerStatistics> playerStatistics) {
 		this.playerStatistics = playerStatistics;
+	}
+	public Boolean getIsOvertimeGame() {
+		return isOvertimeGame;
+	}
+	public void setIsOvertimeGame(Boolean isOvertimeGame) {
+		this.isOvertimeGame = isOvertimeGame;
 	}
 }

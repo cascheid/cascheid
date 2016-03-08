@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -18,10 +19,10 @@ import site.blitzball.BlitzballGameMarks;
 import site.blitzball.BlitzballGameRoster;
 import site.blitzball.BlitzballGameTechs;
 import site.blitzball.BlitzballInfo;
-import site.blitzball.BlitzballLeague;
 import site.blitzball.BlitzballPlayerStatistics;
 import site.blitzball.BlitzballTeam;
 import site.blitzball.BlitzballUtils;
+import site.blitzball.BlitzballWeekResults;
 import site.blitzball.TeamName;
 import site.identity.Identity;
 import site.identity.IdentityUtils;
@@ -34,6 +35,7 @@ public class BlitzballController {
 	//BlitzballLeague activeLeague=null;
 	BlitzballTeam activeOpponent=null;
 	BlitzballGame activeGame=null;
+	BlitzballWeekResults weekResults = null;
 
 	@RequestMapping("/blitzball")
 	public ModelAndView getBlizballMenuBackground(@CookieValue(value = "identifier", defaultValue = "0") Long identifier){
@@ -300,57 +302,71 @@ public class BlitzballController {
 				}
 			}
 		}
-		ModelAndView mv = new ModelAndView("test");
-		activeGame=blitzballGameInfo;
+		activeGame = blitzballGameInfo;
 		BlitzballUtils.persistBlitzballGame(activeGame, blitzballInfo.getTeam().getTeamID());
-		if (activeGame.getHalvesComplete()>=2){
-			if (activeGame.getLeagueGameID()!=null){
-				//league game, increment
-			} else if (activeGame.getTourneyGameID()!=null){//TODO tournament implementation
-				if (activeGame.getTeam1Score()==activeGame.getTeam2Score()){
-					//tied, go to overtime
-				} else if (activeGame.getTeam1Score()>activeGame.getTeam2Score()){
-					//advance team 1
-				} else {
-					//advance team 2
-				}
+		ModelAndView mv;
+		if (activeGame.getHalvesComplete()>=2&&(!activeGame.getIsOvertimeGame()||activeGame.getTeam1Score()!=activeGame.getTeam2Score())){
+			mv = new ModelAndView("bbGameResult");
+			weekResults = BlitzballUtils.simulateWeeksGames(blitzballInfo, activeGame);
+			
+			ObjectMapper objectMapper = new ObjectMapper();
+			try {
+				mv.addObject("myTeam", objectMapper.writeValueAsString(blitzballInfo.getTeam()));
+				mv.addObject("oppTeam", objectMapper.writeValueAsString(activeOpponent));
+				mv.addObject("blitzballGameInfo", blitzballGameInfo);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-		}
+		} else {//overtime
+			mv = new ModelAndView("test");
+			activeGame=blitzballGameInfo;
 
-		ObjectMapper objectMapper = new ObjectMapper();
-		try {
-			mv.addObject("myTeam", objectMapper.writeValueAsString(blitzballInfo.getTeam()));
-			mv.addObject("oppTeam", objectMapper.writeValueAsString(activeOpponent));
-			mv.addObject("blitzballGameInfo", blitzballGameInfo);
-		} catch (Exception e) {
-			e.printStackTrace();
+			ObjectMapper objectMapper = new ObjectMapper();
+			try {
+				mv.addObject("myTeam", objectMapper.writeValueAsString(blitzballInfo.getTeam()));
+				mv.addObject("oppTeam", objectMapper.writeValueAsString(activeOpponent));
+				mv.addObject("blitzballGameInfo", blitzballGameInfo);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return mv;
 	}
 	
-	@RequestMapping("/bbGameResult")
-	public ModelAndView submitGameResult(@CookieValue(value = "identifier", defaultValue = "0") Long identifier, 
-			@ModelAttribute("blitzballGameInfo") BlitzballGame blitzballGameInfo){
+
+	@RequestMapping("/blitzballLeagueWeekResults")
+	public ModelAndView getLeagueWeekResults(){
+		if (identity==null||blitzballInfo==null||weekResults==null){
+			return new ModelAndView("timeout");
+		}
+		ModelAndView mv = new ModelAndView("bbLeagueWeekResults");
+		mv.addObject("weekResults", weekResults);
+		return mv;
+	}
+	
+	@RequestMapping("/bbSignPlayer")
+	@ResponseBody
+	public void signPlayer(@RequestParam(value = "playerID") Integer playerID,
+			@RequestParam(value = "contractLength") Integer contractLength){
 		if (identity==null||blitzballInfo==null){
-			if (identifier==0){//no cookie
-				ModelAndView mv = new ModelAndView("pleaseLogin");
-				mv.addObject("action","play Blitzball");
-				return mv;
-			} else {
-				identity=IdentityUtils.getIdentityByIdentifier(identifier);
-				blitzballInfo=BlitzballUtils.getBlitsballInfo(identifier);
-			}
-			if (blitzballInfo!=null&&(blitzballInfo.getLeague()==null||blitzballInfo.getLeague().getWeeksComplete()>=10)){
-				blitzballInfo=BlitzballUtils.getActiveLeague(blitzballInfo);
-			}
+			//TODO show error somehow return new ModelAndView("timeout");
 		}
-		ModelAndView mv = new ModelAndView("blitzballGameStart");
-		activeGame=null;
-		
-		//TODO blitzballutils to save stats/result, contract extension screen
-		return mv;
+		String position = "BENCH2";
+		if (blitzballInfo.getTeam().getLeftWing()==null){
+			position="LW";
+		} else if (blitzballInfo.getTeam().getRightWing()==null){
+			position="RW";
+		} else if (blitzballInfo.getTeam().getMidfielder()==null){
+			position="MF";
+		} else if (blitzballInfo.getTeam().getLeftBack()==null){
+			position="LB";
+		} else if (blitzballInfo.getTeam().getRightBack()==null){
+			position="RB";
+		} else if (blitzballInfo.getTeam().getKeeper()==null){
+			position="BK";
+		} else if (blitzballInfo.getTeam().getBench1()==null){
+			position="BENCH1";
+		}
+		BlitzballUtils.signPlayer(blitzballInfo, playerID, position, contractLength);
 	}
-	
-	
-	
 }
