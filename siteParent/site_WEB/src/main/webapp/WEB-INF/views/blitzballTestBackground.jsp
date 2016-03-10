@@ -49,6 +49,10 @@
 		function focusFrame(){
 			document.getElementById('blitzMenuFrame').focus();
 		}
+		
+		document.documentElement.onkeydown = function(e){
+		    document.getElementById('blitzMenuFrame').contentWindow.onKeyDown(e);
+		};
 		</script>
 	</body>
 </html>

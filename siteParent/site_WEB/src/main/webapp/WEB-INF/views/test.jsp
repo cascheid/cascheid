@@ -2143,7 +2143,7 @@
 
 			var displayedTime=0;
 			function updateGameTimer(delta){
-				gameTimer+=(delta*3000);
+				gameTimer+=(delta*3);
 				if (gameTimer-displayedTime>=1){
 					displayedTime=gameTimer-gameTimer%1;
 					var mins = Math.floor(displayedTime/60);

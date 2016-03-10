@@ -139,8 +139,8 @@
 		var techList=${techListJSON};
 		
 		
-		window.onkeydown = function(e){
-		    onKeyDown(e);
+		document.body.onkeydown = function(e){
+		    parent.onKeyDown(e);
 		};
 
 		function upButtonPressed(){

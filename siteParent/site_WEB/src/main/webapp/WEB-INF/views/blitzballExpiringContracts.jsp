@@ -65,14 +65,16 @@
 	</head>
 
 	<body>
-		<iframe id="playerStatFrame" style="position:absolute; top:40%; left:50%; width:50%; height:60%" frameborder=0></iframe>
+		<iframe id="playerStatFrame" style="position:absolute; top:20%; left:50%; width:50%; height:60%" frameborder=0></iframe>
 		<iframe id="playerTechFrame" style="position:absolute; top:0; left:0; width:100%; height:100%" frameborder=0></iframe>
 		
-		<div id="expireMessage" style="display:none">
-			<span id="expirePName"></span>'s Contract with the &nbsp<span id="expireTName"> has expired.</span>
+		<div style="position:absolute; top:40%; margin:auto; left:0; right:0;">
+		<div id="expireMessage" class="menu"  style="margin:0 auto; visibility:hidden">
+			<span id="expirePName"></span>'s Contract with the &nbsp<span id="expireTName"></span>&nbsp has expired.
 		</div>
-		<div id="signMessage" style="display:none">
+		<div id="signMessage" class="menu" style="visibility:hidden">
 			<span id="signPName"></span>&nbsp has signed with the &nbsp<span id="signTName"></span>&nbsp for &nbsp<span id="numGames"></span>&nbsp games.
+		</div>
 		</div>
 		
 		<div id="confirmDiv" class="menu" style="display:none">
@@ -95,7 +97,7 @@
 		var renewedPlayers=${expiringPlayers};
 		var myExpiredPlayers=${myExpiredPlayers};
 		var playerNum=0;
-		var nextCall=loadNextPlayer();
+		var nextCall=loadNextPlayer;
 		var prompted=false;
 		var signPrompted=false;
 		var numGames=0;
@@ -107,11 +109,11 @@
 			if (expiringPlayers.length>playerNum){
 				var player = expiringPlayers[playerNum];
 				parent.loadPlayer(player.model);
-				document.getElementById('signMessage').style.display='none';
+				document.getElementById('signMessage').style.visibility='hidden';
 				document.getElementById('expirePName').innerHTML=player.name;
 				document.getElementById('expireTName').innerHTML=player.teamName;
-				document.getElementById('expireMessage').style.display='';
-				nextCall=loadSignedPlayer();
+				document.getElementById('expireMessage').style.visibility='';
+				nextCall=loadSignedPlayer;
 			} else {
 				playerNum=0;
 				loadNextMyExpiredPlayer();
@@ -119,20 +121,21 @@
 		}
 
 		function loadNextMyExpiredPlayer(){
-			if (myExpiringPlayers.length>playerNum){
+			if (myExpiredPlayers.length>playerNum){
 				var prompted=false;
-				currPlayer = myExpiringPlayers[playerNum];
+				currPlayer = myExpiredPlayers[playerNum];
 				parent.loadPlayer(currPlayer.model);
-				document.getElementById('signedMessage').style.display='none';
+				document.getElementById('signMessage').style.visibility='hidden';
 				document.getElementById('playerStatFrame').style.display='none';
 				document.getElementById('playerTechFrame').style.display='none';
 				document.getElementById('expirePName').innerHTML=currPlayer.name;
 				document.getElementById('expireTName').innerHTML=currPlayer.teamName;
-				document.getElementById('expireMessage').style.display='';
-				document.getElementById('pName').innerHTML=player.name;
+				document.getElementById('expireMessage').style.visibility='';
+				document.getElementById('pName').innerHTML=currPlayer.name;
 				document.getElementById('playerStatFrame').src='bbStatDisplay?id='+currPlayer.playerID;
 				document.getElementById('playerTechFrame').src='bbTechDisplay?id='+currPlayer.playerID;
-				nextCall=loadPlayerSignOption();
+				nextCall=loadPlayerSignOption;
+				playerNum++;
 			} else {
 				window.open("blitzballMenu", "_self");
 			}
@@ -143,7 +146,7 @@
 			document.getElementById('playerTechFrame').style.display='';
 			document.getElementById('confirmDiv').style.display='';
 			document.getElementById('confSelector').style.display="";
-			nextCall=loadNextMyExpiredPlayer();
+			nextCall=loadNextMyExpiredPlayer;
 			prompted=true;
 		}
 
@@ -151,17 +154,24 @@
 			parent.unloadPlayer();
 			var player = renewedPlayers[playerNum];
 			parent.loadPlayer(player.model);
-			document.getElementById('expireMessage').style.display='none';
+			document.getElementById('expireMessage').style.visibility='hidden';
 			document.getElementById('signPName').innerHTML=player.name;
 			document.getElementById('signTName').innerHTML=player.teamName;
-			document.getElementById('signMessage').style.display='';
-			nextCall=loadNextPlayer();
+			document.getElementById('signMessage').style.visibility='';
+			nextCall=loadNextPlayer;
 			playerNum++;
 		}
-				
+
+		top.document.onkeydown = function(e){
+		    onKeyDown(e);
+		}
 		document.body.onkeydown = function(e){
 		    onKeyDown(e);
 		};
+		window.onload = function(){
+			nextCall();
+		};
+		//document.body.focus();
 		
 		function upButtonPressed(){
 			if (prompted){
@@ -169,7 +179,7 @@
 					numGames++;
 					document.getElementById('numGames').innerHTML=numGames;
 				} else if (displayingTechs){
-						document.getElementById('playerTechMenu').contentWindow.upButtonPressed();
+						document.getElementById('playerTechFrame').contentWindow.upButtonPressed();
 				} else {
 					if (menuSelection<=1){
 						menuSelection=MAXITEMS;
@@ -189,7 +199,7 @@
 						document.getElementById('numGames').innerHTML=numGames;
 					}
 				} else if (displayingTechs){
-						document.getElementById('playerTechMenu').contentWindow.downButtonPressed();
+						document.getElementById('playerTechFrame').contentWindow.downButtonPressed();
 				} else {
 					if (menuSelection>=MAXITEMS){
 						menuSelection=1;
@@ -209,11 +219,11 @@
 				req.open("GET", "bbSignPlayer?playerId="+currPlayer.playerID+"&contractLength="+numGames, true);
 				req.send();
 			} else if (displayingTechs){
-				document.getElementById('playerTechDisplay').contentWindow.selectButtonPressed();
+				document.getElementById('playerTechFrame').contentWindow.selectButtonPressed();
 			} else if (menuSelection==1){
 				displayingTechs=true;
 				document.getElementById('confSelector').style.display="none";
-				document.getElementById('playerTechDisplay').contentWindow.selectButtonPressed();
+				document.getElementById('playerTechFrame').contentWindow.selectButtonPressed();
 			} else if (menuSelection==2){
 				document.getElementById('confirmDiv').style.display='none';
 				document.getElementById('signNumGamesDiv').style.display='';
@@ -248,11 +258,11 @@
 			} else if (event.keyCode==39){
 				event.preventDefault();
 				if (displayingTechs){
-					document.getElementById('playerTechMenu').contentWindow.rightButtonPressed();
+					document.getElementById('playerTechFrame').contentWindow.rightButtonPressed();
 				}
 			} else if (event.keyCode==37){
 				if (displayingTechs){
-					document.getElementById('playerTechMenu').contentWindow.leftButtonPressed();
+					document.getElementById('playerTechFrame').contentWindow.leftButtonPressed();
 				}
 			} else if (event.keyCode==90){
 				event.preventDefault();
@@ -260,7 +270,7 @@
 			} else if (event.keyCode==88){
 				event.preventDefault();
 				if (displayingTechs){
-					document.getElementById('playerTechMenu').contentWindow.cancelButtonPressed();
+					document.getElementById('playerTechFrame').contentWindow.cancelButtonPressed();
 				} else {
 					cancelButtonPressed();
 				}
