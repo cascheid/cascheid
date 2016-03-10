@@ -81,6 +81,7 @@ public class BlitzballServiceTest {
 		if (controller==null){
 			controller= new BlitzballController();
 			controller.getBlizballMenuBackground(junitUserID);
+			controller.getLeagueStandings();
 		}
 		ModelAndView mv = controller.getLeagueSchedule();
 		assertNotNull(mv);
@@ -94,6 +95,7 @@ public class BlitzballServiceTest {
 		if (controller==null){
 			controller= new BlitzballController();
 			controller.getBlizballMenuBackground(junitUserID);
+			controller.getLeagueStandings();
 		}
 		ModelAndView mv = controller.getLeagueStatistics();
 		assertNotNull(mv);
@@ -108,9 +110,122 @@ public class BlitzballServiceTest {
 		if (controller==null){
 			controller= new BlitzballController();
 			controller.getBlizballMenuBackground(junitUserID);
+			controller.getLeagueStandings();
 		}
 		ModelAndView mv = controller.getPlayerStatisticsDisplay(1);
 		assertNotNull(mv);
 		assertNotNull(mv.getModel().get("player"));
+	}
+	
+	@Test
+	public void testLoadBlitzballGame(){
+		if (controller==null){
+			controller= new BlitzballController();
+			controller.getBlizballMenuBackground(junitUserID);
+			controller.getLeagueStandings();
+		}
+		ModelAndView mv = controller.loadBlitzballGame();
+		assertNotNull(mv);
+		assertNotNull(mv.getModel().get("myTeam"));
+		assertNotNull(mv.getModel().get("oppTeam"));
+		assertNotNull(mv.getModel().get("blitzballGameRoster"));
+	}
+	
+	@Test
+	public void testLoadGameTechScreen(){
+		if (controller==null){
+			controller= new BlitzballController();
+			controller.getBlizballMenuBackground(junitUserID);
+			controller.getLeagueStandings();
+		}
+		BlitzballGameRoster roster = new BlitzballGameRoster();
+		roster.setLeftWing(BlitzballMockData.getLeftWing(1l).getPlayerID());
+		roster.setRightWing(BlitzballMockData.getRightWing(1l).getPlayerID());
+		roster.setMidfielder(BlitzballMockData.getMidfielder(1l).getPlayerID());
+		roster.setLeftBack(BlitzballMockData.getLeftBack(1l).getPlayerID());
+		roster.setRightBack(BlitzballMockData.getRightBack(1l).getPlayerID());
+		roster.setKeeper(BlitzballMockData.getKeeper(1l).getPlayerID());
+		ModelAndView mv = controller.loadGameTechScreen(roster);
+		assertNotNull(mv);
+		assertNotNull(mv.getModel().get("myTeam"));
+		assertNotNull(mv.getModel().get("techList"));
+		assertNotNull(mv.getModel().get("blitzballGameTechs"));
+	}
+	
+	@Test
+	public void testLoadGameMarkScreen(){
+		if (controller==null){
+			controller= new BlitzballController();
+			controller.getBlizballMenuBackground(junitUserID);
+			controller.getLeagueStandings();
+		}
+		BlitzballGameTechs techs = new BlitzballGameTechs();
+		techs.setLeftWingTech1(BlitzballMockData.getLeftWing(1l).getTech1().getTechID());
+		techs.setRightWingTech1(BlitzballMockData.getRightWing(1l).getTech1().getTechID());
+		techs.setMidfielderTech1(BlitzballMockData.getMidfielder(1l).getTech1().getTechID());
+		techs.setLeftWingTech1(BlitzballMockData.getLeftBack(1l).getTech1().getTechID());
+		techs.setRightWingTech1(BlitzballMockData.getRightBack(1l).getTech1().getTechID());
+		techs.setKeeperTech1(BlitzballMockData.getKeeper(1l).getTech1().getTechID());
+		ModelAndView mv = controller.loadGameMarkScreen(techs);
+		assertNotNull(mv);
+		assertNotNull(mv.getModel().get("myTeam"));
+		assertNotNull(mv.getModel().get("oppTeam"));
+		assertNotNull(mv.getModel().get("techList"));
+		assertNotNull(mv.getModel().get("blitzballGameMarks"));
+	}
+	
+	@Test
+	public void testLoadGameReady(){
+		if (controller==null){
+			controller= new BlitzballController();
+			controller.getBlizballMenuBackground(junitUserID);
+			controller.getLeagueStandings();
+		}
+		BlitzballGameMarks marks = new BlitzballGameMarks();
+		marks.setLeftWingTarget(BlitzballMockData.getLeftWing(2l).getPlayerID());
+		marks.setRightWingTarget(BlitzballMockData.getRightWing(2l).getPlayerID());
+		marks.setMidfielderTarget(BlitzballMockData.getMidfielder(2l).getPlayerID());
+		marks.setLeftBackTarget(BlitzballMockData.getLeftBack(2l).getPlayerID());
+		marks.setRightBackTarget(BlitzballMockData.getRightBack(2l).getPlayerID());
+		marks.setKeeperTarget(BlitzballMockData.getKeeper(2l).getPlayerID());
+		ModelAndView mv = controller.loadGameReady(marks);
+		assertNotNull(mv);
+		assertNotNull(mv.getModel().get("myTeam"));
+		assertNotNull(mv.getModel().get("oppTeam"));
+		assertNotNull(mv.getModel().get("blitzballGameMarks"));
+		assertNotNull(mv.getModel().get("blitzballGameInfo"));
+	}
+	
+	@Test
+	public void testPlayBlitzballGame(){
+		if (controller==null){
+			controller= new BlitzballController();
+			controller.getBlizballMenuBackground(junitUserID);
+			controller.getLeagueStandings();
+		}
+		ModelAndView mv = controller.playBlitzballGame();
+		assertNotNull(mv);
+		assertNotNull(mv.getModel().get("myTeam"));
+		assertNotNull(mv.getModel().get("oppTeam"));
+		assertNotNull(mv.getModel().get("blitzballGameInfo"));
+	}
+	
+	@Test
+	public void testSubmitHalfResults(){
+		if (controller==null){
+			controller= new BlitzballController();
+			controller.getBlizballMenuBackground(junitUserID);
+			controller.getLeagueStandings();
+		}
+		BlitzballGame game = BlitzballMockData.getHalftimeGame(BlitzballMockData.getTeam1(), BlitzballMockData.getTeam2(), true, 1l);
+		ModelAndView mv = controller.submitHalfResults(junitUserID, game);
+		assertNotNull(mv);
+		assertNotNull(mv.getModel().get("myTeam"));
+		assertNotNull(mv.getModel().get("oppTeam"));
+		assertNotNull(mv.getModel().get("blitzballGameMarks"));
+		assertNotNull(mv.getModel().get("blitzballGameInfo"));
+		BlitzballGame game2 = BlitzballMockData.getCompletedBlitzballGame(BlitzballMockData.getTeam1(), BlitzballMockData.getTeam2(), true, 1l);
+		mv = controller.submitHalfResults(junitUserID, game2);
+		assertNotNull(mv);
 	}
 }

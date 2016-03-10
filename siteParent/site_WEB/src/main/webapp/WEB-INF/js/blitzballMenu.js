@@ -201,15 +201,15 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 				var loader = new THREE.ColladaLoader();
 				loader.options.convertUpAxis = true;
-				loader.load( 'obj/stormtrooper/stormtrooper.dae', function ( collada ) {
+				loader.load( 'obj/stormtrooper/'+model, function ( collada ) {
 
 					dae = collada.scene;
 					var trooper = dae.children[1];
 					trooper.children[0].material.reflectivity=0;
 					trooper.children[0].material.shininess=0;
 					trooper.children[0].material.side=THREE.DoubleSide;
-					var animation = new THREE.BBAnimation( trooper.children[0], trooper.children[0].geometry.animation );
-					animation.playTreadAnimation();
+					//var animation = new THREE.BBAnimation( trooper.children[0], trooper.children[0].geometry.animation );
+					//animation.playTreadAnimation();
 
 					dae.scale.x = dae.scale.y = dae.scale.z = 17;
 
@@ -255,23 +255,25 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 			}
 			
 			function unloadPlayer(){
-				scene.remove(playerObject);
-				if (playerObject.geometry) {
-					playerObject.geometry.dispose();
-                }
+				if (playerObject!=null){
+					scene.remove(playerObject);
+					if (playerObject.geometry) {
+						playerObject.geometry.dispose();
+	                }
 
-                if (playerObject.material) {
-                    /*if (obj.material instanceof THREE.MeshFaceMaterial) {
-                        $.each(obj.material.materials, function(idx, obj) {
-                            obj.dispose();
-                        });
-                    } else {*/
-                	playerObject.material.dispose();
-                    //}
-                }
+	                if (playerObject.material) {
+	                    /*if (obj.material instanceof THREE.MeshFaceMaterial) {
+	                        $.each(obj.material.materials, function(idx, obj) {
+	                            obj.dispose();
+	                        });
+	                    } else {*/
+	                	playerObject.material.dispose();
+	                    //}
+	                }
 
-                if (playerObject.dispose) {
-                	playerObject.dispose();
-                }
-                playerObject=null;
+	                if (playerObject.dispose) {
+	                	playerObject.dispose();
+	                }
+	                playerObject=null;
+				}
 			}

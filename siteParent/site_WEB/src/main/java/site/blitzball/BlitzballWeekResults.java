@@ -10,6 +10,7 @@ public class BlitzballWeekResults implements java.io.Serializable {
 	private List<BlitzballGame> gameResults;
 	private List<BlitzballPlayer> expiredPlayers;
 	private List<BlitzballPlayer> renewedPlayers;
+	private List<BlitzballPlayer> myExpiredPlayers;
 	
 	public BlitzballWeekResults(){}
 
@@ -43,5 +44,13 @@ public class BlitzballWeekResults implements java.io.Serializable {
 
 	public void setRenewedPlayers(List<BlitzballPlayer> renewedPlayers) {
 		this.renewedPlayers = renewedPlayers;
+	}
+
+	public List<BlitzballPlayer> getMyExpiredPlayers() {
+		return myExpiredPlayers;
+	}
+
+	public void setMyExpiredPlayers(List<BlitzballPlayer> myExpiredPlayers) {
+		this.myExpiredPlayers = myExpiredPlayers;
 	}
 }

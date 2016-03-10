@@ -18,7 +18,7 @@ public class BlitzballMockData {
 
 	public static BlitzballTeam getTeam2(){
 		BlitzballTeam team = new BlitzballTeam();
-		team.setTeamID(1l);
+		team.setTeamID(2l);
 		team.setLeftWing(getLeftWing(2l));
 		team.setRightWing(getRightWing(2l));
 		team.setMidfielder(getMidfielder(2l));
@@ -208,5 +208,57 @@ public class BlitzballMockData {
 		tech.setHpCost(60);
 		tech.setStatMod(3);
 		return tech;
+	}
+	
+	public static BlitzballGame getHalftimeGame(BlitzballTeam team1, BlitzballTeam team2, boolean isLeague, Long gameID){
+		BlitzballGame game = new BlitzballGame(team1, team2);
+		game.setTeam1Score(2);
+		game.setTeam2Score(1);
+		game.getPlayerStatistics().get(0).setGoals(1);
+		game.getPlayerStatistics().get(0).setShots(2);
+		game.getPlayerStatistics().get(0).setExpGained(5);
+		game.getPlayerStatistics().get(1).setGoals(1);
+		game.getPlayerStatistics().get(1).setShots(3);
+		game.getPlayerStatistics().get(1).setExpGained(5);
+		game.getPlayerStatistics().get(2).setBreaks(1);
+		game.getPlayerStatistics().get(2).setShots(1);
+		game.getPlayerStatistics().get(2).setExpGained(5);
+		game.getPlayerStatistics().get(3).setTackles(2);
+		game.getPlayerStatistics().get(3).setExpGained(5);
+		game.getPlayerStatistics().get(4).setBlocks(2);
+		game.getPlayerStatistics().get(4).setExpGained(5);
+		game.getPlayerStatistics().get(5).setGoalsAgainst(1);
+		game.getPlayerStatistics().get(5).setShotsAgainst(4);
+		game.getPlayerStatistics().get(5).setExpGained(5);
+		game.getPlayerStatistics().get(6).setGoals(1);
+		game.getPlayerStatistics().get(6).setShots(2);
+		game.getPlayerStatistics().get(6).setExpGained(5);
+		game.getPlayerStatistics().get(7).setShots(2);
+		game.getPlayerStatistics().get(7).setExpGained(5);
+		game.getPlayerStatistics().get(8).setBreaks(1);
+		game.getPlayerStatistics().get(8).setShots(1);
+		game.getPlayerStatistics().get(8).setExpGained(5);
+		game.getPlayerStatistics().get(9).setTackles(2);
+		game.getPlayerStatistics().get(9).setExpGained(5);
+		game.getPlayerStatistics().get(10).setBlocks(2);
+		game.getPlayerStatistics().get(10).setExpGained(5);
+		game.getPlayerStatistics().get(11).setGoalsAgainst(2);
+		game.getPlayerStatistics().get(11).setShotsAgainst(5);
+		game.getPlayerStatistics().get(11).setExpGained(5);
+		if (isLeague){
+			game.setLeagueGameID(gameID);
+		} else {
+			game.setTourneyGameID(gameID);
+		}
+		game.setHalvesComplete(1);
+		return game;
+	}
+	
+	public static BlitzballGame getCompletedBlitzballGame(BlitzballTeam team1, BlitzballTeam team2, boolean isLeague, Long gameID){
+		BlitzballGame game = getHalftimeGame(team1, team2, isLeague, gameID);
+		game.setHalvesComplete(2);
+		game.setTeam1Score(game.getTeam1Score()*2);
+		game.setTeam2Score(game.getTeam2Score()*2);
+		return game;
 	}
 }

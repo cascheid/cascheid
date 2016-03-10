@@ -171,7 +171,7 @@
 		function selectButtonPressed(){
 			if (popupOpen){
 				if (onOKButton){
-					window.open("blitzballLeagueGame", "_self");
+					window.open("blitzballStartGame", "_self");
 				} else  {
 					onOKButton=true;
 					popupOpen=false;

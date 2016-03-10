@@ -75,6 +75,22 @@ public class BlitzballUtils {
 		}
 		teamString+=info.getTeam().getTeamID();
 		List<BlitzballPlayer> expiredPlayers = dao.advancePlayerContracts(info, teamString);
+		List<BlitzballPlayer> myExpiredPlayers = new ArrayList<BlitzballPlayer>();
+		Iterator<BlitzballPlayer> it = expiredPlayers.iterator();
+		while (it.hasNext()){
+			BlitzballPlayer player = it.next();
+			if (info.getTeam().getLeftWing().getPlayerID()==player.getPlayerID()||
+					info.getTeam().getRightWing().getPlayerID()==player.getPlayerID()||
+					info.getTeam().getMidfielder().getPlayerID()==player.getPlayerID()||
+					info.getTeam().getLeftBack().getPlayerID()==player.getPlayerID()||
+					info.getTeam().getRightBack().getPlayerID()==player.getPlayerID()||
+					info.getTeam().getKeeper().getPlayerID()==player.getPlayerID()||
+					(info.getTeam().getBench1()!=null&&info.getTeam().getBench1().getPlayerID()==player.getPlayerID())||
+					(info.getTeam().getBench2()!=null&&info.getTeam().getBench2().getPlayerID()==player.getPlayerID())){
+				it.remove();
+				myExpiredPlayers.add(player);
+			}
+		}
 		results.setGameResults(gameList);
 		List<BlitzballPlayer> renewedPlayers = new ArrayList<BlitzballPlayer>();
 		renewedPlayers.addAll(expiredPlayers);
@@ -431,11 +447,12 @@ public class BlitzballUtils {
 		return techList;
 	}
 	
-	public static void getExpLevelMap(){
+	public static HashMap<Integer, Integer> getExpLevelMap(){
 		if (expLevels==null){
 			BlitzballDao dao = new BlitzballDaoImpl();
 			expLevels = dao.getExpLevelMilestones();
 		}
+		return expLevels;
 	}
 	
 	public static BlitzballPlayer getBlitzballPlayer(BlitzballInfo info, Integer playerID){

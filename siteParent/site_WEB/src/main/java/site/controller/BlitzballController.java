@@ -1,5 +1,6 @@
 package site.controller;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import site.blitzball.BlitzballGameMarks;
 import site.blitzball.BlitzballGameRoster;
 import site.blitzball.BlitzballGameTechs;
 import site.blitzball.BlitzballInfo;
+import site.blitzball.BlitzballPlayer;
 import site.blitzball.BlitzballPlayerStatistics;
 import site.blitzball.BlitzballTeam;
 import site.blitzball.BlitzballUtils;
@@ -105,9 +107,7 @@ public class BlitzballController {
 		ModelAndView mv;
 		if (activeGame!=null&&activeGame.getHalvesComplete()>0){
 			//resume active game
-			mv = new ModelAndView("blitzball");
-			mv.addObject("myTeam", blitzballInfo.getTeam());
-			mv.addObject("oppTeam", activeOpponent);
+			mv = loadBlitzballGame();
 		} else {
 			//load standings
 			mv = new ModelAndView("blitzballLeague");
@@ -171,9 +171,28 @@ public class BlitzballController {
 		
 	}
 	
+	@RequestMapping("/bbTechDisplay")
+	public ModelAndView getPlayerTechsDisplay(@RequestParam(value = "id") Integer playerID){
+		if (identity==null||blitzballInfo==null){
+			return new ModelAndView("timeout");
+		}
+		ModelAndView mv = new ModelAndView("blitzballTechDisplay");
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			mv.addObject("techList", BlitzballUtils.getTechList());
+			mv.addObject("currPlayer", BlitzballUtils.getBlitzballPlayer(blitzballInfo, playerID));
+			mv.addObject("techListJSON", objectMapper.writeValueAsString(BlitzballUtils.getTechList()));
+			//mv.addObject("currPlayer", objectMapper.writeValueAsString(BlitzballUtils.getBlitzballPlayer(blitzballInfo, playerID)));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return mv;	
+	}
+	
 	//public ModelAndView startLeagueGame(@RequestParam(value = "opponent") Long oppID){
-	@RequestMapping("/blitzballLeagueGame")
-	public ModelAndView startLeagueGame(){
+	@RequestMapping("/blitzballStartGame")
+	public ModelAndView loadBlitzballGame(){
 		if (identity==null||blitzballInfo==null){
 			return new ModelAndView("timeout");
 		}
@@ -191,19 +210,8 @@ public class BlitzballController {
 		return mv;
 	}
 	
-	@RequestMapping("/blitzballStart")
-	public ModelAndView loadGame(@ModelAttribute("blitzballTeam") BlitzballTeam blitzballTeam){
-		if (identity==null||blitzballInfo==null){
-			return new ModelAndView("timeout");
-		}
-		ModelAndView mv = new ModelAndView("blitzball");
-		mv.addObject("myTeam", blitzballInfo.getTeam());
-		mv.addObject("oppTeam", activeOpponent);
-		return mv;
-	}
-	
 	@RequestMapping("/blitzballGame")
-	public ModelAndView getBlitzballGame() {
+	public ModelAndView playBlitzballGame() {
 		if (identity==null||blitzballInfo==null){
 			return new ModelAndView("timeout");
 		}
@@ -265,16 +273,10 @@ public class BlitzballController {
 		if (identity==null||blitzballInfo==null){
 			return new ModelAndView("timeout");
 		}
-		ModelAndView mv = new ModelAndView("blitzballGameStart");
-
+		ModelAndView mv = new ModelAndView("test");
+		
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
-			if (activeGame==null){
-				mv.addObject("halftime", 1);
-				activeGame = new BlitzballGame(blitzballInfo.getTeam(), activeOpponent);
-			} else {
-				mv.addObject("halftime", 2);
-			}
 			mv.addObject("myTeam", objectMapper.writeValueAsString(blitzballInfo.getTeam()));
 			mv.addObject("oppTeam", objectMapper.writeValueAsString(activeOpponent));
 			mv.addObject("blitzballGameMarks", blitzballGameMarks);
@@ -286,7 +288,7 @@ public class BlitzballController {
 	}
 	
 	@RequestMapping("/blitzballIntermission")
-	public ModelAndView submitHalftime(@CookieValue(value = "identifier", defaultValue = "0") Long identifier, 
+	public ModelAndView submitHalfResults(@CookieValue(value = "identifier", defaultValue = "0") Long identifier, 
 			@ModelAttribute("blitzballGameInfo") BlitzballGame blitzballGameInfo){
 		if (identity==null||blitzballInfo==null){
 			if (identifier==0){//no cookie
@@ -302,33 +304,27 @@ public class BlitzballController {
 				}
 			}
 		}
-		activeGame = blitzballGameInfo;
+		//activeGame = blitzballGameInfo;
 		BlitzballUtils.persistBlitzballGame(activeGame, blitzballInfo.getTeam().getTeamID());
 		ModelAndView mv;
 		if (activeGame.getHalvesComplete()>=2&&(!activeGame.getIsOvertimeGame()||activeGame.getTeam1Score()!=activeGame.getTeam2Score())){
-			mv = new ModelAndView("bbGameResult");
+			activeGame=null;
 			weekResults = BlitzballUtils.simulateWeeksGames(blitzballInfo, activeGame);
-			
-			ObjectMapper objectMapper = new ObjectMapper();
-			try {
-				mv.addObject("myTeam", objectMapper.writeValueAsString(blitzballInfo.getTeam()));
-				mv.addObject("oppTeam", objectMapper.writeValueAsString(activeOpponent));
-				mv.addObject("blitzballGameInfo", blitzballGameInfo);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else {//overtime
-			mv = new ModelAndView("test");
+		} else {//halftime or overtime
 			activeGame=blitzballGameInfo;
-
-			ObjectMapper objectMapper = new ObjectMapper();
-			try {
-				mv.addObject("myTeam", objectMapper.writeValueAsString(blitzballInfo.getTeam()));
-				mv.addObject("oppTeam", objectMapper.writeValueAsString(activeOpponent));
-				mv.addObject("blitzballGameInfo", blitzballGameInfo);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			weekResults=null;
+		}
+		
+		mv = new ModelAndView("blitzballGameResult");
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			mv.addObject("myTeam", objectMapper.writeValueAsString(blitzballInfo.getTeam()));
+			mv.addObject("oppTeam", objectMapper.writeValueAsString(activeOpponent));
+			mv.addObject("blitzballGameInfo", blitzballGameInfo);
+			mv.addObject("expMap", objectMapper.writeValueAsString(BlitzballUtils.getExpLevelMap()));
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return mv;
 	}
@@ -368,5 +364,52 @@ public class BlitzballController {
 			position="BENCH1";
 		}
 		BlitzballUtils.signPlayer(blitzballInfo, playerID, position, contractLength);
+	}
+
+	@RequestMapping("/bbTestExpiringContracts")
+	public ModelAndView testExpiringContractsPage(){
+		if (identity==null||blitzballInfo==null){
+			return new ModelAndView("timeout");
+		}
+		ModelAndView mv = new ModelAndView("blitzballExpiringContracts");
+		List<BlitzballPlayer> expiringPlayers = new ArrayList<BlitzballPlayer>();
+		expiringPlayers.add(BlitzballUtils.getBlitzballPlayer(blitzballInfo, 25));
+		expiringPlayers.add(BlitzballUtils.getBlitzballPlayer(blitzballInfo, 10));
+		List<BlitzballPlayer> renewedPlayers = new ArrayList<BlitzballPlayer>();
+		renewedPlayers.add(BlitzballUtils.getBlitzballPlayer(blitzballInfo, 25));
+		renewedPlayers.add(BlitzballUtils.getBlitzballPlayer(blitzballInfo, 55));
+		List<BlitzballPlayer> myExpiredPlayers = new ArrayList<BlitzballPlayer>();
+		myExpiredPlayers.add(blitzballInfo.getTeam().getLeftWing());
+		myExpiredPlayers.add(blitzballInfo.getTeam().getKeeper());
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			mv.addObject("expiringPlayers", objectMapper.writeValueAsString(expiringPlayers));
+			mv.addObject("renewedPlayers", objectMapper.writeValueAsString(renewedPlayers));
+			mv.addObject("myExpiredPlayers", objectMapper.writeValueAsString(myExpiredPlayers));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return mv;
+	}
+	@RequestMapping("/bbTestPage")
+	public ModelAndView getTestMenuBackground(@CookieValue(value = "identifier", defaultValue = "0") Long identifier){
+		ModelAndView mv;
+		if (identifier==0){//no cookie
+			mv = new ModelAndView("pleaseLogin");
+			mv.addObject("action","play Blitzball");
+			return mv;
+		} else {
+			mv = new ModelAndView("blitzballTestBackground");
+		}
+		if (identity==null||identity.getIdentifier()!=identifier){
+			identity=IdentityUtils.getIdentityByIdentifier(identifier);
+			blitzballInfo=BlitzballUtils.getBlitsballInfo(identifier);
+			//activeLeague=BlitzballUtils.getActiveLeague(blitzballInfo);
+		}
+		if (blitzballInfo!=null&&(blitzballInfo.getLeague()==null||blitzballInfo.getLeague().getWeeksComplete()>=10)){
+			blitzballInfo=BlitzballUtils.getActiveLeague(blitzballInfo);
+		}
+		return mv;
 	}
 }

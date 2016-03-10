@@ -437,7 +437,7 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 			setDataSource(getDataSource());
 		}
 		jdbcTemplate.update("UPDATE BB_PLAYERS SET CONTRACT_LENGTH=(CONTRACT_LENGTH-1) WHERE GAME_ID=? AND CURR_TEAM IN ("+teamIDString+")", new Object[]{info.getTeam().getTeamID()});
-		List<BlitzballPlayer> expiredList = jdbcTemplate.query("SELECT * FROM BB_PLAYERS P INNER JOIN BB_PLAYER_LVL_STATS PLS ON P.LEVEL=PLS.LEVEL AND P.PLAYER_ID=PLS.PLAYER_ID WHERE P.GAME_ID=? AND P.CONTRACT_LENGTH<=0 AND P.CURR_TEAM IN ("+teamIDString+")", new Object[]{info.getTeam().getTeamID()}, new RowMapper<BlitzballPlayer>(){
+		List<BlitzballPlayer> expiredList = jdbcTemplate.query("SELECT * FROM BB_PLAYERS P INNER JOIN BB_PLAYER_LVL_STATS PLS ON P.LEVEL=PLS.LEVEL AND P.PLAYER_ID=PLS.PLAYER_ID INNER JOIN BB_TEAM T ON P.TEAM_ID=T.TEAM_ID WHERE P.GAME_ID=? AND P.CONTRACT_LENGTH<=0 AND P.CURR_TEAM IN ("+teamIDString+")", new Object[]{info.getTeam().getTeamID()}, new RowMapper<BlitzballPlayer>(){
 			public BlitzballPlayer mapRow(ResultSet rs, int rowNum) throws SQLException {
 				BlitzballPlayer player = new BlitzballPlayer();
 				player.setPlayerID(rs.getInt("PLAYER_ID"));
@@ -466,6 +466,7 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 				player.setLearnableTechs(jdbcTemplate.queryForList("SELECT TECH_ID FROM BB_PLAYER_TECHS WHERE GAME_ID=? AND PLAYER_ID=? AND LEARNED=FALSE", new Object[]{info.getTeam().getTeamID(), player.getPlayerID()}, Integer.class));
 				player.setLearnedTechs(jdbcTemplate.queryForList("SELECT TECH_ID FROM BB_PLAYER_TECHS WHERE GAME_ID=? AND PLAYER_ID=? AND LEARNED=TRUE", new Object[]{info.getTeam().getTeamID(), player.getPlayerID()}, Integer.class));
 				player.setModel(rs.getString("MODEL"));
+				player.setTeamName(rs.getString("TEAM_NAME"));
 				return player;
 			}
 		});

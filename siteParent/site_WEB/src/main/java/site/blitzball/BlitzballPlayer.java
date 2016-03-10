@@ -9,6 +9,7 @@ public class BlitzballPlayer implements java.io.Serializable {
 	
 	private Integer playerID;
 	private Long teamID;
+	private String teamName;
 	private String name;
 	private Integer level;
 	private Integer experience;
@@ -48,6 +49,14 @@ public class BlitzballPlayer implements java.io.Serializable {
 	public void setTeamID(Long teamID) {
 		this.teamID = teamID;
 	}
+	public String getTeamName() {
+		return teamName;
+	}
+
+	public void setTeamName(String teamName) {
+		this.teamName = teamName;
+	}
+
 	public String getName() {
 		return name;
 	}

@@ -547,7 +547,7 @@
 								document.getElementById('selector').style.display='';
 								prompted=false;
 							} else if (promptList==2){
-								window.open("blitzballLeagueGame", "_self");
+								window.open("blitzballStartGame", "_self");
 							}
 						} else {
 							prompted=true;
