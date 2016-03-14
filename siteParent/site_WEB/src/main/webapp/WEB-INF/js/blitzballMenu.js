@@ -184,7 +184,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 			}
 
 			
-			function loadPlayer(model){
+			function loadPlayer(model, callback){
 				
 				var onProgress = function ( xhr ) {
 					if ( xhr.lengthComputable ) {
@@ -227,6 +227,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 					//init();
 					//animate();
+					callback();
 
 				}, onProgress, onError  );
 				/*THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );

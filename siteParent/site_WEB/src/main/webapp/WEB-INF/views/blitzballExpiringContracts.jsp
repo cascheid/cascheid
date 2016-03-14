@@ -7,7 +7,7 @@
 		<title>Blitzball!</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<link rel="stylesheet" type="text/css" href="css/blitzball.css?version=1.00"/>
+		<link rel="stylesheet" type="text/css" href="css/blitzball.css?version=1.01"/>
 		<style>
 			#blitzMenu{
 				top:20%;
@@ -17,8 +17,6 @@
 			}
 			
 			#confirmDiv{
-				top:20%;
-				width:20%;
 				height:16vmin;
 				left:40%;
 			}
@@ -68,28 +66,28 @@
 		<iframe id="playerStatFrame" style="position:absolute; top:20%; left:50%; width:50%; height:60%" frameborder=0></iframe>
 		<iframe id="playerTechFrame" style="position:absolute; top:0; left:0; width:100%; height:100%" frameborder=0></iframe>
 		
-		<div style="position:absolute; top:40%; margin:auto; left:0; right:0;">
-		<div id="expireMessage" class="menu"  style="margin:0 auto; visibility:hidden">
+		<div style="position:absolute; top:40%; margin:0 auto; left:0; right:0; text-align:center">
+		<div id="expireMessage" class="menu"  style="display:none">
 			<span id="expirePName"></span>'s Contract with the &nbsp<span id="expireTName"></span>&nbsp has expired.
 		</div>
-		<div id="signMessage" class="menu" style="visibility:hidden">
-			<span id="signPName"></span>&nbsp has signed with the &nbsp<span id="signTName"></span>&nbsp for &nbsp<span id="numGames"></span>&nbsp games.
-		</div>
+		<div id="signMessage" class="menu" style="display:none">
+			<span id="signPName"></span>&nbsp has signed with the &nbsp<span id="signTName"></span>&nbsp for &nbsp<span id="gamesSigned"></span>&nbsp games.
 		</div>
 		
 		<div id="confirmDiv" class="menu" style="display:none">
 			<img id="confSelector" class="selector" src="img/blitzball/arrow.png" />
-			<div class="promptLabel">Resign &nbsp<span id='pName'></span>?</div>
+			<div>Resign &nbsp<span id='pName'></span>?</div>
 			<div class="promptOptions">View Techs</div>
 			<div class="promptOptions">Sign</div>
 			<div class="promptOptions">Release</div>
 		</div>
 		
 		<div id="signNumGamesDiv" class="menu" style="display:none">
-			<div class="promptLabel">Resign for how many games?</div>
+			<div>Resign for how many games?</div>
 			<div id="numGames"></div>
 		</div>
 		
+		</div>
 		<script>
 		var menuSelection=1;
 		var MAXITEMS=3;
@@ -104,16 +102,22 @@
 		var displayingTechs=false;
 		var currPlayer;
 
+		function waiting(){
+			console.log('Waiting for model load');
+		}
+
 		function loadNextPlayer(){
 			parent.unloadPlayer();
 			if (expiringPlayers.length>playerNum){
 				var player = expiringPlayers[playerNum];
-				parent.loadPlayer(player.model);
-				document.getElementById('signMessage').style.visibility='hidden';
-				document.getElementById('expirePName').innerHTML=player.name;
-				document.getElementById('expireTName').innerHTML=player.teamName;
-				document.getElementById('expireMessage').style.visibility='';
-				nextCall=loadSignedPlayer;
+				document.getElementById('signMessage').style.display='none';
+				nextCall=waiting();
+				parent.loadPlayer(player.model, function(){
+					document.getElementById('expirePName').innerHTML=player.name;
+					document.getElementById('expireTName').innerHTML=player.teamName;
+					document.getElementById('expireMessage').style.display='inline-block';
+					nextCall=loadSignedPlayer;
+				});
 			} else {
 				playerNum=0;
 				loadNextMyExpiredPlayer();
@@ -124,18 +128,20 @@
 			if (myExpiredPlayers.length>playerNum){
 				var prompted=false;
 				currPlayer = myExpiredPlayers[playerNum];
-				parent.loadPlayer(currPlayer.model);
-				document.getElementById('signMessage').style.visibility='hidden';
+				document.getElementById('signMessage').style.display='none';
 				document.getElementById('playerStatFrame').style.display='none';
 				document.getElementById('playerTechFrame').style.display='none';
-				document.getElementById('expirePName').innerHTML=currPlayer.name;
-				document.getElementById('expireTName').innerHTML=currPlayer.teamName;
-				document.getElementById('expireMessage').style.visibility='';
-				document.getElementById('pName').innerHTML=currPlayer.name;
-				document.getElementById('playerStatFrame').src='bbStatDisplay?id='+currPlayer.playerID;
-				document.getElementById('playerTechFrame').src='bbTechDisplay?id='+currPlayer.playerID;
-				nextCall=loadPlayerSignOption;
-				playerNum++;
+				nextCall=waiting();
+				parent.loadPlayer(currPlayer.model, function(){
+					document.getElementById('expirePName').innerHTML=currPlayer.name;
+					document.getElementById('expireTName').innerHTML=currPlayer.teamName;
+					document.getElementById('expireMessage').style.visibility='inline-block';
+					document.getElementById('pName').innerHTML=currPlayer.name;
+					document.getElementById('playerStatFrame').src='bbStatDisplay?id='+currPlayer.playerID;
+					document.getElementById('playerTechFrame').src='bbTechDisplay?id='+currPlayer.playerID;
+					nextCall=loadPlayerSignOption;
+					playerNum++;
+				});
 			} else {
 				window.open("blitzballMenu", "_self");
 			}
@@ -144,21 +150,29 @@
 		function loadPlayerSignOption(){
 			document.getElementById('playerStatFrame').style.display='';
 			document.getElementById('playerTechFrame').style.display='';
-			document.getElementById('confirmDiv').style.display='';
+			document.getElementById('confirmDiv').style.display='inline-block';
 			document.getElementById('confSelector').style.display="";
 			nextCall=loadNextMyExpiredPlayer;
 			prompted=true;
 		}
 
 		function loadSignedPlayer(){
-			parent.unloadPlayer();
 			var player = renewedPlayers[playerNum];
-			parent.loadPlayer(player.model);
-			document.getElementById('expireMessage').style.visibility='hidden';
+			document.getElementById('expireMessage').style.display='none';
 			document.getElementById('signPName').innerHTML=player.name;
 			document.getElementById('signTName').innerHTML=player.teamName;
-			document.getElementById('signMessage').style.visibility='';
-			nextCall=loadNextPlayer;
+			document.getElementById('gamesSigned').innerHTML=player.contractLength;
+			if (player.playerID==expiringPlayers[playerNum].playerID){
+				document.getElementById('signMessage').style.display='inline-block';
+				nextCall=loadNextPlayer;
+			} else {
+				parent.unloadPlayer();
+				nextCall=waiting();
+				parent.loadPlayer(player.model, function(){
+					document.getElementById('signMessage').style.display='inline-block';
+					nextCall=loadNextPlayer;
+				});
+			}
 			playerNum++;
 		}
 
@@ -238,12 +252,12 @@
 		function cancelButtonPressed(){
 			if (prompted){
 				if (signPrompted){
-					document.getElementById('confirmDiv').style.display='';
+					document.getElementById('confirmDiv').style.display='inline-block';
 					document.getElementById('signNumGamesDiv').style.display='none';
 					signPrompted=false;
 				} else if (displayingTechs){
 					displayingTechs=false;
-					document.getElementById('confirmDiv').style.display='';
+					document.getElementById('confirmDiv').style.display='inline-block';
 				}
 			}
 		}

@@ -52,7 +52,8 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 					public BlitzballTeam mapRow(ResultSet rs, int rowNum) throws SQLException {
 						BlitzballTeam myTeam=new BlitzballTeam();
 						myTeam.setTeamID(rs.getLong("TEAM_ID"));
-						myTeam.setTeamName(rs.getString("TEAM_NAME"));
+						String teamName=rs.getString("TEAM_NAME");
+						myTeam.setTeamName(teamName);
 						final Long gameID=myTeam.getTeamID();
 
 						RowMapper<BlitzballPlayer> playerMapper = new RowMapper<BlitzballPlayer>(){
@@ -93,13 +94,20 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 						myTeam.setRightBack(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS P INNER JOIN BB_PLAYER_LVL_STATS PLS ON P.LEVEL=PLS.LEVEL AND P.PLAYER_ID=PLS.PLAYER_ID WHERE P.PLAYER_ID=? AND P.GAME_ID=?" , new Object[]{rs.getLong("RBACK"), teamID}, playerMapper));
 						myTeam.setLeftBack(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS P INNER JOIN BB_PLAYER_LVL_STATS PLS ON P.LEVEL=PLS.LEVEL AND P.PLAYER_ID=PLS.PLAYER_ID WHERE P.PLAYER_ID=? AND P.GAME_ID=?" , new Object[]{rs.getLong("LBACK"), teamID}, playerMapper));
 						myTeam.setKeeper(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS P INNER JOIN BB_PLAYER_LVL_STATS PLS ON P.LEVEL=PLS.LEVEL AND P.PLAYER_ID=PLS.PLAYER_ID WHERE P.PLAYER_ID=? AND P.GAME_ID=?" , new Object[]{rs.getLong("KEEPER"), teamID}, playerMapper));
-						
+						myTeam.getRightWing().setTeamName(teamName);
+						myTeam.getLeftWing().setTeamName(teamName);
+						myTeam.getMidfielder().setTeamName(teamName);
+						myTeam.getRightBack().setTeamName(teamName);
+						myTeam.getLeftBack().setTeamName(teamName);
+						myTeam.getKeeper().setTeamName(teamName);
 						Long tempID=rs.getLong("BENCH1");
 						if (tempID!=null&&tempID>0){
 							myTeam.setBench1(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS P INNER JOIN BB_PLAYER_LVL_STATS PLS ON P.LEVEL=PLS.LEVEL AND P.PLAYER_ID=PLS.PLAYER_ID WHERE P.PLAYER_ID=? AND P.GAME_ID=?" , new Object[]{rs.getLong("BENCH1"), teamID}, playerMapper));
+							myTeam.getBench1().setTeamName(teamName);
 							tempID=rs.getLong("BENCH2");
 							if (tempID!=null&&tempID>0){
-								myTeam.setBench1(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS P INNER JOIN BB_PLAYER_LVL_STATS PLS ON P.LEVEL=PLS.LEVEL AND P.PLAYER_ID=PLS.PLAYER_ID WHERE P.PLAYER_ID=? AND P.GAME_ID=?" , new Object[]{rs.getLong("BENCH2"), teamID}, playerMapper));
+								myTeam.getBench2().setTeamName(teamName);
+								myTeam.setBench2(jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS P INNER JOIN BB_PLAYER_LVL_STATS PLS ON P.LEVEL=PLS.LEVEL AND P.PLAYER_ID=PLS.PLAYER_ID WHERE P.PLAYER_ID=? AND P.GAME_ID=?" , new Object[]{rs.getLong("BENCH2"), teamID}, playerMapper));
 							}
 						}
 						return myTeam;
