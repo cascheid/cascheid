@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>Blitzball!</title>
+		<title>localhost</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<style>
@@ -43,16 +43,7 @@
 		<script src="js/ColladaLoader.js"></script>
 		<script src="js/blitzballMenu.js?version=0.1"></script>
 
-		<iframe id="blitzMenuFrame" name="blitzMenuFrame" frameborder=0 height="100%" width="100%" src="bbTestExpiringContracts" allowtransparency="true" onload="focusFrame()"></iframe>
-		
-		<script>
-		function focusFrame(){
-			document.getElementById('blitzMenuFrame').focus();
-		}
-		
-		document.documentElement.onkeydown = function(e){
-		    document.getElementById('blitzMenuFrame').contentWindow.onKeyDown(e);
-		};
-		</script>
+		<iframe id="blitzMenuFrame" name="blitzMenuFrame" frameborder=0 height="100%" width="100%" src="${testPage}" allowtransparency="true" tabindex='0'></iframe>
+
 	</body>
 </html>

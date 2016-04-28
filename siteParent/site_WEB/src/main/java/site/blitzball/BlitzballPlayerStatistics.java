@@ -20,7 +20,7 @@ public class BlitzballPlayerStatistics implements Serializable{
 	private Integer breaks;
 	private Integer turnovers;
 	private Integer expGained;
-	private List<Integer> techsLearned;
+	private List<BlitzballTech> techsLearned;
 	
 	public BlitzballPlayerStatistics(){}
 	public BlitzballPlayerStatistics(Integer playerID){
@@ -35,7 +35,7 @@ public class BlitzballPlayerStatistics implements Serializable{
 		this.breaks=0;
 		this.turnovers=0;
 		this.expGained=0;
-		this.techsLearned=new ArrayList<Integer>();
+		this.techsLearned=new ArrayList<BlitzballTech>();
 	}
 	public BlitzballPlayerStatistics(Integer playerID, String playerName){
 		this(playerID);
@@ -113,10 +113,10 @@ public class BlitzballPlayerStatistics implements Serializable{
 	public void setExpGained(Integer expGained) {
 		this.expGained = expGained;
 	}
-	public List<Integer> getTechsLearned() {
+	public List<BlitzballTech> getTechsLearned() {
 		return techsLearned;
 	}
-	public void setTechsLearned(List<Integer> techsLearned) {
+	public void setTechsLearned(List<BlitzballTech> techsLearned) {
 		this.techsLearned = techsLearned;
 	}
 }

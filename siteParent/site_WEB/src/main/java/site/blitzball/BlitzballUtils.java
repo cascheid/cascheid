@@ -17,6 +17,11 @@ import site.dao.BlitzballDaoImpl;
 public class BlitzballUtils {
 	private static List<BlitzballTech> techList;
 	private static HashMap<Integer, Integer> expLevels;
+	
+	public static void deleteBlitzballInfo(Long gameID){
+		BlitzballDao dao = new BlitzballDaoImpl();
+		dao.deleteBlitzballGameInfo(gameID);
+	}
 
 	public static BlitzballInfo getBlitsballInfo(Long identifier){
 		BlitzballDao dao = new BlitzballDaoImpl();
@@ -33,6 +38,27 @@ public class BlitzballUtils {
 		BlitzballDao dao = new BlitzballDaoImpl();
 		dao.insertNewBlitzballGame(identifier, teamName);
 		BlitzballInfo info = dao.getBlitzballByIdentifier(identifier);
+		return info;
+	}
+	
+	public static BlitzballInfo getActiveLeague(BlitzballInfo info){
+		BlitzballDao dao = new BlitzballDaoImpl();
+		BlitzballLeague league=null;
+		try {
+			league=dao.getActiveLeagueByTeamID(info);
+			//league.setDivisionOpponents(dao.getDivisionsOpponents(league.getLeagueID()));
+			//league.setNonDivisionOpponents(dao.getNonDivisionsOpponents(info, league.getLeagueID()));
+			league.setSchedule(dao.getLeagueSchedule(league));
+			league.setPlayerStatistics(dao.getLeaguePlayerStatistics(league.getLeagueID(), league.getGameID()));
+		} catch (EmptyResultDataAccessException e){
+			//e.printStackTrace();
+			generateRandomLeague(info);
+			league=dao.getActiveLeagueByTeamID(info);
+			league.setSchedule(dao.getLeagueSchedule(league));
+			league.setPlayerStatistics(dao.getLeaguePlayerStatistics(league.getLeagueID(), league.getGameID()));
+			//league=generateRandomLeague(info);
+		}
+		info.setLeague(league);
 		return info;
 	}
 	
@@ -58,11 +84,12 @@ public class BlitzballUtils {
 				if (team1==null||team2==null){
 					throw new IllegalStateException("Null team in simulating games:"+game.getTeam1().getTeamID() + "-"+ game.getTeam2().getTeamID());
 				} else {
-					BlitzballGame newGame = BlitzballUtils.simulateGame(team1, team2);
-					game.setHalvesComplete(newGame.getHalvesComplete());
+					//BlitzballGame newGame = BlitzballUtils.simulateGame(team1, team2);
+					BlitzballUtils.simulateGame(game);
+					/*game.setHalvesComplete(newGame.getHalvesComplete());
 					game.setTeam1Score(newGame.getTeam1Score());
 					game.setTeam2Score(newGame.getTeam2Score());
-					game.setPlayerStatistics(newGame.getPlayerStatistics());
+					game.setPlayerStatistics(newGame.getPlayerStatistics());*/
 				}
 			}
 		}
@@ -112,27 +139,6 @@ public class BlitzballUtils {
 	public static void signPlayer(BlitzballInfo info, Integer playerID, String position, Integer contractLength){
 		BlitzballDao dao = new BlitzballDaoImpl();
 		dao.signPlayer(playerID, info.getTeam().getTeamID(), info.getTeam().getTeamID(), contractLength, position);
-	}
-	
-	public static BlitzballInfo getActiveLeague(BlitzballInfo info){
-		BlitzballDao dao = new BlitzballDaoImpl();
-		BlitzballLeague league=null;
-		try {
-			league=dao.getActiveLeagueByTeamID(info);
-			//league.setDivisionOpponents(dao.getDivisionsOpponents(league.getLeagueID()));
-			//league.setNonDivisionOpponents(dao.getNonDivisionsOpponents(info, league.getLeagueID()));
-			league.setSchedule(dao.getLeagueSchedule(league.getLeagueID()));
-			league.setPlayerStatistics(dao.getLeaguePlayerStatistics(league.getLeagueID(), league.getGameID()));
-		} catch (EmptyResultDataAccessException e){
-			//e.printStackTrace();
-			generateRandomLeague(info);
-			league=dao.getActiveLeagueByTeamID(info);
-			league.setSchedule(dao.getLeagueSchedule(league.getLeagueID()));
-			league.setPlayerStatistics(dao.getLeaguePlayerStatistics(league.getLeagueID(), league.getGameID()));
-			//league=generateRandomLeague(info);
-		}
-		info.setLeague(league);
-		return info;
 	}
 	
 	public static BlitzballGame getLeagueGame(BlitzballLeague leagueInfo){
@@ -374,8 +380,17 @@ public class BlitzballUtils {
 				||adjustedTeam.getLeftBack()==null||adjustedTeam.getRightBack()==null||adjustedTeam.getKeeper()==null){
 			throw new IllegalStateException("Adjusted Team does not have proper number of players");
 		}
+		//to keep same point in memory
+		origTeam.setLeftWing(adjustedTeam.getLeftWing());
+		origTeam.setRightWing(adjustedTeam.getRightWing());
+		origTeam.setMidfielder(adjustedTeam.getMidfielder());
+		origTeam.setLeftBack(adjustedTeam.getLeftBack());
+		origTeam.setRightBack(adjustedTeam.getRightBack());
+		origTeam.setKeeper(adjustedTeam.getKeeper());
+		origTeam.setBench1(adjustedTeam.getBench1());
+		origTeam.setBench2(adjustedTeam.getBench2());
 		
-		return adjustedTeam;
+		return origTeam;
 	}
 	
 	public static BlitzballTech getTechFromTechID(Integer techID){
@@ -390,11 +405,48 @@ public class BlitzballUtils {
 		return null;
 	}
 	
-	public static BlitzballPlayer advancePlayerExp(BlitzballPlayer player, Integer exp){
+	public static BlitzballPlayer advancePlayerExp(BlitzballPlayer player, Integer exp, Long gameID){
 		player.setExperience(player.getExperience()+exp);
-		while (player.getExperience()>getExpForLevel(player.getLevel()+1)){
+		while (player.getExperience()>=getExpForLevel(player.getLevel()+1)){
 			player.setLevel(player.getLevel()+1);
 		}
+		player.setNextExp(getExpForLevel(player.getLevel()+1));
+		BlitzballDao dao = new BlitzballDaoImpl();
+		BlitzballPlayer updatedPlayer = dao.getPlayerByID(player.getPlayerID(), gameID, player.getLevel());
+		List<String> updatedStats = new ArrayList<String>();
+		if (!player.getSpeed().equals(updatedPlayer.getSpeed())){
+			updatedStats.add("spd");
+			player.setSpeed(updatedPlayer.getSpeed());
+		}
+		if (!player.getEndurance().equals(updatedPlayer.getEndurance())){
+			updatedStats.add("end");
+			player.setSpeed(updatedPlayer.getSpeed());
+		}
+		if (!player.getHp().equals(updatedPlayer.getHp())){
+			updatedStats.add("hp");
+			player.setHp(updatedPlayer.getHp());
+		}
+		if (!player.getAttack().equals(updatedPlayer.getAttack())){
+			updatedStats.add("atk");
+			player.setAttack(updatedPlayer.getAttack());
+		}
+		if (!player.getPass().equals(updatedPlayer.getPass())){
+			updatedStats.add("pas");
+			player.setPass(updatedPlayer.getPass());
+		}
+		if (!player.getShot().equals(updatedPlayer.getShot())){
+			updatedStats.add("sht");
+			player.setShot(updatedPlayer.getShot());
+		}
+		if (!player.getBlock().equals(updatedPlayer.getBlock())){
+			updatedStats.add("blk");
+			player.setBlock(updatedPlayer.getBlock());
+		}
+		if (!player.getCat().equals(updatedPlayer.getCat())){
+			updatedStats.add("cat");
+			player.setCat(updatedPlayer.getCat());
+		}
+		player.setUpdatedStats(updatedStats);
 		return player;
 	}
 	
@@ -501,17 +553,23 @@ public class BlitzballUtils {
 	public static void persistBlitzballGame(BlitzballGame game, Long gameID){
 		BlitzballDao dao = new BlitzballDaoImpl();
 		for (BlitzballPlayer player : game.getTeam1().getActivePlayers()){
+			player.setOrigLevel(player.getLevel());
+			player.setOrigExp(player.getExperience());
+			player.setOrigNextExp(player.getNextExp());
 			for (BlitzballPlayerStatistics stats : game.getPlayerStatistics()){
 				if (stats.getPlayerID().equals(player.getPlayerID())){
-					advancePlayerExp(player, stats.getExpGained());
+					advancePlayerExp(player, stats.getExpGained(), gameID);
 					break;
 				}
 			}
 		}
 		for (BlitzballPlayer player : game.getTeam2().getActivePlayers()){
+			player.setOrigLevel(player.getLevel());
+			player.setOrigExp(player.getExperience());
+			player.setOrigNextExp(player.getNextExp());
 			for (BlitzballPlayerStatistics stats : game.getPlayerStatistics()){
 				if (stats.getPlayerID().equals(player.getPlayerID())){
-					advancePlayerExp(player, stats.getExpGained());
+					advancePlayerExp(player, stats.getExpGained(), gameID);
 					break;
 				}
 			}
@@ -523,9 +581,10 @@ public class BlitzballUtils {
 		}
 	}
 	
-	public static BlitzballGame simulateGame(BlitzballTeam team1, BlitzballTeam team2){
+	public static BlitzballGame simulateGame(BlitzballGame game){
 		//BlitzballDao dao = new BlitzballDaoImpl();
-		
+		BlitzballTeam team1 = game.getTeam1();
+		BlitzballTeam team2 = game.getTeam2();
 		BlitzballPlayer currPlayer = team1.getMidfielder();
 		BlitzballPlayer currOppPlayer = team2.getMidfielder();
 		BlitzballPlayer dblbreakPlayer = team2.getMidfielder();
@@ -550,23 +609,23 @@ public class BlitzballUtils {
 		gameStats.put(team2.getKeeper().getPlayerID(), new BlitzballPlayerStatistics(team2.getKeeper().getPlayerID()));
 		for (BlitzballPlayer team1Player : team1.getActivePlayers()){
 			int learnableCount = 0;
-			List<Integer> learnableTechs = new ArrayList<Integer>();
+			List<BlitzballTech> learnableTechs = new ArrayList<BlitzballTech>();
 			for (BlitzballPlayer team2Player : team2.getActivePlayers()){
-				List<Integer> currTechs = new ArrayList<Integer>();
+				List<BlitzballTech> currTechs = new ArrayList<BlitzballTech>();
 				if (team2Player.getTech1()!=null&&team1Player.getLearnableTechs().contains(team2Player.getTech1().getTechID())){
-					currTechs.add(team2Player.getTech1().getTechID());
+					currTechs.add(team2Player.getTech1());
 				}
 				if (team2Player.getTech2()!=null&&team1Player.getLearnableTechs().contains(team2Player.getTech2().getTechID())){
-					currTechs.add(team2Player.getTech2().getTechID());
+					currTechs.add(team2Player.getTech2());
 				}
 				if (team2Player.getTech3()!=null&&team1Player.getLearnableTechs().contains(team2Player.getTech3().getTechID())){
-					currTechs.add(team2Player.getTech3().getTechID());
+					currTechs.add(team2Player.getTech3());
 				}
 				if (team2Player.getTech4()!=null&&team1Player.getLearnableTechs().contains(team2Player.getTech4().getTechID())){
-					currTechs.add(team2Player.getTech4().getTechID());
+					currTechs.add(team2Player.getTech4());
 				}
 				if (team2Player.getTech5()!=null&&team1Player.getLearnableTechs().contains(team2Player.getTech5().getTechID())){
-					currTechs.add(team2Player.getTech5().getTechID());
+					currTechs.add(team2Player.getTech5());
 				}
 				if (currTechs.size()>learnableCount){
 					learnableCount=currTechs.size();
@@ -579,8 +638,8 @@ public class BlitzballUtils {
 				}	
 			}
 			if (learnableTechs.size()>0){
-				List<Integer> techsLearned = new ArrayList<Integer>();
-				for (Integer tech : learnableTechs){
+				List<BlitzballTech> techsLearned = new ArrayList<BlitzballTech>();
+				for (BlitzballTech tech : learnableTechs){
 					if (Math.random()<.2){
 						techsLearned.add(tech);
 					}
@@ -590,23 +649,23 @@ public class BlitzballUtils {
 		}
 		for (BlitzballPlayer team1Player : team2.getActivePlayers()){
 			int learnableCount = 0;
-			List<Integer> learnableTechs = new ArrayList<Integer>();
+			List<BlitzballTech> learnableTechs = new ArrayList<BlitzballTech>();
 			for (BlitzballPlayer team2Player : team1.getActivePlayers()){
-				List<Integer> currTechs = new ArrayList<Integer>();
+				List<BlitzballTech> currTechs = new ArrayList<BlitzballTech>();
 				if (team2Player.getTech1()!=null&&team1Player.getLearnableTechs().contains(team2Player.getTech1().getTechID())){
-					currTechs.add(team2Player.getTech1().getTechID());
+					currTechs.add(team2Player.getTech1());
 				}
 				if (team2Player.getTech2()!=null&&team1Player.getLearnableTechs().contains(team2Player.getTech2().getTechID())){
-					currTechs.add(team2Player.getTech2().getTechID());
+					currTechs.add(team2Player.getTech2());
 				}
 				if (team2Player.getTech3()!=null&&team1Player.getLearnableTechs().contains(team2Player.getTech3().getTechID())){
-					currTechs.add(team2Player.getTech3().getTechID());
+					currTechs.add(team2Player.getTech3());
 				}
 				if (team2Player.getTech4()!=null&&team1Player.getLearnableTechs().contains(team2Player.getTech4().getTechID())){
-					currTechs.add(team2Player.getTech4().getTechID());
+					currTechs.add(team2Player.getTech4());
 				}
 				if (team2Player.getTech5()!=null&&team1Player.getLearnableTechs().contains(team2Player.getTech5().getTechID())){
-					currTechs.add(team2Player.getTech5().getTechID());
+					currTechs.add(team2Player.getTech5());
 				}
 				if (currTechs.size()>learnableCount){
 					learnableCount=currTechs.size();
@@ -619,8 +678,8 @@ public class BlitzballUtils {
 				}	
 			}
 			if (learnableTechs.size()>0){
-				List<Integer> techsLearned = new ArrayList<Integer>();
-				for (Integer tech : learnableTechs){
+				List<BlitzballTech> techsLearned = new ArrayList<BlitzballTech>();
+				for (BlitzballTech tech : learnableTechs){
 					if (Math.random()<.2){
 						techsLearned.add(tech);
 					}
@@ -1054,9 +1113,9 @@ public class BlitzballUtils {
 			}
 		}
 		
-		BlitzballGame simGame = new BlitzballGame();
+		/*BlitzballGame simGame = new BlitzballGame();
 		simGame.setTeam1(team1);
-		simGame.setTeam2(team2);
+		simGame.setTeam2(team2);*/
 		int team1Score = gameStats.get(team1.getLeftWing().getPlayerID()).getGoals()+
 				gameStats.get(team1.getRightWing().getPlayerID()).getGoals()+
 				gameStats.get(team1.getMidfielder().getPlayerID()).getGoals()+
@@ -1067,16 +1126,16 @@ public class BlitzballUtils {
 				gameStats.get(team2.getMidfielder().getPlayerID()).getGoals()+
 				gameStats.get(team2.getLeftBack().getPlayerID()).getGoals()+
 				gameStats.get(team2.getRightBack().getPlayerID()).getGoals();
-		simGame.setTeam1Score(team1Score);
-		simGame.setTeam2Score(team2Score);
-		simGame.setHalvesComplete(2);
+		game.setTeam1Score(team1Score);
+		game.setTeam2Score(team2Score);
+		game.setHalvesComplete(2);
 		List<BlitzballPlayerStatistics> list = new ArrayList<BlitzballPlayerStatistics>();
 		Iterator<Entry<Integer, BlitzballPlayerStatistics>> it = gameStats.entrySet().iterator();
 		while (it.hasNext()){
 			Entry<Integer, BlitzballPlayerStatistics> e = it.next();
 			list.add(e.getValue());
 		}
-		simGame.setPlayerStatistics(list);
-		return simGame;
+		game.setPlayerStatistics(list);
+		return game;
 	}
 }

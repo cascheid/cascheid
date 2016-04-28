@@ -10,22 +10,22 @@ body {
 	white-space:nowrap;
 }
 
-.promptLabel{
-	width:100%; 
+.promptOptions{
 	padding-left:2.5vmin;
 }
 
-.promptOptions{
-	width:100%; 
-	padding-left:5vmin;
+.centerWrapper{
+	margin:0 auto;
+	left:0;
+	right:0;
 }
 
 .menu{
-	position:absolute;
 	background-color:#6B238E;
 	background-image: url("../img/blitzball/cracks.png");
 	border: 5px double white;
 	z-index:1000;
+	padding:2.5vmin;
 }
 
 .selector{

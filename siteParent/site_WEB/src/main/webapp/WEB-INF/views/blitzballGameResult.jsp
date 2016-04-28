@@ -22,11 +22,47 @@
 				color: #ffffff;
 				position:absolute;
 				top:10vmin;
-				width:20%;
+				width:28%;
 				left:10%;
 				z-index:1000;
 				line-height:4vmin;
 				padding:0px;
+				display:table;
+				table-layout:fixed;
+			}
+			
+			#learnedTechs{
+				color:#FFFFFF;
+				font-size:3.5vmin;
+				position:absolute;
+				top:65vmin;
+				line-height:4vmin;
+				width:50%;
+				left:10%;
+				background:none transparent;
+				z-index:1000;
+			}
+			
+			#expDiv{
+				font-size:3.5vmin;
+				color: #ffffff;
+				position:absolute;
+				top:10vmin;
+				left:45%;
+				z-index:1000;
+				line-height:4vmin;
+				padding:0px;
+			}
+			#statsDiv{
+				font-size:3.5vmin;
+				color: #ffffff;
+				position:absolute;
+				top:10vmin;
+				left:55%;
+				z-index:1000;
+				line-height:4vmin;
+				padding:0px;
+				width:30%;
 			}
 			
 			#techListDisplay{
@@ -77,8 +113,8 @@
 			
 			#selector{
 				position:absolute;
-				left:10vmin;
-				top:4vmin;
+				left:-5vmin;
+				top:0vmin;
 				width:5vmin;
 				height:4vmin;
 			}
@@ -136,12 +172,40 @@
 				z-index:1001;
 			}
 			
-			.stat{
+			.expLabelCell{
 				text-align:left;
 				color: #87CEFA;
 				display: table-cell; 
 				width:8vmin;
 				padding-left:0.5vmin
+			}
+			
+			.expCell{
+				text-align:right;
+				color: #FFFF66;
+				display: table-cell; 
+				width:12vmin;
+			}
+			
+			.breakCell{
+				text-align:center;
+				color: #87CEFA;
+				display: table-cell; 
+				width:4vmin;
+			}
+			
+			.playerNameCell{
+				text-align:left;
+				color: #FFFF66;
+				display: table-cell;
+				width:60%;
+			}
+			
+			.playerLevelCell{
+				text-align:right;
+				color: #FFFF66;
+				display: table-cell;
+				width:40%;
 			}
 			
 			.num{
@@ -150,197 +214,295 @@
 				display: table-cell; 
 				width:8vmin;
 			}
+			
+			hr { 
+  				border : 0;
+  				height: 0.8vmin;
+  				background-image: linear-gradient(to right, rgba(107, 35, 142, 0.5), rgba(107, 35, 142, 1), rgba(107, 35, 142, 0.5));
+			}
 		</style>
 	</head>
 
 	<body>
-		<div class="crossDiv" style="left:5%; top:0; width:10vmin; height:47.7vmin"></div>
+		<div class="crossDiv" style="left:5%; top:0; width:5%; height:47.7vmin"></div>
 		<div id="playerMenu">
 			<img id="selector" style="display:none" src="img/blitzball/arrow.png" />
 			<div style="display:table-row">
-				<div style="display: table-cell"><label style="padding-left:5vmin" id="players1">${myTeam.leftWing.name }</label></div>
-				<div style="display: table-cell"><label class="stat">Lv.</label><label style="padding-left:5vmin" id="playerLevel1">${myTeam.leftWing.level}</label></div>
+				<div class="playerNameCell"><span style="padding-left:5vmin" id="lwName">${myTeam.leftWing.name }</span></div>
+				<div class="playerLevelCell"><span style="color:#87CEFA">Lv.</span><span style="padding-left:5vmin" id="lwLevel">${myTeam.leftWing.origLevel}</span></div>
 			</div>
 			<div style="display:table-row">
-				<div style="display: table-cell"><label style="padding-left:5vmin" id="players2">${myTeam.rightWing.name }</label></div>
-				<div style="display: table-cell"><label class="stat">Lv.</label><label style="padding-left:5vmin" id="playerLevel2">${myTeam.rightWing.level}</label></div>
+				<div class="playerNameCell" style="width:60%"><span style="padding-left:5vmin" id="rwName">${myTeam.rightWing.name }</span></div>
+				<div class="playerLevelCell"><span style="color:#87CEFA">Lv.</span><span style="padding-left:5vmin" id="rwLevel">${myTeam.rightWing.origLevel}</span></div>
 			</div>
 			<div style="display:table-row">
-				<div style="display: table-cell"><label style="padding-left:5vmin" id="players3">${myTeam.midfielder.name }</label></div>
-				<div style="display: table-cell"><label class="stat">Lv.</label><label style="padding-left:5vmin" id="playerLevel3">${myTeam.midfielder.level}</label></div>
+				<div class="playerNameCell" style="width:60%"><span style="padding-left:5vmin" id="mfName">${myTeam.midfielder.name }</span></div>
+				<div class="playerLevelCell"><span style="color:#87CEFA">Lv.</span><span style="padding-left:5vmin" id="mfLevel">${myTeam.midfielder.origLevel}</span></div>
 			</div>
 			<div style="display:table-row">
-				<div style="display: table-cell"><label style="padding-left:5vmin" id="players4">${myTeam.leftBack.name }</label></div>
-				<div style="display: table-cell"><label class="stat">Lv.</label><label style="padding-left:5vmin" id="playerLevel4">${myTeam.leftBack.level}</label></div>
+				<div class="playerNameCell" style="width:60%"><span style="padding-left:5vmin" id="lbName">${myTeam.leftBack.name }</span></div>
+				<div class="playerLevelCell"><span style="color:#87CEFA">Lv.</span><span style="padding-left:5vmin" id="lbLevel">${myTeam.leftBack.origLevel}</span></div>
 			</div>
 			<div style="display:table-row">
-				<div style="display: table-cell"><label style="padding-left:5vmin" id="players5">${myTeam.rightBack.name }</label></div>
-				<div style="display: table-cell"><label class="stat">Lv.</label><label style="padding-left:5vmin" id="playerLevel5">${myTeam.rightBack.level}</label></div>
+				<div class="playerNameCell" style="width:60%"><span style="padding-left:5vmin" id="rbName">${myTeam.rightBack.name }</span></div>
+				<div class="playerLevelCell"><span style="color:#87CEFA">Lv.</span><span style="padding-left:5vmin" id="rbLevel">${myTeam.rightBack.origLevel}</span></div>
 			</div>
 			<div style="display:table-row">
-				<div style="display: table-cell"><label style="padding-left:5vmin" id="players6">${myTeam.keeper.name }</label></div>
-				<div style="display: table-cell"><label class="stat">Lv.</label><label style="padding-left:5vmin" id="playerLevel6">${myTeam.keeper.level}</label></div>
+				<div class="playerNameCell" style="width:60%"><span style="padding-left:5vmin" id="gkName">${myTeam.keeper.name }</span></div>
+				<div class="playerLevelCell"><span style="color:#87CEFA">Lv.</span><span style="padding-left:5vmin" id="gkLevel">${myTeam.keeper.origLevel}</span></div>
 			</div>
 		</div>
-		<div class="crossDiv" style="left:38%; top:0; width:2vmin; height:47.7vh"></div>		
+		<div id="learnedTechs">
+			<div id="lwTechsLearned" style="display:none">
+				<c:forEach items="${blitzballGameInfo.playerStatistics}" var="stat" varStatus="rowStatus">
+					<c:if test="${myTeam.leftWing.playerID eq stat.playerID}">
+						<c:forEach items="${stat.techsLearned}" var="tech">
+							<c:choose>
+								<c:when test="${(myTeam.leftWing.keyTech1.techID eq tech.techID)||(myTeam.leftWing.keyTech2.techID eq tech.techID)||(myTeam.leftWing.keyTech3.techID eq tech.techID)}">
+									<div>${myTeam.leftWing.name} has learned&nbsp<span style="color:#FFFF66">Key Technique</span>&nbsp${tech.techName}</div>
+								</c:when>
+								<c:otherwise>
+									<div>${myTeam.leftWing.name} has learned Technique ${tech.techName}</div>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</c:if>
+				</c:forEach>
+			</div>
+			<div id="rwTechsLearned" style="display:none">
+				<c:forEach items="${blitzballGameInfo.playerStatistics}" var="stat" varStatus="rowStatus">
+					<c:if test="${myTeam.rightWing.playerID eq stat.playerID}">
+						<c:forEach items="${stat.techsLearned}" var="tech">
+							<c:choose>
+								<c:when test="${(myTeam.rightWing.keyTech1.techID eq tech.techID)||(myTeam.rightWing.keyTech2.techID eq tech.techID)||(myTeam.rightWing.keyTech3.techID eq tech.techID)}">
+									<div>${myTeam.rightWing.name} has learned&nbsp<span style="color:#FFFF66">Key Technique</span>&nbsp${tech.techName}</div>
+								</c:when>
+								<c:otherwise>
+									<div>${myTeam.rightWing.name} has learned Technique ${tech.techName}</div>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</c:if>
+				</c:forEach>
+			</div>
+			<div id="mfTechsLearned" style="display:none">
+				<c:forEach items="${blitzballGameInfo.playerStatistics}" var="stat" varStatus="rowStatus">
+					<c:if test="${myTeam.midfielder.playerID eq stat.playerID}">
+						<c:forEach items="${stat.techsLearned}" var="tech">
+							<c:choose>
+								<c:when test="${(myTeam.midfielder.keyTech1.techID eq tech.techID)||(myTeam.midfielder.keyTech2.techID eq tech.techID)||(myTeam.midfielder.keyTech3.techID eq tech.techID)}">
+									<div>${myTeam.midfielder.name} has learned&nbsp<span style="color:#FFFF66">Key Technique</span>&nbsp${tech.techName}</div>
+								</c:when>
+								<c:otherwise>
+									<div>${myTeam.midfielder.name} has learned Technique ${tech.techName}</div>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</c:if>
+				</c:forEach>
+			</div>
+			<div id="lbTechsLearned" style="display:none">
+				<c:forEach items="${blitzballGameInfo.playerStatistics}" var="stat" varStatus="rowStatus">
+					<c:if test="${myTeam.leftBack.playerID eq stat.playerID}">
+						<c:forEach items="${stat.techsLearned}" var="tech">
+							<c:choose>
+								<c:when test="${(myTeam.leftBack.keyTech1.techID eq tech.techID)||(myTeam.leftBack.keyTech2.techID eq tech.techID)||(myTeam.leftBack.keyTech3.techID eq tech.techID)}">
+									<div>${myTeam.leftBack.name} has learned&nbsp<span style="color:#FFFF66">Key Technique</span>&nbsp${tech.techName}</div>
+								</c:when>
+								<c:otherwise>
+									<div>${myTeam.leftBack.name} has learned Technique ${tech.techName}</div>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</c:if>
+				</c:forEach>
+			</div>
+			<div id="rbTechsLearned" style="display:none">
+				<c:forEach items="${blitzballGameInfo.playerStatistics}" var="stat" varStatus="rowStatus">
+					<c:if test="${myTeam.rightBack.playerID eq stat.playerID}">
+						<c:forEach items="${stat.techsLearned}" var="tech">
+							<c:choose>
+								<c:when test="${(myTeam.rightBack.keyTech1.techID eq tech.techID)||(myTeam.rightBack.keyTech2.techID eq tech.techID)||(myTeam.rightBack.keyTech3.techID eq tech.techID)}">
+									<div>${myTeam.rightBack.name} has learned&nbsp<span style="color:#FFFF66">Key Technique</span>&nbsp${tech.techName}</div>
+								</c:when>
+								<c:otherwise>
+									<div>${myTeam.rightBack.name} has learned Technique ${tech.techName}</div>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</c:if>
+				</c:forEach>
+			</div>
+			<div id="gkTechsLearned" style="display:none">
+				<c:forEach items="${blitzballGameInfo.playerStatistics}" var="stat" varStatus="rowStatus">
+					<c:if test="${myTeam.keeper.playerID eq stat.playerID}">
+						<c:forEach items="${stat.techsLearned}" var="tech">
+							<c:choose>
+								<c:when test="${(myTeam.keeper.keyTech1.techID eq tech.techID)||(myTeam.keeper.keyTech2.techID eq tech.techID)||(myTeam.keeper.keyTech3.techID eq tech.techID)}">
+									<div>${myTeam.keeper.name} has learned&nbsp<span style="color:#FFFF66">Key Technique</span>&nbsp${tech.techName}</div>
+								</c:when>
+								<c:otherwise>
+									<div>${myTeam.keeper.name} has learned Technique ${tech.techName}</div>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</c:if>
+				</c:forEach>
+			</div>
+		</div>
+		<div class="crossDiv" style="left:40%; top:0; width:2%; height:47.7vh"></div>		
 		<div class="crossDiv" style="left:0; top:48vmin; width:100%; height:2vmin"></div>
 		
 		<div id="expDiv">
 			<div style="display:table-row">
-				<div style="display: table-cell">
+				<div class="expCell">
 				<c:forEach items="${blitzballGameInfo.playerStatistics}" var="stat" varStatus="rowStatus">
 					<c:if test="${myTeam.leftWing.playerID eq stat.playerID}">
-						<label class="num" style="padding-left:5vmin" id="lwExpGained">${stat.expGained}</label>
+						<span id="lwExpGained">${stat.expGained}</span>
 					</c:if>
 				</c:forEach>
 				<c:forEach items="${blitzballGameInfo.playerStatistics}" var="stat" varStatus="rowStatus">
 					<c:if test="${oppTeam.leftWing.playerID eq stat.playerID}">
-						<label class="num" style="padding-left:5vmin" id="lw2ExpGained">${stat.expGained}</label>
+						<span style="display:none" id="lw2ExpGained">${stat.expGained}</span>
 					</c:if>
 				</c:forEach>
 				</div>
-				<div style="display: table-cell"><label class="num" id="lwExp">${myTeam.leftWing.experience}</label></div>
-				<div style="display: table-cell"><label class="stat" style="padding-left:0.5vmin; padding-right:0.5vmin">/</label></div>
-				<div style="display: table-cell"><label class="num" id="lwNextExp">${myTeam.leftWing.nextExp}</label></div>
-				<div style="display: table-cell"><label class="stat">EXP</label></div>
+				<div class="breakCell">&nbsp</div>
+				<div class="expCell"><span id="lwExp">${myTeam.leftWing.origExp}</span></div>
+				<div class="breakCell"><span>/</span></div>
+				<div class="expCell"><span id="lwNextExp">${myTeam.leftWing.origNextExp}</span></div>
+				<div class="expLabelCell"><span>EXP</span></div>
 			</div>
 			<div style="display:table-row">
-				<div style="display: table-cell">
+				<div class="num">
 				<c:forEach items="${blitzballGameInfo.playerStatistics}" var="stat" varStatus="rowStatus">
 					<c:if test="${myTeam.rightWing.playerID eq stat.playerID}">
-						<label class="num" style="padding-left:5vmin" id="rwExpGained">${stat.expGained}</label>
+						<span id="rwExpGained">${stat.expGained}</span>
 					</c:if>
 				</c:forEach>
 				<c:forEach items="${blitzballGameInfo.playerStatistics}" var="stat" varStatus="rowStatus">
 					<c:if test="${oppTeam.rightWing.playerID eq stat.playerID}">
-						<label class="num" style="padding-left:5vmin" id="rw2ExpGained">${stat.expGained}</label>
+						<span style="display:none" id="rw2ExpGained">${stat.expGained}</span>
 					</c:if>
 				</c:forEach>
 				</div>
-				<div style="display: table-cell"><label class="num" id="rwExp">${myTeam.rightWing.experience}</label></div>
-				<div style="display: table-cell"><label class="stat" style="padding-left:0.5vmin; padding-right:0.5vmin">/</label></div>
-				<div style="display: table-cell"><label class="num" id="rwNextExp">${myTeam.rightWing.nextExp}</label></div>
-				<div style="display: table-cell"><label class="stat">EXP</label></div>
+				<div class="breakCell">&nbsp</div>
+				<div class="expCell"><span id="rwExp">${myTeam.rightWing.origExp}</span></div>
+				<div class="breakCell"><span>/</span></div>
+				<div class="expCell"><span id="rwNextExp">${myTeam.rightWing.origNextExp}</span></div>
+				<div class="expLabelCell"><span>EXP</span></div>
 			</div>
 			<div style="display:table-row">
-				<div style="display: table-cell">
+				<div class="num">
 				<c:forEach items="${blitzballGameInfo.playerStatistics}" var="stat" varStatus="rowStatus">
 					<c:if test="${myTeam.midfielder.playerID eq stat.playerID}">
-						<label class="num" style="padding-left:5vmin" id="mfExpGained">${stat.expGained}</label>
+						<span id="mfExpGained">${stat.expGained}</span>
 					</c:if>
 				</c:forEach>
 				<c:forEach items="${blitzballGameInfo.playerStatistics}" var="stat" varStatus="rowStatus">
 					<c:if test="${oppTeam.midfielder.playerID eq stat.playerID}">
-						<label class="num" style="padding-left:5vmin" id="mf2ExpGained">${stat.expGained}</label>
+						<span style="display:none" id="mf2ExpGained">${stat.expGained}</span>
 					</c:if>
 				</c:forEach>
 				</div>
-				<div style="display: table-cell"><label class="num" id="mfExp">${myTeam.midfielder.experience}</label></div>
-				<div style="display: table-cell"><label class="stat" style="padding-left:0.5vmin; padding-right:0.5vmin">/</label></div>
-				<div style="display: table-cell"><label class="num" id="mfNextExp">${myTeam.midfielder.nextExp}</label></div>
-				<div style="display: table-cell"><label class="stat">EXP</label></div>
+				<div class="breakCell">&nbsp</div>
+				<div class="expCell"><span id="mfExp">${myTeam.midfielder.origExp}</span></div>
+				<div class="breakCell"><span>/</span></div>
+				<div class="expCell"><span id="mfNextExp">${myTeam.midfielder.origNextExp}</span></div>
+				<div class="expLabelCell"><span>EXP</span></div>
 			</div>
 			<div style="display:table-row">
-				<div style="display: table-cell">
+				<div class="num">
 				<c:forEach items="${blitzballGameInfo.playerStatistics}" var="stat" varStatus="rowStatus">
 					<c:if test="${myTeam.leftBack.playerID eq stat.playerID}">
-						<label class="num" style="padding-left:5vmin" id="lbExpGained">${stat.expGained}</label>
+						<span id="lbExpGained">${stat.expGained}</span>
 					</c:if>
 				</c:forEach>
 				<c:forEach items="${blitzballGameInfo.playerStatistics}" var="stat" varStatus="rowStatus">
 					<c:if test="${oppTeam.leftBack.playerID eq stat.playerID}">
-						<label class="num" style="padding-left:5vmin" id="lb2ExpGained">${stat.expGained}</label>
+						<span style="display:none" id="lb2ExpGained">${stat.expGained}</span>
 					</c:if>
 				</c:forEach>
 				</div>
-				<div style="display: table-cell"><label class="num" id="lbExp">${myTeam.leftBack.experience}</label></div>
-				<div style="display: table-cell"><label class="stat" style="padding-left:0.5vmin; padding-right:0.5vmin">/</label></div>
-				<div style="display: table-cell"><label class="num" id="lbNextExp">${myTeam.leftBack.nextExp}</label></div>
-				<div style="display: table-cell"><label class="stat">EXP</label></div>
+				<div class="breakCell">&nbsp</div>
+				<div class="expCell"><span id="lbExp">${myTeam.leftBack.origExp}</span></div>
+				<div class="breakCell"><span>/</span></div>
+				<div class="expCell"><span id="lbNextExp">${myTeam.leftBack.origNextExp}</span></div>
+				<div class="expLabelCell"><span>EXP</span></div>
 			</div>
 			<div style="display:table-row">
-				<div style="display: table-cell">
+				<div class="num">
 				<c:forEach items="${blitzballGameInfo.playerStatistics}" var="stat" varStatus="rowStatus">
 					<c:if test="${myTeam.rightBack.playerID eq stat.playerID}">
-						<label class="num" style="padding-left:5vmin" id="rbExpGained">${stat.expGained}</label>
+						<span id="rbExpGained">${stat.expGained}</span>
 					</c:if>
 				</c:forEach>
 				<c:forEach items="${blitzballGameInfo.playerStatistics}" var="stat" varStatus="rowStatus">
 					<c:if test="${oppTeam.rightBack.playerID eq stat.playerID}">
-						<label class="num" style="padding-left:5vmin" id="rb2ExpGained">${stat.expGained}</label>
+						<span style="display:none" id="rb2ExpGained">${stat.expGained}</span>
 					</c:if>
 				</c:forEach>
 				</div>
-				<div style="display: table-cell"><label class="num" id="rbExp">${myTeam.rightBack.experience}</label></div>
-				<div style="display: table-cell"><label class="stat" style="padding-left:0.5vmin; padding-right:0.5vmin">/</label></div>
-				<div style="display: table-cell"><label class="num" id="rbNextExp">${myTeam.rightBack.nextExp}</label></div>
-				<div style="display: table-cell"><label class="stat">EXP</label></div>
+				<div class="breakCell">&nbsp</div>
+				<div class="expCell"><span id="rbExp">${myTeam.rightBack.origExp}</span></div>
+				<div class="breakCell"><span>/</span></div>
+				<div class="expCell"><span id="rbNextExp">${myTeam.rightBack.origNextExp}</span></div>
+				<div class="expLabelCell"><span>EXP</span></div>
 			</div>
 			<div style="display:table-row">
-				<div style="display: table-cell">
+				<div class="num">
 				<c:forEach items="${blitzballGameInfo.playerStatistics}" var="stat" varStatus="rowStatus">
 					<c:if test="${myTeam.keeper.playerID eq stat.playerID}">
-						<label class="num" style="padding-left:5vmin" id="gkExpGained">${stat.expGained}</label>
+						<span id="gkExpGained">${stat.expGained}</span>
 					</c:if>
 				</c:forEach>
 				<c:forEach items="${blitzballGameInfo.playerStatistics}" var="stat" varStatus="rowStatus">
 					<c:if test="${oppTeam.keeper.playerID eq stat.playerID}">
-						<label class="num" style="padding-left:5vmin" id="gk2ExpGained">${stat.expGained}</label>
+						<span style="display:none" id="gk2ExpGained">${stat.expGained}</span>
 					</c:if>
 				</c:forEach>
 				</div>
-				<div style="display: table-cell"><label class="num" id="gkExp">${myTeam.keeper.experience}</label></div>
-				<div style="display: table-cell"><label class="stat" style="padding-left:0.5vmin; padding-right:0.5vmin">/</label></div>
-				<div style="display: table-cell"><label class="num" id="gkNextExp">${myTeam.keeper.nextExp}</label></div>
-				<div style="display: table-cell"><label class="stat">EXP</label></div>
+				<div class="breakCell">&nbsp</div>
+				<div class="expCell"><span id="gkExp">${myTeam.keeper.origExp}</span></div>
+				<div class="breakCell"><span>/</span></div>
+				<div class="expCell"><span id="gkNextExp">${myTeam.keeper.origNextExp}</span></div>
+				<div class="expLabelCell"><span>EXP</span></div>
 			</div>
 		</div>
 		
 		<div id="statsDiv" style = "display:none">
-			<div id="playerDisplay" style="width: 49%;">
 			<div>
-				<label id="displayName" style="color:#ffffff;"></label>
+				<span id="displayName" style="color:#ffffff; margin-left:2vmin"></span>
 			</div>
-			<div id="displayTable" style="display:table; visibility:none">
+			<hr />
+			<div id="displayTable" style="display:table; visibility:none; width:100%">
 				<div style="display:table-row">
-					<div class="stat"></div>
-					<div class="stat"></div>
-					<div class="stat" style="text-align:right;"><label>Lv</label></div>
-					<div class="num" style="text-align:left; padding-left:0.5vmin"><label id="lvlDisplay"></label></div>
+					<div class="expCell"><span id="spdDisplay"></span></div>
+					<div class="expLabelCell"><span>SPD</span></div>
+					<div class="expCell"><span id="hpDisplay"></span></div>
+					<div class="expLabelCell"><span>HP</span></div>
 				</div>
 				<div style="display:table-row">
-					<div class="stat"></div>
-					<div class="num"><label id="expDisplay"></label></div>
-					<div class="stat"><label>EXP</label></div>
-					<div class="stat"><label>LEFT</label></div>
+					<div class="expCell" style=""><span id="endDisplay" ></span></div>
+					<div class="expLabelCell"><span >END</span></div>
+					<div class="expCell"><span id="atkDisplay"></span></div>
+					<div class="expLabelCell"><span>ATK</span></div>
 				</div>
 				<div style="display:table-row">
-					<div class="num"><label id="spdDisplay"></label></div>
-					<div class="stat"><label>SPD</label></div>
-					<div class="num"><label id="hpDisplay"></label></div>
-					<div class="stat"><label>HP</label></div>
+					<div class="expCell"><span id="pasDisplay"></span></div>
+					<div class="expLabelCell"><span>PAS</span></div>
+					<div class="expCell"><span id="blkDisplay"></span></div>
+					<div class="expLabelCell"><span>BLK</span></div>
 				</div>
 				<div style="display:table-row">
-					<div class="num" style=""><label id="endDisplay" ></label></div>
-					<div class="stat"><label >END</label></div>
-					<div class="num"><label id="atkDisplay"></label></div>
-					<div class="stat"><label>ATK</label></div>
+					<div class="expCell"><span id="shtDisplay"></span></div>
+					<div class="expLabelCell"><span>SHT</span></div>
+					<div class="expCell"><span id="catDisplay"></span></div>
+					<div class="expLabelCell"><span>CAT</span></div>
 				</div>
-				<div style="display:table-row">
-					<div class="num"><label id="pasDisplay"></label></div>
-					<div class="stat"><label>PAS</label></div>
-					<div class="num"><label id="blkDisplay"></label></div>
-					<div class="stat"><label>BLK</label></div>
-				</div>
-				<div style="display:table-row">
-					<div class="num"><label id="shtDisplay"></label></div>
-					<div class="stat"><label>SHT</label></div>
-					<div class="num"><label id="catDisplay"></label></div>
-					<div class="stat"><label>CAT</label></div>
-				</div>
-			</div>
 			</div>
 		</div>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 		
 		<script>
 		//document.getElementById('displayedTechsContainer').style.display='none';
@@ -351,69 +513,67 @@
 		var started=false;
 		var oppPlayerRow=7;
 		var selectedPrefix='lw';
-		var techList=${techList};
 		var emptyDashString='- - - - - - - -';
 		var submitted=false;
-		var myTeam;
-		var oppTeam;
+		var myTeam = JSON.parse('${myTeamJSON}');
+		var oppTeam = JSON.parse('${oppTeamJSON}');
 		var prompted=false;
 		var promptList=1;
+		var expMap=JSON.parse('${expMap}');
+		var trackTimer=0;
+		var statUpdating;
 		
 		
-		document.getElementById('players1').focus();
-		document.body.onkeydown = function(e){
-		    onKeyDown(e);
-		};
 		
 		function switchTeams(){
 			teamOnDisplay=2;
-			document.getElementById('lwName').innerHTML=${oppTeam.leftWing.name};
-			document.getElementById('lwLevel').innerHTML=${oppTeam.leftWing.level};
-			document.getElementById('lwExpGained').style.display="none";
-			document.getElementById('lw2ExpGained').style.display="";
-			document.getElementById('lwExp').innerHTML=${oppTeam.leftWing.experience};
-			document.getElementById('lwNextExp').innerHTML=${oppTeam.leftWing.nextExp};
+			document.getElementById('lwName').innerHTML='${oppTeam.leftWing.name}';
+			document.getElementById('lwLevel').innerHTML=${oppTeam.leftWing.origLevel};
+			document.getElementById('lwLevel').style.color='#FFFF66';
+			document.getElementById('lwExpGained').innerHTML=document.getElementById('lw2ExpGained').innerHTML;
+			document.getElementById('lwExp').innerHTML=${oppTeam.leftWing.origExp};
+			document.getElementById('lwNextExp').innerHTML=${oppTeam.leftWing.origNextExp};
 
-			document.getElementById('rwName').innerHTML=${oppTeam.rightWing.name};
-			document.getElementById('rwLevel').innerHTML=${oppTeam.rightWing.level};
-			document.getElementById('rwExpGained').style.display="none";
-			document.getElementById('rw2ExpGained').style.display="";
-			document.getElementById('rwExp').innerHTML=${oppTeam.rightWing.experience};
-			document.getElementById('rwNextExp').innerHTML=${oppTeam.rightWing.nextExp};
+			document.getElementById('rwName').innerHTML='${oppTeam.rightWing.name}';
+			document.getElementById('rwLevel').innerHTML=${oppTeam.rightWing.origLevel};
+			document.getElementById('rwLevel').style.color='#FFFF66';
+			document.getElementById('rwExpGained').innerHTML=document.getElementById('rw2ExpGained').innerHTML;
+			document.getElementById('rwExp').innerHTML=${oppTeam.rightWing.origExp};
+			document.getElementById('rwNextExp').innerHTML=${oppTeam.rightWing.origNextExp};
 
-			document.getElementById('mfName').innerHTML=${oppTeam.midfielder.name};
-			document.getElementById('mfLevel').innerHTML=${oppTeam.midfielder.level};
-			document.getElementById('mfExpGained').style.display="none";
-			document.getElementById('mf2ExpGained').style.display="";
-			document.getElementById('mfExp').innerHTML=${oppTeam.midfielder.experience};
-			document.getElementById('mfNextExp').innerHTML=${oppTeam.midfielder.nextExp};
+			document.getElementById('mfName').innerHTML='${oppTeam.midfielder.name}';
+			document.getElementById('mfLevel').innerHTML=${oppTeam.midfielder.origLevel};
+			document.getElementById('mfLevel').style.color='#FFFF66';
+			document.getElementById('mfExpGained').innerHTML=document.getElementById('mf2ExpGained').innerHTML;
+			document.getElementById('mfExp').innerHTML=${oppTeam.midfielder.origExp};
+			document.getElementById('mfNextExp').innerHTML=${oppTeam.midfielder.origNextExp};
 
-			document.getElementById('lbName').innerHTML=${oppTeam.leftBack.name};
-			document.getElementById('lbLevel').innerHTML=${oppTeam.leftBack.level};
-			document.getElementById('lbExpGained').style.display="none";
-			document.getElementById('lb2ExpGained').style.display="";
-			document.getElementById('lbExp').innerHTML=${oppTeam.leftBack.experience};
-			document.getElementById('lbNextExp').innerHTML=${oppTeam.leftBack.nextExp};
+			document.getElementById('lbName').innerHTML='${oppTeam.leftBack.name}';
+			document.getElementById('lbLevel').innerHTML=${oppTeam.leftBack.origLevel};
+			document.getElementById('lbLevel').style.color='#FFFF66';
+			document.getElementById('lbExpGained').innerHTML=document.getElementById('lb2ExpGained').innerHTML;
+			document.getElementById('lbExp').innerHTML=${oppTeam.leftBack.origExp};
+			document.getElementById('lbNextExp').innerHTML=${oppTeam.leftBack.origNextExp};
 
-			document.getElementById('rbName').innerHTML=${oppTeam.rightBack.name};
-			document.getElementById('rbLevel').innerHTML=${oppTeam.rightBack.level};
-			document.getElementById('rbExpGained').style.display="none";
-			document.getElementById('rb2ExpGained').style.display="";
-			document.getElementById('rbExp').innerHTML=${oppTeam.rightBack.experience};
-			document.getElementById('rbNextExp').innerHTML=${oppTeam.rightBack.nextExp};
+			document.getElementById('rbName').innerHTML='${oppTeam.rightBack.name}';
+			document.getElementById('rbLevel').innerHTML=${oppTeam.rightBack.origLevel};
+			document.getElementById('rbLevel').style.color='#FFFF66';
+			document.getElementById('rbExpGained').innerHTML=document.getElementById('rb2ExpGained').innerHTML;
+			document.getElementById('rbExp').innerHTML=${oppTeam.rightBack.origExp};
+			document.getElementById('rbNextExp').innerHTML=${oppTeam.rightBack.origNextExp};
 
-			document.getElementById('gkName').innerHTML=${oppTeam.keeper.name};
-			document.getElementById('gkLevel').innerHTML=${oppTeam.keeper.level};
-			document.getElementById('gkExpGained').style.display="none";
-			document.getElementById('gk2ExpGained').style.display="";
-			document.getElementById('gkExp').innerHTML=${oppTeam.keeper.experience};
-			document.getElementById('gkNextExp').innerHTML=${oppTeam.keeper.nextExp};
+			document.getElementById('gkName').innerHTML='${oppTeam.keeper.name}';
+			document.getElementById('gkLevel').innerHTML=${oppTeam.keeper.origLevel};
+			document.getElementById('gkLevel').style.color='#FFFF66';
+			document.getElementById('gkExpGained').innerHTML=document.getElementById('gk2ExpGained').innerHTML;
+			document.getElementById('gkExp').innerHTML=${oppTeam.keeper.origExp};
+			document.getElementById('gkNextExp').innerHTML=${oppTeam.keeper.origNextExp};
 		}
 
 		function triggerExpApply(){
 			if (!expApplied){
 				applyExp();
-				setTimeout(triggerExpApply, '100');
+				setTimeout(triggerExpApply, '10');
 			}
 		}
 
@@ -423,21 +583,55 @@
 			}
 		}
 
+		function triggerStatUpdate(statName, statVal){
+			trackTimer=0;
+			document.getElementById(statName).innerHTML=statVal;
+			document.getElementById(statName).style.color="#FFFFFF";
+			if (statUpdating!=null){
+				document.getElementById(statUpdating).style.fontSize='2vw';
+				statUpdating=statName;
+			} else {
+				statUpdating=statName;
+				updateStat();
+			}
+		}
+		
+		function updateStat(){
+			trackTimer+=.05;
+			if (trackTimer<0.5){
+				document.getElementById(statUpdating).style.fontSize=(4-trackTimer)+'vmin';
+				setTimeout(updateStat, '10');
+			} else {
+				document.getElementById(statUpdating).style.fontSize='3.5vmin';
+				statUpdating=null;
+				trackTimer=0;
+			}
+		}
+
 		function applyExp(){
+			if (selectedPrefix==null){
+				selectedPrefix='lw';
+				document.getElementById('lwTechsLearned').style.display='';
+			}
 			var expGained = Number(document.getElementById(selectedPrefix+'ExpGained').innerHTML);
 			if (expGained <=0){
 				if (selectedPrefix=='lw'){
 					selectedPrefix='rw';
+					document.getElementById('rwTechsLearned').style.display='';
 				} else if (selectedPrefix=='rw'){
 					selectedPrefix='mf';
+					document.getElementById('mfTechsLearned').style.display='';
 				} else if (selectedPrefix=='mf'){
 					selectedPrefix='lb';
+					document.getElementById('lbTechsLearned').style.display='';
 				} else if (selectedPrefix=='lb'){
 					selectedPrefix='rb';
+					document.getElementById('rbTechsLearned').style.display='';
 				} else if (selectedPrefix=='rb'){
 					selectedPrefix='gk';
+					document.getElementById('gkTechsLearned').style.display='';
 				} else if (selectedPrefix=='gk'){
-					selectedPrefix='lw';
+					selectedPrefix=null;
 					expApplied=true;
 				}
 			} else {
@@ -450,9 +644,8 @@
 				if (currExp>=nextExp){
 					var currLevel = Number(document.getElementById(selectedPrefix+'Level').innerHTML);
 					currLevel+=1;
-					document.getElementById(selectedPrefix+'Level').innerHTML=currLevel;
-					document.getElementById(selectedPrefix+'Level').color="#FFFFFF";
-					document.getElementById(selectedPrefix+'NextExp').innerHTML=expMap[currLevel];
+					triggerStatUpdate(selectedPrefix+'Level', currLevel);
+					document.getElementById(selectedPrefix+'NextExp').innerHTML=expMap[currLevel+1];
 				}
 			}
 			
@@ -465,28 +658,29 @@
 				} else {
 					menuSelection--;
 				}
-				document.getElementById('selector').style.top=(menuSelection)*4+'vmin';
+				document.getElementById('selector').style.top=(menuSelection-1)*4+'vmin';
 				showPlayerInfo(menuSelection);
 			}
 		}
 
 		function downButtonPressed(){
 			if (onStats){
-				if (menuSelection<=1){
-					menuSelection=6;
+				if (menuSelection>=6){
+					menuSelection=1;
 				} else {
-					menuSelection--;
+					menuSelection++;
 				}
-				document.getElementById('selector').style.top=(menuSelection)*4+'vmin';
+				document.getElementById('selector').style.top=(menuSelection-1)*4+'vmin';
 				showPlayerInfo(menuSelection);
 			}
 		}
 		
 		function selectButtonPressed(){
 			if (!started){
+				started=true;
 				triggerExpApply();
 			} else if (!expApplied){
-				finishExp();
+				finishExpApply();
 			} else if (!onStats){
 				onStats=true;
 				document.getElementById('expDiv').style.display='none';
@@ -499,9 +693,11 @@
 					started=false;
 					expApplied=false;
 					onStats=false;
+					menuSelection=1;
 					document.getElementById('expDiv').style.display='';
 					document.getElementById('statsDiv').style.display='none';
 					document.getElementById('selector').style.display='none';
+					document.getElementById('selector').style.top='0vmin';
 				} else {
 					window.open("bbNextHalf", "_self");
 				}
@@ -556,19 +752,37 @@
 				currPrefix='gk';
 			}
 			document.getElementById('displayName').innerHTML=playerInfo.name;
-			document.getElementById('lvlDisplay').innerHTML=playerInfo.level;
-			document.getElementById('expDisplay').innerHTML=playerInfo.nextExp;
 			document.getElementById('spdDisplay').innerHTML=playerInfo.speed;
+			document.getElementById('spdDisplay').style.color="#FFFF66";
 			document.getElementById('endDisplay').innerHTML=playerInfo.endurance;
+			document.getElementById('endDisplay').style.color="#FFFF66";
 			document.getElementById('hpDisplay').innerHTML=playerInfo.hp;
+			document.getElementById('hpDisplay').style.color="#FFFF66";
 			document.getElementById('atkDisplay').innerHTML=playerInfo.attack;
+			document.getElementById('atkDisplay').style.color="#FFFF66";
 			document.getElementById('pasDisplay').innerHTML=playerInfo.pass;
+			document.getElementById('pasDisplay').style.color="#FFFF66";
 			document.getElementById('shtDisplay').innerHTML=playerInfo.shot;
+			document.getElementById('shtDisplay').style.color="#FFFF66";
 			document.getElementById('blkDisplay').innerHTML=playerInfo.block;
+			document.getElementById('blkDisplay').style.color="#FFFF66";
 			document.getElementById('catDisplay').innerHTML=playerInfo.cat;
+			document.getElementById('catDisplay').style.color="#FFFF66";
 			document.getElementById('displayTable').style.visibility='';
 
+			if (playerInfo.updatedStats!=null){
+				for (var i=0; i<playerInfo.updatedStats.length; i++){
+					document.getElementById(playerInfo.updatedStats[i]+'Display').style.color="#FFFFFF";
+				}
+			}
+
 		}
+
+		$(document).ready(function(){
+			$(document).keydown(function(event){
+			    onKeyDown(event);
+			});
+		});
 
 		</script>
 

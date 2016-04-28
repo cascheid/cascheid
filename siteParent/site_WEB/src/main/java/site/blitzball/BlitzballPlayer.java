@@ -11,6 +11,9 @@ public class BlitzballPlayer implements java.io.Serializable {
 	private Long teamID;
 	private String teamName;
 	private String name;
+	private Integer origLevel;
+	private Integer origExp;
+	private Integer origNextExp;
 	private Integer level;
 	private Integer experience;
 	private Integer nextExp;
@@ -34,6 +37,7 @@ public class BlitzballPlayer implements java.io.Serializable {
 	private BlitzballTech keyTech1;
 	private BlitzballTech keyTech2;
 	private BlitzballTech keyTech3;
+	private List<String> updatedStats;
 	
 	public BlitzballPlayer(){}
 	
@@ -52,16 +56,32 @@ public class BlitzballPlayer implements java.io.Serializable {
 	public String getTeamName() {
 		return teamName;
 	}
-
 	public void setTeamName(String teamName) {
 		this.teamName = teamName;
 	}
-
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public Integer getOrigLevel() {
+		return origLevel;
+	}
+	public void setOrigLevel(Integer origLevel) {
+		this.origLevel = origLevel;
+	}
+	public Integer getOrigExp() {
+		return origExp;
+	}
+	public void setOrigExp(Integer origExp) {
+		this.origExp = origExp;
+	}
+	public Integer getOrigNextExp() {
+		return origNextExp;
+	}
+	public void setOrigNextExp(Integer origNextExp) {
+		this.origNextExp = origNextExp;
 	}
 	public Integer getLevel() {
 		return level;
@@ -204,6 +224,12 @@ public class BlitzballPlayer implements java.io.Serializable {
 	}
 	public void setKeyTech3(BlitzballTech keyTech3) {
 		this.keyTech3 = keyTech3;
+	}
+	public List<String> getUpdatedStats() {
+		return updatedStats;
+	}
+	public void setUpdatedStats(List<String> updatedStats) {
+		this.updatedStats = updatedStats;
 	}
 	public List<Integer> getCurrentTechs(){
 		List<Integer> returnList = new ArrayList<Integer>();

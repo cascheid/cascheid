@@ -8,7 +8,7 @@ public class BlitzballSimTest {
 
 	@Test
 	public void testSimGame(){
-		BlitzballGame game = BlitzballUtils.simulateGame(BlitzballMockData.getTeam1(), BlitzballMockData.getTeam2());
+		BlitzballGame game = BlitzballUtils.simulateGame(new BlitzballGame(BlitzballMockData.getTeam1(), BlitzballMockData.getTeam2()));
 		assertNotNull(game);
 		assertNotNull(game.getPlayerStatistics());
 		assertNotEquals(game.getPlayerStatistics().size(), 0);

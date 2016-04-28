@@ -1,6 +1,7 @@
 package site.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -318,11 +319,13 @@ public class BlitzballController {
 		mv = new ModelAndView("blitzballGameResult");
 		
 		ObjectMapper objectMapper = new ObjectMapper();
+		mv.addObject("myTeam", blitzballInfo.getTeam());
+		mv.addObject("oppTeam", activeOpponent);
+		mv.addObject("blitzballGameInfo", blitzballGameInfo);
 		try {
-			mv.addObject("myTeam", objectMapper.writeValueAsString(blitzballInfo.getTeam()));
-			mv.addObject("oppTeam", objectMapper.writeValueAsString(activeOpponent));
-			mv.addObject("blitzballGameInfo", blitzballGameInfo);
 			mv.addObject("expMap", objectMapper.writeValueAsString(BlitzballUtils.getExpLevelMap()));
+			mv.addObject("myTeamJSON", objectMapper.writeValueAsString(blitzballInfo.getTeam()));
+			mv.addObject("oppTeamJSON", objectMapper.writeValueAsString(activeOpponent));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -392,6 +395,44 @@ public class BlitzballController {
 		}
 		return mv;
 	}
+	
+	@RequestMapping("/bbTestGameResults")
+	public ModelAndView testGameResults(){
+		if (identity==null||blitzballInfo==null){
+			return new ModelAndView("timeout");
+		}
+		if (activeOpponent==null){
+			activeOpponent = BlitzballUtils.getLeagueOpponentByID(blitzballInfo.getLeague());
+		}
+		BlitzballGame game = BlitzballUtils.simulateGame(BlitzballUtils.getLeagueGame(blitzballInfo.getLeague()));
+		BlitzballUtils.persistBlitzballGame(game, blitzballInfo.getTeam().getTeamID());
+		ModelAndView mv;
+		
+		mv = new ModelAndView("blitzballGameResult");
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		mv.addObject("myTeam", blitzballInfo.getTeam());
+		mv.addObject("oppTeam", activeOpponent);
+		mv.addObject("blitzballGameInfo", game);
+		blitzballInfo.getTeam().getRightWing().setUpdatedStats(Arrays.asList("sht", "hp", "end"));
+		for (BlitzballPlayerStatistics stats : game.getPlayerStatistics()){
+			if (stats.getPlayerID().equals(blitzballInfo.getTeam().getMidfielder().getPlayerID())){
+				stats.getTechsLearned().add(blitzballInfo.getTeam().getLeftBack().getTech1());
+			} else if (stats.getPlayerID().equals(blitzballInfo.getTeam().getRightWing().getPlayerID())){
+				stats.getTechsLearned().add(blitzballInfo.getTeam().getRightWing().getKeyTech1());
+				stats.getTechsLearned().add(blitzballInfo.getTeam().getMidfielder().getTech1());
+			}
+		}
+		try {
+			mv.addObject("expMap", objectMapper.writeValueAsString(BlitzballUtils.getExpLevelMap()));
+			mv.addObject("myTeamJSON", objectMapper.writeValueAsString(blitzballInfo.getTeam()));
+			mv.addObject("oppTeamJSON", objectMapper.writeValueAsString(activeOpponent));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return mv;
+	}
+	
 	@RequestMapping("/bbTestPage")
 	public ModelAndView getTestMenuBackground(@CookieValue(value = "identifier", defaultValue = "0") Long identifier){
 		ModelAndView mv;
@@ -401,6 +442,7 @@ public class BlitzballController {
 			return mv;
 		} else {
 			mv = new ModelAndView("blitzballTestBackground");
+			mv.addObject("testPage", "bbTestGameResults");
 		}
 		if (identity==null||identity.getIdentifier()!=identifier){
 			identity=IdentityUtils.getIdentityByIdentifier(identifier);
