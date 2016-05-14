@@ -274,9 +274,16 @@ public class BlitzballController {
 		if (identity==null||blitzballInfo==null){
 			return new ModelAndView("timeout");
 		}
-		ModelAndView mv = new ModelAndView("test");
-		
-		ObjectMapper objectMapper = new ObjectMapper();
+		//TODO link to actual game
+		//ModelAndView mv = new ModelAndView("test");
+		if (activeGame.getHalvesComplete()==1){
+			BlitzballUtils.simulateGame(activeGame);
+			activeGame.setHalvesComplete(2);
+		} else {
+			BlitzballUtils.simulateGame(activeGame);
+			activeGame.setHalvesComplete(1);
+		};
+		/*ObjectMapper objectMapper = new ObjectMapper();
 		try {
 			mv.addObject("myTeam", objectMapper.writeValueAsString(blitzballInfo.getTeam()));
 			mv.addObject("oppTeam", objectMapper.writeValueAsString(activeOpponent));
@@ -285,7 +292,8 @@ public class BlitzballController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return mv;
+		return mv;*/
+		return submitHalfResults(0l, activeGame);
 	}
 	
 	@RequestMapping("/blitzballIntermission")
@@ -309,8 +317,16 @@ public class BlitzballController {
 		BlitzballUtils.persistBlitzballGame(activeGame, blitzballInfo.getTeam().getTeamID());
 		ModelAndView mv;
 		if (activeGame.getHalvesComplete()>=2&&(!activeGame.getIsOvertimeGame()||activeGame.getTeam1Score()!=activeGame.getTeam2Score())){
-			activeGame=null;
 			weekResults = BlitzballUtils.simulateWeeksGames(blitzballInfo, activeGame);
+			if (activeGame.getLeagueGameID()!=null&&activeGame.getTourneyGameID()==null){
+				weekResults.setType("league");
+			} else if (activeGame.getTourneyGameID()!=null&&activeGame.getLeagueGameID()==null){
+				weekResults.setType("tourney");
+			} else {
+				throw new IllegalStateException("Couldn't determine game type for week results");
+			}
+			activeGame=null;
+			
 		} else {//halftime or overtime
 			activeGame=blitzballGameInfo;
 			weekResults=null;
@@ -332,13 +348,30 @@ public class BlitzballController {
 		return mv;
 	}
 	
+	@RequestMapping("/bbProcessHalf")
+	public ModelAndView processHalftimeNextPage(){
+		if (identity==null||blitzballInfo==null||activeGame==null){
+			return new ModelAndView("timeout");
+		}
+		if (activeGame.getHalvesComplete()>=2&&(!activeGame.getIsOvertimeGame()||activeGame.getTeam1Score()!=activeGame.getTeam2Score())){
+			return getWeekResults();
+		} else {
+			return loadBlitzballGame();
+		}
+	}
 
-	@RequestMapping("/blitzballLeagueWeekResults")
-	public ModelAndView getLeagueWeekResults(){
+	private ModelAndView getWeekResults(){
 		if (identity==null||blitzballInfo==null||weekResults==null){
 			return new ModelAndView("timeout");
 		}
-		ModelAndView mv = new ModelAndView("bbLeagueWeekResults");
+		ModelAndView mv;
+		if (weekResults.getType().equals("league")){
+			mv = new ModelAndView("bbLeagueWeekResults");
+		} else if (weekResults.getType().equals("tourney")){
+			mv = new ModelAndView("bbTourneyWeekResults");
+		} else {
+			throw new IllegalStateException("Invalid weekResults type");
+		}
 		mv.addObject("weekResults", weekResults);
 		return mv;
 	}

@@ -6,6 +6,7 @@ public class BlitzballWeekResults implements java.io.Serializable {
 
 	private static final long serialVersionUID = 5319892078982833787L;
 	
+	private String type;
 	private Integer weekNo;
 	private List<BlitzballGame> gameResults;
 	private List<BlitzballPlayer> expiredPlayers;
@@ -13,6 +14,14 @@ public class BlitzballWeekResults implements java.io.Serializable {
 	private List<BlitzballPlayer> myExpiredPlayers;
 	
 	public BlitzballWeekResults(){}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 
 	public Integer getWeekNo() {
 		return weekNo;

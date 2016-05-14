@@ -699,7 +699,7 @@
 					document.getElementById('selector').style.display='none';
 					document.getElementById('selector').style.top='0vmin';
 				} else {
-					window.open("bbNextHalf", "_self");
+					window.open("bbProcessHalf", "_self");
 				}
 			}
 		}
