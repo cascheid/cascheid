@@ -65,7 +65,7 @@ public class BlitzballDaoTest {
 			System.out.println("No JUNIT data found in testDeleteGameInfo");
 			id = dao.insertNewBlitzballGame(junitUserID, "JUnit Testers");
 		}
-		dao.deleteBlitzballGameInfo(id);
+		dao.resetBlitzballGameInfo(id);
 		exception.expect(EmptyResultDataAccessException.class);
 		BlitzballInfo newInfo = dao.getBlitzballByIdentifier(junitUserID);
 		//assertNull(newInfo);
@@ -76,7 +76,7 @@ public class BlitzballDaoTest {
 		BlitzballDao dao = new BlitzballDaoImpl();
 		try{
 			BlitzballInfo info = dao.getBlitzballByIdentifier(junitUserID);
-			dao.deleteBlitzballGameInfo(info.getTeam().getTeamID());
+			dao.resetBlitzballGameInfo(info.getTeam().getTeamID());
 		} catch (EmptyResultDataAccessException e){
 			System.out.println("No JUNIT data found in testCreateGameInfo");
 		}

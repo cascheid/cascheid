@@ -17,10 +17,11 @@ import site.dao.BlitzballDaoImpl;
 public class BlitzballUtils {
 	private static List<BlitzballTech> techList;
 	private static HashMap<Integer, Integer> expLevels;
+	public static final Integer MAX_LEVEL = 30;
 	
-	public static void deleteBlitzballInfo(Long gameID){
+	public static void resetBlitzballInfo(Long gameID){
 		BlitzballDao dao = new BlitzballDaoImpl();
-		dao.deleteBlitzballGameInfo(gameID);
+		dao.resetBlitzballGameInfo(gameID);
 	}
 
 	public static BlitzballInfo getBlitsballInfo(Long identifier){
@@ -406,47 +407,49 @@ public class BlitzballUtils {
 	}
 	
 	public static BlitzballPlayer advancePlayerExp(BlitzballPlayer player, Integer exp, Long gameID){
-		player.setExperience(player.getExperience()+exp);
-		while (player.getExperience()>=getExpForLevel(player.getLevel()+1)){
-			player.setLevel(player.getLevel()+1);
+		if (player.getLevel()<MAX_LEVEL){
+			player.setExperience(player.getExperience()+exp);
+			while (player.getExperience()>=getExpForLevel(player.getLevel()+1)&&player.getLevel()<MAX_LEVEL){
+				player.setLevel(player.getLevel()+1);
+			}
+			player.setNextExp(getExpForLevel(player.getLevel()+1));
+			BlitzballDao dao = new BlitzballDaoImpl();
+			BlitzballPlayer updatedPlayer = dao.getPlayerByID(player.getPlayerID(), gameID, player.getLevel());
+			List<String> updatedStats = new ArrayList<String>();
+			if (!player.getSpeed().equals(updatedPlayer.getSpeed())){
+				updatedStats.add("spd");
+				player.setSpeed(updatedPlayer.getSpeed());
+			}
+			if (!player.getEndurance().equals(updatedPlayer.getEndurance())){
+				updatedStats.add("end");
+				player.setSpeed(updatedPlayer.getSpeed());
+			}
+			if (!player.getHp().equals(updatedPlayer.getHp())){
+				updatedStats.add("hp");
+				player.setHp(updatedPlayer.getHp());
+			}
+			if (!player.getAttack().equals(updatedPlayer.getAttack())){
+				updatedStats.add("atk");
+				player.setAttack(updatedPlayer.getAttack());
+			}
+			if (!player.getPass().equals(updatedPlayer.getPass())){
+				updatedStats.add("pas");
+				player.setPass(updatedPlayer.getPass());
+			}
+			if (!player.getShot().equals(updatedPlayer.getShot())){
+				updatedStats.add("sht");
+				player.setShot(updatedPlayer.getShot());
+			}
+			if (!player.getBlock().equals(updatedPlayer.getBlock())){
+				updatedStats.add("blk");
+				player.setBlock(updatedPlayer.getBlock());
+			}
+			if (!player.getCat().equals(updatedPlayer.getCat())){
+				updatedStats.add("cat");
+				player.setCat(updatedPlayer.getCat());
+			}
+			player.setUpdatedStats(updatedStats);
 		}
-		player.setNextExp(getExpForLevel(player.getLevel()+1));
-		BlitzballDao dao = new BlitzballDaoImpl();
-		BlitzballPlayer updatedPlayer = dao.getPlayerByID(player.getPlayerID(), gameID, player.getLevel());
-		List<String> updatedStats = new ArrayList<String>();
-		if (!player.getSpeed().equals(updatedPlayer.getSpeed())){
-			updatedStats.add("spd");
-			player.setSpeed(updatedPlayer.getSpeed());
-		}
-		if (!player.getEndurance().equals(updatedPlayer.getEndurance())){
-			updatedStats.add("end");
-			player.setSpeed(updatedPlayer.getSpeed());
-		}
-		if (!player.getHp().equals(updatedPlayer.getHp())){
-			updatedStats.add("hp");
-			player.setHp(updatedPlayer.getHp());
-		}
-		if (!player.getAttack().equals(updatedPlayer.getAttack())){
-			updatedStats.add("atk");
-			player.setAttack(updatedPlayer.getAttack());
-		}
-		if (!player.getPass().equals(updatedPlayer.getPass())){
-			updatedStats.add("pas");
-			player.setPass(updatedPlayer.getPass());
-		}
-		if (!player.getShot().equals(updatedPlayer.getShot())){
-			updatedStats.add("sht");
-			player.setShot(updatedPlayer.getShot());
-		}
-		if (!player.getBlock().equals(updatedPlayer.getBlock())){
-			updatedStats.add("blk");
-			player.setBlock(updatedPlayer.getBlock());
-		}
-		if (!player.getCat().equals(updatedPlayer.getCat())){
-			updatedStats.add("cat");
-			player.setCat(updatedPlayer.getCat());
-		}
-		player.setUpdatedStats(updatedStats);
 		return player;
 	}
 	

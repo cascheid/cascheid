@@ -44,11 +44,21 @@
 		<script src="js/ColladaLoader.js"></script>
 		<script src="js/blitzballMenu.js?version=0.1"></script>
 
-		<iframe id="blitzMenuFrame" name="blitzMenuFrame" frameborder=0 height="100%" width="100%" src="blitzballMenu" allowtransparency="true" onload="focusFrame()"></iframe>
+		<iframe id="blitzMenuFrame" name="blitzMenuFrame" frameborder=0 height="100%" width="100%" src="blitzballMenu" allowtransparency="true" onload="bindFrameKeydown()"></iframe>
 		
 		<script>
-		function focusFrame(){
-			document.getElementById('blitzMenuFrame').focus();
+		$(document).ready = function(){
+			$(this).keydown(function(e) {
+				$("#blitzMenuFrame").get(0).contentWindow.onKeyDown(e);
+			});
+		};
+		
+		function bindFrameKeydown(){
+			
+			$(document.getElementById('blitzMenuFrame').contentWindow.document).keydown(function(e) {
+				$("#blitzMenuFrame").get(0).contentWindow.onKeyDown(e);
+			});
+			$(document.getElementById('blitzMenuFrame').contentWindow).focus();
 		}
 		</script>
 	</body>

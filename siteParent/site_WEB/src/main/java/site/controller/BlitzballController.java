@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -73,6 +74,7 @@ public class BlitzballController {
 		}
 		mv = new ModelAndView("blitzballMenu");
 		mv.addObject("username", identity.getUsername());
+		mv.addObject("numPlayers", blitzballInfo.getNumberOfPlayers());
 		//mv.addObject("teamName", blitzballInfo.getTeam().getTeamName());
 		return mv;
 	}
@@ -182,6 +184,10 @@ public class BlitzballController {
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
 			mv.addObject("techList", BlitzballUtils.getTechList());
+			BlitzballPlayer player = BlitzballUtils.getBlitzballPlayer(blitzballInfo, playerID);
+			player.getLearnedTechs().add(30);
+			player.getLearnedTechs().add(54);
+			player.getLearnedTechs().add(57);
 			mv.addObject("currPlayer", BlitzballUtils.getBlitzballPlayer(blitzballInfo, playerID));
 			mv.addObject("techListJSON", objectMapper.writeValueAsString(BlitzballUtils.getTechList()));
 			//mv.addObject("currPlayer", objectMapper.writeValueAsString(BlitzballUtils.getBlitzballPlayer(blitzballInfo, playerID)));
@@ -325,7 +331,6 @@ public class BlitzballController {
 			} else {
 				throw new IllegalStateException("Couldn't determine game type for week results");
 			}
-			activeGame=null;
 			
 		} else {//halftime or overtime
 			activeGame=blitzballGameInfo;
@@ -486,5 +491,22 @@ public class BlitzballController {
 			blitzballInfo=BlitzballUtils.getActiveLeague(blitzballInfo);
 		}
 		return mv;
+	}
+	
+	@RequestMapping("/resetBlitzballGame")
+	public String resetBlitzballGame(@CookieValue(value = "identifier", defaultValue = "0") Long identifier){
+		if (identifier==0){//no cookie, main page can handle it
+			return "redirect:blitzball";
+		}
+		if (identity==null||identity.getIdentifier()!=identifier){
+			identity=IdentityUtils.getIdentityByIdentifier(identifier);
+			blitzballInfo=BlitzballUtils.getBlitsballInfo(identifier);
+		}
+		BlitzballUtils.resetBlitzballInfo(blitzballInfo.getTeam().getTeamID());
+		blitzballInfo=null;
+		activeOpponent=null;
+		activeGame=null;
+		weekResults = null;
+		return "redirect:blitzball";
 	}
 }

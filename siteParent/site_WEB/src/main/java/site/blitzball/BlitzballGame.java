@@ -23,7 +23,9 @@ public class BlitzballGame implements java.io.Serializable {
 	private List<BlitzballPlayerStatistics> playerStatistics;
 	private Boolean isOvertimeGame;
 	
-	public BlitzballGame(){}
+	public BlitzballGame(){
+		this.isOvertimeGame=false;
+	}
 	public BlitzballGame(BlitzballTeam team1, BlitzballTeam team2){
 		this.team1=team1;
 		this.team2=team2;

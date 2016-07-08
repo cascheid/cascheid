@@ -13,7 +13,7 @@ import site.blitzball.BlitzballTech;
 public interface BlitzballDao {
 	public BlitzballPlayer getPlayerByID(Integer playerID, Long gameID, Integer optionalLevel);
 	public BlitzballInfo getBlitzballByIdentifier(Long identifier);
-	public void deleteBlitzballGameInfo(Long gameID);
+	public void resetBlitzballGameInfo(Long gameID);
 	public Long insertNewBlitzballGame(Long identifier, String teamName);
 	public BlitzballLeague getActiveLeagueByTeamID(BlitzballInfo info);
 	public Long insertNewLeague(Long teamID, List<Long> divisionOpponents, HashMap<Integer, List<BlitzballGame>> schedule);
