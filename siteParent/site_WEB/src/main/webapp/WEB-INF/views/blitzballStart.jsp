@@ -1,118 +1,17 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>Blitzball!</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-		<style>
-			body {
-				background:none transparent;
-				padding:0;
-				margin:0;
-				font-weight: bold;
-				overflow:hidden;
-			}
-			
-			#playerMenu{
-				font-size:3.5vmin;
-				color: #ffffff;
-				position:absolute;
-				top:15vmin;
-				width:20%;
-				left:20%;
-				z-index:1000;
-				line-height:4vmin;
-				padding:0px;
-			}
-			
-			#centerDisplay{
-				font-size:3.5vmin;
-				position:absolute;
-				top:15vmin;
-				width:20%;
-				left:40%;
-				background:none transparent;
-				z-index:1000;
-			}
-			
-			#rightDisplay{
-				font-size:3.5vmin;
-				color: #ffffff;
-				position:absolute;
-				top:11vmin;
-				width:20%;
-				left:60%;
-				background:none transparent;
-				z-index:1000;
-			}
-			
-			#infoDiv{
-				font-size:3.5vmin;
-				line-height:4vmin;
-				color: #ffffff;
-				position:absolute;
-				top:55vmin;
-				left:40%;
-				background:none transparent;
-				z-index:1000;
-			}
-			
-			#selector{
-				position:absolute;
-				left:-5vmin;
-				top:0vmin;
-				width:5vmin;
-				height:3.5vmin;
-			}
-			
-			#confSelector{
-				position:absolute;
-				left:0vmin;
-				top:4vmin;
-				width:5vmin;
-				height:3.5vmin;
-			}
-			
-			#returnSelector{
-				position:absolute;
-				left:0vmin;
-				top:4vmin;
-				width:5vmin;
-				height:3.5vmin;
-			}
-			
-			#confirmDiv{
-				position:absolute;
-				color: #ffffff;
-				font-size:3.5vmin;
-				line-height:4vmin;
-				top:40%;
-				width:10%;
-				height:15%;
-				left:45%;
-				background-color:#6B238E;
-				background-image: url("img/blitzball/cracks.png");
-				border: 5px double white;
-				z-index:1001;
-			}
-			
-			#returnDiv{
-				position:absolute;
-				color: #ffffff;
-				font-size:3.5vmin;
-				line-height:4vmin;
-				top:40%;
-				width:20%;
-				height:12vmin;
-				left:40%;
-				background-color:#6B238E;
-				background-image: url("img/blitzball/cracks.png");
-				border: 5px double white;
-				z-index:1001;
-			}
+<head>
+	<title>Blitzball!</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="css/blitzball.css?version=1.00"/>
+	<script src="js/BBNavMenu.js?version=0.1"></script>
+	<style>			
 			
 			.crossDiv{
 				position:absolute;
@@ -138,125 +37,70 @@
 		</style>
 	</head>
 
-	<body>
-		<div id="playerMenu">
-			<img id="selector" src="img/blitzball/arrow.png" />
+<body>
+<div id="contentWindow" class="absoluteCentered" style="position:absolute; width:100vmin; height:100vmin">
+	<div style="position:absolute; top:10vmin; left:0vmin; width:30vmin">
+		<div class="innerMenu">
+			<div class="selectorWrapper">
+				<img id="selector" class="selector" src="img/blitzball/arrow.png" />
+			</div>
+		<c:forEach items="${myTeam.allPlayers}" var="player" varStatus="status">
 			<div class="playeritems">
-				<label id="players1"></label>
-				<label id="hplayers1" style="display:none"></label>
+				<label id="players${status.count}">${player.name}</label>
+				<label id="hplayers${status.count}" style="display:none">${player.playerID}</label>
 			</div>
-			<div class="playeritems">
-				<label id="players2"></label>
-				<label id="hplayers2" style="display:none"></label>
-			</div>
-			<div class="playeritems">
-				<label id="players3"></label>
-				<label id="hplayers3" style="display:none"></label>
-			</div>
-			<div class="playeritems">
-				<label id="players4"></label>
-				<label id="hplayers4" style="display:none"></label>
-			</div>
-			<div class="playeritems">
-				<label id="players5"></label>
-				<label id="hplayers5" style="display:none"></label>
-			</div>
-			<div class="playeritems">
-				<label id="players6"></label>
-				<label id="hplayers6" style="display:none"></label>
-			</div>
-			<div class="playeritems">
-				<label id="players7"></label>
-				<label id="hplayers7" style="display:none"></label>
-			</div>
-			<div class="playeritems" style="top:310px">
-				<label id="players8"></label>
-				<label id="hplayers8" style="display:none"></label>
-			</div>
+		</c:forEach>
 		</div>
-		<div class="crossDiv" style="left:38%; top:0; width:2vmin; height:100%"></div>
-		<div id="centerDisplay">
-			<div>
-				<label id="displayName" style="color:#ffffff;"></label>
-			</div>
+	</div>
+		<div class="crossDiv" style="left:30vmin; top:0; width:2vmin; height:100vmax"></div>
+		<div id="centerDisplay" style="position:absolute; top:7.5vmin; left:35vmin; width:30vmin">
+		<c:forEach items="${myTeam.allPlayers}" var="player" varStatus="status">
+		<div id="playerDisplay${status.count}" style="display:none">
+			<div>${player.name}</div>
 			<div id="displayTable" style="display:table;">
 				<div style="display:table-row">
 					<div class="stat"></div>
 					<div class="stat"></div>
 					<div class="stat" style="text-align:right;"><label>Lv</label></div>
-					<div class="num" style="text-align:left; padding-left:0.5vmin"><label id="lvlDisplay"></label></div>
+					<div class="num" style="text-align:left; padding-left:0.5vmin">${player.level}</div>
 				</div>
 				<div style="display:table-row">
 					<div class="stat"></div>
-					<div class="num"><label id="expDisplay"></label></div>
+					<div class="num">${player.experience}/${player.nextExp}</div>
 					<div class="stat"><label>EXP</label></div>
 					<div class="stat"><label>LEFT</label></div>
 				</div>
 				<div style="display:table-row">
-					<div class="num"><label id="spdDisplay"></label></div>
+					<div class="num">${player.speed}</div>
 					<div class="stat"><label>SPD</label></div>
-					<div class="num"><label id="hpDisplay"></label></div>
+					<div class="num">${player.hp}</div>
 					<div class="stat"><label>HP</label></div>
 				</div>
 				<div style="display:table-row">
-					<div class="num" style=""><label id="endDisplay" ></label></div>
+					<div class="num">${player.endurance}</div>
 					<div class="stat"><label >END</label></div>
-					<div class="num"><label id="atkDisplay"></label></div>
+					<div class="num">${player.attack}</div>
 					<div class="stat"><label>ATK</label></div>
 				</div>
 				<div style="display:table-row">
-					<div class="num"><label id="pasDisplay"></label></div>
+					<div class="num">${player.pass}</div>
 					<div class="stat"><label>PAS</label></div>
-					<div class="num"><label id="blkDisplay"></label></div>
+					<div class="num">${player.block}</div>
 					<div class="stat"><label>BLK</label></div>
 				</div>
 				<div style="display:table-row">
-					<div class="num"><label id="shtDisplay"></label></div>
+					<div class="num">${player.shot}</div>
 					<div class="stat"><label>SHT</label></div>
-					<div class="num"><label id="catDisplay"></label></div>
+					<div class="num">${player.cat}</div>
 					<div class="stat"><label>CAT</label></div>
 				</div>
 			</div>
-			<!--  <table id="displayTable">
-				<tr>
-					<td/><td/>
-					<td class="stat" style="text-align:right;">Lv</td>
-					<td id="lvlDisplay" class="num"  style="text-align:left;"></td>
-				</tr>
-				<tr>
-				<td />
-					<td id="expDisplay" class="num"></td>
-					<td colspan="2" class="stat">EXP LEFT</td>
-				</tr>
-				<tr>
-					<td id="spdDisplay" class="num"></td>
-					<td class="stat">SPD</td>
-					<td id="hpDisplay" class="num"></td>
-					<td class="stat">HP</td>
-				</tr>
-				<tr>
-					<td id="endDisplay" class="num"></td>
-					<td class="stat">END</td>
-					<td id="atkDisplay" class="num"></td>
-					<td class="stat">ATK</td>
-				</tr>
-				<tr>
-					<td id="pasDisplay" class="num"></td>
-					<td class="stat">PAS</td>
-					<td id="blkDisplay" class="num"></td>
-					<td class="stat">BLK</td>
-				</tr>
-				<tr>
-					<td id="shtDisplay" class="num"></td>
-					<td class="stat">SHT</td>
-					<td id="catDisplay" class="num"></td>
-					<td class="stat">CAT</td>
-				</tr>
-			</table>-->
 		</div>
-		<div class="crossDiv" style="left:60%; top:0; width:10vmin; height:47.7vmin"></div>
-		<div class="crossDiv" style="left:0; top:48vmin; width:100%; height:2vmin"></div>
-		<div id="rightDisplay">
+		</c:forEach>
+		</div>
+		<div class="crossDiv" style="left:66vmin; top:0; width:8vmin; height:47.7vmin"></div>
+		<div class="crossDiv" style="position:absolute; left:-50vmax; top:48vmin; width:150vmax; height:2vmin"></div>
+		<div style="position:absolute; top:7.5vmin; left:65vmin; width:35vmin">
 			<form:form id="rosterForm" action="setBBGameRoster" commandName="blitzballGameRoster">
 			<table id="selectedTable">
 				<form:hidden id="hselected1" path="leftWing" value=""></form:hidden>
@@ -266,7 +110,7 @@
 				<form:hidden id="hselected5" path="rightBack" value=""></form:hidden>
 				<form:hidden id="hselected6" path="keeper" value=""></form:hidden>
 				<tr>
-					<td style="width:10vmin"/><td>Positions</td>
+					<td style="width:11vmin"/><td>Positions</td>
 				</tr>
 				<tr>
 					<td style="padding-left:2vmin;">LF</td>
@@ -296,7 +140,7 @@
 			</form:form>
 		</div>
 		
-		<div id="infoDiv">
+		<div id="infoDiv" style="position:absolute; top:55vmin; left:35vmin">
 		<label class="num">Assign Positions</label>
 		<p>Select this game's Left<br/>
 		Forward (LF), Right Forward<br/>
@@ -306,126 +150,75 @@
 		</p>
 		</div>
 		
-		<div id="confirmDiv" style="display:none">
-			<img id="confSelector" src="img/blitzball/arrow.png" />
-			<div style="width:100%; padding-left:2.5vmin">
-			<label>Proceed?</label>
+	
+	<div id="confirmDiv" class="menu absoluteCentered" style="display:none; top:30vmin">
+		<div class="innerMenu">
+			<div>Proceed?</div>
+			<div class="selectorWrapper" style="top:6.5vmin">
+				<img id="confSelector" class="selector" src="img/blitzball/arrow.png" />
 			</div>
-			<div style="width:100%; padding-left:5vmin">
-			<label>Yes</label>
-			</div>
-			<div style="width:100%; padding-left:5vmin">
-			<label>No</label>
-			</div>
+			<div>Yes</div>
+			<div>No</div>
 		</div>
-		
-		<div id="returnDiv" style="display:none">
-			<img id="returnSelector" src="img/blitzball/arrow.png" />
-			<div style="width:100%; padding-left:2.5vmin">
-			<label>Return to Main Menu?</label>
+	</div>
+	
+	<div id="returnDiv" class="menu absoluteCentered" style="display:none; top:30vmin">
+		<div class="innerMenu">
+			<div>Return to Main Menu?</div>
+			<div class="selectorWrapper" style="top:6.5vmin">
+				<img id="returnSelector" class="selector" src="img/blitzball/arrow.png" />
 			</div>
-			<div style="width:100%; padding-left:5vmin">
-			<label>Yes</label>
-			</div>
-			<div style="width:100%; padding-left:5vmin">
-			<label>No</label>
-			</div>
+			<div>Yes</div>
+			<div>No</div>
 		</div>
-		
+	</div>
+</div>
 		<script>
 
 		var menuSelection=1;
-		var MAXITEMS=6;
-		var prompted=false;
+		var MAXITEMS=Number('${fn:length(myTeam.allPlayers)}');
+		var continuePrompted=false;
 		var promptOnOK=true;
 		var playersSelected=0;
 		var returnPrompted=false;
-		
-		document.getElementById('players1').focus();
-		document.body.onkeydown = function(e){
-		    onKeyDown(e);
-		};
+		var selectingPlayers=true;
+		var navMenu = new BBNavMenu('selector', MAXITEMS, 1);
 
 		function upButtonPressed(){
-			if (prompted){
-				if (promptOnOK){
-					promptOnOK=false;
-					document.getElementById('confSelector').style.top='8vmin';
-				} else {
-					promptOnOK=true;
-					document.getElementById('confSelector').style.top='4vmin';
-				}
-			} else if (returnPrompted){
-				if (promptOnOK){
-					promptOnOK=false;
-					document.getElementById('returnSelector').style.top='8vmin';
-				} else {
-					promptOnOK=true;
-					document.getElementById('returnSelector').style.top='4vmin';
-				}
-			} else {
-				if (menuSelection<=1){
-					menuSelection=MAXITEMS;
-				} else {
-					menuSelection--;
-				}
-				if (document.getElementById('players'+menuSelection).style.visibility=='hidden'){
+			navMenu.moveUp();
+			if (navMenu.getSelector()=='selector'){
+				if (document.getElementById('players'+navMenu.getRow()).style.visibility=='hidden'){
 					upButtonPressed();
 				} else {
-					document.getElementById('selector').style.top=(menuSelection-1)*4+'vmin';
-					changeHighlightedPlayer(menuSelection);
+					changeHighlightedPlayer(navMenu.getRow());
 				}
 			}
 		}
 
 		function downButtonPressed(){
-			if (prompted){
-				if (promptOnOK){
-					promptOnOK=false;
-					document.getElementById('confSelector').style.top='8vmin';
-				} else {
-					promptOnOK=true;
-					document.getElementById('confSelector').style.top='4vmin';
-				}
-			} else if (returnPrompted){
-				if (promptOnOK){
-					promptOnOK=false;
-					document.getElementById('returnSelector').style.top='8vmin';
-				} else {
-					promptOnOK=true;
-					document.getElementById('returnSelector').style.top='4vmin';
-				}
-			} else {
-				if (menuSelection>=MAXITEMS){
-					menuSelection=1;
-				} else {
-					menuSelection++;
-				}
-				if (document.getElementById('players'+menuSelection).style.visibility=='hidden'){
+			navMenu.moveDown();
+			if (navMenu.getSelector()=='selector'){
+				if (document.getElementById('players'+navMenu.getRow()).style.visibility=='hidden'){
 					downButtonPressed();
 				} else {
-					document.getElementById('selector').style.top=(menuSelection-1)*4+'vmin';
-					changeHighlightedPlayer(menuSelection);
+					changeHighlightedPlayer(navMenu.getRow());
 				}
 			}
 		}
 
 		function selectButtonPressed(){
-			if (prompted){
-				if (promptOnOK){
+			if (navMenu.getSelector()=='confSelector'){
+				if (navMenu.getRow()==1){
 					document.getElementById('rosterForm').submit();
 				} else {
 					resetChoices();
 				}
-			} else if (returnPrompted){
-				if (promptOnOK){
+			} else if (navMenu.getSelector()=='returnSelector'){
+				if (navMenu.getRow()==1){
 					window.open("blitzballMenu", "_self");
 				} else {
 					document.getElementById('returnDiv').style.display='none';
-					document.getElementById('selector').style.display='';
-					document.getElementById('returnSelector').style.top='4vmin';
-					promptOnOK=true;
-					returnPrompted=false;
+					navMenu.updateActiveSelector('selector', MAXITEMS, menuSelection);
 				}
 			} else {
 				selectPlayer();
@@ -433,20 +226,16 @@
 		}
 
 		function cancelButtonPressed(){
-			if (prompted){
-				promptOnOK=false;
-				document.getElementById('confSelector').style.top='8vmin';
-			} else if (returnPrompted) {
-				promptOnOK=false;
-				document.getElementById('returnSelector').style.top='8vmin';
-			} else {
+			if (navMenu.getSelector()=='selector'){
 				if (playersSelected>0){
 					unSelectLastPlayer();
 				} else {
+					menuSelection=navMenu.getRow();
+					navMenu.updateActiveSelector('returnSelector', 2, 1);
 					document.getElementById('returnDiv').style.display='';
-					document.getElementById('selector').style.display='none';
-					returnPrompted=true;
 				}
+			} else {
+				navMenu.updateRow(2);
 			}
 		}
 
@@ -469,77 +258,28 @@
 		var myTeam;
 
 		window.onload = function(){
-			myTeam=JSON.parse('${myTeam}');
-			if (myTeam.bench1!=null){
-				MAXITEMS++;
-				document.getElementById('players7').style.display='';
-				document.getElementById('players7').innerHTML=myTeam.bench1.name;
-				document.getElementById('hplayers7').innerHTML=myTeam.bench1.playerID;
-				if (myTeam.bench2!=null){
-					MAXITEMS++;
-					document.getElementById('players8').style.display='';
-					document.getElementById('players8').innerHTML=myTeam.bench2.name;
-					document.getElementById('hplayers8').innerHTML=myTeam.bench2.playerID;
-				}
-			}
-			document.getElementById('players1').innerHTML=myTeam.leftWing.name;
-			document.getElementById('hplayers1').innerHTML=myTeam.leftWing.playerID;
-			document.getElementById('players2').innerHTML=myTeam.rightWing.name;
-			document.getElementById('hplayers2').innerHTML=myTeam.rightWing.playerID;
-			document.getElementById('players3').innerHTML=myTeam.midfielder.name;
-			document.getElementById('hplayers3').innerHTML=myTeam.midfielder.playerID;
-			document.getElementById('players4').innerHTML=myTeam.leftBack.name;
-			document.getElementById('hplayers4').innerHTML=myTeam.leftBack.playerID;
-			document.getElementById('players5').innerHTML=myTeam.rightBack.name;
-			document.getElementById('hplayers5').innerHTML=myTeam.rightBack.playerID;
-			document.getElementById('players6').innerHTML=myTeam.keeper.name;
-			document.getElementById('hplayers6').innerHTML=myTeam.keeper.playerID;
-
 			changeHighlightedPlayer(1);
 		}
 
 		function changeHighlightedPlayer(playerNo){
-			var playerInfo;
-			if (playerNo==1){
-				playerInfo=myTeam.leftWing;
-			} else if (playerNo==2){
-				playerInfo=myTeam.rightWing;
-			} else if (playerNo==3){
-				playerInfo=myTeam.midfielder;
-			} else if (playerNo==4){
-				playerInfo=myTeam.leftBack;
-			} else if (playerNo==5){
-				playerInfo=myTeam.rightBack;
-			} else if (playerNo==6){
-				playerInfo=myTeam.keeper;
-			} else if (playerNo==7){
-				playerInfo=myTeam.bench1;
-			} else if (playerNo==8){
-				playerInfo=myTeam.bench2;
+			for (var i=1; i<=MAXITEMS; i++){
+				if (i==playerNo){
+					document.getElementById('playerDisplay'+i).style.display='';
+				} else {
+					document.getElementById('playerDisplay'+i).style.display='none';
+				}
 			}
-
-			document.getElementById('displayName').innerHTML=playerInfo.name;
-			document.getElementById('lvlDisplay').innerHTML=playerInfo.level;
-			document.getElementById('expDisplay').innerHTML=playerInfo.nextExp;
-			document.getElementById('spdDisplay').innerHTML=playerInfo.speed;
-			document.getElementById('endDisplay').innerHTML=playerInfo.endurance;
-			document.getElementById('hpDisplay').innerHTML=playerInfo.hp;
-			document.getElementById('atkDisplay').innerHTML=playerInfo.attack;
-			document.getElementById('pasDisplay').innerHTML=playerInfo.pass;
-			document.getElementById('shtDisplay').innerHTML=playerInfo.shot;
-			document.getElementById('blkDisplay').innerHTML=playerInfo.block;
-			document.getElementById('catDisplay').innerHTML=playerInfo.cat;
 		}
 
 		function selectPlayer(){
 			playersSelected++;
-			document.getElementById('selected'+playersSelected).innerHTML=document.getElementById('players'+menuSelection).innerHTML;
-			document.getElementById('hselected'+playersSelected).value=document.getElementById('hplayers'+menuSelection).innerHTML;
-			document.getElementById('players'+menuSelection).style.visibility='hidden';
+			var selectedRow=navMenu.getRow();
+			document.getElementById('selected'+playersSelected).innerHTML=document.getElementById('players'+selectedRow).innerHTML;
+			document.getElementById('hselected'+playersSelected).value=document.getElementById('hplayers'+selectedRow).innerHTML;
+			document.getElementById('players'+selectedRow).style.visibility='hidden';
 			if (playersSelected==6){
-				prompted=true;
 				document.getElementById('confirmDiv').style.display='';
-				document.getElementById('selector').style.display='none';
+				navMenu.updateActiveSelector('confSelector', 2, 1);
 			} else {
 				downButtonPressed();
 			}
@@ -567,9 +307,10 @@
 			document.getElementById('players4').style.visibility='';
 			document.getElementById('players5').style.visibility='';
 			document.getElementById('players6').style.visibility='';
-			document.getElementById('players7').style.visibility='';
-			document.getElementById('players8').style.visibility='';
-
+			try{
+				document.getElementById('players7').style.visibility='';
+				document.getElementById('players8').style.visibility='';
+			} catch (e){}
 			document.getElementById('selected1').innerHTML='';
 			document.getElementById('selected2').innerHTML='';
 			document.getElementById('selected3').innerHTML='';
@@ -585,13 +326,8 @@
 			document.getElementById('hselected6').value='';
 
 			document.getElementById('confirmDiv').style.display='none';
-			document.getElementById('selector').style.display='';
-			document.getElementById('selector').style.top='0vmin';
-			document.getElementById('confSelector').style.top='4vmin';
+			navMenu.updateActiveSelector('selector', MAXITEMS, 1);
 			
-			menuSelection=1;
-			prompted=false;
-			promptOnOK=true;
 			playersSelected=0;
 			
 			changeHighlightedPlayer(1);

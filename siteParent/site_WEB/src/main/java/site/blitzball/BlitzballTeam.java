@@ -1,6 +1,7 @@
 package site.blitzball;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class BlitzballTeam implements java.io.Serializable {
@@ -112,6 +113,17 @@ public class BlitzballTeam implements java.io.Serializable {
 		list.add(leftBack);
 		list.add(rightBack);
 		list.add(keeper);
+		return list;
+	}
+	public List<BlitzballPlayer> getAllPlayers(){
+		List<BlitzballPlayer> list = getActivePlayers();
+		list.removeAll(Collections.singleton(null)); 
+		if (bench1!=null){
+			list.add(bench1);
+		}
+		if (bench2!=null){
+			list.add(bench2);
+		}
 		return list;
 	}
 }

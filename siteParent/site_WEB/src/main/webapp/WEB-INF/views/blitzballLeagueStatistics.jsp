@@ -28,22 +28,6 @@
 				width:6vw;
 				text-align:center;
 			}
-			
-			#techInfoDiv{
-				position:absolute;
-				top:10vmin;
-				left:40%;
-				width:40%;
-				z-index:1000;
-			}
-			
-			#displayedTechsContainer{
-				top:40%;
-				left:10%;
-				width:81%;
-				height:55%;
-				z-index:1001;
-			}
 		</style>
 	</head>
 
@@ -134,7 +118,7 @@
 		var sortOrder=[];
 		var sortCol=2;
 		var emptyDashString='- - - - - - - -';
-		var navMenu = new BBNavMenu('selector', MAXITEMS, 1);
+		var navMenu = new BBNavMenu('selector', MAXITEMS, 4);
 		
 		function upButtonPressed(){
 			if (selectingTable){

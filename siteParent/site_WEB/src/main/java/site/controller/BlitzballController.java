@@ -205,14 +205,14 @@ public class BlitzballController {
 		}
 		ModelAndView mv = new ModelAndView("blitzballStart");
 		//in loading league activeOpponent=BlitzballUtils.getLeagueOpponentByID(activeLeague);
-
+		mv.addObject("myTeam", blitzballInfo.getTeam());/*
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
 			mv.addObject("myTeam", objectMapper.writeValueAsString(blitzballInfo.getTeam()));
 			mv.addObject("oppTeam", objectMapper.writeValueAsString(activeOpponent));
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 		mv.addObject("blitzballGameRoster", new BlitzballGameRoster());
 		return mv;
 	}
