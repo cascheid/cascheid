@@ -91,28 +91,7 @@ public class BlitzballInfo implements java.io.Serializable {
 
 	public Integer getNumberOfPlayers(){
 		int numPlayers = 0;
-		if (this.team.getLeftWing()!=null){
-			numPlayers++;
-		}
-		if (this.team.getRightWing()!=null){
-			numPlayers++;
-		}
-		if (this.team.getMidfielder()!=null){
-			numPlayers++;
-		}
-		if (this.team.getLeftBack()!=null){
-			numPlayers++;
-		}
-		if (this.team.getRightBack()!=null){
-			numPlayers++;
-		}
-		if (this.team.getKeeper()!=null){
-			numPlayers++;
-		}
-		if (this.team.getBench1()!=null){
-			numPlayers++;
-		}
-		if (this.team.getBench2()!=null){
+		for (BlitzballPlayer player : this.team.getAllPlayers()){
 			numPlayers++;
 		}
 		return numPlayers;

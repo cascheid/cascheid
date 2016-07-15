@@ -3,30 +3,13 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<title>Blitzball!</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<head>
+	<title>Blitzball!</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="css/blitzball.css?version=1.00"/>
+	<script src="js/BBNavMenu.js?version=0.1"></script>
 		<style>
-			body {
-				background:none transparent;
-				padding:0;
-				margin:0;
-				font-weight: bold;
-				overflow:hidden;
-			}
-			
-			#playerMenu{
-				font-size:3.5vmin;
-				color: #ffffff;
-				position:absolute;
-				top:10vmin;
-				width:20%;
-				left:10%;
-				z-index:1000;
-				line-height:4vmin;
-				padding:0px;
-			}
 			
 			#techListDisplay{
 				font-size:3.5vmin;
@@ -60,31 +43,6 @@
 				background:none transparent;
 				z-index:1000;
 			}
-			
-			#selector{
-				position:absolute;
-				left:10vmin;
-				top:4vmin;
-				width:5vmin;
-				height:4vmin;
-			}
-			
-			#listSelector{
-				position:absolute;
-				left:-5vmin;
-				top:0vmin;
-				width:5vmin;
-				height:4vmin;
-			}
-			
-			#techSelector{
-				position:absolute;
-				left:0vmin;
-				top:0vmin;
-				width:5vmin;
-				height:4vmin;
-			}
-			
 			.crossDiv{
 				position:absolute;
 				background: rgba(0,0,0,.75);
@@ -109,187 +67,202 @@
 		</style>
 	</head>
 
-	<body>
-		<div class="crossDiv" style="left:10%; top:0; width:10vmin; height:47.7vmin"></div>
-		<div id="playerMenu">
-			<img id="selector" src="img/blitzball/arrow.png" />
+<body>
+	<div id="contentWindow" class="absoluteCentered" style="position:absolute; width:100vmin; height:100vmin">
+		<div class="crossDiv" style="left:0; top:0; width:8vmin; height:47.7vmin"></div>
+		<div style="position:absolute; top:0; left:0">
+			<div class="selectorWrapper" style="left:8vmin; top:4vmin">
+				<img id="selector" class="selector" src="img/blitzball/arrow.png" />
+			</div>
 			<div style="display:table-row">
-				<div style="display: table-cell; width:10vmin"></div>
+				<div style="display: table-cell; width:8vmin"></div>
 				<div style="display: table-cell"><label style="padding-left:5vmin">Set Techs</label></div>
 			</div>
 			<div style="display:table-row">
-				<div style="display: table-cell; width:10vmin"><label style="padding-left:2vmin">LF</label></div>
-				<div style="display: table-cell"><label style="padding-left:5vmin" id="players1"></label></div>
+				<div style="display: table-cell; width:8vmin"><label style="padding-left:2vmin">LF</label></div>
+				<div style="display: table-cell"><label style="padding-left:5vmin" id="players1">${myTeam.leftWing.name}</label></div>
+				<div style="display:none" id="playerID1">${myTeam.leftWing.playerID}</div>
+				<div style="display:none" id="level1">${myTeam.leftWing.level}</div>
 			</div>
 			<div style="display:table-row">
-				<div style="display: table-cell; width:10vmin"><label style="padding-left:2vmin">RF</label></div>
-				<div style="display: table-cell"><label style="padding-left:5vmin" id="players2"></label></div>
+				<div style="display: table-cell; width:8vmin"><label style="padding-left:2vmin">RF</label></div>
+				<div style="display: table-cell"><label style="padding-left:5vmin" id="players2">${myTeam.rightWing.name}</label></div>
+				<div style="display:none" id="playerID2">${myTeam.rightWing.playerID}</div>
+				<div style="display:none" id="level2">${myTeam.rightWing.level}</div>
 			</div>
 			<div style="display:table-row">
-				<div style="display: table-cell; width:10vmin"><label style="padding-left:2vmin">MF</label></div>
-				<div style="display: table-cell"><label style="padding-left:5vmin" id="players3"></label></div>
+				<div style="display: table-cell; width:8vmin"><label style="padding-left:2vmin">MF</label></div>
+				<div style="display: table-cell"><label style="padding-left:5vmin" id="players3">${myTeam.midfielder.name}</label></div>
+				<div style="display:none" id="playerID3">${myTeam.midfielder.playerID}</div>
+				<div style="display:none" id="level3">${myTeam.midfielder.level}</div>
 			</div>
 			<div style="display:table-row">
-				<div style="display: table-cell; width:10vmin"><label style="padding-left:2vmin">LD</label></div>
-				<div style="display: table-cell"><label style="padding-left:5vmin" id="players4"></label></div>
+				<div style="display: table-cell; width:8vmin"><label style="padding-left:2vmin">LD</label></div>
+				<div style="display: table-cell"><label style="padding-left:5vmin" id="players4">${myTeam.leftBack.name}</label></div>
+				<div style="display:none" id="playerID4">${myTeam.leftBack.playerID}</div>
+				<div style="display:none" id="level4">${myTeam.leftBack.level}</div>
 			</div>
 			<div style="display:table-row">
-				<div style="display: table-cell; width:10vmin"><label style="padding-left:2vmin">RD</label></div>
-				<div style="display: table-cell"><label style="padding-left:5vmin" id="players5"></label></div>
+				<div style="display: table-cell; width:8vmin"><label style="padding-left:2vmin">RD</label></div>
+				<div style="display: table-cell"><label style="padding-left:5vmin" id="players5">${myTeam.rightBack.name}</label></div>
+				<div style="display:none" id="playerID5">${myTeam.rightBack.playerID}</div>
+				<div style="display:none" id="level5">${myTeam.rightBack.level}</div>
 			</div>
 			<div style="display:table-row">
-				<div style="display: table-cell; width:10vmin"><label style="padding-left:2vmin">GK</label></div>
-				<div style="display: table-cell"><label style="padding-left:5vmin" id="players6"></label></div>
+				<div style="display: table-cell; width:8vmin"><label style="padding-left:2vmin">GK</label></div>
+				<div style="display: table-cell"><label style="padding-left:5vmin" id="players6">${myTeam.keeper.name}</label></div>
+				<div style="display:none" id="playerID6">${myTeam.keeper.playerID}</div>
+				<div style="display:none" id="level6">${myTeam.keeper.level}</div>
 			</div>
 			<div style="display:table-row">
-				<div style="display: table-cell; width:10vmin"></div>
+				<div style="display: table-cell; width:8vmin"></div>
 				<div style="display: table-cell"><label style="padding-left:5vmin">Done</label></div>
 			</div>
 		</div>
-		<div class="crossDiv" style="left:38%; top:0; width:2vmin; height:100%"></div>
+		<div class="crossDiv" style="left:50vmin; top:0; width:2vmin; height:100vmin"></div>
 		<div id="techListDisplay">
 			<form:form id="techsForm" action="setBBGameTechs" commandName="blitzballGameTechs">
 			<img id="listSelector" src="img/blitzball/arrow.png" style="display:none"/>
-			<div id="lwTechList">
+			<div id="p1TechList">
 				<div style="width:100%">
-				<label id="lwTechSlot1" style="color:#ffffff;"></label>
+				<label id="p1TechSlot1" style="color:#ffffff;"></label>
 				</div>
 				<div style="width:100%">
-				<label id="lwTechSlot2" style="color:#ffffff;"></label>
+				<label id="p1TechSlot2" style="color:#ffffff;"></label>
 				</div>
 				<div style="width:100%">
-				<label id="lwTechSlot3" style="color:#ffffff;"></label>
+				<label id="p1TechSlot3" style="color:#ffffff;"></label>
 				</div>
 				<div style="width:100%">
-				<label id="lwTechSlot4" style="color:#ffffff;"></label>
+				<label id="p1TechSlot4" style="color:#ffffff;"></label>
 				</div>
 				<div style="width:100%">
-				<label id="lwTechSlot5" style="color:#ffffff;"></label>
+				<label id="p1TechSlot5" style="color:#ffffff;"></label>
 				</div>
-				<form:hidden id="lwHTechSlot1" path="leftWingTech1" value=""></form:hidden>
-				<form:hidden id="lwHTechSlot2" path="leftWingTech2" value=""></form:hidden>
-				<form:hidden id="lwHTechSlot3" path="leftWingTech3" value=""></form:hidden>
-				<form:hidden id="lwHTechSlot4" path="leftWingTech4" value=""></form:hidden>
-				<form:hidden id="lwHTechSlot5" path="leftWingTech5" value=""></form:hidden>
+				<form:hidden id="p1HTechSlot1" path="leftWingTech1" value=""></form:hidden>
+				<form:hidden id="p1HTechSlot2" path="leftWingTech2" value=""></form:hidden>
+				<form:hidden id="p1HTechSlot3" path="leftWingTech3" value=""></form:hidden>
+				<form:hidden id="p1HTechSlot4" path="leftWingTech4" value=""></form:hidden>
+				<form:hidden id="p1HTechSlot5" path="leftWingTech5" value=""></form:hidden>
 			</div>
 			
-			<div id="rwTechList" style="display:none">
+			<div id="p2TechList" style="display:none">
 				<div style="width:100%">
-				<label id="rwTechSlot1" style="color:#ffffff;"></label>
+				<label id="p2TechSlot1" style="color:#ffffff;"></label>
 				</div>
 				<div style="width:100%">
-				<label id="rwTechSlot2" style="color:#ffffff;"></label>
+				<label id="p2TechSlot2" style="color:#ffffff;"></label>
 				</div>
 				<div style="width:100%">
-				<label id="rwTechSlot3" style="color:#ffffff;"></label>
+				<label id="p2TechSlot3" style="color:#ffffff;"></label>
 				</div>
 				<div style="width:100%">
-				<label id="rwTechSlot4" style="color:#ffffff;"></label>
+				<label id="p2TechSlot4" style="color:#ffffff;"></label>
 				</div>
 				<div style="width:100%">
-				<label id="rwTechSlot5" style="color:#ffffff;"></label>
+				<label id="p2TechSlot5" style="color:#ffffff;"></label>
 				</div>
-				<form:hidden id="rwHTechSlot1" path="rightWingTech1" value=""></form:hidden>
-				<form:hidden id="rwHTechSlot2" path="rightWingTech2" value=""></form:hidden>
-				<form:hidden id="rwHTechSlot3" path="rightWingTech3" value=""></form:hidden>
-				<form:hidden id="rwHTechSlot4" path="rightWingTech4" value=""></form:hidden>
-				<form:hidden id="rwHTechSlot5" path="rightWingTech5" value=""></form:hidden>
+				<form:hidden id="p2HTechSlot1" path="rightWingTech1" value=""></form:hidden>
+				<form:hidden id="p2HTechSlot2" path="rightWingTech2" value=""></form:hidden>
+				<form:hidden id="p2HTechSlot3" path="rightWingTech3" value=""></form:hidden>
+				<form:hidden id="p2HTechSlot4" path="rightWingTech4" value=""></form:hidden>
+				<form:hidden id="p2HTechSlot5" path="rightWingTech5" value=""></form:hidden>
 			</div>
 			
-			<div id="mfTechList" style="display:none">
+			<div id="p3TechList" style="display:none">
 				<div style="width:100%">
-				<label id="mfTechSlot1" style="color:#ffffff;"></label>
+				<label id="p3TechSlot1" style="color:#ffffff;"></label>
 				</div>
 				<div style="width:100%">
-				<label id="mfTechSlot2" style="color:#ffffff;"></label>
+				<label id="p3TechSlot2" style="color:#ffffff;"></label>
 				</div>
 				<div style="width:100%">
-				<label id="mfTechSlot3" style="color:#ffffff;"></label>
+				<label id="p3TechSlot3" style="color:#ffffff;"></label>
 				</div>
 				<div style="width:100%">
-				<label id="mfTechSlot4" style="color:#ffffff;"></label>
+				<label id="p3TechSlot4" style="color:#ffffff;"></label>
 				</div>
 				<div style="width:100%">
-				<label id="mfTechSlot5" style="color:#ffffff;"></label>
+				<label id="p3TechSlot5" style="color:#ffffff;"></label>
 				</div>
-				<form:hidden id="mfHTechSlot1" path="midfielderTech1" value=""></form:hidden>
-				<form:hidden id="mfHTechSlot2" path="midfielderTech2" value=""></form:hidden>
-				<form:hidden id="mfHTechSlot3" path="midfielderTech3" value=""></form:hidden>
-				<form:hidden id="mfHTechSlot4" path="midfielderTech4" value=""></form:hidden>
-				<form:hidden id="mfHTechSlot5" path="midfielderTech5" value=""></form:hidden>
+				<form:hidden id="p3HTechSlot1" path="midfielderTech1" value=""></form:hidden>
+				<form:hidden id="p3HTechSlot2" path="midfielderTech2" value=""></form:hidden>
+				<form:hidden id="p3HTechSlot3" path="midfielderTech3" value=""></form:hidden>
+				<form:hidden id="p3HTechSlot4" path="midfielderTech4" value=""></form:hidden>
+				<form:hidden id="p3HTechSlot5" path="midfielderTech5" value=""></form:hidden>
 			</div>
 			
-			<div id="lbTechList" style="display:none">
+			<div id="p4TechList" style="display:none">
 				<div style="width:100%">
-				<label id="lbTechSlot1" style="color:#ffffff;"></label>
+				<label id="p4TechSlot1" style="color:#ffffff;"></label>
 				</div>
 				<div style="width:100%">
-				<label id="lbTechSlot2" style="color:#ffffff;"></label>
+				<label id="p4TechSlot2" style="color:#ffffff;"></label>
 				</div>
 				<div style="width:100%">
-				<label id="lbTechSlot3" style="color:#ffffff;"></label>
+				<label id="p4TechSlot3" style="color:#ffffff;"></label>
 				</div>
 				<div style="width:100%">
-				<label id="lbTechSlot4" style="color:#ffffff;"></label>
+				<label id="p4TechSlot4" style="color:#ffffff;"></label>
 				</div>
 				<div style="width:100%">
-				<label id="lbTechSlot5" style="color:#ffffff;"></label>
+				<label id="p4TechSlot5" style="color:#ffffff;"></label>
 				</div>
-				<form:hidden id="lbHTechSlot1" path="leftBackTech1" value=""></form:hidden>
-				<form:hidden id="lbHTechSlot2" path="leftBackTech2" value=""></form:hidden>
-				<form:hidden id="lbHTechSlot3" path="leftBackTech3" value=""></form:hidden>
-				<form:hidden id="lbHTechSlot4" path="leftBackTech4" value=""></form:hidden>
-				<form:hidden id="lbHTechSlot5" path="leftBackTech5" value=""></form:hidden>
+				<form:hidden id="p4HTechSlot1" path="leftBackTech1" value=""></form:hidden>
+				<form:hidden id="p4HTechSlot2" path="leftBackTech2" value=""></form:hidden>
+				<form:hidden id="p4HTechSlot3" path="leftBackTech3" value=""></form:hidden>
+				<form:hidden id="p4HTechSlot4" path="leftBackTech4" value=""></form:hidden>
+				<form:hidden id="p4HTechSlot5" path="leftBackTech5" value=""></form:hidden>
 			</div>
 			
-			<div id="rbTechList" style="display:none">
+			<div id="p5TechList" style="display:none">
 				<div style="width:100%">
-				<label id="rbTechSlot1" style="color:#ffffff;"></label>
+				<label id="p5TechSlot1" style="color:#ffffff;"></label>
 				</div>
 				<div style="width:100%">
-				<label id="rbTechSlot2" style="color:#ffffff;"></label>
+				<label id="p5TechSlot2" style="color:#ffffff;"></label>
 				</div>
 				<div style="width:100%">
-				<label id="rbTechSlot3" style="color:#ffffff;"></label>
+				<label id="p5TechSlot3" style="color:#ffffff;"></label>
 				</div>
 				<div style="width:100%">
-				<label id="rbTechSlot4" style="color:#ffffff;"></label>
+				<label id="p5TechSlot4" style="color:#ffffff;"></label>
 				</div>
 				<div style="width:100%">
-				<label id="rbTechSlot5" style="color:#ffffff;"></label>
+				<label id="p5TechSlot5" style="color:#ffffff;"></label>
 				</div>
-				<form:hidden id="rbHTechSlot1" path="rightBackTech1" value=""></form:hidden>
-				<form:hidden id="rbHTechSlot2" path="rightBackTech2" value=""></form:hidden>
-				<form:hidden id="rbHTechSlot3" path="rightBackTech3" value=""></form:hidden>
-				<form:hidden id="rbHTechSlot4" path="rightBackTech4" value=""></form:hidden>
-				<form:hidden id="rbHTechSlot5" path="rightBackTech5" value=""></form:hidden>
+				<form:hidden id="p5HTechSlot1" path="rightBackTech1" value=""></form:hidden>
+				<form:hidden id="p5HTechSlot2" path="rightBackTech2" value=""></form:hidden>
+				<form:hidden id="p5HTechSlot3" path="rightBackTech3" value=""></form:hidden>
+				<form:hidden id="p5HTechSlot4" path="rightBackTech4" value=""></form:hidden>
+				<form:hidden id="p5HTechSlot5" path="rightBackTech5" value=""></form:hidden>
 			</div>
 			
-			<div id="gkTechList" style="display:none">
+			<div id="p6TechList" style="display:none">
 				<div style="width:100%">
-				<label id="gkTechSlot1" style="color:#ffffff;"></label>
+				<label id="p6TechSlot1" style="color:#ffffff;"></label>
 				</div>
 				<div style="width:100%">
-				<label id="gkTechSlot2" style="color:#ffffff;"></label>
+				<label id="p6TechSlot2" style="color:#ffffff;"></label>
 				</div>
 				<div style="width:100%">
-				<label id="gkTechSlot3" style="color:#ffffff;"></label>
+				<label id="p6TechSlot3" style="color:#ffffff;"></label>
 				</div>
 				<div style="width:100%">
-				<label id="gkTechSlot4" style="color:#ffffff;"></label>
+				<label id="p6TechSlot4" style="color:#ffffff;"></label>
 				</div>
 				<div style="width:100%">
-				<label id="gkTechSlot5" style="color:#ffffff;"></label>
+				<label id="p6TechSlot5" style="color:#ffffff;"></label>
 				</div>
-				<form:hidden id="gkHTechSlot1" path="keeperTech1" value=""></form:hidden>
-				<form:hidden id="gkHTechSlot2" path="keeperTech2" value=""></form:hidden>
-				<form:hidden id="gkHTechSlot3" path="keeperTech3" value=""></form:hidden>
-				<form:hidden id="gkHTechSlot4" path="keeperTech4" value=""></form:hidden>
-				<form:hidden id="gkHTechSlot5" path="keeperTech5" value=""></form:hidden>
+				<form:hidden id="p6HTechSlot1" path="keeperTech1" value=""></form:hidden>
+				<form:hidden id="p6HTechSlot2" path="keeperTech2" value=""></form:hidden>
+				<form:hidden id="p6HTechSlot3" path="keeperTech3" value=""></form:hidden>
+				<form:hidden id="p6HTechSlot4" path="keeperTech4" value=""></form:hidden>
+				<form:hidden id="p6HTechSlot5" path="keeperTech5" value=""></form:hidden>
 			</div>
 			</form:form>
 		</div>
-		<div class="crossDiv" style="left:0; top:48vmin; width:100%; height:2vmin"></div>
+		<div class="crossDiv" style="left:-100vmax; top:48vmin; width:200vmax; height:2vmin"></div>
 		
 		<div id="techInfoDiv">
 		<label id="techInfoName" style="color: #FFFF66"></label><br/>
@@ -433,6 +406,7 @@
 		a maximum of five slots.<br/>
 		</p>
 		</div>
+	</div>
 		
 		<script>
 		//document.getElementById('displayedTechsContainer').style.display='none';
@@ -449,114 +423,20 @@
 		var techList=${techList};
 		var emptyDashString='- - - - - - - -';
 		var submitted=false;
+		var navMenu = new BBNavMenu('selector', MAXITEMS, 1);
 		
-		
-		document.getElementById('players1').focus();
-		document.body.onkeydown = function(e){
-		    onKeyDown(e);
-		};
 
 		function upButtonPressed(){
-			if (pageShowing>0){
-				if (techRow<=1){
-					techRow=MAXROWS;
-				} else {
-					techRow--;
-				}
-				document.getElementById('techSelector').style.top=(techRow-1)*4+'vmin';
-
-				var techID=(techCol-1)*MAXROWS+techRow;
-				if (pageShowing==2){
-					techID=techID+MAXROWS*MAXCOLS-1;
-				}
-				showTechInfo(techID);
-			} else if (pageShowing==0){
-				if (listRow<=1){
-					listRow=MAXLISTROWS;
-				} else {
-					listRow--;
-				}
-				document.getElementById('listSelector').style.top=(listRow-1)*4+'vmin';
-				var techID=document.getElementById(selectedPrefix+'HTechSlot'+listRow).value;
-				showTechInfo(techID);
-			} else {
-				if (menuSelection<=1){
-					menuSelection=MAXITEMS;
-				} else {
-					menuSelection--;
-				}
-				document.getElementById('selector').style.top=(menuSelection)*4+'vmin';
-				changeHighlightedPlayer(menuSelection);
-			}
+			navMenu.moveUp();
 		}
 
 		function downButtonPressed(){
-			if (pageShowing>0){
-				if (techRow>=MAXROWS){
-					techRow=1;
-				} else {
-					techRow++;
-				}
-				document.getElementById('techSelector').style.top=(techRow-1)*4+'vmin';
-
-				var techID=(techCol-1)*MAXROWS+techRow;
-				if (pageShowing==2){
-					techID=techID+MAXROWS*MAXCOLS-1;
-				}
-				showTechInfo(techID);
-			} else if (pageShowing==0){
-				if (listRow>=MAXLISTROWS){
-					listRow=1;
-				} else {
-					listRow++;
-				}
-				document.getElementById('listSelector').style.top=(listRow-1)*4+'vmin';
-				var techID=document.getElementById(selectedPrefix+'HTechSlot'+listRow).value;
-				showTechInfo(techID);
-			} else {
-				if (menuSelection>=MAXITEMS){
-					menuSelection=1;
-				} else {
-					menuSelection++;
-				}
-				document.getElementById('selector').style.top=(menuSelection)*4+'vmin';
-				changeHighlightedPlayer(menuSelection);
-			}
+			navMenu.moveDown();
 		}
 
-		function leftButtonPressed(){
-			if (pageShowing>0){
-				if (techCol<=1){
-					techCol=MAXCOLS;
-				} else {
-					techCol--;
-				}
-				document.getElementById('techSelector').style.left=(techCol-1)*30+'vw';
+		function leftButtonPressed(){}
 
-				var techID=(techCol-1)*MAXROWS+techRow;
-				if (pageShowing==2){
-					techID=techID+MAXROWS*MAXCOLS-1;
-				}
-				showTechInfo(techID);
-			}
-		}
-
-		function rightButtonPressed(){
-			if (pageShowing>0){
-				if (techCol>=MAXCOLS){
-					techCol=1;
-				} else {
-					techCol++;
-				}
-				document.getElementById('techSelector').style.left=(techCol-1)*30+'vw';
-
-				var techID=(techCol-1)*MAXROWS+techRow;
-				if (pageShowing==2){
-					techID=techID+MAXROWS*MAXCOLS-1;
-				}
-				showTechInfo(techID);
-			}
-		}
+		function rightButtonPressed(){}
 		var currPlayer;
 
 		function hideTechInfo(){
@@ -643,79 +523,55 @@
 			}
 		}
 
-		function selectTech(){
-			var techID=(techCol-1)*MAXROWS+techRow;
-			if (pageShowing==2){
-				techID=techID+MAXROWS*MAXCOLS-1;
-			}
-			var techString=document.getElementById('tech'+techID).innerHTML;
-			if (techString==emptyDashString){//TODO handle hiding already selected techs
-				document.getElementById(selectedPrefix+'TechSlot'+listRow).innerHTML=techString;
-				document.getElementById(selectedPrefix+'HTechSlot'+listRow).value=0;
-				cancelButtonPressed();
-			} else if (techString==techList[techID-1].techName){
-				document.getElementById(selectedPrefix+'TechSlot'+listRow).innerHTML=techString;
-				document.getElementById(selectedPrefix+'HTechSlot'+listRow).value=techID;
-				cancelButtonPressed();
-			}
+		function selectTech(techID, techString){
+			document.getElementById('p'+menuSelection+'TechSlot'+listSelection).innerHTML=techString;
+			document.getElementById('p'+menuSelection+'HTechSlot'+listSelection).value=techID;
+			cancelButtonPressed();
 		}
 
 		function selectButtonPressed(){
-			if (!submitted){
-				if (pageShowing<0){
-					if (menuSelection==MAXITEMS){
-						document.getElementById('techsForm').submit();
-						submitted=true;
-					} else if (MAXLISTROWS>0){
-						pageShowing=0;
-						setupTechsForCurrentPlayer();
-						document.getElementById('selector').style.display='none';
-						document.getElementById('listSelector').style.top='0vmin';
-						document.getElementById('listSelector').style.display='';
-						var techID=document.getElementById(selectedPrefix+'HTechSlot1').value;
-						showTechInfo(techID);
-					}
-				} else if (pageShowing==0){
-					showTechPageCurrPlayer(1);
+			if (navMenu.getSelector()=='listSelector'){
+				displayingTechs=true;
+				listSelection=navMenu.getRow();
+				var playerID=document.getElementById('playerID'+menuSelection).innerHTML;
+				var techID=document.getElementById('p'+menuSelection+'HTechSlot'+listSelection).innerHtml;
+				navMenu.updateActiveSelector(null, 1, 1);
+				document.getElementById('playerTechMenu').src='bbTechDisplay?id='+playerID+'&tech='+techID;
+			} else if (navMenu.getSelector()=='selector'){
+				if (numTechs>0){
+					menuSelection=navMenu.getRow();
+					navMenu.updateActiveSelector('listSelector', numTechs, 1);
+				}
+			} else if (navMenu.getSelector()=='confSelector'){
+				if (navMenu.getRow()==1){
+					document.getElementById('techsForm').submit();
+					submitted=true;
 				} else {
-					if (techCol==MAXCOLS&&techRow==MAXROWS){
-						if (pageShowing==1){
-							showTechPageCurrPlayer(2);
-						} else if (pageShowing==2){
-							showTechPageCurrPlayer(1);
-						}
-					} else {
-						selectTech();
-					}
+					navMenu.updateActiveSelector('selector', MAXITEMS, MAXITEMS);
 				}
 			}
 		}
 
 		function cancelButtonPressed(){
-			if (pageShowing>0){
-				pageShowing=0;
-				document.getElementById('displayedTechsContainer').style.display='none';
-				document.getElementById('listSelector').style.display='';
-				document.getElementById('techSelector').style.top='0vw';
-				document.getElementById('techSelector').style.left='0vw';
-				techCol=1;
-				techRow=1;
-				var techID=document.getElementById(selectedPrefix+'HTechSlot'+listRow).value;
-				showTechInfo(techID);
-			} else if (pageShowing==0){
-				pageShowing=-1;
-				listRow=1;
-				document.getElementById('listSelector').style.top='0vmin';
-				document.getElementById('listSelector').style.display='none';
-				document.getElementById('selector').style.display='';
-				hideTechInfo();
-			} else {
-				menuSelection=7;
-				document.getElementById('selector').style.top=(menuSelection)*4+'vmin';
+			if (navMenu.getSelector()=='listSelector'){
+				navMenu.updateActiveSelector('selector', MAXITEMS, menuSelection);
+			} else if (navMenu.getSelector()=='selector'){
+				navMenu.updateRow(MAXITEMS);
+			} else if (navMenu.getSelector()=='confSelector'){
+				navMenu.updateRow(2);
 			}
 		}
 
 		function onKeyDown(event){
+			if (displayingTechs){
+				try{
+					document.getElementById('playerTechFrame').contentWindow.onKeyDown(event);
+				} catch (e){
+					displayingPlayerInfo=false;
+				}
+			} else if (submitted){
+				event.preventDefault();
+			} else {
 			if (event.keyCode==40){
 				event.preventDefault();
 				downButtonPressed();
@@ -734,6 +590,7 @@
 			} else if (event.keyCode==88){
 				event.preventDefault();
 				cancelButtonPressed();
+			}
 			}
 		}
 
@@ -889,46 +746,25 @@
 		}
 
 		function changeHighlightedPlayer(playerNo){
-			var playerInfo;
-
-			document.getElementById(selectedPrefix+'TechList').style.display='none';
-
-			if (playerNo!=MAXITEMS){//DONE button
-				if (playerNo==1){
-					playerInfo=myTeam.leftWing;
-					selectedPrefix='lw';
-				} else if (playerNo==2){
-					playerInfo=myTeam.rightWing;
-					selectedPrefix='rw';
-				} else if (playerNo==3){
-					playerInfo=myTeam.midfielder;
-					selectedPrefix='mf';
-				} else if (playerNo==4){
-					playerInfo=myTeam.leftBack;
-					selectedPrefix='lb';
-				} else if (playerNo==5){
-					playerInfo=myTeam.rightBack;
-					selectedPrefix='rb';
-				} else if (playerNo==6){
-					playerInfo=myTeam.keeper;
-					selectedPrefix='gk';
-				}
-
-				if (playerInfo.level>=30){
+			document.getElementById('p'+menuSelection+'TechList').style.display='none';
+			menuSelection=playerNo;
+			if (playerNo!=MAXITEMS){
+				var playerLevel = Number(document.getElementById('level'+menuSelection).innerHTML);
+				if (playerLevel>=30){
 					MAXLISTROWS=5;
-				} else if (playerInfo.level>=20){
+				} else if (playerLevel>=20){
 					MAXLISTROWS=4;
-				} else if (playerInfo.level>=12){
+				} else if (playerLevel>=12){
 					MAXLISTROWS=3;
-				} else if (playerInfo.level>=7){
+				} else if (playerLevel>=7){
 					MAXLISTROWS=2;
-				} else if (playerInfo.level>=3){
+				} else if (playerLevel>=3){
 					MAXLISTROWS=1;
 				} else {
 					MAXLISTROWS=0;
 				}
 				
-				document.getElementById(selectedPrefix+'TechList').style.display='';
+				document.getElementById('p'+menuSelection+'TechList').style.display='';
 			}
 		}
 

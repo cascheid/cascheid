@@ -55,4 +55,10 @@ BBNavMenu = function(activeSelector, maxItems, startingRow){
 		return this.activeRow;
 	}
 	
+	this.getSelector = function(){
+		return this.activeSelector;
+	}
+	
+
+	this.updateRow(this.activeRow);
 }

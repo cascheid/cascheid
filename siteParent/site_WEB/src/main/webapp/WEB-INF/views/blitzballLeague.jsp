@@ -112,7 +112,7 @@
 		var menuSelection=1;
 		var MAXITEMS=5;
 		var popupOpen=false;
-		var navMenu = new BBNavMenu('selector', MAXITEMS, 1);
+		var navMenu = new BBNavMenu('selector', MAXITEMS, 2);
 		
 		function upButtonPressed(){
 			navMenu.moveUp();

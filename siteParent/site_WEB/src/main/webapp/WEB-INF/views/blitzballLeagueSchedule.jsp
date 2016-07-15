@@ -84,7 +84,7 @@
 		var weekSelecting=false;
 		var weekOnPrev=true;
 		var currentWeek='${week}';
-		var navMenu = new BBNavMenu('selector', MAXITEMS, 1);
+		var navMenu = new BBNavMenu('selector', MAXITEMS, 3);
 		
 		function upButtonPressed(){
 			if (!weekSelecting){
