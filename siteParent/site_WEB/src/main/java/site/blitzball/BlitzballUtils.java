@@ -11,12 +11,14 @@ import java.util.Map.Entry;
 
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import site.blitzball.BlitzballLeagueStandings.BlitzballTeamResults;
 import site.dao.BlitzballDao;
 import site.dao.BlitzballDaoImpl;
 
 public class BlitzballUtils {
 	private static List<BlitzballTech> techList;
 	private static HashMap<Integer, Integer> expLevels;
+	private static HashMap<Integer, Integer> teamLevels;
 	public static final Integer MAX_LEVEL = 30;
 	
 	public static void resetBlitzballInfo(Long gameID){
@@ -453,6 +455,20 @@ public class BlitzballUtils {
 		return player;
 	}
 	
+	public static Integer getTeamLevelByExp(Integer experience){
+		if (teamLevels==null){
+			BlitzballDao dao = new BlitzballDaoImpl();
+			teamLevels = dao.getTeamLevelMilestones();
+		}
+		int level=0;
+		int expForLevel=0;
+		while (experience>=expForLevel&&level<10){
+			level++;
+			expForLevel=teamLevels.get(level+1);
+		}
+		return level;
+	}
+	
 	public static Integer getExpForLevel(Integer level){
 		if (expLevels==null){
 			getExpLevelMap();
@@ -553,7 +569,17 @@ public class BlitzballUtils {
 		return selectedPlayer;
 	}
 	
-	public static void persistBlitzballGame(BlitzballGame game, Long gameID){
+	public static boolean addExperienceAndCheckLevelup(BlitzballInfo info, Integer experience){
+		info.setTeamExp(info.getTeamExp()+experience);
+		Integer level = getTeamLevelByExp(info.getTeamExp());
+		if (level>info.getTeamLevel()){
+			info.setTeamLevel(level);
+			return true;
+		}
+		return false;
+	}
+	
+	public static boolean persistBlitzballGame(BlitzballGame game, BlitzballInfo info){
 		BlitzballDao dao = new BlitzballDaoImpl();
 		for (BlitzballPlayer player : game.getTeam1().getActivePlayers()){
 			player.setOrigLevel(player.getLevel());
@@ -561,7 +587,7 @@ public class BlitzballUtils {
 			player.setOrigNextExp(player.getNextExp());
 			for (BlitzballPlayerStatistics stats : game.getPlayerStatistics()){
 				if (stats.getPlayerID().equals(player.getPlayerID())){
-					advancePlayerExp(player, stats.getExpGained(), gameID);
+					advancePlayerExp(player, stats.getExpGained(), info.getTeam().getTeamID());
 					break;
 				}
 			}
@@ -572,16 +598,31 @@ public class BlitzballUtils {
 			player.setOrigNextExp(player.getNextExp());
 			for (BlitzballPlayerStatistics stats : game.getPlayerStatistics()){
 				if (stats.getPlayerID().equals(player.getPlayerID())){
-					advancePlayerExp(player, stats.getExpGained(), gameID);
+					advancePlayerExp(player, stats.getExpGained(), info.getTeam().getTeamID());
 					break;
 				}
 			}
 		}
+		boolean levelUp=false;
+		if (game.getHalvesComplete()>=2&&(!game.getIsOvertimeGame()||game.getTeam1Score()!=game.getTeam2Score())){
+			if (game.getTeam1Score()>game.getTeam2Score()){
+				levelUp=addExperienceAndCheckLevelup(info, 3);
+				dao.updateBlitzballInfo(info);
+			} else if (game.getTeam1Score()==game.getTeam2Score()){
+				levelUp=addExperienceAndCheckLevelup(info, 1);
+				dao.updateBlitzballInfo(info);
+			}
+		}
 		if (game.getLeagueGameID()!=null&&game.getTourneyGameID()==null){
-			dao.saveLeagueGameInfo(game, gameID);
+			dao.saveLeagueGameInfo(game, info.getTeam().getTeamID());
 		} else if (game.getLeagueGameID()==null&&game.getTourneyGameID()!=null){
 			//dao.saveTournamentGameInfo(game, gameID);
 		}
+		return levelUp;
+	}
+	
+	public static void updateTeamExperience(BlitzballInfo info, Integer experience){
+		
 	}
 	
 	public static BlitzballGame simulateGame(BlitzballGame game){
@@ -1140,5 +1181,98 @@ public class BlitzballUtils {
 		}
 		game.setPlayerStatistics(list);
 		return game;
+	}
+	
+	public static List<BlitzballPlayer> getAllPlayers(Long gameID){
+		BlitzballDao dao = new BlitzballDaoImpl();
+		return dao.getAllGamePlayers(gameID);
+	}
+	
+	public static BlitzballLeagueResult handleLeagueComplete(BlitzballInfo info){
+		BlitzballLeagueResult result = new BlitzballLeagueResult();
+		result.setPrize(info.getLeague().getPrize());
+		BlitzballLeagueStandings standings = info.getLeague().getLeagueStandings();
+		BlitzballTeamResults div1Winner = standings.getDivision1Standings().get(0);
+		BlitzballTeamResults div2Winner = standings.getDivision2Standings().get(0);
+		if (div1Winner.getPoints()>div2Winner.getPoints()){
+			result.setFirstPlaceTeam(div1Winner.getTeamID());
+			result.setSecondPlaceTeam(div2Winner.getTeamID());
+		} else if (div2Winner.getPoints()>div1Winner.getPoints()){
+			result.setFirstPlaceTeam(div2Winner.getTeamID());
+			result.setSecondPlaceTeam(div1Winner.getTeamID());
+		} else {//if they're not in the same division, they only played once
+			Iterator<Entry<Integer, List<BlitzballGame>>> it = info.getLeague().getSchedule().entrySet().iterator();
+			topLoop: while (it.hasNext()){
+				Entry<Integer, List<BlitzballGame>> e = it.next();
+				for (BlitzballGame game : e.getValue()){
+					if (game.getTeam1().getTeamID()==div1Winner.getTeamID()&&game.getTeam2().getTeamID()==div2Winner.getTeamID()){
+						if (game.getTeam1Score()>game.getTeam2Score()){
+							result.setFirstPlaceTeam(div1Winner.getTeamID());
+							result.setSecondPlaceTeam(div2Winner.getTeamID());
+						} else if (game.getTeam2Score()>game.getTeam1Score()){
+							result.setFirstPlaceTeam(div2Winner.getTeamID());
+							result.setSecondPlaceTeam(div1Winner.getTeamID());
+						}
+						break topLoop;
+					} else if (game.getTeam1().getTeamID()==div2Winner.getTeamID()&&game.getTeam2().getTeamID()==div1Winner.getTeamID()){
+						if (game.getTeam1Score()>game.getTeam2Score()){
+							result.setFirstPlaceTeam(div2Winner.getTeamID());
+							result.setSecondPlaceTeam(div1Winner.getTeamID());
+						} else if (game.getTeam2Score()>game.getTeam1Score()){
+							result.setFirstPlaceTeam(div1Winner.getTeamID());
+							result.setSecondPlaceTeam(div2Winner.getTeamID());
+						}
+						break topLoop;
+					}
+				}
+			}
+			if (result.getFirstPlaceTeam()==null){//they tied
+				if (div1Winner.getWins()>div2Winner.getWins()){
+					result.setFirstPlaceTeam(div1Winner.getTeamID());
+					result.setSecondPlaceTeam(div2Winner.getTeamID());
+				} else if (div2Winner.getWins()>div1Winner.getWins()){
+					result.setFirstPlaceTeam(div2Winner.getTeamID());
+					result.setSecondPlaceTeam(div1Winner.getTeamID());
+				} else {//tough luck division 2, i'm not writing more code for this
+					result.setFirstPlaceTeam(div1Winner.getTeamID());
+					result.setSecondPlaceTeam(div2Winner.getTeamID());
+				}
+			}
+		}
+		
+		List<BlitzballPlayerStatistics> statistics = info.getLeague().getPlayerStatistics();
+		statistics.sort(new Comparator<BlitzballPlayerStatistics>(){
+			public int compare(BlitzballPlayerStatistics p1, BlitzballPlayerStatistics p2) {
+				int comp = p2.getGoals().compareTo(p1.getGoals());
+				if (comp!=0){
+					return comp;
+				} else {
+					comp = p1.getShots().compareTo(p2.getShots());
+					if (comp!=0){
+						return comp;
+					} else {
+						return p1.getTurnovers().compareTo(p2.getTurnovers());
+					}
+				}
+			};
+		});
+		result.setTopScorerPlayerName(statistics.get(0).getPlayerName());
+		for (BlitzballPlayer player : info.getTeam().getAllPlayers()){
+			if (player.getPlayerID().equals(statistics.get(0).getPlayerID())){
+				info.setAvailableCash(info.getAvailableCash()+info.getLeague().getPrize());
+			}
+		}
+		if (info.getTeam().getTeamID().equals(result.getFirstPlaceTeam())){
+			info.setAvailableCash(info.getAvailableCash()+info.getLeague().getPrize()*3);
+			info.setLeagueWins(info.getLeagueWins()+1);
+		} else if (info.getTeam().getTeamID().equals(result.getSecondPlaceTeam())){
+			info.setAvailableCash(info.getAvailableCash()+info.getLeague().getPrize()*2);
+		} else {
+			info.setAvailableCash(info.getAvailableCash()+info.getLeague().getPrize());
+		}
+		BlitzballDao dao = new BlitzballDaoImpl();
+		dao.updateBlitzballInfo(info);
+		return result;
+		
 	}
 }

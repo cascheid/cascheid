@@ -116,6 +116,7 @@ public class BlitzballController {
 			mv = new ModelAndView("blitzballLeague");
 			mv.addObject("standings", blitzballInfo.getLeague().getLeagueStandings());
 			mv.addObject("oppName", activeOpponent.getTeamName());
+			mv.addObject("prize", blitzballInfo.getLeague().getPrize());
 		}
 		return mv;
 	}
@@ -320,14 +321,21 @@ public class BlitzballController {
 			}
 		}
 		//activeGame = blitzballGameInfo;
-		BlitzballUtils.persistBlitzballGame(activeGame, blitzballInfo.getTeam().getTeamID());
+		boolean teamLevelUp = BlitzballUtils.persistBlitzballGame(activeGame, blitzballInfo);
 		ModelAndView mv;
 		if (activeGame.getHalvesComplete()>=2&&(!activeGame.getIsOvertimeGame()||activeGame.getTeam1Score()!=activeGame.getTeam2Score())){
 			weekResults = BlitzballUtils.simulateWeeksGames(blitzballInfo, activeGame);
+			weekResults.setTeamLevelUp(teamLevelUp);
 			if (activeGame.getLeagueGameID()!=null&&activeGame.getTourneyGameID()==null){
 				weekResults.setType("league");
+				if (weekResults.getWeekNo()==10){
+					BlitzballUtils.handleLeagueComplete(blitzballInfo);
+				}
 			} else if (activeGame.getTourneyGameID()!=null&&activeGame.getLeagueGameID()==null){
 				weekResults.setType("tourney");
+				if (weekResults.getWeekNo()==3){
+					//TODO complete tournament
+				}
 			} else {
 				throw new IllegalStateException("Couldn't determine game type for week results");
 			}
@@ -508,5 +516,23 @@ public class BlitzballController {
 		activeGame=null;
 		weekResults = null;
 		return "redirect:blitzball";
+	}
+	
+	@RequestMapping("/bbRecruit")
+	public ModelAndView getRecruitingPage(){
+		if (identity==null||blitzballInfo==null){
+			return new ModelAndView("timeout");
+		}
+		ModelAndView mv = new ModelAndView("blitzballRecruit");
+		mv.addObject("myTeam", blitzballInfo.getTeam());
+		mv.addObject("allPlayers", BlitzballUtils.getAllPlayers(blitzballInfo.getTeam().getTeamID()));
+		List<Long> teamIDs = new ArrayList<Long>();
+		teamIDs.add(0l);
+		for (BlitzballTeam team : blitzballInfo.getOpponents()){
+			teamIDs.add(team.getTeamID());
+		}
+		mv.addObject("teamIDs", teamIDs);
+		return mv;
+		
 	}
 }

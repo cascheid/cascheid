@@ -45,6 +45,12 @@ body {
 	left:10%;
 }
 
+.leaguePrizes{
+	position:absolute;
+	top:65%;
+	left:10%;
+}
+
 .innerMenu{
 	padding:2.5vmin 5vmin;
 }

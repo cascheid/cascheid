@@ -26,6 +26,7 @@ public class BlitzballPlayer implements java.io.Serializable {
 	private Integer block;
 	private Integer cat;//catch
 	private Integer contractLength;
+	private Integer salary;
 	private String model;
 	private List<Integer> learnedTechs;
 	private List<Integer> learnableTechs;
@@ -157,6 +158,14 @@ public class BlitzballPlayer implements java.io.Serializable {
 	public void setContractLength(Integer contractLength) {
 		this.contractLength = contractLength;
 	}
+	public Integer getSalary() {
+		return salary;
+	}
+
+	public void setSalary(Integer salary) {
+		this.salary = salary;
+	}
+
 	public String getModel() {
 		return model;
 	}

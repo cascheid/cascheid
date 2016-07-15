@@ -12,6 +12,7 @@ public class BlitzballWeekResults implements java.io.Serializable {
 	private List<BlitzballPlayer> expiredPlayers;
 	private List<BlitzballPlayer> renewedPlayers;
 	private List<BlitzballPlayer> myExpiredPlayers;
+	private boolean teamLevelUp=false;
 	
 	public BlitzballWeekResults(){}
 
@@ -61,5 +62,13 @@ public class BlitzballWeekResults implements java.io.Serializable {
 
 	public void setMyExpiredPlayers(List<BlitzballPlayer> myExpiredPlayers) {
 		this.myExpiredPlayers = myExpiredPlayers;
+	}
+
+	public boolean isTeamLevelUp() {
+		return teamLevelUp;
+	}
+
+	public void setTeamLevelUp(boolean teamLevelUp) {
+		this.teamLevelUp = teamLevelUp;
 	}
 }
