@@ -329,7 +329,7 @@ public class BlitzballController {
 			if (activeGame.getLeagueGameID()!=null&&activeGame.getTourneyGameID()==null){
 				weekResults.setType("league");
 				if (weekResults.getWeekNo()==10){
-					BlitzballUtils.handleLeagueComplete(blitzballInfo);
+					BlitzballUtils.handleLeagueComplete(blitzballInfo, weekResults);
 				}
 			} else if (activeGame.getTourneyGameID()!=null&&activeGame.getLeagueGameID()==null){
 				weekResults.setType("tourney");
@@ -386,6 +386,9 @@ public class BlitzballController {
 			throw new IllegalStateException("Invalid weekResults type");
 		}
 		mv.addObject("weekResults", weekResults);
+		if (weekResults.getLeagueResult()!=null){
+			mv.addObject("leagueResult", weekResults.getLeagueResult());
+		}
 		return mv;
 	}
 	
@@ -451,7 +454,7 @@ public class BlitzballController {
 			activeOpponent = BlitzballUtils.getLeagueOpponentByID(blitzballInfo.getLeague());
 		}
 		BlitzballGame game = BlitzballUtils.simulateGame(BlitzballUtils.getLeagueGame(blitzballInfo.getLeague()));
-		BlitzballUtils.persistBlitzballGame(game, blitzballInfo.getTeam().getTeamID());
+		BlitzballUtils.persistBlitzballGame(game, blitzballInfo);
 		ModelAndView mv;
 		
 		mv = new ModelAndView("blitzballGameResult");

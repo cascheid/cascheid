@@ -621,10 +621,6 @@ public class BlitzballUtils {
 		return levelUp;
 	}
 	
-	public static void updateTeamExperience(BlitzballInfo info, Integer experience){
-		
-	}
-	
 	public static BlitzballGame simulateGame(BlitzballGame game){
 		//BlitzballDao dao = new BlitzballDaoImpl();
 		BlitzballTeam team1 = game.getTeam1();
@@ -1188,7 +1184,7 @@ public class BlitzballUtils {
 		return dao.getAllGamePlayers(gameID);
 	}
 	
-	public static BlitzballLeagueResult handleLeagueComplete(BlitzballInfo info){
+	public static BlitzballLeagueResult handleLeagueComplete(BlitzballInfo info, BlitzballWeekResults weekResults){
 		BlitzballLeagueResult result = new BlitzballLeagueResult();
 		result.setPrize(info.getLeague().getPrize());
 		BlitzballLeagueStandings standings = info.getLeague().getLeagueStandings();
@@ -1262,13 +1258,20 @@ public class BlitzballUtils {
 				info.setAvailableCash(info.getAvailableCash()+info.getLeague().getPrize());
 			}
 		}
+		boolean teamLevelup=false;
 		if (info.getTeam().getTeamID().equals(result.getFirstPlaceTeam())){
 			info.setAvailableCash(info.getAvailableCash()+info.getLeague().getPrize()*3);
 			info.setLeagueWins(info.getLeagueWins()+1);
+			teamLevelup=addExperienceAndCheckLevelup(info, 30);
 		} else if (info.getTeam().getTeamID().equals(result.getSecondPlaceTeam())){
+			teamLevelup=addExperienceAndCheckLevelup(info, 15);
 			info.setAvailableCash(info.getAvailableCash()+info.getLeague().getPrize()*2);
 		} else {
+			teamLevelup=addExperienceAndCheckLevelup(info, 5);
 			info.setAvailableCash(info.getAvailableCash()+info.getLeague().getPrize());
+		}
+		if (teamLevelup){
+			weekResults.setTeamLevelUp(teamLevelup);
 		}
 		BlitzballDao dao = new BlitzballDaoImpl();
 		dao.updateBlitzballInfo(info);
