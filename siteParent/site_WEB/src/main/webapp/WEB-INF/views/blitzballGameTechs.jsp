@@ -407,6 +407,8 @@
 		</p>
 		</div>
 	</div>
+	<iframe id="playerTechFrame" style="position:absolute; top:0; left:0; height:100vh; width:100vw; z-index:1050;" frameborder=0 ></iframe>
+	
 		
 		<script>
 		//document.getElementById('displayedTechsContainer').style.display='none';
@@ -420,7 +422,7 @@
 		var MAXLISTROWS=0;
 		var listRow=1;
 		var selectedPrefix='lw';
-		var techList=${techList};
+		var techList=null;//${techList};
 		var emptyDashString='- - - - - - - -';
 		var submitted=false;
 		var navMenu = new BBNavMenu('selector', MAXITEMS, 1);
@@ -536,7 +538,7 @@
 				var playerID=document.getElementById('playerID'+menuSelection).innerHTML;
 				var techID=document.getElementById('p'+menuSelection+'HTechSlot'+listSelection).innerHtml;
 				navMenu.updateActiveSelector(null, 1, 1);
-				document.getElementById('playerTechMenu').src='bbTechDisplay?id='+playerID+'&tech='+techID;
+				document.getElementById('playerTechFrame').src='bbTechDisplay?id='+playerID+'&tech='+techID;
 			} else if (navMenu.getSelector()=='selector'){
 				if (numTechs>0){
 					menuSelection=navMenu.getRow();

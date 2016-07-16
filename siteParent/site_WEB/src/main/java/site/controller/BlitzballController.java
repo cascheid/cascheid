@@ -242,15 +242,9 @@ public class BlitzballController {
 		ModelAndView mv = new ModelAndView("blitzballGameTechs");
 		
 		blitzballInfo.setTeam(BlitzballUtils.getUpdatedRoster(blitzballInfo.getTeam(), blitzballGameRoster));
-
-		ObjectMapper objectMapper = new ObjectMapper();
-		try {
-			mv.addObject("myTeam", objectMapper.writeValueAsString(blitzballInfo.getTeam()));
-			mv.addObject("techList", objectMapper.writeValueAsString(BlitzballUtils.getTechList()));
-			mv.addObject("blitzballGameTechs", new BlitzballGameTechs());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		mv.addObject("myTeam");
+		mv.addObject("blitzballGameTechs", new BlitzballGameTechs());
+		
 		return mv;
 	}
 	
