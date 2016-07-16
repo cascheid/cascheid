@@ -1,0 +1,11 @@
+use mysite;
+source 008_create_bb_tables.sql
+source 009_create_blitzball_game_function.sql
+source 010_insert_blitzball_techs.sql
+source 011_bb_table_updates.sql
+source 011_create_sign_free_agent_function.sql
+source 012_all_players.sql
+source 013_setup_exp_table.sql
+source 014_reset_blitzball_game_procedure.sql
+source 015_create_league_procedure.sql
+source 016_team_exp_lookup.sql

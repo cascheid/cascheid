@@ -25,6 +25,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import site.blitzball.BlitzballGame;
 import site.blitzball.BlitzballInfo;
 import site.blitzball.BlitzballLeague;
+import site.blitzball.BlitzballLeagueResult;
 import site.blitzball.BlitzballPlayer;
 import site.blitzball.BlitzballPlayerStatistics;
 import site.blitzball.BlitzballTeam;
@@ -32,43 +33,44 @@ import site.blitzball.BlitzballTech;
 import site.blitzball.BlitzballUtils;
 
 public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
+	private RowMapper<BlitzballPlayer> playerMapper = new RowMapper<BlitzballPlayer>(){
+		public BlitzballPlayer mapRow(ResultSet rs, int rowNum) throws SQLException {
+			BlitzballPlayer player = new BlitzballPlayer();
+			player.setPlayerID(rs.getInt("PLAYER_ID"));
+			player.setTeamID(rs.getLong("CURR_TEAM"));
+			player.setName(rs.getString("NAME"));
+			player.setLevel(rs.getInt("LEVEL"));
+			player.setExperience(rs.getInt("EXP"));
+			player.setNextExp(BlitzballUtils.getExpForLevel(player.getLevel()+1));
+			player.setSpeed(rs.getInt("SPD"));
+			player.setEndurance(rs.getInt("ENDUR"));
+			player.setHp(rs.getInt("HP"));
+			player.setAttack(rs.getInt("ATK"));
+			player.setPass(rs.getInt("PASS"));
+			player.setShot(rs.getInt("SHOT"));
+			player.setBlock(rs.getInt("BLK"));
+			player.setCat(rs.getInt("CAT"));
+			player.setContractLength(rs.getInt("CONTRACT_LENGTH"));
+			player.setSalary(rs.getInt("SALARY"));
+			player.setTech1(BlitzballUtils.getTechFromTechID(rs.getInt("TECH1")));
+			player.setTech2(BlitzballUtils.getTechFromTechID(rs.getInt("TECH2")));
+			player.setTech3(BlitzballUtils.getTechFromTechID(rs.getInt("TECH3")));
+			player.setTech4(BlitzballUtils.getTechFromTechID(rs.getInt("TECH4")));
+			player.setTech5(BlitzballUtils.getTechFromTechID(rs.getInt("TECH5")));
+			player.setKeyTech1(BlitzballUtils.getTechFromTechID(rs.getInt("KEYTECH1")));
+			player.setKeyTech2(BlitzballUtils.getTechFromTechID(rs.getInt("KEYTECH2")));
+			player.setKeyTech3(BlitzballUtils.getTechFromTechID(rs.getInt("KEYTECH3")));
+			player.setLearnableTechs(jdbcTemplate.queryForList("SELECT TECH_ID FROM BB_PLAYER_TECHS WHERE GAME_ID=? AND PLAYER_ID=? AND LEARNED=FALSE", new Object[]{rs.getLong("GAME_ID"), player.getPlayerID()}, Integer.class));
+			player.setLearnedTechs(jdbcTemplate.queryForList("SELECT TECH_ID FROM BB_PLAYER_TECHS WHERE GAME_ID=? AND PLAYER_ID=? AND LEARNED=TRUE", new Object[]{rs.getLong("GAME_ID"), player.getPlayerID()}, Integer.class));
+			player.setModel(rs.getString("MODEL"));
+			return player;
+		}
+	};
 	
 	public BlitzballPlayer getPlayerByID(Integer playerID, Long gameID, Integer optionalLevel){
 		if (jdbcTemplate==null){
 			setDataSource(getDataSource());
 		}
-		RowMapper<BlitzballPlayer> playerMapper = new RowMapper<BlitzballPlayer>(){
-			public BlitzballPlayer mapRow(ResultSet rs, int rowNum) throws SQLException {
-				BlitzballPlayer player = new BlitzballPlayer();
-				player.setPlayerID(rs.getInt("PLAYER_ID"));
-				player.setTeamID(rs.getLong("CURR_TEAM"));
-				player.setName(rs.getString("NAME"));
-				player.setLevel(rs.getInt("LEVEL"));
-				player.setExperience(rs.getInt("EXP"));
-				player.setNextExp(BlitzballUtils.getExpForLevel(player.getLevel()+1));
-				player.setSpeed(rs.getInt("SPD"));
-				player.setEndurance(rs.getInt("ENDUR"));
-				player.setHp(rs.getInt("HP"));
-				player.setAttack(rs.getInt("ATK"));
-				player.setPass(rs.getInt("PASS"));
-				player.setShot(rs.getInt("SHOT"));
-				player.setBlock(rs.getInt("BLK"));
-				player.setCat(rs.getInt("CAT"));
-				player.setContractLength(rs.getInt("CONTRACT_LENGTH"));
-				player.setTech1(BlitzballUtils.getTechFromTechID(rs.getInt("TECH1")));
-				player.setTech2(BlitzballUtils.getTechFromTechID(rs.getInt("TECH2")));
-				player.setTech3(BlitzballUtils.getTechFromTechID(rs.getInt("TECH3")));
-				player.setTech4(BlitzballUtils.getTechFromTechID(rs.getInt("TECH4")));
-				player.setTech5(BlitzballUtils.getTechFromTechID(rs.getInt("TECH5")));
-				player.setKeyTech1(BlitzballUtils.getTechFromTechID(rs.getInt("KEYTECH1")));
-				player.setKeyTech2(BlitzballUtils.getTechFromTechID(rs.getInt("KEYTECH2")));
-				player.setKeyTech3(BlitzballUtils.getTechFromTechID(rs.getInt("KEYTECH3")));
-				player.setLearnableTechs(jdbcTemplate.queryForList("SELECT TECH_ID FROM BB_PLAYER_TECHS WHERE GAME_ID=? AND PLAYER_ID=? AND LEARNED=FALSE", new Object[]{gameID, player.getPlayerID()}, Integer.class));
-				player.setLearnedTechs(jdbcTemplate.queryForList("SELECT TECH_ID FROM BB_PLAYER_TECHS WHERE GAME_ID=? AND PLAYER_ID=? AND LEARNED=TRUE", new Object[]{gameID, player.getPlayerID()}, Integer.class));
-				player.setModel(rs.getString("MODEL"));
-				return player;
-			}
-		};
 		if (optionalLevel==null){
 			return jdbcTemplate.queryForObject("SELECT * FROM BB_PLAYERS P INNER JOIN BB_PLAYER_LVL_STATS PLS ON P.LEVEL=PLS.LEVEL AND P.PLAYER_ID=PLS.PLAYER_ID WHERE P.PLAYER_ID=? AND P.GAME_ID=?" , new Object[]{playerID, gameID}, playerMapper);
 		} else {
@@ -85,9 +87,10 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 			public BlitzballInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
 				BlitzballInfo info = new BlitzballInfo();
 				info.setUserID(identifier);
-				info.setTotalWins(rs.getInt("WINS"));
-				info.setTotalLosses(rs.getInt("LOSSES"));
+				info.setLeagueWins(rs.getInt("LEAGUE_WINS"));
+				info.setTournamentWins(rs.getInt("TOURNAMENT_WINS"));
 				info.setTeamLevel(rs.getInt("TEAM_LVL"));
+				info.setTeamExp(rs.getInt("TEAM_EXP"));
 				
 				final Long gameID=rs.getLong("GAME_ID");
 				
@@ -143,12 +146,20 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 		return info;
 	}
 	
+	public void updateBlitzballInfo(BlitzballInfo info){
+		if (jdbcTemplate==null){
+			setDataSource(getDataSource());
+		}
+		
+		jdbcTemplate.update("UPDATE BB_INFO SET TEAM_LVL=?, TEAM_EXP=?, AVAILABLE_CASH=?, LEAGUE_WINS=?, TOURNAMENT_WINS=? WHERE GAME_ID=?", new Object[]{info.getTeamLevel(), info.getTeamExp(), info.getAvailableCash(), info.getLeagueWins(), info.getTournamentWins(), info.getTeam().getTeamID()});
+	}
+	
 	public void resetBlitzballGameInfo(Long gameID){
 		if (jdbcTemplate==null){
 			setDataSource(getDataSource());
 		}
 
-		SimpleJdbcCall resetGameProc= new SimpleJdbcCall(this.getDataSource()).withFunctionName("RESET_BLITZBALL_GAME");
+		SimpleJdbcCall resetGameProc= new SimpleJdbcCall(this.getDataSource()).withProcedureName("RESET_BLITZBALL_GAME");
 		resetGameProc.declareParameters(new SqlParameter("p_game_id", Types.NUMERIC));
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("p_game_id", gameID);
@@ -185,6 +196,7 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 				league.setLeagueID(rs.getLong("LEAGUE_ID"));
 				league.setGameID(rs.getLong("GAME_ID"));
 				league.setWeeksComplete(rs.getInt("WEEKS_COMPLETE"));
+				league.setPrize(rs.getInt("PRIZE"));
 				List<Long> divOppIds = new ArrayList<Long>();
 				divOppIds.add(rs.getLong("DIV_OPP1"));
 				divOppIds.add(rs.getLong("DIV_OPP2"));
@@ -226,21 +238,21 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 			setDataSource(getDataSource());
 		}
 		Long lReturn=null;
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-		jdbcTemplate.update(
-		    new PreparedStatementCreator() {
-		        public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-		            PreparedStatement ps =
-		                connection.prepareStatement("INSERT INTO BB_LEAGUE(LEAGUE_ID, GAME_ID, WEEKS_COMPLETE, DIV_OPP1, DIV_OPP2, DIV_OPP3) VALUES (NULL, ?, 0, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-		            ps.setLong(1, teamID);
-		            ps.setLong(2, divisionOpponents.get(0));
-		            ps.setLong(3, divisionOpponents.get(1));
-		            ps.setLong(4, divisionOpponents.get(2));
-		            return ps;
-		        }
-		    },
-		    keyHolder);
-		lReturn=(Long) keyHolder.getKey();
+
+		SimpleJdbcCall createGameFunc= new SimpleJdbcCall(this.getDataSource()).withFunctionName("CREATE_LEAGUE");
+		createGameFunc.declareParameters(new SqlParameter("p_gameID", Types.NUMERIC),
+				new SqlParameter("p_div_opp1", Types.NUMERIC),
+				new SqlParameter("p_div_opp2", Types.NUMERIC),
+				new SqlParameter("p_div_opp3", Types.NUMERIC));
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("p_gameID", teamID);
+		params.put("p_div_opp1", divisionOpponents.get(0));
+		params.put("p_div_opp2", divisionOpponents.get(1));
+		params.put("p_div_opp3", divisionOpponents.get(2));
+		
+		SqlParameterSource in = new MapSqlParameterSource().addValues(params);
+		Integer leagueID=createGameFunc.executeFunction(Integer.class, in);
+		lReturn = new Long(leagueID);
 		
 		Iterator<Entry<Integer, List<BlitzballGame>>> it = schedule.entrySet().iterator();
 		while (it.hasNext()){
@@ -267,7 +279,6 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 				team.setTeamID(rs.getLong("TEAM_ID"));
 				String teamName=rs.getString("TEAM_NAME");
 				team.setTeamName(teamName);
-
 
 				team.setLeftWing(getPlayerByID(rs.getInt("LWING"), league.getGameID(), null));
 				team.setRightWing(getPlayerByID(rs.getInt("RWING"), league.getGameID(), null));
@@ -442,6 +453,21 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 		return expMap;
 	}
 	
+	public HashMap<Integer, Integer> getTeamLevelMilestones(){
+		if (jdbcTemplate==null){
+			setDataSource(getDataSource());
+		}
+		HashMap<Integer, Integer> teamExpMap = new HashMap<Integer, Integer>();
+		jdbcTemplate.query("SELECT * FROM BB_TEAM_LVL_LOOKUP", new RowMapper<Void>(){
+			public Void mapRow(ResultSet rs, int rowNum) throws SQLException {
+				teamExpMap.put(rs.getInt("LEVEL"), rs.getInt("EXP"));
+				return null;
+			}
+			
+		});
+		return teamExpMap;
+	}
+	
 	public void saveLeagueGameInfo(BlitzballGame game, Long gameID){
 		if (jdbcTemplate==null){
 			setDataSource(getDataSource());
@@ -495,6 +521,7 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 				player.setBlock(rs.getInt("BLK"));
 				player.setCat(rs.getInt("CAT"));
 				player.setContractLength(rs.getInt("CONTRACT_LENGTH"));
+				player.setSalary(rs.getInt("SALARY"));
 				player.setTech1(BlitzballUtils.getTechFromTechID(rs.getInt("TECH1")));
 				player.setTech2(BlitzballUtils.getTechFromTechID(rs.getInt("TECH2")));
 				player.setTech3(BlitzballUtils.getTechFromTechID(rs.getInt("TECH3")));
@@ -546,6 +573,7 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 				player.setBlock(rs.getInt("BLK"));
 				player.setCat(rs.getInt("CAT"));
 				player.setContractLength(rs.getInt("CONTRACT_LENGTH"));
+				player.setSalary(rs.getInt("SALARY"));
 				player.setTech1(BlitzballUtils.getTechFromTechID(rs.getInt("TECH1")));
 				player.setTech2(BlitzballUtils.getTechFromTechID(rs.getInt("TECH2")));
 				player.setTech3(BlitzballUtils.getTechFromTechID(rs.getInt("TECH3")));
@@ -609,6 +637,13 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 			return "BENCH2";
 		}
 		return null;
+	}
+	
+	public List<BlitzballPlayer> getAllGamePlayers(Long gameID){
+		if (jdbcTemplate==null){
+			setDataSource(getDataSource());
+		}
+		return jdbcTemplate.query("SELECT * FROM BB_PLAYERS P INNER JOIN BB_PLAYER_LVL_STATS PLS ON P.LEVEL=PLS.LEVEL AND P.PLAYER_ID=PLS.PLAYER_ID WHERE P.GAME_ID=?" , new Long[]{gameID}, playerMapper);
 	}
 	
 }

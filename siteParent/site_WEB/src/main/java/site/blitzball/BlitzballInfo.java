@@ -9,9 +9,11 @@ public class BlitzballInfo implements java.io.Serializable {
 	private BlitzballTeam team;
 	private List<BlitzballTeam> opponents;
 	private BlitzballLeague league;
-	private Integer totalWins;
-	private Integer totalLosses;
+	private Integer availableCash;
+	private Integer leagueWins;
+	private Integer tournamentWins;
 	private Integer teamLevel;
+	private Integer teamExp;
 	
 	public BlitzballInfo(){}
 
@@ -47,20 +49,28 @@ public class BlitzballInfo implements java.io.Serializable {
 		this.league = league;
 	}
 
-	public Integer getTotalWins() {
-		return totalWins;
+	public Integer getAvailableCash() {
+		return availableCash;
 	}
 
-	public void setTotalWins(Integer totalWins) {
-		this.totalWins = totalWins;
+	public void setAvailableCash(Integer availableCash) {
+		this.availableCash = availableCash;
 	}
 
-	public Integer getTotalLosses() {
-		return totalLosses;
+	public Integer getLeagueWins() {
+		return leagueWins;
 	}
 
-	public void setTotalLosses(Integer totalLosses) {
-		this.totalLosses = totalLosses;
+	public void setLeagueWins(Integer leagueWins) {
+		this.leagueWins = leagueWins;
+	}
+
+	public Integer getTournamentWins() {
+		return tournamentWins;
+	}
+
+	public void setTournamentWins(Integer tournamentWins) {
+		this.tournamentWins = tournamentWins;
 	}
 
 	public Integer getTeamLevel() {
@@ -71,6 +81,14 @@ public class BlitzballInfo implements java.io.Serializable {
 		this.teamLevel = teamLevel;
 	}
 	
+	public Integer getTeamExp() {
+		return teamExp;
+	}
+
+	public void setTeamExp(Integer teamExp) {
+		this.teamExp = teamExp;
+	}
+
 	public Integer getNumberOfPlayers(){
 		int numPlayers = 0;
 		for (BlitzballPlayer player : this.team.getAllPlayers()){

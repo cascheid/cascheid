@@ -34,6 +34,12 @@
 			</div>
 		</div>
 	</div>
+		<div class="leaguePrizes smallFont">
+			<div>First Place: ${prize*3} credits</div>
+			<div>Division Winner: ${prize*2} credits</div>
+			<div>Participation: ${prize} credits</div>
+			<div>Top Scorer Bonus: ${prize} credits</div>
+		</div>
 	
 	<div id="standings">
 		<div id="div1Standings" style="position:absolute; left:40%; top:20vmin; width:40%; font-size:6vmin; text-align:center">
@@ -87,7 +93,10 @@
 		</div>
 	</div>
 	
-	<div id="confirmDiv" class="menu absoluteCentered" style="display:none; top:30vmin"">
+	
+	
+	
+	<div id="confirmDiv" class="menu absoluteCentered" style="display:none; top:30vmin">
 		<div class="innerMenu">
 			<div>Play Game vs</div>
 			<div>${oppName}?</div>
