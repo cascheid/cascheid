@@ -13,6 +13,7 @@ public class BlitzballLeague implements java.io.Serializable {
 	private Long leagueID;
 	private Long gameID;
 	private Integer weeksComplete;
+	private Integer prize;
 	private BlitzballTeam myTeam;
 	private List<BlitzballTeam> divisionOpponents;
 	private List<BlitzballTeam> nonDivisionOpponents;
@@ -37,6 +38,12 @@ public class BlitzballLeague implements java.io.Serializable {
 	}
 	public void setWeeksComplete(Integer weeksComplete) {
 		this.weeksComplete = weeksComplete;
+	}
+	public Integer getPrize() {
+		return prize;
+	}
+	public void setPrize(Integer prize) {
+		this.prize = prize;
 	}
 	public BlitzballTeam getMyTeam() {
 		return myTeam;

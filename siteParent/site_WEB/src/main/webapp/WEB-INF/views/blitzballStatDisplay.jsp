@@ -79,7 +79,7 @@
 
 			var playerInfo=JSON.parse('${player}');
 			
-			parent.parent.loadPlayer(playerInfo.name);
+			//parent.parent.loadPlayer(playerInfo.name);
 
 			document.getElementById('displayName').innerHTML=playerInfo.name;
 			document.getElementById('lvlDisplay').innerHTML=playerInfo.level;

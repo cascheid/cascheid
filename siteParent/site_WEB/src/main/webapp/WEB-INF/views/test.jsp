@@ -1,9 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>three.js webgl - collada</title>
+		<title>Blitzball!</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<style>
@@ -224,13 +226,53 @@
 		</div>
 		</div>
 		
-		<div id="infoText" style="color:white; position:absolute; top:20vmin; left:20vmin"></div>
+		<div id="infoText" style="color:white; text-align:left; font-size:4vmin; position:absolute; top:20vmin; left:20vmin"></div>
+		
+		<div id="techCopy" style="color:#FFFFFF; text-align:left; font-size:4vmin; position:absolute; top:80vmin; left:20vmin; display:none">techcopy</div>
 		
 		<div id="overlay" style="display:none">Blitzoff!</div>
 		
-		<div style="position: absolute; bottom:0; left: 80%; z-index:1000">
+		<div style="position: absolute; bottom:6vw; left: 80%; z-index:1000">
 			<canvas id="minimapCanvas"></canvas>
 		</div>
+		
+		<div id="bottomDisplay" style="display:table; position: absolute; bottom:0vw; left: 70%; z-index:1000; width:30%; visibility:hidden">
+			<div id="timeRow" style="display:table-row;">
+				<div class="num" style="color:#FFFF00; width:29%; border-top-left-radius: 1vw; border-bottom-left-radius: 1vw;">TIME</div>
+				<div class="num" style="width:20%;"><label id="minuteLabel">00</label></div>
+				<div class="num" style="width:2%;"><label>:</label></div>
+				<div class="num" style="width:20%; text-align:left;"><label id="secondLabel">00</label></div>
+				<div class="num" style="width:29%;"></div>
+			</div>
+			<div id="scoreRow" style="display:table-row;">
+				<div class="num" style="text-align:center; color:#FFFF00; width:29%; border-top-left-radius: 1vw; border-bottom-left-radius: 1vw;">
+					<img id="team2Logo" src="" width="0" height="0" />
+				</div>
+				<div class="num" style="width:20%; text-align:left"><label id="team2Score" style="padding-left:0.5vw;">0</label></div>
+				<div class="num" style="width:2%;"></div>
+				<div class="num" style="width:20%;text-align:right; "><label id="team1Score" style="padding-left:0.5vw;">0</label></div>
+				<div class="num" style="width:29%; text-align:center; ">
+					<img id="team1Logo" src="" width="0" height="0" />
+				</div>
+			</div>
+		</div>
+		
+		<form:form id="gameInfoForm" action="blitzballIntermission" commandName="blitzballGameInfo">
+			<form:hidden id="formTeam1Score" path="team1Score"/>
+			<form:hidden id="formTeam2Score" path="team2Score"/>
+			<form:hidden id="halvesComplete" path="halvesComplete"/>
+    		<c:forEach var="playerStatLine" items="${blitzballGameInfo.playerStatistics}" varStatus="status">
+        		<form:hidden path="playerStatistics[${status.index}].goals" name="goals" id="goals${playerStatLine.playerID}" value="" />
+        		<form:hidden path="playerStatistics[${status.index}].shots" name="shots" id="shots${playerStatLine.playerID}" value="" />
+        		<form:hidden path="playerStatistics[${status.index}].assists" name="assists" id="assists${playerStatLine.playerID}" value="" />
+        		<form:hidden path="playerStatistics[${status.index}].goalsAgainst" name="goalsAgainst" id="goalsAgainst${playerStatLine.playerID}" value="" />
+        		<form:hidden path="playerStatistics[${status.index}].shotsAgainst" name="shotsAgainst" id="shotsAgainst${playerStatLine.playerID}" value="" />
+        		<form:hidden path="playerStatistics[${status.index}].tackles" name="tackles" id="tackles${playerStatLine.playerID}" value="" />
+        		<form:hidden path="playerStatistics[${status.index}].blocks" name="blocks" id="blocks${playerStatLine.playerID}" value="" />
+        		<form:hidden path="playerStatistics[${status.index}].breaks" name="breaks" id="breaks${playerStatLine.playerID}" value="" />
+        		<form:hidden path="playerStatistics[${status.index}].turnovers" name="turnovers" id="turnovers${playerStatLine.playerID}" value="" />
+    		</c:forEach>
+		</form:form>
 
 		<script src="js/three73.js?version=1.00"></script>
 		<script src="js/BBAnimation.js"></script>
@@ -273,8 +315,15 @@
 			var currAnimation="none";
 			var currAction="none";
 			var gameActive=false;
+			var timerActive=false;
 			var teamWithBall=1;
 			var multiplayer=false;
+
+			var trackTimer=0;
+			var triggerTimer=0;
+			var rotTimer=0;
+			var gameTimer=0;
+			var selectedTech=null;
 
 			var menuSelection=1;
 			var MAXITEMS=3;
@@ -290,6 +339,7 @@
 			var team2Score=0;
 			var lastScoredTeam=0;
 			var timeSinceLastTrigger=10;
+			var halvesComplete=Number(document.getElementById('halvesComplete').value);
 			var loader = new THREE.ColladaLoader();
 			loader.options.convertUpAxis = true;
 			loader.load( 'obj/stormtrooper/blitzball.dae', function ( collada ) {
@@ -333,42 +383,45 @@
 			} );
 
 
+			var myTeamJSON=JSON.parse('${myTeam}');
+			var oppTeamJSON=JSON.parse('${oppTeam}');
+
 			var myTeam = [];
-			var myTeamLW = new THREE.BBPlayer(null, new THREE.Vector3(20, 0, 50), triggerBreak);
+			var myTeamLW = new THREE.BBPlayer(myTeamJSON.leftWing, new THREE.Vector3(20, 0, 50), triggerBreak);
 			myTeamLW.loadPlayer(function(){addPlayer(myTeamLW);});
 			myTeam.push(myTeamLW);
-			var myTeamRW = new THREE.BBPlayer(null, new THREE.Vector3(20, 0, -50), triggerBreak);
+			var myTeamRW = new THREE.BBPlayer(myTeamJSON.rightWing, new THREE.Vector3(20, 0, -50), triggerBreak);
 			myTeamRW.loadPlayer(function(){addPlayer(myTeamRW);});
 			myTeam.push(myTeamRW);
-			var myTeamMF = new THREE.BBPlayer(null, new THREE.Vector3(40, 0, 0), triggerBreak);
+			var myTeamMF = new THREE.BBPlayer(myTeamJSON.midfielder, new THREE.Vector3(40, 0, 0), triggerBreak);
 			myTeamMF.loadPlayer(function(){addPlayer(myTeamMF);});
 			myTeam.push(myTeamMF);
-			var myTeamLB = new THREE.BBPlayer(null, new THREE.Vector3(60, 0, 20), triggerBreak);
+			var myTeamLB = new THREE.BBPlayer(myTeamJSON.leftBack, new THREE.Vector3(60, 0, 20), triggerBreak);
 			myTeamLB.loadPlayer(function(){addPlayer(myTeamLB);});
 			myTeam.push(myTeamLB);
-			var myTeamRB = new THREE.BBPlayer(null, new THREE.Vector3(60, 0, -20), triggerBreak);
+			var myTeamRB = new THREE.BBPlayer(myTeamJSON.rightBack, new THREE.Vector3(60, 0, -20), triggerBreak);
 			myTeamRB.loadPlayer(function(){addPlayer(myTeamRB);});
 			myTeam.push(myTeamRB);
-			var myTeamGK = new THREE.BBPlayer(null, new THREE.Vector3(95, 0, 0), triggerBreak);
+			var myTeamGK = new THREE.BBPlayer(myTeamJSON.keeper, new THREE.Vector3(95, 0, 0), triggerBreak);
 			myTeamGK.loadPlayer(function(){addPlayer(myTeamGK);});
 
 			var oppTeam = [];
-			var oppTeamLW = new THREE.BBPlayer(null, new THREE.Vector3(-20, 0, -50), triggerBreak);
+			var oppTeamLW = new THREE.BBPlayer(oppTeamJSON.leftWing, new THREE.Vector3(-20, 0, -50), triggerBreak);
 			oppTeamLW.loadPlayer(function(){addPlayer(oppTeamLW);});
 			oppTeam.push(oppTeamLW);
-			var oppTeamRW = new THREE.BBPlayer(null, new THREE.Vector3(-20, 0, 50), triggerBreak);
+			var oppTeamRW = new THREE.BBPlayer(oppTeamJSON.rightWing, new THREE.Vector3(-20, 0, 50), triggerBreak);
 			oppTeamRW.loadPlayer(function(){addPlayer(oppTeamRW);});
 			oppTeam.push(oppTeamRW);
-			var oppTeamMF = new THREE.BBPlayer(null, new THREE.Vector3(-40, 0, 0), triggerBreak);
+			var oppTeamMF = new THREE.BBPlayer(oppTeamJSON.midfielder, new THREE.Vector3(-40, 0, 0), triggerBreak);
 			oppTeamMF.loadPlayer(function(){addPlayer(oppTeamMF);});
 			oppTeam.push(oppTeamMF);
-			var oppTeamLB = new THREE.BBPlayer(null, new THREE.Vector3(-60, 0, -20), triggerBreak);
+			var oppTeamLB = new THREE.BBPlayer(oppTeamJSON.leftBack, new THREE.Vector3(-60, 0, -20), triggerBreak);
 			oppTeamLB.loadPlayer(function(){addPlayer(oppTeamLB);});
 			oppTeam.push(oppTeamLB);
-			var oppTeamRB = new THREE.BBPlayer(null, new THREE.Vector3(-60, 0, 20), triggerBreak);
+			var oppTeamRB = new THREE.BBPlayer(oppTeamJSON.rightBack, new THREE.Vector3(-60, 0, 20), triggerBreak);
 			oppTeamRB.loadPlayer(function(){addPlayer(oppTeamRB);});
 			oppTeam.push(oppTeamRB);
-			var oppTeamGK = new THREE.BBPlayer(null, new THREE.Vector3(-95, 0, 0), triggerBreak);
+			var oppTeamGK = new THREE.BBPlayer(oppTeamJSON.keeper, new THREE.Vector3(-95, 0, 0), triggerBreak);
 			oppTeamGK.loadPlayer(function(){addPlayer(oppTeamGK);});
 
 			var allPlayers=[];
@@ -462,10 +515,11 @@
 				minimapContext = minimapCanvas.getContext('2d');
 				minimapCanvas.height=window.innerWidth*.2;
 				minimapCanvas.width=window.innerWidth*.2;
+				minimapContext.globalAlpha=0.5;
 
-				minimapContext.rect(0,0,minimapCanvas.width,minimapCanvas.width);
-				minimapContext.fillStyle="grey";
-				minimapContext.fill();
+				minimapContext.clearRect(0,0,minimapCanvas.width,minimapCanvas.width);
+				//minimapContext.fillStyle="grey";
+				//minimapContext.fill();
 				minimapContext.beginPath();
 				minimapContext.arc(minimapCanvas.width/2, minimapCanvas.width/2, minimapCanvas.width/2, 0, 2 * Math.PI, false);
 				minimapContext.closePath();
@@ -563,6 +617,24 @@
 				stats.domElement.style.top = '0px';
 				container.appendChild( stats.domElement );
 
+				//scoreboard
+				var logoImg1 = new Image();
+				logoImg1.onload = function(){
+					var img=document.getElementById('team1Logo');
+					img.height=window.innerWidth*0.03;
+					img.width=window.innerWidth*0.04;
+					img.src=logoImg1.src;
+				}
+				logoImg1.src="img/blitzball/Bandits.jpg";
+				var logoImg2 = new Image();
+				logoImg2.onload = function(){
+					var img=document.getElementById('team2Logo');
+					img.height=window.innerWidth*0.03;
+					img.width=window.innerWidth*0.04;
+					img.src=logoImg2.src;
+				}
+				logoImg2.src="img/blitzball/Bandits.jpg";
+				
 				window.addEventListener( 'resize', onWindowResize, false );
 				window.addEventListener('keydown', onKeyDown, true);
 				window.addEventListener('keyup', onKeyUp, true);
@@ -570,6 +642,7 @@
 
 			function startGame(){
 				cameraTarget.set(scene.position.x, scene.position.y, scene.position.z);
+				document.getElementById('bottomDisplay').style.visibility='';
 
 				clock=new THREE.Clock();
 				//updateCurrentPlayer(myTeamLW);
@@ -727,6 +800,7 @@
 			}
 
 			function triggerBreak(){
+				timerActive=false
 				controls.moveForward=false;
 				controls.moveBackward=false;
 				controls.moveLeft=false;
@@ -851,35 +925,108 @@
 								numDefenders++;
 							}
 						}
-						writeInfo(numDefenders + ' player breakthrough.');
-						setTimeout(function(){
-							if (currentPlayer.currentPosition.x<20){
-								writeInfo('Pass');
-								currAction="breaktargetting";
-							} else {
-								writeInfo('Shoot');
-								currAction="breakshoot";
-							}
-							setTimeout(function(){animateBreak(numDefenders);}, '2000');
-						}, '2000');
+						if (numDefenders>0){
+							writeInfo(numDefenders + ' player breakthrough.');
+						} else {
+							writeInfo('No break');
+						}
 					} else {
 						writeInfo('No break');
-						setTimeout(function(){
-							if (currentPlayer.currentPosition.x<20){
-								writeInfo('Pass');
-								currAction="breaktargetting";
+					}
+					setTimeout(function(){
+						if (currentPlayer.currentPosition.x<20||(Math.random()<(currentPlayer.pass/(currentPlayer.shoot+currentPlayer.pass)))){
+							var options = [];
+							for (var i=0; i<currentPlayer.techs.length; i++){
+								if (currentPlayer.techs[i].techType=='pass'&&currentPlayer.techs[i].hpCost<currentPlayer.hp){
+									options.push(i);
+								}
+							}
+							if (options.length>0){
+								var chosen = Math.floor(Math.random()*(options.length+1));
+								if (chosen>0){
+									selectedTech = currentPlayer.techs[options[chosen-1]];
+								}
+							}
+							if (selectedTech!=null){
+								writeInfo(selectedTech.techName);
 							} else {
-								writeInfo('Shoot');
+								writeInfo('Pass');
+							}
+							currAction="breaktargetting";
+						} else {
+							if (Math.random()<(currentPlayer.shoot/(currentPlayer.shoot+currentPlayer.pass))){
+								var options = [];
+								for (var i=0; i<currentPlayer.techs.length; i++){
+									if (currentPlayer.techs[i].techType=='shot'&&currentPlayer.techs[i].hpCost<currentPlayer.hp){
+										options.push(i);
+									}
+								}
+								if (options.length>0){
+									var chosen = Math.floor(Math.random()*(options.length+1));
+									if (chosen>0){
+										selectedTech = currentPlayer.techs[options[chosen-1]];
+									}
+								}
+								if (selectedTech!=null){
+									writeInfo(selectedTech.techName);
+								} else {
+									writeInfo('Shoot');
+								}
 								currAction="breakshoot";
 							}
-							setTimeout(function(){animateBreak(0);}, '2000');
-						}, '2000');
-					}
+						}
+						setTimeout(function(){animateBreak(numDefenders);}, '2000');
+					}, '2000');
 				}
 			}
-			
+			var gameOver=false;
 			function selectButtonPressed(){
-				if (gameActive&&teamWithBall==1){
+				if (!gameOver){
+				if (techCopying){
+					if (techCopyMatch){
+						var playerOptions=[];
+						if (teamWithBall==2){
+							for (var i=0; i<myTeam[i].length; i++){
+								if (myTeam[i].techCopyTarget==currentPlayer.playerID){
+									for (var j=0; i<myTeam[i].learnableTechs.length; j++){
+										if (myTeam[i].learnableTechs[j].techID==selectedTech.techID){
+											playerOptions.push(myTeam[i]);
+											break;
+										}
+									}
+								}
+							}
+						} else {
+							for (var i=0; i<oppTeam[i].length; i++){
+								if (oppTeam[i].techCopyTarget==currentPlayer.playerID){
+									for (var j=0; i<oppTeam[i].learnableTechs.length; j++){
+										if (oppTeam[i].learnableTechs[j].techID==selectedTech.techID){
+											playerOptions.push(oppTeam[i]);
+											break;
+										}
+									}
+								}
+							}
+						}
+						var player = playerOptions[Math.floor(Math.random()*playerOptions.length)];
+						if (Math.random()<Math.max((.75+.05*(player.level-currentPlayer.level)), .5)){
+							//TODO learned tech
+							if (player.keyTech1!=selectedTech.techID&&player.keyTech2!=selectedTech.techID&&player.keyTech3!=selectedTech.techID){
+								writeInfo(player.name + ' learned a new tech');
+							} else {
+								writeInfo(player.name + ' learned a new key tech');
+							}
+						} else {
+							writeInfo(player.name + ' level too low.');
+						}
+					} else {
+						writeInfo('Tech copy failed.');
+					}
+					techCopying=false;
+					techCopyMatch=false;
+					document.getElementById('techCopy').style.display='none';
+				}
+				else if (gameActive&&teamWithBall==1){
 					triggerBreak();
 				} else if (!gameActive&&currAction=="break"){
 					if (menuSelection==1){
@@ -907,6 +1054,7 @@
 						}
 						document.getElementById('menu1').innerHTML='Normal Pass';
 						MAXITEMS=techOptions.length+2;
+						document.getElementById('menu'+MAXITEMS).style.display='';
 						document.getElementById('menu'+MAXITEMS).innerHTML='Back';
 						currAction="pass";
 					} else if (menuSelection==2){
@@ -924,6 +1072,7 @@
 						}
 						document.getElementById('menu1').innerHTML='Normal Shot';
 						MAXITEMS=techOptions.length+2;
+						document.getElementById('menu'+MAXITEMS).style.display='';
 						document.getElementById('menu'+MAXITEMS).innerHTML='Back';
 						currAction="shoot";
 					} else if (menuSelection==3){
@@ -970,6 +1119,7 @@
 						animateBreak(numDefenders);
 						//shoot();
 					}
+				}
 				}
 			}
 
@@ -1044,6 +1194,7 @@
 			function resumeActiveGame(){
 				clearInfo();
 				currAction="none";
+				timerActive=true;
 				unpause();
 			}
 
@@ -1132,9 +1283,11 @@
 
 			function updateMinimap(){
 				//reset canvas
-				minimapContext.rect(0,0,minimapCanvas.width,minimapCanvas.width);
-				minimapContext.fillStyle="grey";
-				minimapContext.fill();
+				//minimapContext.globalAlpha=0.4;
+				//minimapContext.rect(0,0,minimapCanvas.width,minimapCanvas.width);
+				minimapContext.clearRect(0,0,minimapCanvas.width,minimapCanvas.width);
+				//minimapContext.fillStyle="grey";
+				//minimapContext.fill();
 				minimapContext.beginPath();
 				minimapContext.arc(minimapCanvas.width/2, minimapCanvas.width/2, minimapCanvas.width/2, 0, 2 * Math.PI, false);
 				minimapContext.closePath();
@@ -1212,6 +1365,7 @@
 
 			function animateBreak(numLeft){
 				inMenu=false;
+				timerActive=true;
 				if (numLeft>0){
 					/*if (defendingPlayers!=null&&defendingPlayers.length>=numLeft){
 						console.log('invalid number of break attempts: ' + numLeft);
@@ -1225,6 +1379,7 @@
 				} else {
 					if (currAction=="breaktargetting"){
 						if (teamWithBall==1){
+							timerActive=false;
 							currAction="targetting";
 							document.getElementById('actionMenu').style.display='';
 
@@ -1276,6 +1431,7 @@
 					} else if (currAction=="breakshoot"){
 						shoot();
 					} else if (currAction=="breakdribble"){
+						updateCurrentPlayer(currentPlayer);
 						resumeActiveGame();
 					}
 					//showMainActionMenu();
@@ -1305,7 +1461,8 @@
 				ballQuadrant=0;
 
 				if (teamWithBall==2){
-					setTimeout(triggerAIStop, '2000');
+					triggerTimer=-1;
+					//setTimeout(triggerAIStop, '2000');
 				}
 			}
 
@@ -1345,6 +1502,11 @@
 								keeper.animatePass(function(){grabLooseBall(targettedPlayer)});
 							});
 						} else {
+							if (selectedTech!=null){
+								if (selectedTech.techName=='Venom Pass'){
+									writeInfo(keeper.name + " is poisoned!");//TODO
+								}
+							}
 							keeper.animateGoalieSaveDeflect(function(){
 								updateStat('playerSHT', 0);
 								writeInfo(keeper.name + ' blocks the ball!');
@@ -1373,16 +1535,27 @@
 						keeper.animateGoalieFailSave(blitzball, function(){
 							updateStat('playerSHT', goalNum);
 							writeInfo(currentPlayer.name + ' scores!');
+							timerActive=false;
 							cameraZoom = new THREE.Vector3(0, 10, 0);
 							zoomLeft=3;
-							if (teamWithBall==1){
-								team1Score++;
-							} else {
-								team2Score++;
-							}
-							lastScoredTeam=teamWithBall;
 							//TODO increment score
 							setTimeout(function(){
+								if (teamWithBall==1){
+									team1Score++;
+									trackTimer=0;
+									statUpdating="team1Score";
+									document.getElementById(statUpdating).innerHTML=team1Score;
+									document.getElementById(statUpdating).style.color='white';
+									document.getElementById(statUpdating).style.fontSize='5vmin';
+								} else {
+									team2Score++;
+									trackTimer=0;
+									statUpdating="team2Score";
+									document.getElementById(statUpdating).innerHTML=team2Score;
+									document.getElementById(statUpdating).style.color='white';
+									document.getElementById(statUpdating).style.fontSize='5vmin';
+								}
+								lastScoredTeam=teamWithBall;
 								cameraZoom = new THREE.Vector3(0, 10, 300);
 								zoomLeft=2;
 								cameraTarget.set(0, 10, 0);
@@ -1433,6 +1606,28 @@
 						});
 					}
 				}
+				selectedTech=null;
+			}
+
+			var techCopying = false;
+			var techCopyMatch=false;
+			function setupTechCopy(){
+				techCopying = true;
+				techCopyMatch=false;
+				if (selectedTech!=null&&teamWithBall==2){
+					document.getElementById('techCopy').style.color='#708090';
+					document.getElementById('techCopy').style.display='';
+					setTimeout(function(){
+						if (techCopying){
+							if (!techCopyMatch){
+								document.getElementById('techCopy').style.color='#FFFFFF';
+							} else {
+								techCopyMatch=true;
+								document.getElementById('techCopy').style.color='#708090';
+							}
+						}
+					}, '200');
+				}
 			}
 
 			function blockInterim(){
@@ -1454,6 +1649,9 @@
 			}
 
 			function animateBlock(){
+				techCopying=false;
+				techCopyMatch=false;
+				document.getElementById('techCopy').style.display='none';
 				/*animatingPlayer=defendingPlayers[0];
 				currStat = currStat-((.5+Math.random())*defendingPlayers[0].block);
 				defendingPlayers.shift();
@@ -1521,6 +1719,7 @@
 
 			function pass(){
 				inMenu=false;
+				timerActive=true;
 				currAction="animPass";
 				currentPlayer.lookAt(targettedPlayer.currentPosition);
 				if (targettedPlayer.currentPosition.x<currentPlayer.currentPosition.x){
@@ -1532,13 +1731,22 @@
 				camera.position.z=currentPlayer.currentPosition.z+7;
 				cameraTarget.set(currentPlayer.currentPosition.x, 0, currentPlayer.currentPosition.z);
 				document.getElementById('actionMenu').style.display='none';
-				setTimeout(function(){currentPlayer.animatePass(animatePassBlock);}, '1000');
-				currStat=currentPlayer.pass;
+				if (selectedTech!=null){
+					setTimeout(function(){
+						currentPlayer.animatePass(animatePassBlock);
+						currStat=currentPlayer.pass+selectedTech.statMod;
+						setupTechCopy();
+					}, '1000');
+				} else {
+					setTimeout(function(){currentPlayer.animatePass(animatePassBlock);}, '1000');
+					currStat=currentPlayer.pass;
+				}
 				//currentPlayer=destination;
 			}
 
 			function shoot(){
 				inMenu=false;
+				timerActive=true;
 				currAction="animShot";
 				
 				if (teamWithBall==1){
@@ -1550,14 +1758,31 @@
 				camera.position.z=currentPlayer.currentPosition.z+7;
 				cameraTarget.set(currentPlayer.currentPosition.x, 0, currentPlayer.currentPosition.z);
 				document.getElementById('actionMenu').style.display='none';
-				setTimeout(function(){currentPlayer.animateShoot(animateShotBlock);}, '1000');
-				currStat=currentPlayer.shot;
+				if (selectedTech!=null){
+					setTimeout(function(){
+						if (selectedTech.techID==1){
+							currentPlayer.animateShoot(animateShotBlock);
+							setupStatReel(currentPlayer.shot-5, currentPlayer.shot+10);
+						} else {
+							currentPlayer.animateShoot(animateShotBlock);
+							currStat=currentPlayer.shot+selectedTech.statMod;
+						}
+						setupTechCopy();
+					}, '1000');
+				} else {
+					setTimeout(function(){currentPlayer.animateShoot(animateShotBlock);}, '1000');
+					currStat=currentPlayer.shot;
+				}
 			}
-
-			var trackTimer=0;
 			
 			function blitzoff(){
 				currAction="blitzoff";
+				for (var i=0; i<myTeam.length; i++){
+					myTeam[i].currentRotation=Math.PI;
+				}
+				for (var i=0; i<oppTeam.length; i++){
+					oppTeam[i].currentRotation=0;
+				}
 				myTeamLW.currentPosition.set(20, 0, 50);
 				myTeamMF.currentPosition.set(40, 0, 0);
 				myTeamRW.currentPosition.set(20, 0, -50);
@@ -1574,7 +1799,6 @@
 				document.getElementById('overlay').innerHTML="Blitzoff!";
 				document.getElementById('overlay').style.display="";
 				trackTimer=0;
-				timeSinceLastTrigger=10;
 			}
 
 			function grabLooseBall(player){
@@ -1593,9 +1817,13 @@
 
 			function endBlitzoff(){
 				blitzball.visible=false;
-				if (Math.random()<1){//TODO .5
+				timeSinceLastTrigger=10;
+				if (Math.random()<.5){
 					teamWithBall=1;
 					grabLooseBall(myTeamMF);
+				} else {
+					teamWithBall=2;
+					grabLooseBall(oppTeamMF);
 				}
 			}
 
@@ -1730,6 +1958,7 @@
 			}
 
 			function triggerAIStop(){
+				triggerTimer=0;
 				if (currentPlayer.currentPosition.x>85){
 					triggerBreak();
 				} else if (currentPlayer.currentPosition.x>0){
@@ -1737,26 +1966,26 @@
 						if (Math.random()<.85){
 							triggerBreak();
 						} else {
-							setTimeout(triggerAIStop, '1000');
+							//setTimeout(triggerAIStop, '1000');
 						}
 					} else {
 						if (Math.random()<.3){
 							triggerBreak();
 						} else {
-							setTimeout(triggerAIStop, '1000');
+							//setTimeout(triggerAIStop, '1000');
 						}
 					}
 				} else if (currentPlayer==oppTeamLB||currentPlayer==oppTeamRB){
 					if (Math.random()<.3){
 						triggerBreak();
 					} else {
-						setTimeout(triggerAIStop, '1000');
+						//setTimeout(triggerAIStop, '1000');
 					}
 				} else {
 					if (Math.random()<.15){
 						triggerBreak();
 					} else {
-						setTimeout(triggerAIStop, '1000');
+						//setTimeout(triggerAIStop, '1000');
 					}
 				}
 			}
@@ -1878,7 +2107,6 @@
 			}
 			
 
-			var rotTimer=0;
 			function updateCameraTarget(){
 				if (currAction=="none"){
 					cameraTarget.set(currentPlayer.currentPosition.x, 0, currentPlayer.currentPosition.z);
@@ -1912,12 +2140,52 @@
 					}
 				}
 			}
+
+			var displayedTime=0;
+			function updateGameTimer(delta){
+				gameTimer+=(delta*3);
+				if (gameTimer-displayedTime>=1){
+					displayedTime=gameTimer-gameTimer%1;
+					var mins = Math.floor(displayedTime/60);
+					var seconds = (displayedTime - mins*60);
+					if (mins<10){
+						document.getElementById('minuteLabel').innerHTML='0'+mins;
+					} else {
+						document.getElementById('minuteLabel').innerHTML=mins;
+					}
+					if (seconds<10){
+						document.getElementById('secondLabel').innerHTML='0'+seconds;
+					} else {
+						document.getElementById('secondLabel').innerHTML=seconds;
+					}
+					if (mins>=5*(halvesComplete+1)){
+						if (halvesComplete==0){
+							document.getElementById('overlay').innerHTML="HalfTime!";
+						} else {
+							document.getElementById('overlay').innerHTML="Times up!";
+						}
+						document.getElementById('overlay').style.display="";
+						timerActive=false;
+						gameOver=true;
+						setTimeout(submitGame, '5000');
+					}
+				}
+			}
 			
 			function render() {
 
 				//var timer = Date.now() * 0.0005;
 				var delta = Math.min(clock.getDelta(), 0.3);
 
+				if (timerActive){
+					updateGameTimer(delta);
+					if (teamWithBall==2&&currAction=="none"){
+						triggerTimer+=delta;
+						if (triggerTimer>=1){
+							triggerAIStop();
+						}
+					}
+				}
 				if (gameActive){
 					computeRestingPositions();
 					timeSinceLastTrigger+=delta;
@@ -1944,7 +2212,11 @@
 				if (statUpdating!=null){
 					trackTimer+=delta;
 					if (trackTimer<1){
-						document.getElementById(statUpdating).style.fontSize=(3-trackTimer)+'vw';
+						if (statUpdating=='team1Score'||statUpdating=='team2Score'){
+							document.getElementById(statUpdating).style.fontSize=(3-trackTimer)+'vw';
+						} else {
+							document.getElementById(statUpdating).style.fontSize=(3-trackTimer)+'vw';
+						}
 					} else {
 						document.getElementById(statUpdating).style.fontSize='2vw';
 						document.getElementById(statUpdating).style.color="#FFFF66";
@@ -2074,6 +2346,26 @@
 
 				renderer.render( scene, camera );
 
+			}
+
+			function submitGame(){
+				team1Score++;
+				team2Score++;
+				document.getElementById('formTeam1Score').value=team1Score;
+				document.getElementById('formTeam2Score').value=team2Score;
+				for (var i=0; i<allPlayers.length; i++){
+					document.getElementById('goals'+(allPlayers[i].playerID)).value=allPlayers[i].goals;
+					document.getElementById('shots'+(allPlayers[i].playerID)).value=allPlayers[i].shots;
+					document.getElementById('assists'+(allPlayers[i].playerID)).value=allPlayers[i].assists;
+					document.getElementById('goalsAgainst'+(allPlayers[i].playerID)).value=allPlayers[i].goalsAgainst;
+					document.getElementById('shotsAgainst'+(allPlayers[i].playerID)).value=allPlayers[i].shotsAgainst;
+					document.getElementById('tackles'+(allPlayers[i].playerID)).value=allPlayers[i].tackles;
+					document.getElementById('blocks'+(allPlayers[i].playerID)).value=allPlayers[i].blocks;
+					document.getElementById('breaks'+(allPlayers[i].playerID)).value=allPlayers[i].breaks;
+					document.getElementById('turnovers'+(allPlayers[i].playerID)).value=allPlayers[i].turnovers;
+				}
+				document.getElementById('halvesComplete').value=halvesComplete+1;
+				document.getElementById('gameInfoForm').submit();
 			}
 
 		</script>

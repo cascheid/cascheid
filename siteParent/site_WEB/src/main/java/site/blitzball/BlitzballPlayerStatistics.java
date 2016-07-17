@@ -1,13 +1,16 @@
 package site.blitzball;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BlitzballPlayerStatistics implements Serializable{
 
 	private static final long serialVersionUID = 7686223340965135147L;
 
-	private Long playerID;
+	private Integer playerID;
 	private String playerName;
+	private String model;
 	private Integer goals;
 	private Integer shots;
 	private Integer assists;
@@ -17,9 +20,11 @@ public class BlitzballPlayerStatistics implements Serializable{
 	private Integer blocks;
 	private Integer breaks;
 	private Integer turnovers;
+	private Integer expGained;
+	private List<BlitzballTech> techsLearned;
 	
 	public BlitzballPlayerStatistics(){}
-	public BlitzballPlayerStatistics(Long playerID){
+	public BlitzballPlayerStatistics(Integer playerID){
 		this.playerID=playerID;
 		this.goals=0;
 		this.shots=0;
@@ -30,15 +35,18 @@ public class BlitzballPlayerStatistics implements Serializable{
 		this.blocks=0;
 		this.breaks=0;
 		this.turnovers=0;
+		this.expGained=0;
+		this.techsLearned=new ArrayList<BlitzballTech>();
 	}
-	public BlitzballPlayerStatistics(Long playerID, String playerName){
+	public BlitzballPlayerStatistics(Integer playerID, String name, String model){
 		this(playerID);
-		this.setPlayerName(playerName);
+		this.playerName=name;
+		this.model=model;
 	}
-	public Long getPlayerID() {
+	public Integer getPlayerID() {
 		return playerID;
 	}
-	public void setPlayerID(Long playerID) {
+	public void setPlayerID(Integer playerID) {
 		this.playerID = playerID;
 	}
 	public String getPlayerName() {
@@ -46,6 +54,12 @@ public class BlitzballPlayerStatistics implements Serializable{
 	}
 	public void setPlayerName(String playerName) {
 		this.playerName = playerName;
+	}
+	public String getModel() {
+		return model;
+	}
+	public void setModel(String model) {
+		this.model = model;
 	}
 	public Integer getGoals() {
 		return goals;
@@ -100,5 +114,17 @@ public class BlitzballPlayerStatistics implements Serializable{
 	}
 	public void setTurnovers(Integer turnovers) {
 		this.turnovers = turnovers;
+	}
+	public Integer getExpGained() {
+		return expGained;
+	}
+	public void setExpGained(Integer expGained) {
+		this.expGained = expGained;
+	}
+	public List<BlitzballTech> getTechsLearned() {
+		return techsLearned;
+	}
+	public void setTechsLearned(List<BlitzballTech> techsLearned) {
+		this.techsLearned = techsLearned;
 	}
 }

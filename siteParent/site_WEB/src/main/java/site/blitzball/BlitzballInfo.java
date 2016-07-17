@@ -8,10 +8,12 @@ public class BlitzballInfo implements java.io.Serializable {
 	private Long userID;
 	private BlitzballTeam team;
 	private List<BlitzballTeam> opponents;
-	private Integer totalWins;
-	private Integer totalLosses;
-	private Integer totalGoals;
-	private Integer totalGoalsAgainst;
+	private BlitzballLeague league;
+	private Integer availableCash;
+	private Integer leagueWins;
+	private Integer tournamentWins;
+	private Integer teamLevel;
+	private Integer teamExp;
 	
 	public BlitzballInfo(){}
 
@@ -39,35 +41,59 @@ public class BlitzballInfo implements java.io.Serializable {
 		this.opponents = opponents;
 	}
 
-	public Integer getTotalWins() {
-		return totalWins;
+	public BlitzballLeague getLeague() {
+		return league;
 	}
 
-	public void setTotalWins(Integer totalWins) {
-		this.totalWins = totalWins;
+	public void setLeague(BlitzballLeague league) {
+		this.league = league;
 	}
 
-	public Integer getTotalLosses() {
-		return totalLosses;
+	public Integer getAvailableCash() {
+		return availableCash;
 	}
 
-	public void setTotalLosses(Integer totalLosses) {
-		this.totalLosses = totalLosses;
+	public void setAvailableCash(Integer availableCash) {
+		this.availableCash = availableCash;
 	}
 
-	public Integer getTotalGoals() {
-		return totalGoals;
+	public Integer getLeagueWins() {
+		return leagueWins;
 	}
 
-	public void setTotalGoals(Integer totalGoals) {
-		this.totalGoals = totalGoals;
+	public void setLeagueWins(Integer leagueWins) {
+		this.leagueWins = leagueWins;
 	}
 
-	public Integer getTotalGoalsAgainst() {
-		return totalGoalsAgainst;
+	public Integer getTournamentWins() {
+		return tournamentWins;
 	}
 
-	public void setTotalGoalsAgainst(Integer totalGoalsAgainst) {
-		this.totalGoalsAgainst = totalGoalsAgainst;
-	}	
+	public void setTournamentWins(Integer tournamentWins) {
+		this.tournamentWins = tournamentWins;
+	}
+
+	public Integer getTeamLevel() {
+		return teamLevel;
+	}
+
+	public void setTeamLevel(Integer teamLevel) {
+		this.teamLevel = teamLevel;
+	}
+	
+	public Integer getTeamExp() {
+		return teamExp;
+	}
+
+	public void setTeamExp(Integer teamExp) {
+		this.teamExp = teamExp;
+	}
+
+	public Integer getNumberOfPlayers(){
+		int numPlayers = 0;
+		for (BlitzballPlayer player : this.team.getAllPlayers()){
+			numPlayers++;
+		}
+		return numPlayers;
+	}
 }

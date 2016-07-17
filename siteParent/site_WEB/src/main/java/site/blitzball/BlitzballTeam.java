@@ -1,5 +1,9 @@
 package site.blitzball;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class BlitzballTeam implements java.io.Serializable {
 
 	private static final long serialVersionUID = 9069740686801226048L;
@@ -17,7 +21,6 @@ public class BlitzballTeam implements java.io.Serializable {
 	private Integer wins;
 	private Integer losses;
 	private Integer ties;
-	private Integer availableCash;
 	
 	public BlitzballTeam(){}
 	public BlitzballTeam(Long teamID){
@@ -102,10 +105,25 @@ public class BlitzballTeam implements java.io.Serializable {
 	public void setTies(Integer ties) {
 		this.ties = ties;
 	}
-	public Integer getAvailableCash() {
-		return availableCash;
+	public List<BlitzballPlayer> getActivePlayers(){
+		List<BlitzballPlayer> list = new ArrayList<BlitzballPlayer>();
+		list.add(leftWing);
+		list.add(rightWing);
+		list.add(midfielder);
+		list.add(leftBack);
+		list.add(rightBack);
+		list.add(keeper);
+		return list;
 	}
-	public void setAvailableCash(Integer availableCash) {
-		this.availableCash = availableCash;
+	public List<BlitzballPlayer> getAllPlayers(){
+		List<BlitzballPlayer> list = getActivePlayers();
+		list.removeAll(Collections.singleton(null)); 
+		if (bench1!=null){
+			list.add(bench1);
+		}
+		if (bench2!=null){
+			list.add(bench2);
+		}
+		return list;
 	}
 }

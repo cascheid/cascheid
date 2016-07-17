@@ -1,5 +1,6 @@
 package site.blitzball;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BlitzballPlayer implements java.io.Serializable {
@@ -8,8 +9,13 @@ public class BlitzballPlayer implements java.io.Serializable {
 	
 	private Integer playerID;
 	private Long teamID;
+	private String teamName;
 	private String name;
+	private Integer origLevel;
+	private Integer origExp;
+	private Integer origNextExp;
 	private Integer level;
+	private Integer experience;
 	private Integer nextExp;
 	private Integer speed;
 	private Integer endurance;
@@ -19,8 +25,9 @@ public class BlitzballPlayer implements java.io.Serializable {
 	private Integer shot;
 	private Integer block;
 	private Integer cat;//catch
-	private Integer salary;
 	private Integer contractLength;
+	private Integer salary;
+	private String model;
 	private List<Integer> learnedTechs;
 	private List<Integer> learnableTechs;
 	private BlitzballTech tech1;
@@ -31,6 +38,7 @@ public class BlitzballPlayer implements java.io.Serializable {
 	private BlitzballTech keyTech1;
 	private BlitzballTech keyTech2;
 	private BlitzballTech keyTech3;
+	private List<String> updatedStats;
 	
 	public BlitzballPlayer(){}
 	
@@ -46,11 +54,35 @@ public class BlitzballPlayer implements java.io.Serializable {
 	public void setTeamID(Long teamID) {
 		this.teamID = teamID;
 	}
+	public String getTeamName() {
+		return teamName;
+	}
+	public void setTeamName(String teamName) {
+		this.teamName = teamName;
+	}
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+	public Integer getOrigLevel() {
+		return origLevel;
+	}
+	public void setOrigLevel(Integer origLevel) {
+		this.origLevel = origLevel;
+	}
+	public Integer getOrigExp() {
+		return origExp;
+	}
+	public void setOrigExp(Integer origExp) {
+		this.origExp = origExp;
+	}
+	public Integer getOrigNextExp() {
+		return origNextExp;
+	}
+	public void setOrigNextExp(Integer origNextExp) {
+		this.origNextExp = origNextExp;
 	}
 	public Integer getLevel() {
 		return level;
@@ -58,6 +90,14 @@ public class BlitzballPlayer implements java.io.Serializable {
 	public void setLevel(Integer level) {
 		this.level = level;
 	}
+	public Integer getExperience() {
+		return experience;
+	}
+
+	public void setExperience(Integer experience) {
+		this.experience = experience;
+	}
+
 	public Integer getNextExp() {
 		return nextExp;
 	}
@@ -112,18 +152,28 @@ public class BlitzballPlayer implements java.io.Serializable {
 	public void setCat(Integer cat) {
 		this.cat = cat;
 	}
-	public Integer getSalary() {
-		return salary;
-	}
-	public void setSalary(Integer salary) {
-		this.salary = salary;
-	}
 	public Integer getContractLength() {
 		return contractLength;
 	}
 	public void setContractLength(Integer contractLength) {
 		this.contractLength = contractLength;
 	}
+	public Integer getSalary() {
+		return salary;
+	}
+
+	public void setSalary(Integer salary) {
+		this.salary = salary;
+	}
+
+	public String getModel() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
 	public List<Integer> getLearnedTechs() {
 		return learnedTechs;
 	}
@@ -183,5 +233,30 @@ public class BlitzballPlayer implements java.io.Serializable {
 	}
 	public void setKeyTech3(BlitzballTech keyTech3) {
 		this.keyTech3 = keyTech3;
+	}
+	public List<String> getUpdatedStats() {
+		return updatedStats;
+	}
+	public void setUpdatedStats(List<String> updatedStats) {
+		this.updatedStats = updatedStats;
+	}
+	public List<Integer> getCurrentTechs(){
+		List<Integer> returnList = new ArrayList<Integer>();
+		if (tech1!=null){
+			returnList.add(tech1.getTechID());
+		}
+		if (tech2!=null){
+			returnList.add(tech2.getTechID());
+		}
+		if (tech3!=null){
+			returnList.add(tech3.getTechID());
+		}
+		if (tech4!=null){
+			returnList.add(tech4.getTechID());
+		}
+		if (tech5!=null){
+			returnList.add(tech5.getTechID());
+		}
+		return returnList;
 	}
 }

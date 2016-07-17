@@ -407,28 +407,49 @@
 			var ballMoveIteration;
 
 			function pass(){
-				ballTrajectory=targettedPlayer.currentPosition.clone().sub(currentCar.currentPosition);
-				ballPosition.set(currentCar.currentPosition.x, currentCar.currentPosition.y, currentCar.currentPosition.z);
-				if (is3DMode){
-					ball.position=ballPosition;
+				currAction="animPass";
+				currentPlayer.lookAt(targettedPlayer.currentPosition);
+				if (targettedPlayer.currentPosition.x<currentPlayer.currentPosition.x){
+					camera.position.x=currentPlayer.currentPosition.x-7;
 				} else {
-					currStat=currentCar.pass;
-					animatePassBlock();
+					camera.position.x=currentPlayer.currentPosition.x+7;
 				}
+				camera.position.y=0;
+				camera.position.z=currentPlayer.currentPosition.z+7;
+				cameraTarget.set(currentPlayer.currentPosition.x, 0, currentPlayer.currentPosition.z);
+				currentPlayer.animatePass(animatePassBlock);
+				currStat=currentCar.pass;
+				//ballTrajectory=targettedPlayer.currentPosition.clone().sub(currentCar.currentPosition);
+				//ballPosition.set(currentCar.currentPosition.x, currentCar.currentPosition.y, currentCar.currentPosition.z);
+				//if (is3DMode){
+					//ball.position=ballPosition;
+				//} else {
+					//currStat=currentCar.pass;
+					//animatePassBlock();
+				//}
 				//currentCar=destination;
 			}
 
+			function passBlockInterim(){
+				}
+
 			function animatePassBlock(){
 				if (defendingPlayers==null||defendingPlayers.length==0){
-					currAnimation="passedBall";
+					currAaction="passedBall";
 					ballMoveIteration=0;
 				} else {
-					currAnimation="block";
-					animatingPlayer=defendingPlayers[0];
-					//TODO this should happen in the middle of animation
+					currAction="blockPass";
+					/*animatingPlayer=defendingPlayers[0];
 					currStat = currStat-((.5+Math.random())*defendingPlayers[0].block);
 					defendingPlayers.shift();
-					setTimeout(animatePassBlock, '1500');
+					setTimeout(animatePassBlock, '1500');*/
+					animatingPlayer=defendingPlayers.shift();
+					currStat = currStat-Math.round((.5+Math.random())*defendingPlayers[0].block);
+					if (currStat>0){
+						animatingPlayer.animateBlockFail(passBlockInterim);
+					} else {
+						animatingPlayer.animateGrabBall(resumeActiveGame)
+					}
 				}
 			}
 

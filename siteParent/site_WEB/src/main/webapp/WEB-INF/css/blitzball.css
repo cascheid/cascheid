@@ -10,14 +10,24 @@ body {
 	white-space:nowrap;
 }
 
-.promptLabel{
-	width:100%; 
-	padding-left:2.5vmin;
+.smallFont{
+	font-size:2.5vmin;
 }
 
 .promptOptions{
-	width:100%; 
-	padding-left:5vmin;
+	padding-left:2.5vmin;
+}
+
+.centerWrapper{
+	margin:0 auto;
+	left:0;
+	right:0;
+}
+
+.absoluteCentered{
+	left:50%; 
+	-webkit-transform:translateX(-50%); 
+	transform:translateX(-50%);
 }
 
 .menu{
@@ -25,13 +35,36 @@ body {
 	background-color:#6B238E;
 	background-image: url("../img/blitzball/cracks.png");
 	border: 5px double white;
+	width:auto;
+	height:auto;
 	z-index:1000;
+}
+
+.leagueNav{
+	top: 20%;
+	left:10%;
+}
+
+.leaguePrizes{
+	position:absolute;
+	top:65%;
+	left:10%;
+}
+
+.innerMenu{
+	padding:2.5vmin 5vmin;
 }
 
 .selector{
 	position:absolute;
-	left:-5vmin;
+	left:0;
 	top:0vmin;
 	width:5vmin;
 	height:4vmin;
+}
+
+.selectorWrapper{
+	position:absolute;
+	top:2.5vmin;
+	left:0;
 }
