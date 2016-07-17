@@ -4654,13 +4654,29 @@
 
 
 					applySkin( geom, skinController );
+					var isFaceMaterial = material instanceof THREE.MeshFaceMaterial;
+					var multiMaterials = isFaceMaterial === true ? material.materials : null;
 
 					if ( geom.morphTargets.length > 0 ) {
 
+						if (multiMaterials!=null){
+							for (var j=0; j<multiMaterials.length; j++){
+								multiMaterials[j].morphTargets = false;
+								multiMaterials[j].skinning = true;
+							}
+						}
+						
 						material.morphTargets = true;
 						material.skinning = false;
 
 					} else {
+						
+						if (multiMaterials!=null){
+							for (var j=0; j<multiMaterials.length; j++){
+								multiMaterials[j].morphTargets = false;
+								multiMaterials[j].skinning = true;
+							}
+						}
 
 						material.morphTargets = false;
 						material.skinning = true;
