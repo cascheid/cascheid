@@ -88,7 +88,8 @@ public class BlitzballController {
 		String sError=teamName.checkValid();
 		if (sError==null){
 			blitzballInfo = BlitzballUtils.getNewBlitzballGameInfo(identity.getIdentifier(), teamName.getFullTeamName());
-			mv = new ModelAndView("blitzballMenu");
+			blitzballInfo=BlitzballUtils.getActiveLeague(blitzballInfo);
+			return getBlizballMenu();
 		} else {
 			mv = new ModelAndView("blitzballCreate");
 			mv.addObject("teamName", new TeamName());
@@ -224,6 +225,9 @@ public class BlitzballController {
 			return new ModelAndView("timeout");
 		}
 		ModelAndView mv = new ModelAndView("test");
+		if (activeOpponent==null){
+			activeOpponent=BlitzballUtils.getLeagueOpponentByID(blitzballInfo.getLeague());
+		}
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
 			mv.addObject("myTeam", objectMapper.writeValueAsString(blitzballInfo.getTeam()));
@@ -313,6 +317,9 @@ public class BlitzballController {
 					activeOpponent = BlitzballUtils.getLeagueOpponentByID(blitzballInfo.getLeague());
 				}
 			}
+			return null;
+		} else if (identity!=null||blitzballInfo!=null){
+			return null;
 		}
 		//activeGame = blitzballGameInfo;
 		boolean teamLevelUp = BlitzballUtils.persistBlitzballGame(activeGame, blitzballInfo);
