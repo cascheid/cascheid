@@ -47,9 +47,9 @@ THREE.BBAnimation.prototype = {
 	keyTypes:  [ "pos", "rot", "scl" ],
 	
 	playTreadAnimation: function(){
-		this.currentTime = 0;
-		this.beginTime = 0;
-		this.endTime=.533333;
+		this.currentTime = 0.13333333;
+		this.beginTime = 0.13333333;
+		this.endTime=.6666666;
 		this.weight = 1;
 		this.isPlaying=true;
 		this.animPlaying="tread";
@@ -62,9 +62,9 @@ THREE.BBAnimation.prototype = {
 	},
 	
 	playGoalieTreadAnimation: function(){
-		this.currentTime = 4.466666666;
-		this.beginTime = 4.466666666;
-		this.endTime=4.733333333;
+		this.currentTime = 4.6;
+		this.beginTime = 4.6;
+		this.endTime=4.866666666;
 		this.weight = 1;
 		this.isPlaying=true;
 		this.animPlaying="tread";
@@ -78,9 +78,9 @@ THREE.BBAnimation.prototype = {
 	},
 	
 	playSwimAnimation: function(){
-		this.currentTime = .55;
-		this.beginTime = .6666666;
-		this.endTime=1.333333;
+		this.currentTime = 0.683333333;
+		this.beginTime = .8;
+		this.endTime=1.4666666;
 		this.weight = 1;
 		this.isPlaying=true;
 		this.animPlaying="swim";
@@ -93,13 +93,13 @@ THREE.BBAnimation.prototype = {
 	},
 	
 	playGrabBallAnimation: function(ballTransferCallback){
-		this.currentTime = 1.3666667;
-		this.beginTime = 1.3666667;
-		this.endTime=1.866666666;
+		this.currentTime = 1.5;
+		this.beginTime = 1.5;
+		this.endTime=2.0;
 		this.weight = 1;
 		this.isPlaying=true;
 		this.ballTransferCallback=ballTransferCallback;
-		this.ballTransferCallbackTime=1.6333333;
+		this.ballTransferCallbackTime=1.76666666;
 		this.animPlaying="grab";
 		this.timeScale = 0.3;
 		this.loop=false;
@@ -108,13 +108,103 @@ THREE.BBAnimation.prototype = {
 
 		THREE.AnimationHandler.play( this );
 	},
+
+	playBlockAnimation: function(ballTransferCallback){
+		this.currentTime = 5.933333333;
+		this.beginTime = 5.933333333;
+		this.endTime=6.466666666;
+		this.ballTransferCallback=ballTransferCallback;
+		this.ballTransferCallbackTime=6.2;
+		this.weight = 1;
+		this.isPlaying=true;
+		this.animPlaying="blockpass";
+		this.timeScale = 0.3;
+		this.loop=false;
+		this.reset();
+		THREE.AnimationHandler.play( this );
+	},
+
+	playIncomingNapAnimation: function(ballTransferCallback){
+		this.currentTime = 6.466666666;
+		this.beginTime = 6.466666666;
+		this.endTime=6.8666666;
+		this.ballTransferCallback=ballTransferCallback;
+		this.ballTransferCallbackTime=6.733333;
+		this.weight = 1;
+		this.isPlaying=true;
+		this.animPlaying="incomingnap";
+		this.timeScale = 0.3;
+		this.loop=false;
+		this.reset();
+		THREE.AnimationHandler.play( this );
+	},
+	
+	playIncomingNapGoalieDrop: function(){
+		this.currentTime = 7.16666666;
+		this.beginTime = 7.16666666;
+		this.endTime=7.4;
+		this.ballTransferCallback=null;
+		this.ballTransferCallbackTime=null;
+		this.weight = 1;
+		this.isPlaying=true;
+		this.animPlaying="napgoaliedrop";
+		this.timeScale = 0.3;
+		this.loop=false;
+		this.reset();
+		THREE.AnimationHandler.play( this );
+	},
+
+	playNapTreadAnimation: function(){
+		this.currentTime = 6.9;
+		this.beginTime = 6.9;
+		this.endTime=7.1666666;
+		this.ballTransferCallback=null;
+		this.ballTransferCallbackTime=null;
+		this.weight = 1;
+		this.isPlaying=true;
+		this.animPlaying="naptread";
+		this.timeScale = 0.3;
+		this.loop=true;
+		this.reset();
+		THREE.AnimationHandler.play( this );
+	},
+
+	playWakeupAnimation: function(){
+		this.currentTime = 6.9;
+		this.beginTime = 6.9;
+		this.endTime=7.3;
+		this.ballTransferCallback=null;
+		this.ballTransferCallbackTime=null;
+		this.weight = 1;
+		this.isPlaying=true;
+		this.animPlaying="wakeup";
+		this.timeScale = 0.3;
+		this.loop=false;
+		this.reset();
+		THREE.AnimationHandler.play( this );
+	},
+
+	playSphereShotAnimation: function(ballTransferCallback){
+		this.currentTime = 7.3666666;
+		this.beginTime = 7.366666;
+		this.endTime=8.3;
+		this.ballTransferCallback=ballTransferCallback;
+		this.ballTransferCallbackTime=8.1666666;
+		this.weight = 1;
+		this.isPlaying=true;
+		this.animPlaying="sphereshot";
+		this.timeScale = 0.2;
+		this.loop=false;
+		this.reset();
+		THREE.AnimationHandler.play( this );
+	},
 	
 	playCatchAnimation: function(ballTransferCallback){
-		this.currentTime = 3.6;
-		this.beginTime = 3.6;
-		this.endTime=4.0;
+		this.currentTime = 3.7333333;
+		this.beginTime = 3.7333333;
+		this.endTime=4.13333333;
 		this.ballTransferCallback=ballTransferCallback;
-		this.ballTransferCallbackTime=3.76666666666;
+		this.ballTransferCallbackTime=3.9;
 		this.weight = 1;
 		this.isPlaying=true;
 		this.animPlaying="catch";
@@ -131,11 +221,11 @@ THREE.BBAnimation.prototype = {
 		//this.beginTime = 4.0333333333333333;
 		//this.currentTime = 4.16666666666+(this.currentTime%3.6333333333333333);
 		//this.beginTime = 4.16666666666;
-		this.currentTime = 4.0;
-		this.beginTime = 4.0;
-		this.endTime=4.4;
+		this.currentTime = 4.13333333;
+		this.beginTime = 4.13333333;
+		this.endTime=4.53333333;
 		this.ballTransferCallback=ballTransferCallback;
-		this.ballTransferCallbackTime=3.76666666666;
+		this.ballTransferCallbackTime=3.9;
 		this.weight = 1;
 		this.isPlaying=true;
 		this.animPlaying="drop";
@@ -150,11 +240,11 @@ THREE.BBAnimation.prototype = {
 	
 	
 	playPassAnimation: function(ballTransferCallback){
-		this.currentTime = 1.86666666;
-		this.beginTime = 1.86666666;
-		this.endTime=2.2666666;
+		this.currentTime = 2.0;
+		this.beginTime = 2.0;
+		this.endTime=2.4;
 		this.ballTransferCallback=ballTransferCallback;
-		this.ballTransferCallbackTime=2.1333333;
+		this.ballTransferCallbackTime=2.26666666;
 		this.weight = 1;
 		this.isPlaying=true;
 		this.animPlaying="pass";
@@ -167,27 +257,27 @@ THREE.BBAnimation.prototype = {
 	},
 	
 	playEndureAnimation: function(ballTransferCallback){
-		this.currentTime = 3.0666666;
-		this.beginTime = 3.0666666;
-		this.endTime=3.6;
+		this.currentTime = 3.2;
+		this.beginTime = 3.2;
+		this.endTime=3.73333333;
 		this.weight = 1;
 		this.isPlaying=true;
 		this.animPlaying="endure";
 		this.timeScale = 0.2;
 		this.loop=false;
 		this.ballTransferCallback=ballTransferCallback;
-		this.ballTransferCallbackTime=3.4;
+		this.ballTransferCallbackTime=3.5333333;
 		this.reset();
 		THREE.AnimationHandler.play( this );
 	},
 	
 	playTackleAnimation: function(animTarget){
-		this.currentTime = 2.6666666;
-		this.beginTime = 2.6666666;
-		this.endTime=3.0666666;
+		this.currentTime = 2.8;
+		this.beginTime = 2.8;
+		this.endTime=3.2;
 		this.weight = 1;
 		this.isPlaying=true;
-		this.animMoveStart=2.8333333;
+		this.animMoveStart=2.96666666;
 		this.animPlaying="tackle";
 		this.timeScale = 0.2;
 		this.loop=false;
@@ -199,14 +289,14 @@ THREE.BBAnimation.prototype = {
 	},
 	
 	playShootAnimation: function(ballTransferCallback){
-		this.currentTime = 2.2666666;
-		this.beginTime = 2.2666666;
-		this.endTime=2.6666666;
+		this.currentTime = 2.4;
+		this.beginTime = 2.4;
+		this.endTime=2.8;
 		this.weight = 1;
 		this.isPlaying=true;
 		this.animPlaying="shoot";
 		this.ballTransferCallback=ballTransferCallback;
-		this.ballTransferCallbackTime=2.533333
+		this.ballTransferCallbackTime=2.6666666
 		this.timeScale = 0.3;
 		this.loop=false;
 		this.reset();
@@ -214,11 +304,11 @@ THREE.BBAnimation.prototype = {
 	},
 	
 	playGoalieGrabAnimation: function(ballTransferCallback){
-		this.currentTime = 4.7666666;
-		this.beginTime = 4.73333333;
-		this.endTime=5.2666666;//5.3
+		this.currentTime = 4.9;
+		this.beginTime = 4.8666666;
+		this.endTime=5.4;//5.3
 		this.ballTransferCallback=ballTransferCallback;
-		this.ballTransferCallbackTime=5;
+		this.ballTransferCallbackTime=5.13333333;
 		this.weight = 1;
 		this.isPlaying=true;
 		this.animPlaying="save";
@@ -230,11 +320,11 @@ THREE.BBAnimation.prototype = {
 	},
 	
 	playGoalieDeflectAnimation: function(ballTransferCallback){
-		this.currentTime = 5.3;
-		this.beginTime = 5.2666666;
-		this.endTime=5.8;
+		this.currentTime = 5.43333333;
+		this.beginTime = 5.4;
+		this.endTime=5.933333333;
 		this.ballTransferCallback=ballTransferCallback;
-		this.ballTransferCallbackTime=5.533333333;
+		this.ballTransferCallbackTime=5.6666666;
 		this.weight = 1;
 		this.isPlaying=true;
 		this.animPlaying="blocksave";
@@ -246,9 +336,9 @@ THREE.BBAnimation.prototype = {
 	},
 	
 	playBallGoalieFailSaveAnimation: function(){
-		this.currentTime = 4.73333333;
-		this.beginTime = 4.73333333;
-		this.endTime=5;
+		this.currentTime = 4.8666666666;
+		this.beginTime = 4.866666666;
+		this.endTime=5.1333333;
 		this.weight = 1;
 		this.isPlaying=true;
 		this.animPlaying="save";

@@ -99,7 +99,7 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 		scope.callback=callback;
 		var loader = new THREE.ColladaLoader();
 		loader.options.convertUpAxis = true;
-		loader.load( 'obj/stormtrooper/'+this.model, function ( collada ) {
+		loader.load( 'obj/'+this.model, function ( collada ) {
 
 			scope.root = collada.scene;
 			scope.has3DModel=true;
@@ -269,9 +269,12 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 	
 	this.animateBlockFail = function(callback, interimCallback){
 		this.ball.visible=true;
-		this.animation.playGrabBallAnimation(null);
-		this.ballAnimation.playGrabBallAnimation(interimCallback);
-		this.ballAnimation.callback=callback;
+		this.animation.playBlockAnimation(null);
+		this.ballAnimation.playBlockAnimation(interimCallback);
+		this.ballAnimation.callback=function(){
+			scope.ball.visible=false;
+			callback();
+		};
 	}
 	
 	this.animateCatchBall = function(callback){
@@ -292,8 +295,10 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 	}
 	
 	this.animateShoot = function(callback){
-		this.animation.playShootAnimation();
-		this.ballAnimation.playShootAnimation(function(){scope.ball.visible=false;});
+		//this.animation.playShootAnimation();
+		//this.ballAnimation.playShootAnimation(function(){scope.ball.visible=false;});
+		this.animation.playSphereShotAnimation();
+		this.ballAnimation.playSphereShotAnimation(function(){scope.ball.visible=false;});
 		this.animation.callback=callback;
 	}
 	
