@@ -337,12 +337,12 @@
 			var goal2=null;
 			var team1Score=0;
 			var team2Score=0;
-			var lastScoredTeam=0;
+			var blitzoffTeam=2;
 			var timeSinceLastTrigger=10;
 			var halvesComplete=Number(document.getElementById('halvesComplete').value);
 			var loader = new THREE.ColladaLoader();
 			loader.options.convertUpAxis = true;
-			loader.load( 'obj/stormtrooper/blitzball.dae', function ( collada ) {
+			loader.load( 'obj/blitzball/blitzball.dae', function ( collada ) {
 
 				blitzball = collada.scene;
 				blitzball.children[0].children[0].material.side=THREE.DoubleSide;
@@ -799,7 +799,7 @@
 				}
 			}
 
-			function triggerBreak(){
+			function triggerBreak(randomTriggered){
 				timerActive=false
 				controls.moveForward=false;
 				controls.moveBackward=false;
@@ -906,6 +906,16 @@
 				if (teamWithBall==1){
 					showBreakMenu();
 				} else {
+					currAction="aibreak";
+					for (var i=0; i<defendingPlayers.length; i++){
+						document.getElementById('break'+(i+1)+'Name').innerHTML=defendingPlayers[i].name;
+						document.getElementById('break'+(i+1)+'HP').innerHTML=defendingPlayers[i].hp;
+						document.getElementById('break'+(i+1)+'ATK').innerHTML=defendingPlayers[i].attack;
+						document.getElementById('break'+(i+1)+'ATKLabel').innerHTML='ATK';
+						document.getElementById('break'+(i+1)+'BLK').innerHTML=defendingPlayers[i].block;
+						document.getElementById('break'+(i+1)+'BLKLabel').innerHTML='BLK';
+						document.getElementById('break'+(i+1)+'Stats').style.visibility='';
+					}
 					if (defendingPlayers!=null&&defendingPlayers.length>0){
 						var expectedBreakLeft=currentPlayer.endurance;
 						for (var i=0; i<defendingPlayers.length; i++){
@@ -934,10 +944,17 @@
 						writeInfo('No break');
 					}
 					setTimeout(function(){
-						if (currentPlayer.currentPosition.x<20||(Math.random()<(currentPlayer.pass/(currentPlayer.shoot+currentPlayer.pass)))){
+						var shotChance=0.0;
+						if (currentPlayer.currentPosition.x>0){
+							shotChance = currentPlayer.currentPosition.x/200;
+							if (currentPlayer==oppTeamLW || currentPlayer==oppTeamRW){
+								shotChance *= 2.5;
+							}
+						}
+						if (Math.random()<shotChance){
 							var options = [];
 							for (var i=0; i<currentPlayer.techs.length; i++){
-								if (currentPlayer.techs[i].techType=='pass'&&currentPlayer.techs[i].hpCost<currentPlayer.hp){
+								if (currentPlayer.techs[i].techType=='shot'&&currentPlayer.techs[i].hpCost<currentPlayer.hp){
 									options.push(i);
 								}
 							}
@@ -950,14 +967,14 @@
 							if (selectedTech!=null){
 								writeInfo(selectedTech.techName);
 							} else {
-								writeInfo('Pass');
+								writeInfo('Shoot');
 							}
-							currAction="breaktargetting";
+							currAction="breakshoot";
 						} else {
-							if (Math.random()<(currentPlayer.shoot/(currentPlayer.shoot+currentPlayer.pass))){
+							if (numDefenders>0 || randomTriggered || (Math.random()<(currentPlayer.pass/(currentPlayer.endurance/2+currentPlayer.pass)))){
 								var options = [];
 								for (var i=0; i<currentPlayer.techs.length; i++){
-									if (currentPlayer.techs[i].techType=='shot'&&currentPlayer.techs[i].hpCost<currentPlayer.hp){
+									if (currentPlayer.techs[i].techType=='pass'&&currentPlayer.techs[i].hpCost<currentPlayer.hp){
 										options.push(i);
 									}
 								}
@@ -970,9 +987,12 @@
 								if (selectedTech!=null){
 									writeInfo(selectedTech.techName);
 								} else {
-									writeInfo('Shoot');
+									writeInfo('Pass');
 								}
-								currAction="breakshoot";
+								currAction="breaktargetting";
+							} else {
+								writeInfo('Dribble');
+								currAction="breakdribble";
 							}
 						}
 						setTimeout(function(){animateBreak(numDefenders);}, '2000');
@@ -1155,7 +1175,7 @@
 						document.getElementById('break'+MAXITEMS+'Name').innerHTML=defendingPlayers[i].name;
 						document.getElementById('break'+MAXITEMS+'HP').innerHTML=defendingPlayers[i].hp;
 						document.getElementById('break'+MAXITEMS+'ATK').innerHTML=defendingPlayers[i].attack;
-						document.getElementById('break'+MAXITEMS+'ATKLabel').innerHTML='BLK';
+						document.getElementById('break'+MAXITEMS+'ATKLabel').innerHTML='ATK';
 						document.getElementById('break'+MAXITEMS+'BLK').innerHTML=defendingPlayers[i].block;
 						document.getElementById('break'+MAXITEMS+'BLKLabel').innerHTML='BLK';
 						document.getElementById('break'+MAXITEMS+'Stats').style.visibility='';
@@ -1187,8 +1207,14 @@
 				document.getElementById('actionMenu').style.height=(MAXITEMS*4)+'vmin';
 			}
 
-			function delayResumeGame(){
-				setTimeout(resumeActiveGame, '1000');
+			function delayResumeGame(newCurrentPlayer){
+				setTimeout(function(){
+					if (newCurrentPlayer!=null){
+						updateCurrentPlayer(newCurrentPlayer);
+					}
+					resumeActiveGame();
+				}, '1000');
+				
 			}
 
 			function resumeActiveGame(){
@@ -1271,7 +1297,7 @@
 					} else {
 						teamWithBall=1;
 					}
-					currentPlayer.continueEndure(false, function(){updateCurrentPlayer(breakingPlayer); resumeActiveGame();});
+					currentPlayer.continueEndure(false, function(){delayResumeGame(breakingPlayer);});
 					breakingPlayer.continueTackle(true);
 					//updateCurrentPlayer(breakingPlayer);
 				} else {
@@ -1366,6 +1392,7 @@
 			function animateBreak(numLeft){
 				inMenu=false;
 				timerActive=true;
+				document.getElementById('actionMenu').style.display='none';
 				if (numLeft>0){
 					/*if (defendingPlayers!=null&&defendingPlayers.length>=numLeft){
 						console.log('invalid number of break attempts: ' + numLeft);
@@ -1470,6 +1497,7 @@
 
 			function onBallArrive(){
 				blitzball.visible=false;
+				timeSinceLastTrigger=0;
 				if (currAction=="shotBall"){
 					currAction="saving";
 					var keeper;
@@ -1547,6 +1575,7 @@
 									document.getElementById(statUpdating).innerHTML=team1Score;
 									document.getElementById(statUpdating).style.color='white';
 									document.getElementById(statUpdating).style.fontSize='5vmin';
+									blitzoffTeam=2;
 								} else {
 									team2Score++;
 									trackTimer=0;
@@ -1554,8 +1583,8 @@
 									document.getElementById(statUpdating).innerHTML=team2Score;
 									document.getElementById(statUpdating).style.color='white';
 									document.getElementById(statUpdating).style.fontSize='5vmin';
+									blitzoffTeam=1;
 								}
-								lastScoredTeam=teamWithBall;
 								cameraZoom = new THREE.Vector3(0, 10, 300);
 								zoomLeft=2;
 								cameraTarget.set(0, 10, 0);
@@ -1564,16 +1593,18 @@
 						});
 					}
 				} else if (currAction=="passedBall"){
-					timeSinceLastTrigger=10;
+					timeSinceLastTrigger=1;
 					if (currStat>0){
 						currAction="catching";
 						var vec = currentPlayer.currentPosition.clone().sub(targettedPlayer.currentPosition);
 						vec.multiplyScalar(15/vec.length());
 						camera.position.addVectors(targettedPlayer.currentPosition, vec);
-						updateCurrentPlayer(targettedPlayer);
-						cameraTarget.set(currentPlayer.currentPosition.x, 0, currentPlayer.currentPosition.z);
-						currentPlayer.animateCatchBall(delayResumeGame);
-						targettedPlayer=null;
+						//updateCurrentPlayer(targettedPlayer);
+						cameraTarget.set(targettedPlayer.currentPosition.x, 0, targettedPlayer.currentPosition.z);
+						targettedPlayer.animateCatchBall(function(){
+							delayResumeGame(targettedPlayer);
+							targettedPlayer=null;
+						});
 						currStat=0;
 					} else {
 						currAction="droppedBall";
@@ -1595,10 +1626,12 @@
 								}
 							}
 							for (var i=0; i<oppTeam.length; i++){
-								if (oppTeam[i].currentPosition.distanceTo(targettedPlayer.currentPosition)<minDistance){
-									currReceiver=oppTeam[i];
-									minDistance=oppTeam[i].currentPosition.distanceTo(targettedPlayer.currentPosition);
-									teamWithBall=2;
+								if (oppTeam[i]!=targettedPlayer){
+									if (oppTeam[i].currentPosition.distanceTo(targettedPlayer.currentPosition)<minDistance){
+										currReceiver=oppTeam[i];
+										minDistance=oppTeam[i].currentPosition.distanceTo(targettedPlayer.currentPosition);
+										teamWithBall=2;
+									}
 								}
 							}
 							targettedPlayer=null;
@@ -1643,8 +1676,8 @@
 					} else {
 						teamWithBall=1;
 					}
-					updateCurrentPlayer(animatingPlayer);
-					delayResumeGame();
+
+					delayResumeGame(animatingPlayer);
 				}
 			}
 
@@ -1706,7 +1739,6 @@
 					ballMoveIteration=0;
 					blitzball.visible=true;
 					ballTrajectory=targettedPlayer.currentPosition.clone().sub(currentPlayer.currentPosition);
-					targettedPlayer.lookAt(currentPlayer.currentPosition);
 					var ballmv = ballTrajectory.clone().sub(blitzball.position).multiplyScalar(1/ballTrajectory.length());
 					blitzball.position.addVectors(currentPlayer.currentPosition, ballmv);
 					blitzball.position.y=3;
@@ -1733,12 +1765,16 @@
 				document.getElementById('actionMenu').style.display='none';
 				if (selectedTech!=null){
 					setTimeout(function(){
+						targettedPlayer.lookAt(currentPlayer.currentPosition);
 						currentPlayer.animatePass(animatePassBlock);
 						currStat=currentPlayer.pass+selectedTech.statMod;
 						setupTechCopy();
 					}, '1000');
 				} else {
-					setTimeout(function(){currentPlayer.animatePass(animatePassBlock);}, '1000');
+					setTimeout(function(){
+						targettedPlayer.lookAt(currentPlayer.currentPosition);
+						currentPlayer.animatePass(animatePassBlock);
+					}, '1000');
 					currStat=currentPlayer.pass;
 				}
 				//currentPlayer=destination;
@@ -1806,19 +1842,18 @@
 				writeInfo(player.name + ' grabbed the ball');
 				document.getElementById('overlay').innerHTML="";
 				document.getElementById('overlay').style.display="none";
-				updateCurrentPlayer(player);
-				cameraTarget.x=currentPlayer.currentPosition.x;
-				cameraTarget.z=currentPlayer.currentPosition.z;
+				cameraTarget.x=player.currentPosition.x;
+				cameraTarget.z=player.currentPosition.z;
 				cameraTarget.y=0;
-				camera.position.x=currentPlayer.currentPosition.x-7;
-				camera.position.z=currentPlayer.currentPosition.z+7;
-				player.animateGrabBall(delayResumeGame, null);
+				camera.position.x=player.currentPosition.x-7;
+				camera.position.z=player.currentPosition.z+7;
+				player.animateGrabBall(function(){delayResumeGame(player);}, null);
 			}
 
 			function endBlitzoff(){
 				blitzball.visible=false;
 				timeSinceLastTrigger=10;
-				if (Math.random()<.5){
+				if (blitzoffTeam==1){
 					teamWithBall=1;
 					grabLooseBall(myTeamMF);
 				} else {
@@ -1960,30 +1995,30 @@
 			function triggerAIStop(){
 				triggerTimer=0;
 				if (currentPlayer.currentPosition.x>85){
-					triggerBreak();
+					triggerBreak(true);
 				} else if (currentPlayer.currentPosition.x>0){
 					if (currentPlayer==oppTeamLB||currentPlayer==oppTeamRB){
 						if (Math.random()<.85){
-							triggerBreak();
+							triggerBreak(true);
 						} else {
 							//setTimeout(triggerAIStop, '1000');
 						}
 					} else {
 						if (Math.random()<.3){
-							triggerBreak();
+							triggerBreak(true);
 						} else {
 							//setTimeout(triggerAIStop, '1000');
 						}
 					}
 				} else if (currentPlayer==oppTeamLB||currentPlayer==oppTeamRB){
 					if (Math.random()<.3){
-						triggerBreak();
+						triggerBreak(true);
 					} else {
 						//setTimeout(triggerAIStop, '1000');
 					}
 				} else {
 					if (Math.random()<.15){
-						triggerBreak();
+						triggerBreak(true);
 					} else {
 						//setTimeout(triggerAIStop, '1000');
 					}
@@ -2041,7 +2076,7 @@
 					var belowCnt=0;
 					var aboveCnt;
 					for (var i=0; i<myTeam.length; i++){
-						if (myTeam[i].chasingPosition=null){
+						if (myTeam[i].chasingPosition==null){
 							if (myTeam[i].currentPosition.z<currentPlayer.currentPosition.z){
 								aboveCnt++;
 							} else {
@@ -2167,7 +2202,7 @@
 						document.getElementById('overlay').style.display="";
 						timerActive=false;
 						gameOver=true;
-						setTimeout(submitGame, '5000');
+						//setTimeout(submitGame, '5000');
 					}
 				}
 			}
