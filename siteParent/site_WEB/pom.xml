@@ -130,12 +130,13 @@
     	<artifactId>jackson-jaxrs-json-provider</artifactId>
 		<version>2.5.4</version>
 	</dependency>
-	<!-- 
+	
 	<dependency>
 		<groupId>org.apache.tomcat</groupId>
 		<artifactId>tomcat-catalina</artifactId>
 		<version>8.0.22</version>
-	</dependency> -->
+		<scope>test</scope>
+	</dependency>
 
   </dependencies>
 </project>
