@@ -172,5 +172,10 @@ public class IdentityController {
 		return mv;
 	}
 	
+	@RequestMapping(value = "/testFire")
+	public ModelAndView getFireTestPage(){
+		return new ModelAndView("fire-test/main");
+	}
+	
 	
 }

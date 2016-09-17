@@ -12,6 +12,7 @@ public class BlitzballTech implements java.io.Serializable {
 	private String techType;
 	private Integer hpCost;
 	private Integer statMod;
+	private Double effectChance;
 	
 	public BlitzballTech(){}
 	
@@ -50,5 +51,13 @@ public class BlitzballTech implements java.io.Serializable {
 	}
 	public void setStatMod(Integer statMod) {
 		this.statMod = statMod;
+	}
+
+	public Double getEffectChance() {
+		return effectChance;
+	}
+
+	public void setEffectChance(Double effectChance) {
+		this.effectChance = effectChance;
 	}
 }

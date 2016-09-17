@@ -64,6 +64,7 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 	this.blocks=1;
 	this.breaks=0;
 	this.turnovers=1;
+	this.learnedTechs=[];
 	
 	this.restingPosition = startingPos.clone();//Vector3
 	this.currentPosition = startingPos;
@@ -76,6 +77,7 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 	}
 	this.has3DModel=false;
 	this.hasBall=false;
+	this.isSleeping=false;
 	this.root=null;
 	this.animation=null;
 	this.ballAnimation=null;
@@ -158,7 +160,9 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 			this.ballAnimation.resetBlendWeights();
 			this.ballAnimation.update(delta);
 		}
-		if (this.hasBall){
+		if (this.isSleeping){
+			trajectory=null;
+		} else if (this.hasBall){
 			if (controls.moveForward&&!controls.moveBackward){
 				if (controls.moveLeft&&!controls.moveRight){
 					trajectory=new THREE.Vector3(-1*moveScale*sqrt2*(this.speed/60)*delta, 0, -1*moveScale*sqrt2*(this.speed/60)*delta);
@@ -259,7 +263,7 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 		}
 	}
 	
-	this.animateGrabBall = function(callback, interimCallback){
+	this.animateGrabBall = function(interimCallback, callback){
 		this.hasBall=true;
 		this.ball.visible=true;
 		this.animation.playGrabBallAnimation(null);
@@ -267,7 +271,7 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 		this.ballAnimation.callback=callback;
 	}
 	
-	this.animateBlockFail = function(callback, interimCallback){
+	this.animateBlockFail = function(interimCallback, callback){
 		this.ball.visible=true;
 		this.animation.playBlockAnimation(null);
 		this.ballAnimation.playBlockAnimation(interimCallback);
@@ -275,6 +279,35 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 			scope.ball.visible=false;
 			callback();
 		};
+	}
+	
+	this.wakeup = function(){
+		this.isSleeping=false;
+		if (this.animation!=null){
+			this.animation.isSleeping=false;
+		}
+		if (this.ballAnimation!=null){
+			this.ballAnimation.isSleeping=false;
+		}
+	}
+	
+	this.animateBlockSleep = function(interimCallback, callback){
+		this.ball.visible=true;
+		this.animation.playIncomingNapAnimation(null);
+		this.ballAnimation.playIncomingNapAnimation(interimCallback);
+		this.ballAnimation.callback=function(){
+			scope.isSleeping=true;
+			scope.ball.visible=false;
+			callback();
+		};
+	}
+	
+	this.animateWakeup = function(callback){
+		this.ball.visible=true;
+		//this.isSleeping = false;
+		this.animation.playWakeupAnimation();
+		this.ballAnimation.playWakeupAnimation();
+		this.ballAnimation.callback=function(){scope.ball.visible=false; callback()};
 	}
 	
 	this.animateCatchBall = function(callback){
@@ -357,12 +390,30 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 		//this.ballAnimation.callback=callback;
 	}
 	
-	this.continueEndure = function(keptBall, callback){
+	this.animateEndureSleep = function(interimCallback, callback){
+		this.animation.playIncomingNapAnimation(null);
+		this.ballAnimation.playIncomingNapAnimation(interimCallback);
+		this.ballAnimation.callback=callback;
+	}
+	
+	this.continueEndure = function(keptBall, napped, callback){
 		if (!keptBall){
 			this.ball.visible=false;
 			this.hasBall=false;
+			if (napped){
+				this.animation.playIncomingNapAnimation(null);
+				this.ballAnimation.playIncomingNapAnimation(callback);
+				this.ballAnimation.callback=function(){
+					scope.isSleeping=true;
+					scope.ball.visible=false;
+					callback();
+				};
+			} else {
+				this.animation.callback=callback;
+			}
+		} else {
+			this.animation.callback=callback;	
 		}
-		this.animation.callback=callback;
 	}
 	
 	this.animateTackle = function(target){
@@ -469,21 +520,25 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 	}
 	
 	this.testEncounter = function(playerLocation, existingDefCount){
-		var distToPlayer = this.currentPosition.distanceTo(playerLocation);
-		if (distToPlayer<20||(this.brawler&&this.distToPlayer<50&&Math.random()<.6)){
-			this.chasingPosition=null;
-			return true;
-		} else {
-			return false;
+		if (!this.isSleeping){
+			var distToPlayer = this.currentPosition.distanceTo(playerLocation);
+			if (distToPlayer<20||(this.brawler&&this.distToPlayer<50&&Math.random()<.6)){
+				this.chasingPosition=null;
+				return true;
+			} else {
+				return false;
+			}
 		}
 	}
 	
 	this.testViewBallCarrier = function(ballLocation){
-		var distToCarrier = this.currentPosition.distanceTo(ballLocation);
-		if (distToCarrier<=this.fieldOfVision){
-			this.chasingPosition=ballLocation;
-		} else {
-			this.chasingPosition=null;
+		if (!this.isSleeping){
+			var distToCarrier = this.currentPosition.distanceTo(ballLocation);
+			if (distToCarrier<=this.fieldOfVision){
+				this.chasingPosition=ballLocation;
+			} else {
+				this.chasingPosition=null;
+			}
 		}
 	}
 	

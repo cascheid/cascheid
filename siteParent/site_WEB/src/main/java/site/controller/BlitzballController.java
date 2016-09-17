@@ -25,6 +25,7 @@ import site.blitzball.BlitzballInfo;
 import site.blitzball.BlitzballPlayer;
 import site.blitzball.BlitzballPlayerStatistics;
 import site.blitzball.BlitzballTeam;
+import site.blitzball.BlitzballTech;
 import site.blitzball.BlitzballUtils;
 import site.blitzball.BlitzballWeekResults;
 import site.blitzball.TeamName;
@@ -225,8 +226,21 @@ public class BlitzballController {
 			return new ModelAndView("timeout");
 		}
 		ModelAndView mv = new ModelAndView("test");
+		List<BlitzballTech> techs = BlitzballUtils.getTechList();
+		for (BlitzballPlayer player : blitzballInfo.getTeam().getActivePlayers()){
+			player.setTech1(techs.get(16));
+			player.setTech2(techs.get(2));
+			player.setTech3(techs.get(7));
+			player.setTech4(techs.get(28));
+		}
 		if (activeOpponent==null){
 			activeOpponent=BlitzballUtils.getLeagueOpponentByID(blitzballInfo.getLeague());
+		}
+		for (BlitzballPlayer player : activeOpponent.getActivePlayers()){
+			player.setTech1(techs.get(16));
+			player.setTech2(techs.get(2));
+			player.setTech3(techs.get(7));
+			player.setTech4(techs.get(28));
 		}
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
@@ -522,7 +536,7 @@ public class BlitzballController {
 		return "redirect:blitzball";
 	}
 	
-	@RequestMapping("/bbRecruit")
+	@RequestMapping("/blitzballRecruit")
 	public ModelAndView getRecruitingPage(){
 		if (identity==null||blitzballInfo==null){
 			return new ModelAndView("timeout");

@@ -25,6 +25,7 @@ THREE.BBAnimation = function ( obj, data, playerSpeed, isBall ) {
 	this.loop = true;
 	this.weight = 0;
 	this.playerSpeed=playerSpeed;
+	this.isSleeping = false;
 
 	this.interpolationType = THREE.AnimationHandler.LINEAR;
 	
@@ -135,6 +136,7 @@ THREE.BBAnimation.prototype = {
 		this.animPlaying="incomingnap";
 		this.timeScale = 0.3;
 		this.loop=false;
+		this.isSleeping=true;
 		this.reset();
 		THREE.AnimationHandler.play( this );
 	},
@@ -150,6 +152,7 @@ THREE.BBAnimation.prototype = {
 		this.animPlaying="napgoaliedrop";
 		this.timeScale = 0.3;
 		this.loop=false;
+		this.isSleeping=true;
 		this.reset();
 		THREE.AnimationHandler.play( this );
 	},
@@ -180,6 +183,7 @@ THREE.BBAnimation.prototype = {
 		this.animPlaying="wakeup";
 		this.timeScale = 0.3;
 		this.loop=false;
+		this.isSleeping=false;
 		this.reset();
 		THREE.AnimationHandler.play( this );
 	},
@@ -532,7 +536,9 @@ THREE.BBAnimation.prototype = {
 				} else {
 
 					//this.stop();
-					if (this.isGoalie){
+					if (this.isSleeping){
+						this.playNapTreadAnimation();
+					} else if (this.isGoalie){
 						this.playGoalieTreadAnimation();
 					} else {
 						this.playTreadAnimation();

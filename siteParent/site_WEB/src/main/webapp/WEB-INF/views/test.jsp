@@ -8,6 +8,7 @@
 		<title>Blitzball!</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+	<script src="js/BBNavMenu.js?version=0.1"></script>
 		<style>
 			body {
 				background: #000;
@@ -324,9 +325,11 @@
 			var rotTimer=0;
 			var gameTimer=0;
 			var selectedTech=null;
+			var techOptions=[];
 
 			var menuSelection=1;
 			var MAXITEMS=3;
+			var navMenu = new BBNavMenu('selector', MAXITEMS, 1);
 
 			var goal1Loc=new THREE.Vector3(100, 3, -4);
 			var goal2Loc=new THREE.Vector3(-100, 3, 4);
@@ -729,23 +732,30 @@
 				if (gameActive&&teamWithBall==1){
 					controls.moveBackward = true;
 				} else if (!gameActive&&teamWithBall==1){
-					if (menuSelection>=MAXITEMS){
-						menuSelection=1;
-					} else {
-						menuSelection++;
-					}
-					document.getElementById('selector').style.top=(menuSelection-1)*4+'vmin';
+					navMenu.moveDown();
 					if (currAction=="break"){
-						numDefenders=menuSelection-1;
+						numDefenders=navMenu.getRow()-1;
 						highlightBreakInfo();
 					} else if (currAction=="main"){
 						highlightTargettedPlayer();
+					} else if (currAction=="pass"){
+						if (navMenu.getRow()==MAXITEMS||navMenu.getRow()==1){
+							document.getElementById('playerPAS').innerHTML=currentPlayer.pass;
+						} else {
+							document.getElementById('playerPAS').innerHTML=currentPlayer.pass+techOptions[navMenu.getRow()-1].statMod;
+						}
+					} else if (currAction=="shoot"){
+						if (navMenu.getRow()==MAXITEMS||navMenu.getRow()==1){
+							document.getElementById('playerSHT').innerHTML=currentPlayer.shot;
+						} else {
+							document.getElementById('playerSHT').innerHTML=currentPlayer.shot+techOptions[navMenu.getRow()-1].statMod;
+						}
 					} else if (currAction=="targetting"){
 						var j=0;
 						for (var i=0; i<myTeam.length; i++){
 							if (myTeam[i]!=currentPlayer){
 								j++;
-								if (j==menuSelection){
+								if (j==navMenu.getRow()){
 									targettedPlayer=myTeam[i];
 									break;
 								}
@@ -753,6 +763,9 @@
 						}
 						highlightTargettedPlayer();
 					}
+				} else if (!gameActive&&teamWithBall==2&&attackAction=="attackSelection"){
+					navMenu.moveDown();
+					document.getElementById('break'+breakAttackerNum+'ATK').innerHTML=breakingPlayer.attack+attackOptions[navMenu.getRow()-1].statMod;
 				}
 			}
 			
@@ -760,23 +773,30 @@
 				if (gameActive&&teamWithBall==1){
 					controls.moveForward = true;
 				} else if (!gameActive&&teamWithBall==1){
-					if (menuSelection<=1){
-						menuSelection=MAXITEMS;
-					} else {
-						menuSelection--;
-					}
-					document.getElementById('selector').style.top=(menuSelection-1)*4+'vmin';
+					navMenu.moveUp();
 					if (currAction=="break"){
-						numDefenders=menuSelection-1;
+						numDefenders=navMenu.getRow()-1;
 						highlightBreakInfo();
 					} else if (currAction=="main"){
 						highlightTargettedPlayer();
+					} else if (currAction=="pass"){
+						if (navMenu.getRow()==MAXITEMS||navMenu.getRow()==1){
+							document.getElementById('playerPAS').innerHTML=currentPlayer.pass;
+						} else {
+							document.getElementById('playerPAS').innerHTML=currentPlayer.pass+techOptions[navMenu.getRow()-1].statMod;
+						}
+					} else if (currAction=="shoot"){
+						if (navMenu.getRow()==MAXITEMS||navMenu.getRow()==1){
+							document.getElementById('playerSHT').innerHTML=currentPlayer.shot;
+						} else {
+							document.getElementById('playerSHT').innerHTML=currentPlayer.shot+techOptions[navMenu.getRow()-1].statMod;
+						}
 					} else if (currAction=="targetting"){
 						var j=0;
 						for (var i=0; i<myTeam.length; i++){
 							if (myTeam[i]!=currentPlayer){
 								j++;
-								if (j==menuSelection){
+								if (j==navMenu.getRow()){
 									targettedPlayer=myTeam[i];
 									break;
 								}
@@ -784,6 +804,9 @@
 						}
 						highlightTargettedPlayer();
 					}
+				} else if (!gameActive&&teamWithBall==2&&attackAction=="attackSelection"){
+					navMenu.moveUp();
+					document.getElementById('break'+breakAttackerNum+'ATK').innerHTML=breakingPlayer.attack+attackOptions[navMenu.getRow()-1].statMod;
 				}
 			}
 
@@ -954,7 +977,7 @@
 						if (Math.random()<shotChance){
 							var options = [];
 							for (var i=0; i<currentPlayer.techs.length; i++){
-								if (currentPlayer.techs[i].techType=='shot'&&currentPlayer.techs[i].hpCost<currentPlayer.hp){
+								if (currentPlayer.techs[i].techType=='SHOT'&&currentPlayer.techs[i].hpCost<currentPlayer.hp){
 									options.push(i);
 								}
 							}
@@ -974,7 +997,7 @@
 							if (numDefenders>0 || randomTriggered || (Math.random()<(currentPlayer.pass/(currentPlayer.endurance/2+currentPlayer.pass)))){
 								var options = [];
 								for (var i=0; i<currentPlayer.techs.length; i++){
-									if (currentPlayer.techs[i].techType=='pass'&&currentPlayer.techs[i].hpCost<currentPlayer.hp){
+									if (currentPlayer.techs[i].techType=='PASS'&&currentPlayer.techs[i].hpCost<currentPlayer.hp){
 										options.push(i);
 									}
 								}
@@ -995,6 +1018,7 @@
 								currAction="breakdribble";
 							}
 						}
+						breakAttackerNum=0;
 						setTimeout(function(){animateBreak(numDefenders);}, '2000');
 					}, '2000');
 				}
@@ -1004,40 +1028,15 @@
 				if (!gameOver){
 				if (techCopying){
 					if (techCopyMatch){
-						var playerOptions=[];
-						if (teamWithBall==2){
-							for (var i=0; i<myTeam[i].length; i++){
-								if (myTeam[i].techCopyTarget==currentPlayer.playerID){
-									for (var j=0; i<myTeam[i].learnableTechs.length; j++){
-										if (myTeam[i].learnableTechs[j].techID==selectedTech.techID){
-											playerOptions.push(myTeam[i]);
-											break;
-										}
-									}
-								}
-							}
-						} else {
-							for (var i=0; i<oppTeam[i].length; i++){
-								if (oppTeam[i].techCopyTarget==currentPlayer.playerID){
-									for (var j=0; i<oppTeam[i].learnableTechs.length; j++){
-										if (oppTeam[i].learnableTechs[j].techID==selectedTech.techID){
-											playerOptions.push(oppTeam[i]);
-											break;
-										}
-									}
-								}
-							}
-						}
-						var player = playerOptions[Math.floor(Math.random()*playerOptions.length)];
-						if (Math.random()<Math.max((.75+.05*(player.level-currentPlayer.level)), .5)){
-							//TODO learned tech
-							if (player.keyTech1!=selectedTech.techID&&player.keyTech2!=selectedTech.techID&&player.keyTech3!=selectedTech.techID){
-								writeInfo(player.name + ' learned a new tech');
+						if (Math.random()<Math.max((.75+.05*(techCopyPlayer.level-currentPlayer.level)), .5)){
+							techCopyPlayer.learnedTechs.push(selectedTech);
+							if (techCopyPlayer.keyTech1!=selectedTech.techID&&techCopyPlayer.keyTech2!=selectedTech.techID&&techCopyPlayer.keyTech3!=selectedTech.techID){
+								writeInfo(techCopyPlayer.name + ' learned a new tech');
 							} else {
-								writeInfo(player.name + ' learned a new key tech');
+								writeInfo(techCopyPlayer.name + ' learned a new key tech');
 							}
 						} else {
-							writeInfo(player.name + ' level too low.');
+							writeInfo(techCopyPlayer.name + ' level too low, tech copy failed.');
 						}
 					} else {
 						writeInfo('Tech copy failed.');
@@ -1048,8 +1047,12 @@
 				}
 				else if (gameActive&&teamWithBall==1){
 					triggerBreak();
+				} else if (!gameActive&&teamWithBall==2&&attackAction=="attackSelection"){
+					selectedAttack=attackOptions[navMenu.getRow()-1];
+					document.getElementById('actionMenu').style.display='none';
+					executeBreak();
 				} else if (!gameActive&&currAction=="break"){
-					if (menuSelection==1){
+					if (navMenu.getRow()==1){
 						writeInfo('No break.');
 						showMainActionMenu();
 					} else {
@@ -1059,56 +1062,77 @@
 						//animateBreak(menuSelection);
 					}
 				} else if (!gameActive&&currAction=="main"){
-					if (menuSelection==1){
+					if (navMenu.getRow()==1){
 						clearMenu();
 						techOptions=[];
+						var normalPass = {
+							effectChance:0,
+							hpCost:currentPlayer.pass, 
+							statMod:0,
+							techDescription:"",
+							techID:null,
+							techName:"Normal Pass",
+							techType:"PASS"
+						};
+						techOptions.push(normalPass);
 						for (var i=0; i<currentPlayer.techs.length; i++){
-							if (currentPlayer.techs[i].techType=="pass"){
+							if (currentPlayer.techs[i].techType=="PASS"){
 								techOptions.push(currentPlayer.techs[i]);
 							}
 						}
-						document.getElementById('actionMenu').style.height=((techOptions+2)*4)+"vmin";
+						document.getElementById('actionMenu').style.height=((techOptions.length+1)*4)+"vmin";
 						for (var i=0; i<techOptions.length; i++){
-							document.getElementById('menu'+(i+2)).style.display='';
-							document.getElementById('menu'+(i+2)).innerHTML=techOptions[i].techName;
+							document.getElementById('menu'+(i+1)).style.display='';
+							document.getElementById('menu'+(i+1)).innerHTML=techOptions[i].techName;
 						}
-						document.getElementById('menu1').innerHTML='Normal Pass';
-						MAXITEMS=techOptions.length+2;
+						MAXITEMS=techOptions.length+1;
+						navMenu.updateActiveSelector('selector', MAXITEMS, 1);
 						document.getElementById('menu'+MAXITEMS).style.display='';
 						document.getElementById('menu'+MAXITEMS).innerHTML='Back';
 						currAction="pass";
-					} else if (menuSelection==2){
+					} else if (navMenu.getRow()==2){
 						clearMenu();
 						techOptions=[];
+						var normalShot = {
+							effectChance:0,
+							hpCost:currentPlayer.shot, 
+							statMod:0,
+							techDescription:"",
+							techID:null,
+							techName:"Normal Shot",
+							techType:"SHOT"
+						};
+						techOptions.push(normalShot);
 						for (var i=0; i<currentPlayer.techs.length; i++){
-							if (currentPlayer.techs[i].techType=="shot"){
+							if (currentPlayer.techs[i].techType=="SHOT"){
 								techOptions.push(currentPlayer.techs[i]);
 							}
 						}
-						document.getElementById('actionMenu').style.height=((techOptions+2)*4)+"vmin";
+						document.getElementById('actionMenu').style.height=((techOptions.length+1)*4)+"vmin";
 						for (var i=0; i<techOptions.length; i++){
-							document.getElementById('menu'+(i+2)).style.display='';
-							document.getElementById('menu'+(i+2)).innerHTML=techOptions[i].techName;
+							document.getElementById('menu'+(i+1)).style.display='';
+							document.getElementById('menu'+(i+1)).innerHTML=techOptions[i].techName;
 						}
-						document.getElementById('menu1').innerHTML='Normal Shot';
-						MAXITEMS=techOptions.length+2;
+						MAXITEMS=techOptions.length+1;
+						navMenu.updateActiveSelector('selector', MAXITEMS, 1);
 						document.getElementById('menu'+MAXITEMS).style.display='';
 						document.getElementById('menu'+MAXITEMS).innerHTML='Back';
 						currAction="shoot";
-					} else if (menuSelection==3){
+					} else if (navMenu.getRow()==3){
 						document.getElementById('actionMenu').style.display='none';
 						currAction="breakdribble";
 						inMenu=false;
+						breakAttackerNum=0;
 						animateBreak(numDefenders);
 						//updateCurrentPlayer(currentPlayer);
 						//unpause();
 					}
 				} else if (!gameActive&&currAction=="pass"){
-					if (menuSelection==MAXITEMS){
+					if (navMenu.getRow()==MAXITEMS){
 						showMainActionMenu();
 					} else {
-						if (menuSelection>1){
-							selectedTech=techOptions[menuSelection-1];
+						if (navMenu.getRow()>1){
+							selectedTech=techOptions[navMenu.getRow()-1];
 						}
 						var j=0;
 						for (var i=0; i<myTeam.length; i++){
@@ -1119,23 +1143,26 @@
 							}
 						}
 						MAXITEMS=4;
+						navMenu.updateActiveSelector('selector', MAXITEMS, 1);
 						document.getElementById('actionMenu').style.height=(MAXITEMS*4)+'vmin';
 						document.getElementById('actionMenu').style.display="none";
 						currAction="breaktargetting";
 						inMenu=false;
+						breakAttackerNum=0;
 						animateBreak(numDefenders);
 					}
 				} else if (!gameActive&&currAction=="targetting"){
 					pass();
 				} else if (!gameActive&&currAction=="shoot"){
-					if (menuSelection==MAXITEMS){
+					if (navMenu.getRow()==MAXITEMS){
 						showMainActionMenu();
 					} else {
-						if (menuSelection>1){
-							selectedTech=techOptions[menuSelection-1];
+						if (navMenu.getRow()>1){
+							selectedTech=techOptions[navMenu.getRow()-1];
 						}
 						currAction="breakshoot";
 						inMenu=false;
+						breakAttackerNum=0;
 						animateBreak(numDefenders);
 						//shoot();
 					}
@@ -1145,8 +1172,8 @@
 
 			function cancelButtonPressed(){
 				if (!gameActive){
-					menuSelection=MAXITEMS;
-					document.getElementById('selector').style.top=(menuSelection-1)*4+'vmin';
+					navMenu.updateRow(MAXITEMS);
+					document.getElementById('selector').style.top=(navMenu.getRow()-1)*4+'vmin';
 				}
 			}
 
@@ -1159,8 +1186,8 @@
 				document.getElementById('menu3').style.display='none';
 				document.getElementById('menu4').style.display='none';
 				document.getElementById('menu5').style.display='none';
-				menuSelection=1;
-				document.getElementById('selector').style.top=(menuSelection-1)*4+'vmin';
+				navMenu.updateRow(1);
+				document.getElementById('selector').style.top=(navMenu.getRow()-1)*4+'vmin';
 			}
 			
 			function showBreakMenu(){
@@ -1181,6 +1208,7 @@
 						document.getElementById('break'+MAXITEMS+'Stats').style.visibility='';
 						MAXITEMS++;
 					}
+					navMenu.updateActiveSelector('selector', MAXITEMS, 1);
 					currAction="break";
 					document.getElementById('actionMenu').style.height=(MAXITEMS*4)+'vmin';
 					document.getElementById('actionMenu').style.display='';
@@ -1202,6 +1230,7 @@
 					document.getElementById('menu3').innerHTML='Dribble';
 					MAXITEMS=3;
 				}
+				navMenu.updateActiveSelector('selector', MAXITEMS, 1);
 				currAction="main";
 				document.getElementById('actionMenu').style.display='';
 				document.getElementById('actionMenu').style.height=(MAXITEMS*4)+'vmin';
@@ -1264,7 +1293,7 @@
 					document.getElementById('break'+num+'Stats').style.visibility='';
 					cameraTarget.set(targettedPlayer.currentPosition.x, 0, targettedPlayer.currentPosition.z);
 				} else if (currAction=="main"){
-					if (menuSelection==2){
+					if (navMenu.getRow()==2){
 						var keeper=null;
 						if (teamWithBall==1){
 							keeper=oppTeamGK;
@@ -1286,24 +1315,31 @@
 
 			function onBreakResult(numLeft){
 				var currEnd = Number(document.getElementById('playerEND').innerHTML);
-				currEnd-=Math.round((.5+Math.random())*breakingPlayer.attack);
+				currEnd-=Math.round((.5+Math.random())*(breakingPlayer.attack+selectedAttack.statMod));
 				if (currEnd<=0){
 					currEnd=0;
 					//document.getElementById('playerEND').innerHTML=currEnd;
 					updateStat('playerEND', currEnd);
 					writeInfo(breakingPlayer.name + " steals the ball!");
+					var napped=false;
+					if (Math.random()<selectedAttack.effectChance){
+						if (selectedAttack.techName.substring(0,3)=='Nap'){
+							writeInfo(currentPlayer.name + " falls asleep!");
+							napped=true;
+						}
+					}
 					if (teamWithBall==1){
 						teamWithBall=2;
 					} else {
 						teamWithBall=1;
 					}
-					currentPlayer.continueEndure(false, function(){delayResumeGame(breakingPlayer);});
+					currentPlayer.continueEndure(false, napped, function(){delayResumeGame(breakingPlayer);});
 					breakingPlayer.continueTackle(true);
 					//updateCurrentPlayer(breakingPlayer);
 				} else {
 					//document.getElementById('playerEND').innerHTML=currEnd;
 					updateStat('playerEND', currEnd);
-					currentPlayer.continueEndure(true, function(){animateBreak(numLeft)});
+					currentPlayer.continueEndure(true, false, function(){animateBreak(numLeft)});
 				}
 			}
 
@@ -1388,21 +1424,79 @@
 					minimapContext.fill();
 				}
 			}
-
-			function animateBreak(numLeft){
-				inMenu=false;
+			
+			function promptAttackMenu(){
+				console.log(currAction);
+				document.getElementById('actionMenu').style.height=((attackOptions.length)*4)+"vmin";
+				for (var i=0; i<6; i++){
+					document.getElementById('menu'+(i+1)).style.display='none';
+				}
+				for (var i=0; i<attackOptions.length; i++){
+					document.getElementById('menu'+(i+1)).style.display='';
+					document.getElementById('menu'+(i+1)).innerHTML=attackOptions[i].techName;
+				}
+				MAXITEMS=attackOptions.length;
+				document.getElementById('actionMenu').style.display='';
+				navMenu.updateActiveSelector('selector', MAXITEMS, 1);
+				attackAction="attackSelection";
+			}
+			
+			function executeBreak(){
 				timerActive=true;
+				inMenu=false;
+				currentPlayer.animateEndure(function(){onBreakResult(numBreaksLeft-1)});
+				var mv=currentPlayer.currentPosition.clone().sub(breakingPlayer.currentPosition).multiplyScalar(1.5);
+				breakingPlayer.animateTackle(mv);
+			}
+
+			var numBreaksLeft=0;
+			function animateBreak(numLeft){
+				inMenu=true;
+				timerActive=false;
 				document.getElementById('actionMenu').style.display='none';
 				if (numLeft>0){
 					/*if (defendingPlayers!=null&&defendingPlayers.length>=numLeft){
 						console.log('invalid number of break attempts: ' + numLeft);
 						showMainActionMenu();
 					}*/
+					breakAttackerNum++;
 					breakingPlayer=defendingPlayers.shift();
 					writeInfo(currentPlayer.name + " breaks to " + breakingPlayer.name);
-					currentPlayer.animateEndure(function(){onBreakResult(numLeft-1)});
-					var mv=currentPlayer.currentPosition.clone().sub(breakingPlayer.currentPosition).multiplyScalar(1.5);
-					breakingPlayer.animateTackle(mv);
+					attackOptions=[];
+					numBreaksLeft=numLeft-1;
+					var normalTackle = {
+							effectChance:0,
+							hpCost:0, 
+							statMod:0,
+							techDescription:"",
+							techID:null,
+							techName:"Normal Tackle",
+							techType:"ATTACK"
+						};
+					attackOptions.push(normalTackle);
+					for (var i=0; i<breakingPlayer.techs.length; i++){
+						if (breakingPlayer.techs[i].techType=='ATTACK'&&breakingPlayer.techs[i].hpCost<=breakingPlayer.hp){
+							attackOptions.push(breakingPlayer.techs[i]);
+						}
+					}
+					if (attackOptions.length>1&&teamWithBall==2){//player is attacking
+						promptAttackMenu();
+					} else {
+						if (attackOptions.length>1){
+							selectedAttack = attackOptions[Math.floor(Math.random()*(attackOptions.length))];
+						} else {
+							selectedAttack=normalTackle;
+						}
+						if (selectedAttack!=normalTackle){
+							writeInfo(selectedAttack.techName);
+							setTimeout(function(){
+								executeBreak();
+								setupTechCopy();
+							}, 2000);
+						} else {
+							executeBreak();
+						}
+					}
 				} else {
 					if (currAction=="breaktargetting"){
 						if (teamWithBall==1){
@@ -1594,7 +1688,7 @@
 					}
 				} else if (currAction=="passedBall"){
 					timeSinceLastTrigger=1;
-					if (currStat>0){
+					if (currStat>0&&!targettedPlayer.isSleeping){
 						currAction="catching";
 						var vec = currentPlayer.currentPosition.clone().sub(targettedPlayer.currentPosition);
 						vec.multiplyScalar(15/vec.length());
@@ -1612,8 +1706,12 @@
 						vec.multiplyScalar(15/vec.length());
 						camera.position.addVectors(targettedPlayer.currentPosition, vec);
 						cameraTarget.set(targettedPlayer.currentPosition.x, 0, targettedPlayer.currentPosition.z);
-						targettedPlayer.animateDropCatch(function(){
+						var dropCallback = function(){
 							writeInfo(targettedPlayer.name + ' dropped the pass');
+							if (targettedPlayer.isSleeping){
+								targettedPlayer.wakeup();
+								writeInfo(targettedPlayer.name + ' woke up');
+							}
 							var currReceiver;
 							var minDistance=200;
 							for (var i=0; i<myTeam.length; i++){
@@ -1636,7 +1734,12 @@
 							}
 							targettedPlayer=null;
 							grabLooseBall(currReceiver);
-						});
+						};
+						if (targettedPlayer.isSleeping){
+							targettedPlayer.animateWakeup(dropCallback);
+						} else {
+							targettedPlayer.animateDropCatch(dropCallback);
+						}
 					}
 				}
 				selectedTech=null;
@@ -1644,23 +1747,52 @@
 
 			var techCopying = false;
 			var techCopyMatch=false;
+			var toggleCount=0;
+			var techCopyPlayer=null;
 			function setupTechCopy(){
 				techCopying = true;
 				techCopyMatch=false;
+				toggleCount=0;
+				techCopyPlayer=null;
 				if (selectedTech!=null&&teamWithBall==2){
-					document.getElementById('techCopy').style.color='#708090';
-					document.getElementById('techCopy').style.display='';
-					setTimeout(function(){
-						if (techCopying){
-							if (!techCopyMatch){
-								document.getElementById('techCopy').style.color='#FFFFFF';
-							} else {
-								techCopyMatch=true;
-								document.getElementById('techCopy').style.color='#708090';
+					var playerOptions=[];
+					for (var i=0; i<myTeam[i].length; i++){
+						if (myTeam[i].techCopyTarget==currentPlayer.playerID){
+							for (var j=0; i<myTeam[i].learnableTechs.length; j++){
+								if (myTeam[i].learnableTechs[j].techID==selectedTech.techID){
+									playerOptions.push(myTeam[i]);
+									break;
+								}
 							}
 						}
-					}, '200');
+					}
+					playerOptions.push(myTeam[0]);//TODO testing
+					if (playerOptions.length>0){
+						techCopyPlayer = playerOptions[Math.floor(Math.random()*playerOptions.length)];
+						document.getElementById('techCopy').style.color='#708090';
+						document.getElementById('techCopy').style.display='';
+						toggleTechCopy();
+					}
 				}
+			}
+			
+			function toggleTechCopy(){
+				setTimeout(function(){
+					toggleCount++;
+					if (toggleCount>5){
+						techCopyMatch=false;
+						techCopying = false;
+						document.getElementById('techCopy').style.display='none';
+					} else if (techCopying){
+						if (!techCopyMatch){
+							document.getElementById('techCopy').style.color='#FFFFFF';
+						} else {
+							techCopyMatch=true;
+							document.getElementById('techCopy').style.color='#708090';
+						}
+						toggleTechCopy();
+					}
+				}, '200');
 			}
 
 			function blockInterim(){
@@ -1704,9 +1836,20 @@
 					statName='playerSHT';
 				}
 				if (currStat>0){
-					animatingPlayer.animateBlockFail(blockInterim, function(){updateStat(statName, currStat); writeInfo(animatingPlayer.name + ' got a hand on it')});
+					var napped=false;
+					if (selectedTech!=null&&Math.random()<selectedTech.effectChance){
+						if (selectedTech.techName.substring(0,3)=='Nap'){
+							writeInfo(animatingPlayer.name + " falls asleep!");
+							napped=true;
+						}
+					}
+					if (napped){
+						animatingPlayer.animateBlockSleep(function(){updateStat(statName, currStat); writeInfo(animatingPlayer.name + ' got a hand on it')}, blockInterim);
+					} else {
+						animatingPlayer.animateBlockFail(function(){updateStat(statName, currStat); writeInfo(animatingPlayer.name + ' got a hand on it')}, blockInterim);
+					}
 				} else {
-					animatingPlayer.animateGrabBall(blockInterim, function(){updateStat(statName, 0); writeInfo(animatingPlayer.name + ' grabbed the ball');});
+					animatingPlayer.animateGrabBall(function(){updateStat(statName, 0); writeInfo(animatingPlayer.name + ' grabbed the ball');}, blockInterim);
 				}
 			}			
 
@@ -1815,9 +1958,13 @@
 				currAction="blitzoff";
 				for (var i=0; i<myTeam.length; i++){
 					myTeam[i].currentRotation=Math.PI;
+					myTeam[i].root.rotation.y=3*Math.PI/2;
+					myTeam[i].wakeup();
 				}
 				for (var i=0; i<oppTeam.length; i++){
 					oppTeam[i].currentRotation=0;
+					oppTeam[i].root.rotation.y=Math.PI/2;
+					oppTeam[i].wakeup();
 				}
 				myTeamLW.currentPosition.set(20, 0, 50);
 				myTeamMF.currentPosition.set(40, 0, 0);
@@ -1847,7 +1994,7 @@
 				cameraTarget.y=0;
 				camera.position.x=player.currentPosition.x-7;
 				camera.position.z=player.currentPosition.z+7;
-				player.animateGrabBall(function(){delayResumeGame(player);}, null);
+				player.animateGrabBall(null, function(){delayResumeGame(player);});
 			}
 
 			function endBlitzoff(){

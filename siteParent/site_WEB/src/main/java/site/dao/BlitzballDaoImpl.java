@@ -431,6 +431,7 @@ public class BlitzballDaoImpl extends ParentDao implements BlitzballDao{
 				tech.setTechType(rs.getString("TECH_TYPE"));
 				tech.setHpCost(rs.getInt("HP_COST"));
 				tech.setStatMod(rs.getInt("STAT_MOD"));
+				tech.setEffectChance(1.0);//TODO
 				return tech;
 			}
 			

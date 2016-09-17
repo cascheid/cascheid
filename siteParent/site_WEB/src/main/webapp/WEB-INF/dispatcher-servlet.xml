@@ -26,19 +26,10 @@ http://www.springframework.org/schema/websocket/spring-websocket-4.0.xsd">
 	</bean>
 	
 	<mvc:resources mapping="/static/*" location="/WEB-INF/static/" />
-	<mvc:resources mapping="/css/*" location="/WEB-INF/css/" />
-	<mvc:resources mapping="/js/*" location="/WEB-INF/js/" />
-	<mvc:resources mapping="/js/shaders/*" location="/WEB-INF/js/shaders/" />
-	<mvc:resources mapping="/js/postprocessing/*" location="/WEB-INF/js/postprocessing/" />
-	<mvc:resources mapping="/obj/*" location="/WEB-INF/obj/" />
-	<mvc:resources mapping="/obj/stormtrooper/*" location="/WEB-INF/obj/stormtrooper/" />
-	<mvc:resources mapping="/img/*" location="/WEB-INF/img/" />
-	<mvc:resources mapping="/img/cars/*" location="/WEB-INF/img/cars/" />
-	<mvc:resources mapping="/img/misc/*" location="/WEB-INF/img/misc/" />
-	<mvc:resources mapping="/img/sprites/*" location="/WEB-INF/img/sprites/" />
-	<mvc:resources mapping="/img/snake/*" location="/WEB-INF/img/snake/" />
-	<mvc:resources mapping="/img/battleship/*" location="/WEB-INF/img/battleship/" />
-	<mvc:resources mapping="/img/blitzball/*" location="/WEB-INF/img/blitzball/" />
+	<mvc:resources mapping="/css/**" location="/WEB-INF/css/" />
+	<mvc:resources mapping="/js/**" location="/WEB-INF/js/" />
+	<mvc:resources mapping="/obj/**" location="/WEB-INF/obj/" />
+	<mvc:resources mapping="/img/**" location="/WEB-INF/img/" />
 	<mvc:annotation-driven /> 
 	
   	<websocket:message-broker application-destination-prefix="/app">
