@@ -167,8 +167,8 @@
 			<div class="stat" style="width:7%"><label id="break1ATKLabel">ATK</label></div>
 			<div class="num" style="width:7%"><label id="break1BLK"></label></div>
 			<div class="stat" style="width:7%"><label id="break1BLKLabel">BLK</label></div>
-			<div class="num" style="width:7%"></div>
-			<div class="stat" style="width:23%"></div>
+			<div class="num" style="width:7%"><label id="break1EXT"></label></div>
+			<div class="stat" style="width:23%"><label id="break1EXTLabel"></label></div>
 		</div>
 		<div id="break2Stats" style="visibility:hidden; display:table-row;">
 			<div style="color:#FFFF66; text-align:right; padding-right:0.5vw; display:table-cell; width:20%;"><label id="break2Name"></label></div>
@@ -178,8 +178,8 @@
 			<div class="stat" style="width:7%"><label id="break2ATKLabel">ATK</label></div>
 			<div class="num" style="width:7%"><label id="break2BLK"></label></div>
 			<div class="stat" style="width:7%"><label id="break2BLKLabel">BLK</label></div>
-			<div class="num" style="width:7%"></div>
-			<div class="stat" style="width:23%"></div>
+			<div class="num" style="width:7%"><label id="break2EXT"></label></div>
+			<div class="stat" style="width:23%"><label id="break2EXTLabel"></label></div>
 		</div>
 		<div id="break3Stats" style="visibility:hidden; display:table-row;">
 			<div style="color:#FFFF66; text-align:right; padding-right:0.5vw; display:table-cell; width:20%;"><label id="break3Name"></label></div>
@@ -189,8 +189,8 @@
 			<div class="stat" style="width:7%"><label id="break3ATKLabel">ATK</label></div>
 			<div class="num" style="width:7%"><label id="break3BLK"></label></div>
 			<div class="stat" style="width:7%"><label id="break3BLKLabel">BLK</label></div>
-			<div class="num" style="width:7%"></div>
-			<div class="stat" style="width:23%"></div>
+			<div class="num" style="width:7%"><label id="break3EXT"></label></div>
+			<div class="stat" style="width:23%"><label id="break3EXTLabel"></label></div>
 		</div>
 		<div id="break4Stats" style="visibility:hidden; display:table-row;">
 			<div style="color:#FFFF66; text-align:right; padding-right:0.5vw; display:table-cell; width:20%;"><label id="break4Name"></label></div>
@@ -200,8 +200,8 @@
 			<div class="stat" style="width:7%"><label id="break4ATKLabel">ATK</label></div>
 			<div class="num" style="width:7%"><label id="break4BLK"></label></div>
 			<div class="stat" style="width:7%"><label id="break4BLKLabel">BLK</label></div>
-			<div class="num" style="width:7%"></div>
-			<div class="stat" style="width:23%"></div>
+			<div class="num" style="width:7%"><label id="break4EXT"></label></div>
+			<div class="stat" style="width:23%"><label id="break4EXTLabel"></label></div>
 		</div>
 		<div id="break5Stats" style="visibility:hidden; display:table-row;">
 			<div style="color:#FFFF66; text-align:right; padding-right:0.5vw; display:table-cell; width:20%;"><label id="break5Name"></label></div>
@@ -211,8 +211,8 @@
 			<div class="stat" style="width:7%"><label id="break5ATKLabel">ATK</label></div>
 			<div class="num" style="width:7%"><label id="break5BLK"></label></div>
 			<div class="stat" style="width:7%"><label id="break5BLKLabel">BLK</label></div>
-			<div class="num" style="width:7%"></div>
-			<div class="stat" style="width:23%"></div>
+			<div class="num" style="width:7%"><label id="break5EXT"></label></div>
+			<div class="stat" style="width:23%"><label id="break5EXTLabel"></label></div>
 		</div>
 		<div id="break6Stats" style="visibility:hidden; display:table-row;">
 			<div style="color:#FFFF66; text-align:right; padding-right:0.5vw; display:table-cell; width:20%;"><label id="break6Name"></label></div>
@@ -222,8 +222,8 @@
 			<div class="stat" style="width:7%"><label id="break6ATKLabel">ATK</label></div>
 			<div class="num" style="width:7%"><label id="break6BLK"></label></div>
 			<div class="stat" style="width:7%"><label id="break6BLKLabel">BLK</label></div>
-			<div class="num" style="width:7%"></div>
-			<div class="stat" style="width:23%"></div>
+			<div class="num" style="width:7%"><label id="break6EXT"></label></div>
+			<div class="stat" style="width:23%"><label id="break6EXTLabel"></label></div>
 		</div>
 		</div>
 		
@@ -989,9 +989,11 @@
 							}
 							if (selectedTech!=null){
 								writeInfo(selectedTech.techName);
+								//TODO increase shot value on dom
 							} else {
 								writeInfo('Shoot');
 							}
+							//TODO display keeper
 							currAction="breakshoot";
 						} else {
 							if (numDefenders>0 || randomTriggered || (Math.random()<(currentPlayer.pass/(currentPlayer.endurance/2+currentPlayer.pass)))){
@@ -1009,6 +1011,7 @@
 								}
 								if (selectedTech!=null){
 									writeInfo(selectedTech.techName);
+									//TODO increase pass value on dom
 								} else {
 									writeInfo('Pass');
 								}
@@ -1286,10 +1289,12 @@
 				if (currAction=="targetting"){
 					document.getElementById('break'+num+'Name').innerHTML=targettedPlayer.name;
 					document.getElementById('break'+num+'HP').innerHTML=targettedPlayer.hp;
-					document.getElementById('break'+num+'ATK').innerHTML=targettedPlayer.attack;
-					document.getElementById('break'+num+'ATKLabel').innerHTML='ATK';
-					document.getElementById('break'+num+'BLK').innerHTML=targettedPlayer.block;
-					document.getElementById('break'+num+'BLKLabel').innerHTML='BLK';
+					document.getElementById('break'+num+'ATK').innerHTML=targettedPlayer.endurance;
+					document.getElementById('break'+num+'ATKLabel').innerHTML='EN';
+					document.getElementById('break'+num+'BLK').innerHTML=targettedPlayer.pass;
+					document.getElementById('break'+num+'BLKLabel').innerHTML='PAS';
+					document.getElementById('break'+num+'EXT').innerHTML=targettedPlayer.SHT;
+					document.getElementById('break'+num+'EXTLabel').innerHTML='SHT';
 					document.getElementById('break'+num+'Stats').style.visibility='';
 					cameraTarget.set(targettedPlayer.currentPosition.x, 0, targettedPlayer.currentPosition.z);
 				} else if (currAction=="main"){
@@ -1306,6 +1311,8 @@
 						document.getElementById('break'+num+'ATKLabel').innerHTML='';
 						document.getElementById('break'+num+'BLK').innerHTML=keeper.cat;
 						document.getElementById('break'+num+'BLKLabel').innerHTML='CAT';
+						document.getElementById('break'+num+'EXT').innerHTML='';
+						document.getElementById('break'+num+'EXTLabel').innerHTML='';
 						document.getElementById('break'+num+'Stats').style.visibility='';
 					} else {
 						document.getElementById('break'+num+'Stats').style.visibility='hidden';
@@ -1371,9 +1378,15 @@
 					minimapContext.lineTo(x3, minimapCanvas.width-y3);
 					minimapContext.lineTo(x1, minimapCanvas.width-y1);
 					minimapContext.closePath();
-					minimapContext.strokeStyle="#FFCC00";
-					minimapContext.stroke();
-					minimapContext.fillStyle = "#FFCC00";
+					if (!myTeam[i].isSleeping){
+						minimapContext.strokeStyle="#FFCC00";
+						minimapContext.stroke();
+						minimapContext.fillStyle = "#FFCC00";
+					} else {
+						minimapContext.strokeStyle="#000000";
+						minimapContext.stroke();
+						minimapContext.fillStyle = "#000000";
+					}
 					minimapContext.fill();
 				}
 
@@ -1392,10 +1405,14 @@
 					minimapContext.lineTo(x3, minimapCanvas.width-y3);
 					minimapContext.lineTo(x1, minimapCanvas.width-y1);
 					minimapContext.closePath();
-					minimapContext.strokeStyle="#FF0000";
-					//minimapContext.arc(minimapCanvas.width*(100+oppTeam[i].currentPosition.x)/200, minimapCanvas.width*(100+oppTeam[i].currentPosition.z)/200, minimapCanvas.width/40, 0, 2 * Math.PI, false);
+					if (!oppTeam[i].isSleeping){
+						minimapContext.strokeStyle="#FF0000";
+						minimapContext.fillStyle = "#FF0000";
+					} else {
+						minimapContext.strokeStyle="#000000";
+						minimapContext.fillStyle = "#000000";
+					}
 					minimapContext.stroke();
-					minimapContext.fillStyle = "#FF0000";
 					minimapContext.fill();
 				}
 
@@ -1406,13 +1423,23 @@
 				minimapContext.fillStyle = 'white';
 				minimapContext.fill();
 
+				if (currentPlayer){
+					var playerRot=currentPlayer.currentRotation+Math.PI;
+					var playerX=minimapCanvas.width*(110+currentPlayer.currentPosition.x)/220-Math.cos(playerRot)*minimapCanvas.width/24;
+					var playerY=minimapCanvas.width*(110+currentPlayer.currentPosition.z)/220+Math.sin(playerRot)*minimapCanvas.width/24;
+					minimapContext.beginPath();
+					minimapContext.arc(playerX, playerY, minimapCanvas.width/14, 0, 2 * Math.PI, false);
+					minimapContext.arc(playerX, playerY, minimapCanvas.width/15, 0, 2 * Math.PI, true);
+					minimapContext.closePath();
+					minimapContext.fillStyle = 'white';
+					minimapContext.fill();
+				}
+				
 				if (targettedPlayer!=null&&currAction=="targetting"){
 					minimapContext.beginPath();
 					minimapContext.arc(minimapCanvas.width*(110+targettedPlayer.currentPosition.x)/220, minimapCanvas.width*(110+targettedPlayer.currentPosition.z)/220, minimapCanvas.width/14, 0, 2 * Math.PI, false);
 					minimapContext.arc(minimapCanvas.width*(110+targettedPlayer.currentPosition.x)/220, minimapCanvas.width*(110+targettedPlayer.currentPosition.z)/220, minimapCanvas.width/15, 0, 2 * Math.PI, true);
 					minimapContext.closePath();
-					//minimapContext.strokeStyle="#FFCC00";
-					//minimapContext.stroke;
 					minimapContext.fillStyle = 'white';
 					minimapContext.fill();
 				}
@@ -1616,12 +1643,47 @@
 								targettedPlayer=myTeam[Math.floor(Math.random()*5)];
 								teamWithBall=1;
 							}
+							
 							keeper.animateGoalieSaveGrab(function(){
 								updateStat('playerSHT', 0);
 								writeInfo(keeper.name + ' saves the ball!');
 							}, function(){
 								targettedPlayer.lookAt(keeper.currentPosition);
-								keeper.animatePass(function(){grabLooseBall(targettedPlayer)});
+								keeper.animatePass(function(){
+									if (targettedPlayer.isSleeping){
+										targettedPlayer.animateWakeup(function(){
+											writeInfo(targettedPlayer.name + ' dropped the pass');
+											if (targettedPlayer.isSleeping){
+												targettedPlayer.wakeup();
+												writeInfo(targettedPlayer.name + ' woke up');
+											}
+											var currReceiver;
+											var minDistance=200;
+											for (var i=0; i<myTeam.length; i++){
+												if (myTeam[i]!=targettedPlayer){
+													if (!myTeam[i].isSleeping&&myTeam[i].currentPosition.distanceTo(targettedPlayer.currentPosition)<minDistance){
+														currReceiver=myTeam[i];
+														minDistance=myTeam[i].currentPosition.distanceTo(targettedPlayer.currentPosition);
+														teamWithBall=1;
+													}
+												}
+											}
+											for (var i=0; i<oppTeam.length; i++){
+												if (oppTeam[i]!=targettedPlayer){
+													if (!oppTeam[i].isSleeping&&oppTeam[i].currentPosition.distanceTo(targettedPlayer.currentPosition)<minDistance){
+														currReceiver=oppTeam[i];
+														minDistance=oppTeam[i].currentPosition.distanceTo(targettedPlayer.currentPosition);
+														teamWithBall=2;
+													}
+												}
+											}
+											targettedPlayer=null;
+											grabLooseBall(currReceiver);
+										});
+									} else {
+										grabLooseBall(targettedPlayer);
+									}
+								});
 							});
 						} else {
 							if (selectedTech!=null){
@@ -1636,14 +1698,14 @@
 								var currDist = 200;
 								var currWinner=null;
 								for (var i=0; i<myTeam.length; i++){
-									if (myTeam[i].currentPosition.distanceTo(keeper.currentPosition)<currDist){
+									if (!myTeam[i].isSleeping&&myTeam[i].currentPosition.distanceTo(keeper.currentPosition)<currDist){
 										currWinner=myTeam[i];
 										currDist=myTeam[i].currentPosition.distanceTo(keeper.currentPosition);
 										teamWithBall=1;
 									}
 								}
 								for (var i=0; i<oppTeam.length; i++){
-									if (oppTeam[i].currentPosition.distanceTo(keeper.currentPosition)<currDist){
+									if (!oppTeam[i].isSleeping&&oppTeam[i].currentPosition.distanceTo(keeper.currentPosition)<currDist){
 										currWinner=oppTeam[i];
 										currDist=oppTeam[i].currentPosition.distanceTo(keeper.currentPosition);
 										teamWithBall=2;
@@ -1716,7 +1778,7 @@
 							var minDistance=200;
 							for (var i=0; i<myTeam.length; i++){
 								if (myTeam[i]!=targettedPlayer){
-									if (myTeam[i].currentPosition.distanceTo(targettedPlayer.currentPosition)<minDistance){
+									if (!myTeam[i].isSleeping&&myTeam[i].currentPosition.distanceTo(targettedPlayer.currentPosition)<minDistance){
 										currReceiver=myTeam[i];
 										minDistance=myTeam[i].currentPosition.distanceTo(targettedPlayer.currentPosition);
 										teamWithBall=1;
@@ -1725,7 +1787,7 @@
 							}
 							for (var i=0; i<oppTeam.length; i++){
 								if (oppTeam[i]!=targettedPlayer){
-									if (oppTeam[i].currentPosition.distanceTo(targettedPlayer.currentPosition)<minDistance){
+									if (!oppTeam[i].isSleeping&&oppTeam[i].currentPosition.distanceTo(targettedPlayer.currentPosition)<minDistance){
 										currReceiver=oppTeam[i];
 										minDistance=oppTeam[i].currentPosition.distanceTo(targettedPlayer.currentPosition);
 										teamWithBall=2;
@@ -1750,11 +1812,11 @@
 			var toggleCount=0;
 			var techCopyPlayer=null;
 			function setupTechCopy(){
-				techCopying = true;
 				techCopyMatch=false;
 				toggleCount=0;
 				techCopyPlayer=null;
 				if (selectedTech!=null&&teamWithBall==2){
+					techCopying = true;
 					var playerOptions=[];
 					for (var i=0; i<myTeam[i].length; i++){
 						if (myTeam[i].techCopyTarget==currentPlayer.playerID){
@@ -1785,14 +1847,15 @@
 						document.getElementById('techCopy').style.display='none';
 					} else if (techCopying){
 						if (!techCopyMatch){
+							techCopyMatch=true;
 							document.getElementById('techCopy').style.color='#FFFFFF';
 						} else {
-							techCopyMatch=true;
+							techCopyMatch=false;
 							document.getElementById('techCopy').style.color='#708090';
 						}
 						toggleTechCopy();
 					}
-				}, '200');
+				}, '400');
 			}
 
 			function blockInterim(){
@@ -1828,7 +1891,7 @@
 				} else {
 					camera.position.x=animatingPlayer.currentPosition.x-7;
 				}
-				camera.position.y=0;
+				//camera.position.y=0;
 				camera.position.z=animatingPlayer.currentPosition.z+7;
 				cameraTarget.set(animatingPlayer.currentPosition.x, 0, animatingPlayer.currentPosition.z);
 				var statName='playerPAS';
@@ -1902,7 +1965,7 @@
 				} else {
 					camera.position.x=currentPlayer.currentPosition.x+7;
 				}
-				camera.position.y=0;
+				//camera.position.y=0;
 				camera.position.z=currentPlayer.currentPosition.z+7;
 				cameraTarget.set(currentPlayer.currentPosition.x, 0, currentPlayer.currentPosition.z);
 				document.getElementById('actionMenu').style.display='none';
@@ -1922,6 +1985,10 @@
 				}
 				//currentPlayer=destination;
 			}
+			
+			function setupStatReel(minShot, maxShot){
+				//TODO create function
+			}
 
 			function shoot(){
 				inMenu=false;
@@ -1933,17 +2000,18 @@
 				} else {
 					camera.position.x=currentPlayer.currentPosition.x+7;
 				}
-				camera.position.y=0;
+				//camera.position.y=0;
 				camera.position.z=currentPlayer.currentPosition.z+7;
-				cameraTarget.set(currentPlayer.currentPosition.x, 0, currentPlayer.currentPosition.z);
 				document.getElementById('actionMenu').style.display='none';
 				if (selectedTech!=null){
 					setTimeout(function(){
 						if (selectedTech.techID==1){
-							currentPlayer.animateShoot(animateShotBlock);
+							currentPlayer.animateSphereShot(animateShotBlock);
+							cameraTarget.set(currentPlayer.currentPosition.x, 2, currentPlayer.currentPosition.z);
 							setupStatReel(currentPlayer.shot-5, currentPlayer.shot+10);
 						} else {
 							currentPlayer.animateShoot(animateShotBlock);
+							cameraTarget.set(currentPlayer.currentPosition.x, 0, currentPlayer.currentPosition.z);
 							currStat=currentPlayer.shot+selectedTech.statMod;
 						}
 						setupTechCopy();
@@ -2481,7 +2549,7 @@
 					
 				} else if (!gameActive&&inMenu){
 					camera.position.x = cameraTarget.x+Math.cos( rotTimer ) * 15;
-					camera.position.y = 0;
+					//camera.position.y = 0;
 					camera.position.z = cameraTarget.z-Math.sin( rotTimer ) * 15;
 					rotTimer += delta/5;
 				}
@@ -2507,7 +2575,7 @@
 					cameraTarget.y -= delta;
 				}
 				//camera.position.x = Math.cos( timer ) * 10;
-				camera.position.y = 0;
+				camera.position.y = 1;
 				//camera.position.z = Math.sin( timer ) * 10;
 				
 				updateCameraTarget();

@@ -327,11 +327,15 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 		this.ballAnimation.callback=function(){scope.ball.visible=false; callback()};
 	}
 	
-	this.animateShoot = function(callback){
-		//this.animation.playShootAnimation();
-		//this.ballAnimation.playShootAnimation(function(){scope.ball.visible=false;});
+	this.animateSphereShot = function(callback){
 		this.animation.playSphereShotAnimation();
 		this.ballAnimation.playSphereShotAnimation(function(){scope.ball.visible=false;});
+		this.animation.callback=callback;
+	}
+	
+	this.animateShoot = function(callback){
+		this.animation.playShootAnimation();
+		this.ballAnimation.playShootAnimation(function(){scope.ball.visible=false;});
 		this.animation.callback=callback;
 	}
 	
@@ -403,7 +407,7 @@ THREE.BBPlayer = function (player, startingPos, triggerCallback) {
 			if (napped){
 				this.animation.playIncomingNapAnimation(null);
 				this.ballAnimation.playIncomingNapAnimation(callback);
-				this.ballAnimation.callback=function(){
+				this.animation.callback=function(){
 					scope.isSleeping=true;
 					scope.ball.visible=false;
 					callback();
