@@ -61,14 +61,7 @@ body{
 		saveNewUserData();
 	}
 	</script>
-	<nav id="nav01">
-		<ul id='menu'>
-			<li><a href='index'>Home</a></li>
-			<li><a href='gamesIndex'>Games</a></li>
-			<li><a href='about'>About</a></li>
-		</ul>
-	</nav>
-	<div id="main">
+	<div id="main" style="width:100%; height:90vh">
 	<div id="gameTop">
 		<div style="width:85%; float:left">
 			<label class="large">Logged in as: ${username}</label>

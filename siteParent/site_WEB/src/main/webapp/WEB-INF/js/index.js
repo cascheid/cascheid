@@ -1,3 +1,9 @@
+angular.module('indexApp', ['ui.bootstrap', 'ui.toggle']);
+
+angular.module('indexApp').controller('indexCtrl', ['$scope', function($scope){
+	
+}]);
+
 	var runInterval;
 	var fishInterval;
 	var waterfallInterval;

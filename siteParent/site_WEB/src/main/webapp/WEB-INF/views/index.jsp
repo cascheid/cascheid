@@ -4,30 +4,50 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link href="css/site.css?version=1.00" rel="stylesheet">
-<link href="css/index.css?version=1.00" rel="stylesheet">
 <title>CAScheid Home</title>
+<script src="build/vendor.js"></script>
+<!--<script src="build/cascheid.js"></script>-->
 <script src="js/index.js"></script>
-<script src="js/mist.js"></script>
-<script src="js/rain.js"></script>
+<link href="build/vendor.css" rel="stylesheet">
 </head>
-<body>
+<body class="container-fluid" ng-app="indexApp">
 	<canvas id="bodyCanvas"></canvas>
-	<div class="master">
-	<nav id="nav01">
-		<ul id='menu'>
-			<li><a href='index'>Home</a></li>
-			<li><a href='gamesIndex'>Games</a></li>
-			<li><a href='about'>About</a></li>
-		</ul>
-	</nav>
-  	<div id="main">
-  		<button id='btnAnim' style="margin:auto" onclick="toggleAnim()">Animations On</button>
+	<div class="master col-xs-12" ng-controller="indexCtrl">
+	<uib-tabset template-url="indextabset.html">
+		<uib-tab template-url="indextab.html" classes="indextab" index="0" heading="Home">
+  			<div id="main">
+  				<button id='btnAnim' style="margin:auto" onclick="toggleAnim()">Animations On</button>
+			</div>
+			<img id="fish1" class="fish" src="img/sprites/fish.png" style='display:none'>
+			<img id="fish2" class="fish" src="img/sprites/fish.png" style='display:none'>
+		</uib-tab>
+		<uib-tab template-url="indextab.html" classes="indextab" index="1" heading="Games">
+			<jsp:include page="gamesIndex.jsp" />
+		</uib-tab>
+		<uib-tab template-url="indextab.html" classes="indextab" index="2" heading="About">
+			<jsp:include page="about.jsp" />
+		</uib-tab>
+		<div class="pull-right">Animations <toggle ng-model="animationToggle"></toggle></div>
+	</uib-tabset>
 	</div>
-	</div>
-	<img id="fish1" class="fish" src="img/sprites/fish.png" style='display:none'>
-	<img id="fish2" class="fish" src="img/sprites/fish.png" style='display:none'>
 	<img id="top" src="img/misc/top.png" style='display:none'>
 	
+	
+	<script type="text/ng-template" id="indextabset.html">
+	<div style="height:5vh">
+		<ul style="height:5vh; border:none" class="nav nav-tabs" ng-transclude></ul>
+		<div class="tab-content">
+			<div class="tab-pane" ng-repeat="tab in tabset.tabs" ng-class="{active: tabset.active === tab.index}" uib-tab-content-transclude="tab">
+    		</div>
+  		</div>
+	</div>
+	</script>
+	
+	<script type="text/ng-template" id="indextab.html">
+	<li style="height:5vh" ng-class="[{active: active}, classes]" class="uib-tab nav-item">
+		<a style="height:5vh" href ng-click="select($event)" class="nav-link" uib-tab-heading-transclude>{{heading}}</a>
+	</li>
+
+	</script>
 </body>
 </html>

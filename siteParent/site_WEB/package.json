@@ -1,0 +1,21 @@
+{
+  "name": "cascheid",
+  "version": "0.1.0",
+  "dependencies": {
+    "angular": "1.5.9",
+    "angular-ui-bootstrap": "2.3.0",
+    "jquery": "3.1.1",
+    "grunt-cli": "^1.2.0",
+    "bootstrap": "3.3.7",
+    "angular-bootstrap-toggle": "0.1.2"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-concat-css": "^0.3.1",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-concat": "^1.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "load-grunt-tasks": "^3.5.0",
+    "node-sass": "~3.4.2"
+  }
+}

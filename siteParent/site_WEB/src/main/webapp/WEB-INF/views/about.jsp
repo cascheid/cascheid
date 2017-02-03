@@ -1,25 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link href="css/site.css?version=1.00" rel="stylesheet">
-<link href="css/about.css?version=1.00" rel="stylesheet">
-<title>About CAScheid</title>
-</head>
-<body>
-	<nav id="nav01">
-		<ul id='menu'>
-			<li><a href='index'>Home</a></li>
-			<li><a href='gamesIndex'>Games</a></li>
-			<li><a href='about'>About</a></li>
-		</ul>
-	</nav>
-  	<div id="main">
-		<h1 class="underline">Christopher A Scheid</h1>
-		<div class="content">
-			<h3>Java developer based in the Washington D.C. metro area. Main enterprise experience in Java/JEE, but also have professional experience with javascript, PL/SQL, JSP web applications, GWT, linux, and bash. Also have minor to moderate experience in lots of other random things from personal projects (like this one).</h3>
+  	<div class="col-xs-12" id="main" style="background: rgba(128,128,128,.85); border-radius: 0 0 5px 5px; width:100%; height:90vh">
+  		<div class="row">
+		<h1 class="underline">About Me</h1>
+		</div>
+		<div class="row">
+			Christopher A Scheid
+		</div>
+		<div class="row">
+			<p>Java developer based in the Washington D.C. metro area. Main enterprise experience in Java/JEE, but also have professional experience with javascript, PL/SQL, JSP web applications, GWT, linux, and bash. Also have minor to moderate experience in lots of other random things from personal projects (like this one).</p>
 		</div>
 		<div class="fullCenter" style="padding:0px">
 			<label>Contact: </label> <a href="mailto:chris@cascheid.com">chris@cascheid.com</a> 
