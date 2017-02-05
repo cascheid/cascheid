@@ -1,31 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<link href="css/site.css?version=1.00" rel="stylesheet">
-<title>CAScheid Games</title>
-<style>
-body{
-	background-image: url(img/misc/timon.jpg);
-	-moz-background-size: cover;
-	-webkit-background-size: cover;
-	background-size: cover;
-	background-position: top center;
-	background-repeat: no-repeat;
-	background-attachment: fixed;
-}
-#gameTop{
-	height:50px;
-}
-#userLabel{
-    color: #34282C;
-    padding-right:  15px;
-}
-</style>
-</head>
-<body>
+
 	<script>
 	function loadUser(){
 		var username=window.prompt("Enter the username to load. NOTE: All current progress will be lost.");
@@ -61,15 +36,17 @@ body{
 		saveNewUserData();
 	}
 	</script>
-	<div id="main" style="width:100%; height:90vh">
-	<div id="gameTop">
-		<div style="width:85%; float:left">
+<div class="index-content-main" data-ng-controller="gamesCtrl as games">
+	<div id="gameTop" class="row">
+		<div class="col-xs-3">
 			<label class="large">Logged in as: ${username}</label>
-			<button onclick="loadUser()">Load User</button>
-			<button id="btnCreate" onclick="createUser()">Save as New User</button>
-			<button id="btnChange" onclick="changeUsername()" disabled="true">Change Username</button>
 		</div>
-		<div style="width:15%; float:right">
+		<div class="col-xs-6">
+			<button class="btn btn-primary" onclick="loadUser()">Load User</button>
+			<button class="btn btn-primary" id="btnCreate" onclick="createUser()">Save as New User</button>
+			<button class="btn btn-primary" id="btnChange" onclick="changeUsername()" disabled="true">Change Username</button>
+		</div>
+		<div class="col-xs-4 pull-right">
 			<a title="List of Games" href="gamesIndex" target="_self">All Games</a>
 		</div>
 		<div style="width:97%; clear:both;">
@@ -94,5 +71,3 @@ body{
 	    document.getElementById("btnChange").disabled = false;
 	}
 	</script>
-</body>
-</html>

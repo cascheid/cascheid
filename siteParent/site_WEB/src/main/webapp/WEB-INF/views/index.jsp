@@ -8,29 +8,35 @@
 <script src="build/vendor.js"></script>
 <!--<script src="build/cascheid.js"></script>-->
 <script src="js/index.js"></script>
+<script src="js/about.js"></script>
 <link href="build/vendor.css" rel="stylesheet">
+<link href="build/cascheid.css" rel="stylesheet">
 </head>
-<body class="container-fluid" ng-app="indexApp">
-	<canvas id="bodyCanvas"></canvas>
-	<div class="master col-xs-12" ng-controller="indexCtrl">
-	<uib-tabset template-url="indextabset.html">
-		<uib-tab template-url="indextab.html" classes="indextab" index="0" heading="Home">
-  			<div id="main">
-  				<button id='btnAnim' style="margin:auto" onclick="toggleAnim()">Animations On</button>
-			</div>
-			<img id="fish1" class="fish" src="img/sprites/fish.png" style='display:none'>
-			<img id="fish2" class="fish" src="img/sprites/fish.png" style='display:none'>
-		</uib-tab>
-		<uib-tab template-url="indextab.html" classes="indextab" index="1" heading="Games">
-			<jsp:include page="gamesIndex.jsp" />
-		</uib-tab>
-		<uib-tab template-url="indextab.html" classes="indextab" index="2" heading="About">
-			<jsp:include page="about.jsp" />
-		</uib-tab>
-		<div class="pull-right">Animations <toggle ng-model="animationToggle"></toggle></div>
-	</uib-tabset>
+<body class="container-fluid site-body" ng-app="indexApp">
+	<canvas class="bodyCanvas" id="bodyCanvas"></canvas>
+	<div class="row" ng-controller="indexCtrl">
+		<div class="col-xs-12">
+			<uib-tabset>
+				<uib-tab classes="tab-index" index="0" heading="Home">
+  					<div class="index-content-main">
+						<div class="form-inline">
+							<label for="animationsToggle">Animations</label>
+							<toggle id="animationsToggle" ng-model="animationToggle"></toggle>
+						</div>
+					</div>
+				</uib-tab>
+				<uib-tab classes="tab-index" index="1" heading="Games">
+					<jsp:include page="gamesIndex.jsp" />
+				</uib-tab>
+				<uib-tab classes="tab-index" index="2" heading="About">
+					<jsp:include page="about.jsp" />
+				</uib-tab>
+			</uib-tabset>
+		</div>
 	</div>
 	<img id="top" src="img/misc/top.png" style='display:none'>
+	<img id="fish1" class="fish" src="img/sprites/fish.png" style='display:none'>
+	<img id="fish2" class="fish" src="img/sprites/fish.png" style='display:none'>
 	
 	
 	<script type="text/ng-template" id="indextabset.html">

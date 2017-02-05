@@ -1,19 +1,59 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-  	<div class="col-xs-12" id="main" style="background: rgba(128,128,128,.85); border-radius: 0 0 5px 5px; width:100%; height:90vh">
+  	<div class="index-content-main" data-ng-controller="aboutCtrl as about">
   		<div class="row">
-		<h1 class="underline">About Me</h1>
+  			<div class="col-xs-12">
+				<h1 class="underline">About Me</h1>
+			</div>
 		</div>
 		<div class="row">
-			Christopher A Scheid
+			<div class="col-xs-12">
+				<h4>Christopher A Scheid</h4>
+			</div>
 		</div>
 		<div class="row">
-			<p>Java developer based in the Washington D.C. metro area. Main enterprise experience in Java/JEE, but also have professional experience with javascript, PL/SQL, JSP web applications, GWT, linux, and bash. Also have minor to moderate experience in lots of other random things from personal projects (like this one).</p>
+			<div class="col-xs-12">
+				<p>Java developer based in the Washington D.C. metro area. Main enterprise experience in Java/JEE, but also have professional experience with javascript, PL/SQL, JSP web applications, GWT, linux, and bash. Also have minor to moderate experience in lots of other random things from personal projects (like this one).</p>
+				<h4>Experience</h4>
+				<div class="row">
+					<div class="col-xs-6">
+						<label for="javaExp">Java (Spring, JEE)</label>
+						<div data-uib-progressbar class="background-light-grey" data-animate="false" data-value="about.javaExperience.percent" data-type="success">{{about.javaExperience.desc}}</div>
+					</div>
+					<div class="col-xs-6">
+						<label for="jsExp">JavaScript (Vanilla, Angular, JQuery)</label>
+						<div data-uib-progressbar class="background-light-grey" data-animate="false" data-value="about.jsExperience.percent" data-type="success">{{about.jsExperience.desc}}</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<label for="sqlExp">SQL (PL/SQL, MySQL)</label>
+						<div data-uib-progressbar class="background-light-grey" data-animate="false" data-value="about.sqlExperience.percent" data-type="success">{{about.sqlExperience.desc}}</div>
+					</div>
+					<div class="col-xs-6">
+						<label for="unixExp">Unix/Bash/Shell</label>
+						<div data-uib-progressbar class="background-light-grey" data-animate="false" data-value="about.unixExperience.percent" data-type="success">{{about.unixExperience.desc}}</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6">
+						<label for="cssExp">CSS/SASS</label>
+						<div data-uib-progressbar class="background-light-grey" data-animate="false" data-value="about.cssExperience.percent" data-type="success">{{about.cssExperience.desc}}</div>
+					</div>
+					<div class="col-xs-6">
+						<label for="toolsExp">Process Tools (Maven, Ant, NPM, Bower, Grunt, Jira)</label>
+						<div data-uib-progressbar class="background-light-grey" data-animate="false" data-value="about.toolsExperience.percent" data-type="success">{{about.toolsExperience.desc}}</div>
+					</div>
+				</div>
+			</div>
 		</div>
-		<div class="fullCenter" style="padding:0px">
-			<label>Contact: </label> <a href="mailto:chris@cascheid.com">chris@cascheid.com</a> 
+		<div class="row" align="center">
+			<label for="contactLink">Contact: </label>
+			<a id="contactLink" href="mailto:chris@cascheid.com">chris@cascheid.com</a> 
 		</div>
-		<h2 class="underline">About My Site</h2>
+		<div class="row">
+			<h2 class="underline">About My Site</h2>
+		</div>
 		<div id="wrapper">
 			<div id="tabContainer">
     			<div class="tabs">

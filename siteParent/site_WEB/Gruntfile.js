@@ -4,7 +4,7 @@ module.exports = function(grunt) {
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 		paths: {
-			root: 'src/main/webapp/',
+			root: 'src/main/webapp/WEB-INF/',
 			node: 'node_modules/',
 			js: 'src/main/webapp/WEB-INF/js/',
 			build: 'src/main/webapp/build/',
@@ -16,11 +16,18 @@ module.exports = function(grunt) {
 		},
 		sass: {
 			options: {
-				sourcemap: 'none'
+				sourcemap: 'false'
 			},
-			lib: {
+			dist: {
 				files: {
-					'<%= paths.build %>cascheid.css': '<%= paths.root %>sass/base.scss'
+					'<%= paths.build %>cascheid.css': '<%= paths.root %>sass/build.scss'
+				}
+			}
+		},
+		cssmin: {
+			minify: {
+				files: { 
+					'<%= paths.build %>cascheid.css':['<%= paths.build %>cascheid.css']
 				}
 			}
 		},
@@ -39,10 +46,16 @@ module.exports = function(grunt) {
 				src: ['<%= paths.js %>rain.js','<%= paths.js %>mist.js'],
 				dest: '<%= paths.build %>cascheid.js'
 			}
+		},
+		watch: {
+			styles: {
+				files: ['<%= paths.root %>sass/{,*/}*.scss'],
+				tasks: ['sass', 'cssmin']
+			}
 		}
 	});
 	
 	require('load-grunt-tasks')(grunt);
 	
-	grunt.registerTask('build', ['clean:build', 'concat', 'clean:temp']);
+	grunt.registerTask('build', ['clean:build', 'sass', 'cssmin', 'concat', 'clean:temp']);
 }
