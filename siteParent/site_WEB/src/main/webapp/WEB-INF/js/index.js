@@ -381,11 +381,11 @@ angular.module('indexApp').controller('indexCtrl', ['$scope', function($scope){
 		}
 	 }
 
-     window.onload = function() {
+     /*window.onload = function() {
        bAnim=true;
    		document.getElementById('fish1').style.display='';
    		document.getElementById('fish2').style.display='';
        onResize();
      };
 
-	 window.addEventListener('resize', onResize, false);
+	 window.addEventListener('resize', onResize, false);*/
