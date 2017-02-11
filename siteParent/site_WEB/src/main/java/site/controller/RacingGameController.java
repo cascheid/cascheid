@@ -10,11 +10,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import site.identity.Identity;
@@ -28,10 +33,21 @@ import site.racinggame.Upgrade;
 import site.racinggame.UserRacecar;
 
 @Controller
-@Scope("session")
 public class RacingGameController {
-	Identity identity=null;
+	@Autowired
+	Identity identity;
+	
 	RacingGame racingGame=null;
+	
+	@RequestMapping(value="/getRacingGame", method=RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<?> getRacingGame(){
+		if (identity.getRacingGame()==null){
+			identity.setRacingGame(RacingGameUtils.getRacingGameObject(identity.getRacingGameIdentifier(), identity.getIdentifier()));
+			identity.getRacingGame().setPurchaseableCars(RacingGameUtils.getAllAvailableCarsToPurchase(identity.getRacingGame()));
+		}
+		return new ResponseEntity<>(identity.getRacingGame(), HttpStatus.OK);
+	}
 	
 	@RequestMapping("/racingparent")
 	public ModelAndView showParentFrame(

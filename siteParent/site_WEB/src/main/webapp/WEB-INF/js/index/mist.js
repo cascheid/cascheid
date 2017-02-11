@@ -111,7 +111,7 @@ var context;
 
 // Initialise the scene and set the context if possible
 function initMist(left, right, top, bottom, imgsize, count) {
-    var canvas = document.getElementById('bodyCanvas');
+	var canvas = document.getElementById('bodyCanvas');
     if (canvas.getContext) {
     	leftBound=left;
     	rightBound=right;

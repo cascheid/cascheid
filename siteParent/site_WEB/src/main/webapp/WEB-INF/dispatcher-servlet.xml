@@ -31,6 +31,9 @@ http://www.springframework.org/schema/websocket/spring-websocket-4.0.xsd">
 	<mvc:resources mapping="/build/**" location="/build/" />
 	<mvc:resources mapping="/obj/**" location="/WEB-INF/obj/" />
 	<mvc:resources mapping="/img/**" location="/WEB-INF/img/" />
+	<mvc:resources mapping="/fonts/**" location="/build/fonts/" />
+	<mvc:resources mapping="/templates/**" location="/templates/" />
+	<mvc:resources mapping="/views/**" location="/views/" />
 	<mvc:annotation-driven /> 
 	
   	<websocket:message-broker application-destination-prefix="/app">

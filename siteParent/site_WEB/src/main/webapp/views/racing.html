@@ -1,0 +1,27 @@
+<div class="row">
+	<div class="col-xs-4">
+		<label class="large">Money: {{racing.racingGame.availableCash|currency}}</label>
+	</div>
+	<div class="col-xs-4">
+		<label class="large">Class: {{racing.racingGame.racingClass}}</label>
+	</div>
+	<div class="col-xs-4">
+		<button class="btn btn-warn" data-ng-click='racing.resetGame()'>Reset Game Data</button>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-3">
+		<div>
+			<a ui-sref="racing.store" ui-sref-active="active">Buy New Cars</a>
+		</div>
+		<div>
+			<a ui-sref="racing.upgrades" ui-sref-active="active">Upgrade Car</a>
+		</div>
+		<div>
+			<a title="Battleship Game" href="battleship" target="displayFrame">Battleship</a>
+		</div>
+	</div>
+	<div class="col-xs-9">
+		<ui-view></ui-view>
+	</div>
+</div>

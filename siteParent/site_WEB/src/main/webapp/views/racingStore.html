@@ -1,0 +1,46 @@
+<div class="row">
+	<div class="col-xs-12">
+	<div data-uib-tabset>
+		<div data-uib-tab data-ng-repeat="racingClass in racing.racingGame.purchaseableClasses | racingClassSorter" heading="Class {{racingClass}}" style="overflow-y:auto">
+		<div style="overflow-x:auto; max-height:75vh">
+			<div data-ng-repeat="car in racing.racingGame.purchaseableCars[racingClass]">
+				<div class="row" align="center">
+					<h2 data-ng-bind="car.name"></h2>
+				</div>
+				<div class="row" align="center">
+					<img data-ng-src="img/cars/{{car.model}}" width="400px" height="200px" />
+				</div>
+				<div class="row">
+					<div class="col-xs-6 form-group">
+						<label class="stats">Top Speed: {{car.topSpeed}} mph</label>
+						<div data-uib-progressbar data-animate="false" data-value="car.topSpeed/4" data-type="success"></div>
+					</div>
+					<div class="col-xs-6 form-group">
+						<label class="stats">Acceleration: {{car.acceleration}} mph/s</label>
+						<div data-uib-progressbar data-animate="false" data-value="car.acceleration/0.8" data-type="success"></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6 form-group">
+						<label class="stats">Reliability: {{car.reliability*100}}%</label>
+						<div data-uib-progressbar data-animate="false" data-value="car.reliability*100" data-type="success"></div>
+					</div>
+					<div class="col-xs-6 form-group">
+						<label class="stats">Lap Efficiency: {{car.lapEfficiency*100}}%</label>
+						<div data-uib-progressbar data-animate="false" data-value="car.lapEfficiency*125" data-type="success"></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6" align="right">
+						<h3>Price:&nbsp;&nbsp;&nbsp;{{car.price|currency}}</h3>
+					</div>
+					<div class="col-xs-6">
+						<button type="button" class="btn btn-primary" data-ng-click="racing.purchaseCar(car)">Buy it Now!</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+	</div>
+	</div>
+</div>

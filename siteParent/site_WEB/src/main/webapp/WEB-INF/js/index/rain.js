@@ -1,5 +1,4 @@
 
-var canvas = document.getElementById('bodyCanvas');
 var rctx;
 var w;
 var h;
@@ -10,7 +9,7 @@ var rlb;
 var rtb;
 
 function initRain(left, right, top, bottom, parts, lwidth){
-  
+  var canvas = document.getElementById('bodyCanvas');
   if(canvas.getContext) {
     rctx = canvas.getContext('2d');
     w = right-left;

@@ -1,8 +1,14 @@
 package site.identity;
 
-import site.racinggame.RacingGame;
-import site.racinggame.RacingGameUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
 
+import site.racinggame.RacingGame;
+
+@Component
+@Scope(value="session", proxyMode= ScopedProxyMode.TARGET_CLASS)
 public class Identity implements java.io.Serializable{
 
 	private static final long serialVersionUID = 8230463793128406968L;
@@ -11,19 +17,9 @@ public class Identity implements java.io.Serializable{
 	private Long racingGameIdentifier;
 	private Integer snakeScore;
 	private String username;
-	//private RacingGame racingGame;	
-	//private SnakeGame snakeGame;
+	private RacingGame racingGame;
 	
 	public Identity(){
-	}
-	
-	public Identity(Long identifier){
-		this.identifier=identifier;
-	}
-	
-	public Identity(Long identifier, Long racingGameIdentifier){
-		this.identifier=identifier;
-		this.racingGameIdentifier=racingGameIdentifier;
 	}
 	
 	public Long getIdentifier(){
@@ -51,13 +47,22 @@ public class Identity implements java.io.Serializable{
 	}
 
 	public String getUsername() {
-		if (username==null){
-			return "anonymous";
-		}
 		return username;
 	}
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+	
+	public RacingGame getRacingGame() {
+		return racingGame;
+	}
+
+	public void setRacingGame(RacingGame racingGame) {
+		this.racingGame = racingGame;
+	}
+
+	public void updateIdentity(Identity newIdentity){
+		BeanUtils.copyProperties(newIdentity, this, Identity.class);
 	}
 }

@@ -3,8 +3,10 @@ package site.racinggame;
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import site.dao.RacingGameDao;
 import site.dao.RacingGameDaoImpl;
@@ -203,6 +205,26 @@ public class RacingGameUtils {
 			throw new IllegalStateException("Failed to get Opponents for racing class: " + racingClass,e);
 		}
 		return carList;
+	}
+	
+	public static Map<String, List<Racecar>> getAllAvailableCarsToPurchase(RacingGame racingGame){
+		RacingGameDao dao = new RacingGameDaoImpl();
+		Map<String, List<Racecar>> carMap = new HashMap<String, List<Racecar>>();
+		carMap.put("E", new ArrayList<Racecar>());
+		carMap.put("D", new ArrayList<Racecar>());
+		carMap.put("C", new ArrayList<Racecar>());
+		carMap.put("B", new ArrayList<Racecar>());
+		carMap.put("A", new ArrayList<Racecar>());
+		carMap.put("S", new ArrayList<Racecar>());
+		List<Racecar> carList = dao.getAvailableCarsToPurchase(racingGame.getRacingClass(), racingGame.getRacingIdentifier());
+		for (Racecar car : carList){
+			if (car.getRacingClass().equals("SS")){
+				carMap.get("S").add(car);
+			} else {
+				carMap.get(car.getRacingClass()).add(car);
+			}
+		}
+		return carMap;
 	}
 	
 	public static BigDecimal getPurseByClass(String racingClass, Integer place){

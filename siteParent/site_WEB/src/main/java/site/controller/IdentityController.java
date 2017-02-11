@@ -1,22 +1,30 @@
 package site.controller;
 
+import java.util.Collections;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import org.springframework.context.annotation.Scope;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import site.identity.Identity;
 import site.identity.IdentityUtils;
+import site.view.ResultMessage;
 
 @Controller
-@Scope("session")
 public class IdentityController {
-	Identity identity=null;
+	@Autowired 
+	private Identity identity;
 	
 	@RequestMapping(value="/test")
 	public ModelAndView getTestPage(){
@@ -33,67 +41,65 @@ public class IdentityController {
 		return new ModelAndView("test3");
 	}
 	
-	@RequestMapping(value={"/", "/index"})
-	public ModelAndView getIndex( @CookieValue(value = "identifier", defaultValue = "0") Long identifier,
-            HttpServletResponse response) {
-		ModelAndView mv = new ModelAndView("index");
-		if (identifier==0){
-			identity = new Identity();
-		} else {
-			identity = IdentityUtils.getIdentityByIdentifier(identifier);
-			Cookie cookie = new Cookie("identifier", identifier.toString());
-			cookie.setMaxAge(60*60*24*7);
-	        response.addCookie(cookie);
-		}
-		//mv.addObject("identifier", identifier);
-		return mv;
+	@RequestMapping(value="/getIdentity", method=RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<?> getIdentity(){
+		return new ResponseEntity<>(Collections.singletonMap("username",identity.getUsername()), HttpStatus.OK);
 	}
 	
-	@RequestMapping("/about")
-	public ModelAndView getAboutPage() {
-		ModelAndView mv = new ModelAndView("about");
+
+	@RequestMapping(value="/loadUser", method=RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<?> loadUser(@RequestParam String username, @RequestParam(required=false) String password, HttpServletResponse response){
+		Identity newIdentity = IdentityUtils.getIdentityByUsername(username);
+		if (newIdentity==null){
+			ResultMessage result = new ResultMessage();
+			result.setError(true);
+			result.setResultMessage("Username does not exist.");
+			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+		} else {
+			identity.updateIdentity(newIdentity);
+			return new ResponseEntity<>(Collections.singletonMap("username",identity.getUsername()), HttpStatus.OK);
+		}
+	}
+	
+	@RequestMapping(value="createUser", method=RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<?> createUser(@RequestParam String username, HttpServletResponse response){
+		boolean bExists=IdentityUtils.checkExistingUsername(username);
+		if (bExists){
+			ResultMessage result = new ResultMessage();
+			result.setError(true);
+			result.setResultMessage("Username already exists.");
+			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+		} else {
+			identity.setUsername(username);
+			Long newIdentifier=IdentityUtils.insertIdentity(identity);
+			identity.setIdentifier(newIdentifier);
+			Cookie cookie = new Cookie("identifier", newIdentifier.toString());
+			cookie.setMaxAge(60*60*24*7);
+	        response.addCookie(cookie);
+			return new ResponseEntity<>(Collections.singletonMap("username",identity.getUsername()), HttpStatus.OK);
+		}
+	}
+	
+	@RequestMapping(value="logout", method=RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<?> logout(HttpSession session){
+		session.invalidate();
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
+	
+	
+	@RequestMapping(value={"/", "/index"})
+	public ModelAndView getIndex() {
+		ModelAndView mv = new ModelAndView("index");
 		return mv;
 	}
 	
 	@RequestMapping("/testwater")
 	public ModelAndView getTestWaterPage() {
 		ModelAndView mv = new ModelAndView("testwater");
-		return mv;
-	}
-	
-	@RequestMapping("/gamesIndex")
-	public ModelAndView getGamesIndex(@CookieValue(value = "identifier", defaultValue = "0") Long identifier,
-			@RequestParam(value = "sError", required=false) String sError){
-		ModelAndView mv = new ModelAndView("gamesIndex");
-		if (identity==null){
-			identity=IdentityUtils.getIdentityByIdentifier(identifier);
-		}
-		mv.addObject("identifier", identity.getIdentifier());
-		mv.addObject("username", identity.getUsername());
-		mv.addObject("sError", sError);
-		return mv;
-	}
-	 
-	/*@RequestMapping("/topframe")
-	public ModelAndView showTopFrame() {
-		ModelAndView mv = new ModelAndView("topFrame");
-		mv.addObject("identifier", identity.getIdentifier());
-		return mv;
-	}*/
-	 
-	@RequestMapping("/leftframe")
-	public ModelAndView showLeftFrame() {
-		if (identity==null){
-			return new ModelAndView("timeout");
-		}
-		ModelAndView mv = new ModelAndView("leftFrame");
-		mv.addObject("identifier", identity.getIdentifier()==null?0l:identity.getIdentifier());
-		return mv;
-	}
-	 
-	@RequestMapping("/displayframe")
-	public ModelAndView showDisplayFrame() {
-		ModelAndView mv = new ModelAndView("displayFrame");
 		return mv;
 	}
 	
@@ -120,55 +126,6 @@ public class IdentityController {
 			identity.setSnakeScore(score);
 			IdentityUtils.updateSnakeScore(identity.getIdentifier(), score);
 		}
-		return mv;
-	}
-	
-	@RequestMapping(value = "/updateUser")
-	public ModelAndView updateUserName(@RequestParam(value = "name") String userName,
-			@RequestParam(value = "type") String type,
-			HttpServletResponse response) {
-		if (identity==null){
-			return new ModelAndView("timeout");
-		}
-		ModelAndView mv = new ModelAndView("newUserRedirect");
-		String sError=null;
-		if (type.equals("create")){
-			boolean bExists=IdentityUtils.checkExistingUsername(userName);
-			if (bExists){
-				sError="Username already exists.";
-			} else {
-				identity.setUsername(userName);
-				Long newIdentifier=IdentityUtils.insertIdentity(identity);
-				identity.setIdentifier(newIdentifier);
-				Cookie cookie = new Cookie("identifier", newIdentifier.toString());
-				cookie.setMaxAge(60*60*24*7);
-		        response.addCookie(cookie);
-		        type="done";
-				//identity = IdentityUtils.getIdentityByUsername(userName);
-			}
-		} else if ("load".equals(type)){
-			Identity newIdentity = IdentityUtils.getIdentityByUsername(userName);
-			if (newIdentity==null){
-				sError="Username does not exist.";
-			} else {
-				identity = newIdentity;
-				Cookie cookie = new Cookie("identifier", identity.getIdentifier().toString());
-				cookie.setMaxAge(60*60*24*7);
-		        response.addCookie(cookie);
-			}
-		} else if ("change".equals(type)){
-			boolean bExists=IdentityUtils.checkExistingUsername(userName);
-			if (bExists){
-				sError="Username already exists.";
-			} else {
-				identity.setUsername(userName);
-				IdentityUtils.updateUsername(identity.getIdentifier(), userName);
-			}
-		}
-		mv.addObject("identifier", identity.getIdentifier());
-		mv.addObject("type", type);
-		//mv.addObject("username", identity.getUsername());
-		mv.addObject("sError", sError);
 		return mv;
 	}
 	

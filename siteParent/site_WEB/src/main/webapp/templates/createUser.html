@@ -1,0 +1,20 @@
+<div class="modal-header">
+	<h3 class="modal-title" id="modal-title">Load User</h3>
+</div>
+<div class="modal-body" id="modal-body">
+	<div class="row">
+		<div class="col-xs-12">
+			<p>Enter the username to create. All current progress will be saved to this account.</p>
+		</div>
+		<div class="col-xs-12">
+			<div class="form-inline">
+				<label for="loadUsername">User Name:</label>
+				<input id="loadUsername" class="form-control" data-ng-model="modalCtrl.username"/>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" type="button" data-ng-click="modalCtrl.execute()">Save User</button>
+	<button class="btn btn-warning" type="button" data-ng-click="modalCtrl.cancel()">Cancel</button>
+</div>

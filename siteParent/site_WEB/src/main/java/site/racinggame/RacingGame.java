@@ -3,6 +3,7 @@ package site.racinggame;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class RacingGame implements java.io.Serializable{
 
@@ -14,6 +15,7 @@ public class RacingGame implements java.io.Serializable{
 	private String racingClass;
 	private String selectedClass;
 	private List<UserRacecar> carList;
+	private Map<String, List<Racecar>> purchaseableCars;
 	private String selectedMode;
 	
 	public RacingGame(){
@@ -86,5 +88,13 @@ public class RacingGame implements java.io.Serializable{
 
 	public void setSelectedMode(String selectedMode) {
 		this.selectedMode = selectedMode;
+	}
+
+	public Map<String, List<Racecar>> getPurchaseableCars() {
+		return purchaseableCars;
+	}
+
+	public void setPurchaseableCars(Map<String, List<Racecar>> purchaseableCars) {
+		this.purchaseableCars = purchaseableCars;
 	}
 }

@@ -4,37 +4,37 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<%@ taglib prefix="cascheid" tagdir="/WEB-INF/tags" %>
 <title>CAScheid Home</title>
-<script src="build/vendor.js"></script>
-<!--<script src="build/cascheid.js"></script>-->
-<script src="js/index.js"></script>
-<script src="js/about.js"></script>
-<link href="build/vendor.css" rel="stylesheet">
-<link href="build/cascheid.css" rel="stylesheet">
+<cascheid:staticFiles debug="true"/>
 </head>
-<body class="container-fluid site-body" ng-app="indexApp">
+<body class="container-fluid site-body" data-ng-app="indexApp">
 	<canvas class="bodyCanvas" id="bodyCanvas"></canvas>
-	<div class="row" ng-controller="indexCtrl">
+	<div data-ng-cloak class="row" data-ng-controller="indexCtrl as index">
 		<div class="col-xs-12">
-			<uib-tabset>
-				<uib-tab classes="tab-index" index="0" heading="Home">
-  					<div class="index-content-main">
-						<div class="form-inline">
-							<label for="animationsToggle">Animations</label>
-							<toggle id="animationsToggle" ng-model="animationToggle"></toggle>
-						</div>
+			<div data-uib-tabset>
+				<div data-uib-tab data-classes="tab-index" data-index="0" data-select="index.selectHome(true)">
+					<div data-uib-tab-heading>
+						<i class="glyphicon glyphicon-home"></i> Home
 					</div>
-				</uib-tab>
-				<uib-tab classes="tab-index" index="1" heading="Games">
+				</div>
+				<div data-uib-tab data-classes="tab-index" data-index="1" data-select="index.selectHome(false)">
+					<div data-uib-tab-heading>
+						<i class="glyphicon glyphicon-globe"></i> Games
+					</div>
 					<jsp:include page="gamesIndex.jsp" />
-				</uib-tab>
-				<uib-tab classes="tab-index" index="2" heading="About">
+				</div>
+				<div data-uib-tab data-classes="tab-index" data-index="2" data-select="index.selectHome(false)">
+					<div data-uib-tab-heading>
+						<i class="glyphicon glyphicon-user"></i> About
+					</div>
 					<jsp:include page="about.jsp" />
-				</uib-tab>
-			</uib-tabset>
+				</div>
+				<toggle style="padding-top:5px" data-ng-show="index.homeTabSelected" class="pull-right" on="Animations On" off="Animations Off" ng-change="index.toggleAnim()" id="animationsToggle" ng-model="index.animationsToggle"></toggle>
+			</div>
 		</div>
 	</div>
-	<img id="top" src="img/misc/top.png" style='display:none'>
+	<img id="top" class="background-image" src="img/misc/top.png" style='display:none'>
 	<img id="fish1" class="fish" src="img/sprites/fish.png" style='display:none'>
 	<img id="fish2" class="fish" src="img/sprites/fish.png" style='display:none'>
 	

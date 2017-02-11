@@ -27,7 +27,7 @@ module.exports = function(grunt) {
 		cssmin: {
 			minify: {
 				files: { 
-					'<%= paths.build %>cascheid.css':['<%= paths.build %>cascheid.css']
+					'<%= paths.build %>cascheid.min.css':['<%= paths.build %>cascheid.css']
 				}
 			}
 		},
@@ -39,12 +39,25 @@ module.exports = function(grunt) {
 			vendorjs: {
 				src: ['<%= paths.node %>jquery/dist/jquery.min.js', '<%= paths.node %>angular/angular.min.js', 
 				      '<%= paths.node %>angular-ui-bootstrap/dist/ui-bootstrap.js', '<%= paths.node %>angular-ui-bootstrap/dist/ui-bootstrap-tpls.js', 
-				      '<%= paths.node %>bootstrap/dist/js/bootstrap.min.js', '<%= paths.node %>angular-bootstrap-toggle/dist/angular-bootstrap-toggle.min.js'],
+				      '<%= paths.node %>bootstrap/dist/js/bootstrap.min.js', '<%= paths.node %>angular-bootstrap-toggle/dist/angular-bootstrap-toggle.min.js',
+				      '<%= paths.node %>angular-animate/angular-animate.min.js', '<%= paths.node %>angular-ui-router/release/angular-ui-router.min.js'],
 				dest: '<%= paths.build %>vendor.js'
-			},
-			js: {
-				src: ['<%= paths.js %>rain.js','<%= paths.js %>mist.js'],
-				dest: '<%= paths.build %>cascheid.js'
+			}
+		},
+		uglify : {
+			cascheid : {
+				src : ['<%= paths.js %>index.app.js', '<%= paths.js %>index/*.js', '<%= paths.js %>common/*.js'],
+				dest : '<%= paths.build %>cascheid.min.js'
+			}
+		},
+		copy: {
+			fonts: {
+				files: [{
+					expand: true,
+			        cwd: '<%= paths.node %>/bootstrap/dist/fonts/',
+			        src: '*',
+			        dest: '<%= paths.build %>fonts/'
+				}]
 			}
 		},
 		watch: {
@@ -57,5 +70,5 @@ module.exports = function(grunt) {
 	
 	require('load-grunt-tasks')(grunt);
 	
-	grunt.registerTask('build', ['clean:build', 'sass', 'cssmin', 'concat', 'clean:temp']);
+	grunt.registerTask('build', ['clean:build', 'sass', 'cssmin', 'concat', 'uglify', 'copy', 'clean:temp']);
 }
