@@ -31,6 +31,7 @@ import site.racinggame.RacingGame;
 import site.racinggame.RacingGameUtils;
 import site.racinggame.Upgrade;
 import site.racinggame.UserRacecar;
+import site.view.ResultMessage;
 
 @Controller
 public class RacingGameController {
@@ -175,22 +176,17 @@ public class RacingGameController {
 	}
 	
 	@RequestMapping("/purchaseCar")
-	public ModelAndView purchaseCar(
-			@RequestParam(value = "carID", required = true) Integer carID){
-		if (racingGame==null){
-			return new ModelAndView("timeout");
-		}
-		ModelAndView mv = new ModelAndView("purchaseCar");
+	@ResponseBody
+	public ResponseEntity<?> purchaseCar(@RequestParam(value = "carID", required = true) Integer carID){
 		Racecar raceCar = RacingGameUtils.getRacecarByID(carID);
-		racingGame.setAvailableCash(racingGame.getAvailableCash().subtract(raceCar.getPrice()));
-		racingGame.addNewCar(raceCar);
-		if (racingGame.getRacingIdentifier()!=null&&racingGame.getRacingIdentifier()>0){
-			Long userCarID=RacingGameUtils.saveNewCar(racingGame.getRacingIdentifier(), carID);
-			racingGame.getCarList().get(racingGame.getCarList().size()-1).setUserRacecarID(userCarID);
-			RacingGameUtils.updateRacingGame(racingGame.getRacingIdentifier(), racingGame.getAvailableCash(), racingGame.getRacingClass(), racingGame.getSelectedCar().getCarID());
+		if (identity.getRacingGame().getAvailableCash().compareTo(raceCar.getPrice())<0){
+			ResultMessage result = new ResultMessage();
+			result.setError(true);
+			result.setResultMessage("Not Enough Money");
+			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		}
-		mv.addObject("carModel", raceCar.getModel());
-		return mv;
+		RacingGameUtils.purchaseCar(identity.getRacingGame(), raceCar);
+		return new ResponseEntity<>(identity.getRacingGame(), HttpStatus.OK);
 	}
 	
 	@RequestMapping("/openUpgradeStore")
@@ -211,6 +207,29 @@ public class RacingGameController {
 		List<Upgrade> upgradeOptions = RacingGameUtils.getUpgradesByClass(racingGame.getSelectedCar().getRacingClass());
 		mv.addObject("upgradeOptions", upgradeOptions);
 		return mv;
+	}
+	
+	@RequestMapping(value="getUpgrades", method=RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<?> getUpgrades(@RequestParam String racingClass){
+		List<Upgrade> upgradeOptions = RacingGameUtils.getUpgradesByClass(racingClass);
+		return new ResponseEntity<>(upgradeOptions, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="purchaseUpgrade", method=RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<?> purchaseUpgrade(@RequestParam Integer upgradeID){
+		Upgrade upgrade = RacingGameUtils.getUpgradeByID(upgradeID);
+		if (identity.getRacingGame().getAvailableCash().compareTo(upgrade.getPrice())<0){
+			ResultMessage result = new ResultMessage();
+			result.setError(true);
+			result.setResultMessage("Not Enough Money");
+			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+		}
+		identity.getRacingGame().setAvailableCash(identity.getRacingGame().getAvailableCash().subtract(upgrade.getPrice()));
+		identity.getRacingGame().getSelectedCar().addUpgrade(upgrade);
+		RacingGameUtils.addNewUpgrade(identity.getRacingGame().getSelectedCar(), upgrade);
+		return new ResponseEntity<>(identity.getRacingGame().getSelectedCar(), HttpStatus.OK);
 	}
 	
 	@RequestMapping("/upgradeDisplayFrame")
@@ -259,7 +278,7 @@ public class RacingGameController {
 		racingGame.getSelectedCar().addUpgrade(upgrade);
 		if (racingGame.getRacingIdentifier()!=null&&racingGame.getRacingIdentifier()>0){
 			RacingGameUtils.addNewUpgrade(racingGame.getSelectedCar(), upgrade);
-			RacingGameUtils.updateRacingGame(racingGame.getRacingIdentifier(), racingGame.getAvailableCash(), racingGame.getRacingClass(), racingGame.getSelectedCar().getCarID());
+			//RacingGameUtils.updateRacingGame(racingGame.getRacingIdentifier(), racingGame.getAvailableCash(), racingGame.getRacingClass(), racingGame.getSelectedCar().getCarID());
 		}
 		mv.addObject("carModel", racingGame.getSelectedCar().getModel());
 		return mv;
@@ -406,7 +425,7 @@ public class RacingGameController {
 		mv.addObject("finish", finish);
 		mv.addObject("newClass", newClass);
 		if (racingGame.getRacingIdentifier()!=null&&racingGame.getRacingIdentifier()>0){
-			RacingGameUtils.updateRacingGame(racingGame.getRacingIdentifier(), racingGame.getAvailableCash(), racingGame.getRacingClass(), racingGame.getSelectedCar().getCarID());
+			//RacingGameUtils.updateRacingGame(racingGame.getRacingIdentifier(), racingGame.getAvailableCash(), racingGame.getRacingClass(), racingGame.getSelectedCar().getCarID());
 		}
 		return mv;
 	}

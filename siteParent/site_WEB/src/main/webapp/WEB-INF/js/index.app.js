@@ -23,7 +23,10 @@ angular.module('indexApp').config(function($stateProvider, $urlRouterProvider) {
 	var racingUpgradeState = {
 		name : 'racing.upgrades',
 		url : '/upgrades',
-		templateUrl : 'views/racingUpgrades.html'
+		templateUrl : 'views/racingUpgrades.html',
+		onEnter: function($rootScope){
+			$rootScope.$broadcast('loadRacingUpgrade');
+		}
 	}
 	$urlRouterProvider.otherwise('/');
 	$stateProvider.state({

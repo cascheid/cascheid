@@ -75,7 +75,7 @@ public class RacingGame implements java.io.Serializable{
 		}
 	}
 	
-	public void addNewCar(Racecar car){
+	public void addNewCar(UserRacecar car){
 		if (carList==null){
 			carList=new ArrayList<UserRacecar>();
 		}

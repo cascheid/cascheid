@@ -1,4 +1,4 @@
-angular.module('indexApp').controller('racingCtrl', ['$rootScope', '$window', 'racingService', function($rootScope, $window, racingService){
+angular.module('indexApp').controller('racingCtrl', ['$rootScope', '$window', 'commonService', 'racingService', function($rootScope, $window, commonService, racingService){
 	var racingVM = this;
 
 	$rootScope.$on('loadUser', function(e){
@@ -10,13 +10,41 @@ angular.module('indexApp').controller('racingCtrl', ['$rootScope', '$window', 'r
 		racingService.getRacingGame().then(function onSuccess(data){
 			racingVM.racingGame = data;
 			racingVM.racingGame.purchaseableClasses=Object.keys(racingVM.racingGame.purchaseableCars);
+			racingVM.initUpgradeFrame();
 		});
 	};
 	
-	racingVM.selectStoreCar = function(car){
-		racingVM.storeSelectedCar = car;
+	racingVM.purchaseCar = function(car){
+		commonService.openConfirmModal('Purchase Car', 'Are you sure you would like to purchase this car?').then(function(result){
+			if (result){
+				racingService.purchaseCar(car.carID).then(
+					function onSuccess(data){
+						racingVM.racingGame = data;
+						racingVM.racingGame.purchaseableClasses=Object.keys(racingVM.racingGame.purchaseableCars);
+					}
+				);
+			}
+		});
 	};
 	
+	racingVM.initUpgradeFrame = function() {
+		racingVM.selectedUpgrade = null;
+		racingService.getUpgradeList(racingVM.racingGame.selectedCar.racingClass).then(function(data){
+			racingVM.purchaseableUpgrades = data;
+		});
+	};
+	
+	$rootScope.$on('loadRacingUpgrade', function(e){
+		racingVM.initUpgradeFrame();
+	});
+	
+	racingVM.purchaseUpgrade = function() {
+		var price = racingVM.selectedUpgrade.price;
+		racingService.purchaseUpgrade(racingVM.selectedUpgrade.upgradeID).then(function(data){
+			racingVM.racingGame.selectedCar = data;
+			racingVM.racingGame.availableCash -= price;
+		});
+	}
 	racingVM.initController();
 }]);
 
@@ -35,7 +63,7 @@ angular.module('indexApp').filter('racingClassSorter', function(){
 			filtered.push(item);
 		});
 		filtered.sort(function(a, b) {
-			return (classOrder(a) < classOrder(b) ? 1 : -1);
+			return (classOrder(a) > classOrder(b) ? 1 : -1);
 		});
 		return filtered;
 	}

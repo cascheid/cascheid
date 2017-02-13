@@ -1,5 +1,7 @@
 package site.identity;
 
+import org.springframework.dao.EmptyResultDataAccessException;
+
 import site.dao.IdentityDao;
 import site.dao.IdentityDaoImpl;
 
@@ -24,7 +26,7 @@ public class IdentityUtils {
 			IdentityDao dao = new IdentityDaoImpl();
 			identity=dao.getIdentityByUsername(username);
 		}
-		}catch(Exception e){
+		}catch(EmptyResultDataAccessException e){
 			e.printStackTrace();//just means invalid username
 		}
 		return identity;

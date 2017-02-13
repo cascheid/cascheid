@@ -1,5 +1,64 @@
 <div class="row">
 	<div class="col-xs-12">
-		Racing Upgrades
+		<div class="row">
+			<div class="col-xs-12">
+				<div class="row" align="center">
+					<h2 data-ng-bind="racing.racingGame.selectedCar.name"></h2>
+				</div>
+				<div class="row" align="center">
+					<img data-ng-src="img/cars/{{racing.racingGame.selectedCar.model}}" width="400px" height="200px" />
+				</div>
+				<div class="row">
+					<div class="col-xs-6 form-group">
+						<label class="stats">Top Speed: {{racing.racingGame.selectedCar.topSpeed}} <span data-ng-show="racing.selectedUpgrade">+ {{racing.selectedUpgrade.topSpeedMod}}</span> mph</label>
+						<div data-uib-progress>
+							<div data-uib-bar data-animate="false" data-value="racing.racingGame.selectedCar.topSpeed/4" data-type="success"></div>
+							<div data-uib-bar data-animate="false" data-value="racing.selectedUpgrade.topSpeedMod/4" data-type="warning"></div>
+						</div>
+					</div>
+					<div class="col-xs-6 form-group">
+						<label class="stats">Acceleration: {{racing.racingGame.selectedCar.acceleration}} <span data-ng-show="racing.selectedUpgrade">+ {{racing.selectedUpgrade.accelerationMod}}</span> mph/s</label>
+						<div data-uib-progress>
+							<div data-uib-bar data-animate="false" data-value="racing.racingGame.selectedCar.acceleration/0.8" data-type="success"></div>
+							<div data-uib-bar data-animate="false" data-value="racing.selectedUpgrade.accelerationMod/0.8" data-type="warning"></div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-xs-6 form-group">
+						<label class="stats">Reliability: {{racing.racingGame.selectedCar.reliability*100}} <span data-ng-show="racing.selectedUpgrade">+ {{racing.selectedUpgrade.reliabilityMod*100}}</span>%</label>
+						<div data-uib-progress>
+							<div data-uib-bar data-animate="false" data-value="racing.racingGame.selectedCar.reliability*100" data-type="success"></div>
+							<div data-uib-bar data-animate="false" data-value="racing.selectedUpgrade.reliabilityMod*100" data-type="warning"></div>
+						</div>
+					</div>
+					<div class="col-xs-6 form-group">
+						<label class="stats">Lap Efficiency: {{racing.racingGame.selectedCar.lapEfficiency*100}} <span data-ng-show="racing.selectedUpgrade">+ {{racing.selectedUpgrade.efficiencyMod*100}}</span>%</label>
+						<div data-uib-progress>
+							<div data-uib-bar data-animate="false" data-value="racing.racingGame.selectedCar.lapEfficiency*125" data-type="success"></div>
+							<div data-uib-bar data-animate="false" data-value="racing.selectedUpgrade.efficiencyMod*125" data-type="warning"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row" align="center">
+			<label>{{racing.racingGame.selectedCar.upgradeList.length}}/5 Upgrades Purchased</label>
+		</div>
+		<div data-ng-if="racing.racingGame.selectedCar.upgradeList.length<5">
+			<div class="row" align="center">
+				<div class="btn-group">
+        			<label data-ng-repeat="upgrade in racing.purchaseableUpgrades" class="btn btn-primary" data-ng-model="racing.selectedUpgrade" data-uib-btn-radio="upgrade">Upgrade {{$index}}</label>
+    			</div>
+			</div>
+			<div class="row" data-ng-show="racing.selectedUpgrade">
+				<div class="col-xs-6" align="right">
+					<label>Price: {{racing.selectedUpgrade.price|currency}}</label>
+				</div>
+				<div class="col-xs-6">
+					<button class="btn btn-primary" type="button" data-ng-click="racing.purchaseUpgrade()" data-ng-disabled="racing.racingGame.availableCash<racing.selectedUpgrade.price">Purchase Upgrade</button>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>

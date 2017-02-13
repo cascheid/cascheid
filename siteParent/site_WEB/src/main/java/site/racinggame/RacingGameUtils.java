@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import site.dao.RacingGameDao;
@@ -28,7 +29,7 @@ public class RacingGameUtils {
 			racingGame.setRacingClass("E");
 			racingGame.setSelectedClass("E");
 			racingGame.setAvailableCash(new BigDecimal(1000));
-			racingGame.addNewCar(getRacecarByID(1));
+			racingGame.addNewCar(new UserRacecar(getRacecarByID(1)));
 			racingGame.setSelectedCar(racingGame.getCarList().get(0));
 			Long newID;
 			if (identifier!=null&&identifier>0){
@@ -217,6 +218,16 @@ public class RacingGameUtils {
 		carMap.put("A", new ArrayList<Racecar>());
 		carMap.put("S", new ArrayList<Racecar>());
 		List<Racecar> carList = dao.getAvailableCarsToPurchase(racingGame.getRacingClass(), racingGame.getRacingIdentifier());
+		if (racingGame.getRacingIdentifier()==null||racingGame.getRacingIdentifier()<=0){
+			ListIterator<Racecar> iter = carList.listIterator();
+			while(iter.hasNext()){
+			    Racecar currCar = iter.next();
+			    if (currCar.getCarID()==1){
+			    	iter.remove();
+			    	break;
+			    }
+			}
+		}
 		for (Racecar car : carList){
 			if (car.getRacingClass().equals("SS")){
 				carMap.get("S").add(car);
@@ -324,10 +335,31 @@ public class RacingGameUtils {
 		return formatter.format(value);
 	}
 	
-	public static void updateRacingGame(Long racingGameIdentifier, BigDecimal availableCash, String racingClass, Integer carID){
-		if (racingGameIdentifier!=null&&racingGameIdentifier>0){
+	public static void updateRacingGame(RacingGame racingGame){
+		if (racingGame.getRacingIdentifier()!=null&&racingGame.getRacingIdentifier()>0){
 			RacingGameDao dao = new RacingGameDaoImpl();
-			dao.updateRacingGame(racingGameIdentifier, availableCash, racingClass, carID);
+			dao.updateRacingGame(racingGame);
 		}
+	}
+	
+	public static RacingGame purchaseCar(RacingGame racingGame, Racecar car){
+		RacingGameDao dao = new RacingGameDaoImpl();
+		Long userRacecarId=dao.addNewUserRacecar(racingGame.getRacingIdentifier(), car.getCarID());
+		UserRacecar userCar = new UserRacecar(car);
+		userCar.setUserRacecarID(userRacecarId);
+		racingGame.addNewCar(userCar);
+		
+		ListIterator<Racecar> iter = racingGame.getPurchaseableCars().get(car.getRacingClass()).listIterator();
+		while(iter.hasNext()){
+		    Racecar currCar = iter.next();
+		    if (currCar.getCarID()==car.getCarID()){
+		    	iter.remove();
+		    	break;
+		    }
+		}
+
+		racingGame.setAvailableCash(racingGame.getAvailableCash().subtract(car.getPrice()));
+		updateRacingGame(racingGame);
+		return racingGame;
 	}
 }

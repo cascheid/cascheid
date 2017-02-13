@@ -295,12 +295,11 @@ public class RacingGameDaoImpl extends ParentDao implements RacingGameDao{
 		jdbcTemplate.update("INSERT INTO USER_RACECAR_UPGRADES (USER_RACECAR_ID, UPGRADE_ID) VALUES (?,?)", new Object[]{userRacecarID, upgradeID});
 	}
 
-	public void updateRacingGame(Long racingIdentifier, BigDecimal availableCash,
-			String racingClass, Integer carID) {
+	public void updateRacingGame(RacingGame racingGame) {
 		if (jdbcTemplate==null){
 			setDataSource(getDataSource());
 		}
-		jdbcTemplate.update("UPDATE RACING_GAME SET AVAILABLE_CASH=?, RACING_CLASS=?, CAR_ID=? WHERE RACING_IDENTIFIER=?", new Object[]{availableCash, String.valueOf(racingClass), carID, racingIdentifier});
+		jdbcTemplate.update("UPDATE RACING_GAME SET AVAILABLE_CASH=?, RACING_CLASS=?, CAR_ID=? WHERE RACING_IDENTIFIER=?", new Object[]{racingGame.getAvailableCash(), String.valueOf(racingGame.getRacingClass()), racingGame.getSelectedCar().getCarID(), racingGame.getRacingIdentifier()});
 	}
 	
 }
