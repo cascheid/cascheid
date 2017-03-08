@@ -2,6 +2,7 @@ package site.controller;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
@@ -16,10 +17,14 @@ public class BattleshipConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new BattleshipHandler(), "/wsbattleship").withSockJS();
+        registry.addHandler(getBattleshipHandler(), "/wsbattleship").withSockJS();
 //            .addInterceptors(new HttpSessionHandshakeInterceptor()).withSockJS();
     }
 
+    @Bean
+    public WebSocketHandler getBattleshipHandler(){
+    	return new BattleshipHandler();
+    }
 
     @Bean
     public ServletServerContainerFactoryBean createWebSocketContainer() {

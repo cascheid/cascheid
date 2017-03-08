@@ -3,6 +3,7 @@ package site.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -23,9 +24,9 @@ import site.identity.Identity;
 import site.identity.IdentityUtils;
 
 @Controller
-@Scope("session")
 public class BattleshipController {
-	Identity identity=null;
+	@Autowired
+	Identity identity;
 	Identity activeOpponent=null;
 	BattleshipGame activeGame;
 	

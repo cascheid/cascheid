@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -15,7 +17,13 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException;
 
+import site.blitzball.BattleshipGameManager;
+
+@Component
 public class BattleshipHandler extends TextWebSocketHandler {
+	@Autowired
+	private BattleshipGameManager battleshipGameManager;
+	
 	ObjectMapper objectMapper = new ObjectMapper();
 	Map<Long, ActiveBattleshipGame> games = new HashMap<Long, ActiveBattleshipGame>();
 	HashMap<Long, WebSocketSession> sessions = new HashMap<Long, WebSocketSession>();

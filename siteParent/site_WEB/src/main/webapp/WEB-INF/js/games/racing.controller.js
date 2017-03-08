@@ -11,6 +11,7 @@ angular.module('indexApp').controller('racingCtrl', ['$rootScope', '$window', 'c
 			racingVM.racingGame = data;
 			racingVM.racingGame.purchaseableClasses=Object.keys(racingVM.racingGame.purchaseableCars);
 			racingVM.initUpgradeFrame();
+			racingVM.initGarageFrame();
 		});
 	};
 	
@@ -34,15 +35,37 @@ angular.module('indexApp').controller('racingCtrl', ['$rootScope', '$window', 'c
 		});
 	};
 	
+	racingVM.initGarageFrame = function() {
+		angular.forEach(racingVM.racingGame.carList, function(car){
+			if (car.carID==racingVM.racingGame.selectedCar.carID){
+				racingVM.garageCar=car;
+			}
+		});
+	};
+	
+	racingVM.changeSelectedCar = function() {
+		racingVM.racingGame.selectedCar=racingVM.garageCar;
+		//TODO service call to update DB
+	};
+	
 	$rootScope.$on('loadRacingUpgrade', function(e){
 		racingVM.initUpgradeFrame();
 	});
 	
+	$rootScope.$on('loadRacingGarage', function(e){
+		racingVM.initGarageFrame();
+	});
+	
 	racingVM.purchaseUpgrade = function() {
 		var price = racingVM.selectedUpgrade.price;
-		racingService.purchaseUpgrade(racingVM.selectedUpgrade.upgradeID).then(function(data){
-			racingVM.racingGame.selectedCar = data;
-			racingVM.racingGame.availableCash -= price;
+		commonService.openConfirmModal('Purchase Upgrade', 'Are you sure you would like to purchase this upgrade for '+price+'?').then(function(result){
+			if (result){
+				racingService.purchaseUpgrade(racingVM.selectedUpgrade.upgradeID).then(function(data){
+					racingVM.racingGame.selectedCar = data;
+					racingVM.racingGame.availableCash -= price;
+					racingVM.initUpgradeFrame();
+				});
+			}
 		});
 	}
 	racingVM.initController();

@@ -4,7 +4,7 @@ angular.module('indexApp').config(function($stateProvider, $urlRouterProvider) {
 	var racingState = {
 		name : 'racing',
 		url : '/racing',
-		templateUrl : 'views/racing.html',
+		templateUrl : 'views/racing/racing.html',
 		controller: 'racingCtrl as racing'
 	};
 
@@ -17,13 +17,13 @@ angular.module('indexApp').config(function($stateProvider, $urlRouterProvider) {
 	var racingStoreState = {
 		name : 'racing.store',
 		url : '/store',
-		templateUrl : 'views/racingStore.html'
+		templateUrl : 'views/racing/racingStore.html'
 	}
 	
 	var racingUpgradeState = {
 		name : 'racing.upgrades',
 		url : '/upgrades',
-		templateUrl : 'views/racingUpgrades.html',
+		templateUrl : 'views/racing/racingUpgrades.html',
 		onEnter: function($rootScope){
 			$rootScope.$broadcast('loadRacingUpgrade');
 		}
@@ -33,6 +33,14 @@ angular.module('indexApp').config(function($stateProvider, $urlRouterProvider) {
 		name : 'gamesIndex',
 		url : '/',
 		templateUrl : 'gamesList.html'
+	});
+	$stateProvider.state({
+		name : 'racing.garage',
+		url : '/garage',
+		templateUrl : 'views/racing/racingGarage.html',
+		onEnter: function($rootScope){
+			$rootScope.$broadcast('loadRacingGarage');
+		}
 	});
 	$stateProvider.state(racingState);
 	$stateProvider.state(snakeState);

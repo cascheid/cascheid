@@ -11,12 +11,13 @@ import org.springframework.jdbc.core.PreparedStatementCreator;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Repository;
 
 import site.battleship.BattleshipBoard;
 import site.battleship.BattleshipGame;
 import site.battleship.BattleshipMove;
 
-
+@Repository
 public class BattleshipDaoImpl extends ParentDao implements BattleshipDao{
 
 	@Override

@@ -213,6 +213,13 @@ public class RacingGameController {
 	@ResponseBody
 	public ResponseEntity<?> getUpgrades(@RequestParam String racingClass){
 		List<Upgrade> upgradeOptions = RacingGameUtils.getUpgradesByClass(racingClass);
+		for (Upgrade existing : identity.getRacingGame().getSelectedCar().getUpgradeList()){
+			for (Upgrade option : upgradeOptions){
+				if (existing.getUpgradeID()==option.getUpgradeID()){
+					option.setPrice(option.getPrice().add(existing.getPrice()));
+				}
+			}
+		}
 		return new ResponseEntity<>(upgradeOptions, HttpStatus.OK);
 	}
 	
@@ -220,15 +227,24 @@ public class RacingGameController {
 	@ResponseBody
 	public ResponseEntity<?> purchaseUpgrade(@RequestParam Integer upgradeID){
 		Upgrade upgrade = RacingGameUtils.getUpgradeByID(upgradeID);
-		if (identity.getRacingGame().getAvailableCash().compareTo(upgrade.getPrice())<0){
+		BigDecimal price = upgrade.getPrice();
+		for (Upgrade existing : identity.getRacingGame().getSelectedCar().getUpgradeList()){
+			if (existing.getUpgradeID()==upgradeID){
+				price.add(upgrade.getPrice());
+			}
+		}
+		if (identity.getRacingGame().getAvailableCash().compareTo(price)<0){
 			ResultMessage result = new ResultMessage();
 			result.setError(true);
 			result.setResultMessage("Not Enough Money");
 			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		}
-		identity.getRacingGame().setAvailableCash(identity.getRacingGame().getAvailableCash().subtract(upgrade.getPrice()));
+		identity.getRacingGame().setAvailableCash(identity.getRacingGame().getAvailableCash().subtract(price));
 		identity.getRacingGame().getSelectedCar().addUpgrade(upgrade);
-		RacingGameUtils.addNewUpgrade(identity.getRacingGame().getSelectedCar(), upgrade);
+		if (identity.getRacingGame().getRacingIdentifier()!=null&&identity.getRacingGame().getRacingIdentifier()>0){
+			RacingGameUtils.addNewUpgrade(identity.getRacingGame().getSelectedCar(), upgrade);
+			//TODO save cash
+		}
 		return new ResponseEntity<>(identity.getRacingGame().getSelectedCar(), HttpStatus.OK);
 	}
 	
