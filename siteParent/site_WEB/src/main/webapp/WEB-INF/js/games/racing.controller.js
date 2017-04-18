@@ -1,4 +1,4 @@
-angular.module('indexApp').controller('racingCtrl', ['$rootScope', '$window', 'commonService', 'racingService', function($rootScope, $window, commonService, racingService){
+angular.module('indexApp').controller('racingCtrl', ['$rootScope', '$window', '$state', 'commonService', 'racingService', function($rootScope, $window, $state, commonService, racingService){
 	var racingVM = this;
 
 	$rootScope.$on('loadUser', function(e){
@@ -10,8 +10,29 @@ angular.module('indexApp').controller('racingCtrl', ['$rootScope', '$window', 'c
 		racingService.getRacingGame().then(function onSuccess(data){
 			racingVM.racingGame = data;
 			racingVM.racingGame.purchaseableClasses=Object.keys(racingVM.racingGame.purchaseableCars);
+			racingVM.racingGame.raceableClasses=['E'];
+			if (['D','C','B','A','S'].indexOf(racingVM.racingGame.racingClass)>=0){
+				racingVM.racingGame.raceableClasses.push('D');
+			}
+			if (['C','B','A','S'].indexOf(racingVM.racingGame.racingClass)>=0){
+				racingVM.racingGame.raceableClasses.push('C');
+			}
+			if (['B','A','S'].indexOf(racingVM.racingGame.racingClass)>=0){
+				racingVM.racingGame.raceableClasses.push('B');
+			}
+			if (['A','S'].indexOf(racingVM.racingGame.racingClass)>=0){
+				racingVM.racingGame.raceableClasses.push('A');
+			}
+			if (['S'].indexOf(racingVM.racingGame.racingClass)>=0){
+				racingVM.racingGame.raceableClasses.push('S');
+			}
 			racingVM.initUpgradeFrame();
 			racingVM.initGarageFrame();
+			racingVM.raceSetup = {
+					raceType: 'user',
+					racingClass: racingVM.racingGame.racingClass,
+					carID: racingVM.racingGame.selectedCar.carID
+			}
 		});
 	};
 	
@@ -67,7 +88,19 @@ angular.module('indexApp').controller('racingCtrl', ['$rootScope', '$window', 'c
 				});
 			}
 		});
-	}
+	};
+	
+	racingVM.submitRaceSetup = function(){
+		racingService.startRace(racingVM.raceSetup).then(function(data){
+			$rootScope.$broadcast('userRaceStart', data);
+		});
+		if (racingVM.raceSetup.raceType==='user'){
+			$state.go('racing.userRace');
+		} else if (racingVM.raceSetup.raceType==='spectate'){
+			$state.go('racing.spectateRace');
+		}
+	};
+	
 	racingVM.initController();
 }]);
 

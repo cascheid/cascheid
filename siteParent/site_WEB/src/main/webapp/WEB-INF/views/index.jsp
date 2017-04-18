@@ -6,6 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <%@ taglib prefix="cascheid" tagdir="/WEB-INF/tags" %>
 <title>CAScheid Home</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.0.3/sockjs.min.js"></script>
 <cascheid:staticFiles debug="true"/>
 </head>
 <body class="container-fluid site-body" data-ng-app="indexApp">

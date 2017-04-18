@@ -42,6 +42,18 @@ angular.module('indexApp').config(function($stateProvider, $urlRouterProvider) {
 			$rootScope.$broadcast('loadRacingGarage');
 		}
 	});
+	$stateProvider.state({
+		name : 'racing.setup',
+		url : '/raceSetup',
+		templateUrl : 'views/racing/racingSetup.html'
+	});
+	$stateProvider.state({
+		name : 'racing.userRace',
+		url : '/userRace',
+		templateUrl : 'views/racing/userRace.html',
+		controller:"userRaceCtrl",
+		controllerAs:"userRace"
+	});
 	$stateProvider.state(racingState);
 	$stateProvider.state(snakeState);
 	$stateProvider.state(racingStoreState);

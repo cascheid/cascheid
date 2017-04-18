@@ -8,18 +8,18 @@
 		<div class="row">
 			<div class="form-inline">
 				<label for="setupClass">Racing Class:</label>
-				<select class="form-control" id="setupClass" data-ng-options="raceClass in racing.availableClasses" data-ng-model="racing.raceSetup.racingClass"></select>
+				<select class="form-control" id="setupClass" data-ng-options="raceClass for raceClass in racing.racingGame.raceableClasses" data-ng-model="racing.raceSetup.racingClass"></select>
 			</div>
 			<div class="form-inline">
 				<label for="setupType">Racing Type:</label>
-				<select class="form-control" id="setupType" data-ng-model="racing.raceSetup.racingType">
+				<select class="form-control" id="setupType" data-ng-model="racing.raceSetup.raceType">
 					<option value="user">User</option>
 					<option value="spectate">Spectate</option>
 				</select>
 			</div>
 			<div class="form-inline">
 				<label for="setupCar">Selected Car:</label>
-				<select class="form-control" id="setupCar" data-ng-options="car.carID as car.name for car in racing.racingGame.carList" data-ng-model="racing.raceSetup.racingCar"></select>
+				<select class="form-control" id="setupCar" data-ng-options="car.carID as car.name for car in racing.racingGame.carList" data-ng-model="racing.raceSetup.carID"></select>
 			</div>
 		</div>
 	</div>

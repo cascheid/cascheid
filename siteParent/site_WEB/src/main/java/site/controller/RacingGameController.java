@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -342,54 +343,37 @@ public class RacingGameController {
 	}
 	
 	@RequestMapping("/startRace")
-	public ModelAndView openUserRaceFrame(
-			@ModelAttribute("raceInfo") RaceInfo raceInfo){
-		if (racingGame==null){
-			return new ModelAndView("timeout");
-		}
-		ModelAndView mv; 
-		if (raceInfo==null){
-			raceInfo=new RaceInfo();
-		}
-		if (raceInfo.getRaceType()==null){
-			raceInfo.setRaceType("spectate");
-		}
-		racingGame.setSelectedClass(raceInfo.getRacingClass());
-		if (raceInfo.getCarID()!=racingGame.getSelectedCar().getCarID()){
-			for (UserRacecar car : racingGame.getCarList()){
-				if (car.getCarID()==raceInfo.getCarID()){
-					racingGame.setSelectedCar(car);
+	@ResponseBody
+	public ResponseEntity<?> openUserRaceFrame(@RequestParam String racingClass, @RequestParam String raceType, @RequestParam Integer carID){
+		identity.getRacingGame().setSelectedClass(racingClass);
+		if (carID!=identity.getRacingGame().getSelectedCar().getCarID()){
+			for (UserRacecar car : identity.getRacingGame().getCarList()){
+				if (car.getCarID()==carID){
+					identity.getRacingGame().setSelectedCar(car);
 					break;
 				}
 			}
 		}
+		RaceInfo raceInfo = new RaceInfo();
+		raceInfo.setRaceType(raceType);
+		raceInfo.setRacingClass(racingClass);
 		Set<Racecar> opponents;
-		if (raceInfo.getRaceType().equals("user")){
-			racingGame.setSelectedMode("user");
+		if (raceType.equals("user")){
+			identity.getRacingGame().setSelectedMode("user");
 			LinkedHashMap<String, Integer> feeMap = RacingGameUtils.getFeeMap();
-			racingGame.setAvailableCash(racingGame.getAvailableCash().subtract(new BigDecimal(feeMap.get(raceInfo.getRacingClass()))));
-			mv = new ModelAndView("userRaceFrame");
-			opponents = new HashSet<Racecar>(RacingGameUtils.getRandomOpponentsByClass(raceInfo.getRacingClass()));
+			identity.getRacingGame().setAvailableCash(identity.getRacingGame().getAvailableCash().subtract(new BigDecimal(feeMap.get(racingClass))));
+			opponents = new HashSet<Racecar>(RacingGameUtils.getRandomOpponentsByClass(racingClass));
+			raceInfo.setRacer1(identity.getRacingGame().getSelectedCar());
 		} else {
-			racingGame.setSelectedMode("spectate");
-			mv = new ModelAndView("spectateRaceFrame");
-			opponents = new HashSet<Racecar>(RacingGameUtils.getSpectateCarsByCarID(racingGame.getSelectedCar().getCarID()));
+			identity.getRacingGame().setSelectedMode("spectate");
+			opponents = new HashSet<Racecar>(RacingGameUtils.getSpectateCarsByCarID(carID));
 		}
-		raceInfo.setLapDistance(RacingGameUtils.getLapDistanceByClass(raceInfo.getRacingClass()));
-		raceInfo.setNoLaps(RacingGameUtils.getNumberOfLapsByClass(raceInfo.getRacingClass()));
-		mv.addObject("racecar", racingGame.getSelectedCar());
-		int i=0;
-		if (raceInfo.getRaceType().equals("user")){
-			i++;//start with racer2
-		}
+		raceInfo.setLapDistance(RacingGameUtils.getLapDistanceByClass(racingClass));
+		raceInfo.setNoLaps(RacingGameUtils.getNumberOfLapsByClass(racingClass));
 		for (Racecar car : opponents){
-			i++;
-			mv.addObject("racer"+i, car);
+			raceInfo.addRacer(car);
 		}
-		RaceResult raceResult = new RaceResult();
-		mv.addObject("raceInfo", raceInfo);
-		mv.addObject("raceResult", raceResult);
-		return mv;
+		return new ResponseEntity<>(raceInfo, HttpStatus.OK);
 	}
 	
 	@RequestMapping("/racingResults")

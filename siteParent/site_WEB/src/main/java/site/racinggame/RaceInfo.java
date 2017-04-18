@@ -1,19 +1,18 @@
 package site.racinggame;
 
-import java.math.BigDecimal;
 
-
-public class RaceInfo implements java.io.Serializable{
-	
-	private static final long serialVersionUID = 7462149165977234290L;
+public class RaceInfo{
 	
 	private String racingClass;
-	private String courseType;
 	private String raceType;
-	private BigDecimal racingFee;
 	private Integer lapDistance;
 	private Integer noLaps;
-	private Integer carID;
+	private Racecar racer1;
+	private Racecar racer2;
+	private Racecar racer3;
+	private Racecar racer4;
+	private Racecar racer5;
+	private Racecar racer6;
 	
 	public RaceInfo(){
 	}
@@ -26,28 +25,12 @@ public class RaceInfo implements java.io.Serializable{
 		this.racingClass = racingClass;
 	}
 
-	public String getCourseType() {
-		return courseType;
-	}
-
-	public void setCourseType(String courseType) {
-		this.courseType = courseType;
-	}
-
 	public String getRaceType() {
 		return raceType;
 	}
 
 	public void setRaceType(String raceType) {
 		this.raceType = raceType;
-	}
-
-	public BigDecimal getRacingFee() {
-		return racingFee;
-	}
-
-	public void setRacingFee(BigDecimal racingFee) {
-		this.racingFee = racingFee;
 	}
 
 	public Integer getLapDistance() {
@@ -66,12 +49,68 @@ public class RaceInfo implements java.io.Serializable{
 		this.noLaps = noLaps;
 	}
 
-	public Integer getCarID() {
-		return carID;
+	public Racecar getRacer1() {
+		return racer1;
 	}
 
-	public void setCarID(Integer carID) {
-		this.carID = carID;
+	public void setRacer1(Racecar racer1) {
+		this.racer1 = racer1;
+	}
+
+	public Racecar getRacer2() {
+		return racer2;
+	}
+
+	public void setRacer2(Racecar racer2) {
+		this.racer2 = racer2;
+	}
+
+	public Racecar getRacer3() {
+		return racer3;
+	}
+
+	public void setRacer3(Racecar racer3) {
+		this.racer3 = racer3;
+	}
+
+	public Racecar getRacer4() {
+		return racer4;
+	}
+
+	public void setRacer4(Racecar racer4) {
+		this.racer4 = racer4;
+	}
+
+	public Racecar getRacer5() {
+		return racer5;
+	}
+
+	public void setRacer5(Racecar racer5) {
+		this.racer5 = racer5;
+	}
+
+	public Racecar getRacer6() {
+		return racer6;
+	}
+
+	public void setRacer6(Racecar racer6) {
+		this.racer6 = racer6;
+	}
+	
+	public void addRacer(Racecar racer){
+		if (this.racer1==null){
+			this.racer1=racer;
+		} else if (this.racer2==null){
+			this.racer2=racer;
+		} else if (this.racer3==null){
+			this.racer3=racer;
+		} else if (this.racer4==null){
+			this.racer4=racer;
+		} else if (this.racer5==null){
+			this.racer5=racer;
+		} else if (this.racer6==null){
+			this.racer6=racer;
+		}
 	}
 
 }

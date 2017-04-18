@@ -1,6 +1,13 @@
-angular.module('indexApp').controller('racingCtrl', ['$rootScope', '$window', 'commonService', 'racingService', 'raceInfo', function ($rootScope, $window, commonService, racingService, raceInfo) {
-	var finishedRace = false;
-	function startRace() {
+angular.module('indexApp').controller('userRaceCtrl', ['$scope', '$window', 'commonService', 'racingService', function ($scope, $window, commonService, racingService) {
+	var userRace = this;
+	
+	$scope.$on('userRaceStart', function(e, data){
+		userRace.startRace(data);
+	});
+	
+	userRace.startRace = function(raceInfo) {
+		userRace.raceInfo = raceInfo;
+		var finishedRace = false;
 		var distance = raceInfo.lapDistance * raceInfo.noLaps;
 		
 		var lapDistance = raceInfo.lapDistance;
@@ -9,19 +16,19 @@ angular.module('indexApp').controller('racingCtrl', ['$rootScope', '$window', 'c
 		var firstPlace = null;
 		var secondPlace = null;
 		var thirdPlace = null;
-		var car1Accel = raceInfo.racecar.acceleration;
+		var car1Accel = raceInfo.racer1.acceleration;
 		var car2Accel = raceInfo.racer2.acceleration;
 		var car3Accel = raceInfo.racer3.acceleration;
 		var car4Accel = raceInfo.racer4.acceleration;
 		var car5Accel = raceInfo.racer5.acceleration;
 		var car6Accel = raceInfo.racer6.acceleration;
-		var car1TopSpeed = raceInfo.racecar.topSpeed * (1 - ((1 - racecar.reliability) * Math.random()));
-		var car2TopSpeed = raceInfo.racer2.topSpeed * (1 - ((1 - racer2.reliability) * Math.random()));
-		var car3TopSpeed = raceInfo.racer3.topSpeed * (1 - ((1 - racer3.reliability) * Math.random()));
-		var car4TopSpeed = raceInfo.racer4.topSpeed * (1 - ((1 - racer4.reliability) * Math.random()));
-		var car5TopSpeed = raceInfo.racer5.topSpeed * (1 - ((1 - racer5.reliability) * Math.random()));
-		var car6TopSpeed = raceInfo.racer6.topSpeed * (1 - ((1 - racer6.reliability) * Math.random()));
-		var car1LapEfficiency = raceInfo.racecar.lapEfficiency;
+		var car1TopSpeed = raceInfo.racer1.topSpeed * (1 - ((1 - raceInfo.racer1.reliability) * Math.random()));
+		var car2TopSpeed = raceInfo.racer2.topSpeed * (1 - ((1 - raceInfo.racer2.reliability) * Math.random()));
+		var car3TopSpeed = raceInfo.racer3.topSpeed * (1 - ((1 - raceInfo.racer3.reliability) * Math.random()));
+		var car4TopSpeed = raceInfo.racer4.topSpeed * (1 - ((1 - raceInfo.racer4.reliability) * Math.random()));
+		var car5TopSpeed = raceInfo.racer5.topSpeed * (1 - ((1 - raceInfo.racer5.reliability) * Math.random()));
+		var car6TopSpeed = raceInfo.racer6.topSpeed * (1 - ((1 - raceInfo.racer6.reliability) * Math.random()));
+		var car1LapEfficiency = raceInfo.racer1.lapEfficiency;
 		var car2LapEfficiency = raceInfo.racer2.lapEfficiency;
 		var car3LapEfficiency = raceInfo.racer3.lapEfficiency;
 		var car4LapEfficiency = raceInfo.racer4.lapEfficiency;
@@ -60,25 +67,24 @@ angular.module('indexApp').controller('racingCtrl', ['$rootScope', '$window', 'c
 
 				if (car1Location >= distance) {
 					if (firstPlace == null) {
-						firstPlace = "user";
-						document.getElementById("firstPlaceTimeForm").value = elapsedTime;
+						userRace.raceResult.firstPlace = "user";
+						userRace.raceResult.firstPlaceTime = elapsedTime;
 					} else if (secondPlace == null) {
-						secondPlace = "user";
-						document.getElementById("secondPlaceTimeForm").value = elapsedTime;
+						userRace.raceResult.secondPlace = "user";
+						userRace.raceResult.secondPlaceTime = elapsedTime;
 					} else if (thirdPlace == null) {
-						thirdPlace = "user";
-						document.getElementById("thirdPlaceTimeForm").value = elapsedTime;
+						userRace.raceResult.thirdPlace = "user";
+						userRace.raceResult.thirdPlaceTime = elapsedTime;
 						finishedRace = true;
 					}
 				} else {
-					car1.style.left = 100 * (car1Location % lapDistance)
-							/ lapDistance + "%";
+					angular.element('#car1').css('left', 100 * (car1Location % lapDistance) / lapDistance + "%");
 					if (car1Location / lapDistance > car1Lap) {
 						car1Lap += 1;
 						car1CurVelocity = car1CurVelocity * car1LapEfficiency;
 						track1.className = "tracklap" + car1Lap;
-						car1TopSpeed = raceInfo.racecar.topSpeed * (1 - ((1 - raceInfo.racecar.reliability) * Math.random()));
-						car1Acceleration = raceInfo.racecar.acceleration * (1 - ((1 - raceInfo.racecar.reliability) * Math.random()));
+						car1TopSpeed = raceInfo.racer1.topSpeed * (1 - ((1 - raceInfo.racer1.reliability) * Math.random()));
+						car1Acceleration = raceInfo.racer1.acceleration * (1 - ((1 - raceInfo.racer1.reliability) * Math.random()));
 					}
 				}
 			}
@@ -92,14 +98,14 @@ angular.module('indexApp').controller('racingCtrl', ['$rootScope', '$window', 'c
 
 				if (car2Location >= distance) {
 					if (firstPlace == null) {
-						firstPlace = raceInfo.racer2.name;
-						document.getElementById("firstPlaceTimeForm").value = elapsedTime;
+						userRace.raceResult.firstPlace = raceInfo.racer2.name;
+						userRace.raceResult.firstPlaceTime = elapsedTime;
 					} else if (secondPlace == null) {
-						secondPlace = raceInfo.racer2.name;
-						document.getElementById("secondPlaceTimeForm").value = elapsedTime;
+						userRace.raceResult.secondPlace = raceInfo.racer2.name;
+						userRace.raceResult.secondPlaceTime = elapsedTime;
 					} else if (thirdPlace == null) {
-						thirdPlace = raceInfo.racer2.name;
-						document.getElementById("thirdPlaceTimeForm").value = elapsedTime;
+						userRace.raceResult.thirdPlace = raceInfo.racer2.name;
+						userRace.raceResult.thirdPlaceTime = elapsedTime;
 						finishedRace = true;
 					}
 				} else {
@@ -124,14 +130,14 @@ angular.module('indexApp').controller('racingCtrl', ['$rootScope', '$window', 'c
 
 				if (car3Location >= distance) {
 					if (firstPlace == null) {
-						firstPlace = raceInfo.racer3.name;
-						document.getElementById("firstPlaceTimeForm").value = elapsedTime;
+						userRace.raceResult.firstPlace = raceInfo.racer3.name;
+						userRace.raceResult.firstPlaceTime = elapsedTime;
 					} else if (secondPlace == null) {
-						secondPlace = raceInfo.racer3.name;
-						document.getElementById("secondPlaceTimeForm").value = elapsedTime;
+						userRace.raceResult.secondPlace = raceInfo.racer3.name;
+						userRace.raceResult.secondPlaceTime = elapsedTime;
 					} else if (thirdPlace == null) {
-						thirdPlace = raceInfo.racer3.name;
-						document.getElementById("thirdPlaceTimeForm").value = elapsedTime;
+						userRace.raceResult.thirdPlace = raceInfo.racer3.name;
+						userRace.raceResult.thirdPlaceTime = elapsedTime;
 						finishedRace = true;
 					}
 				} else {
@@ -156,14 +162,14 @@ angular.module('indexApp').controller('racingCtrl', ['$rootScope', '$window', 'c
 
 				if (car4Location >= distance) {
 					if (firstPlace == null) {
-						firstPlace = raceInfo.racer4.name;
-						document.getElementById("firstPlaceTimeForm").value = elapsedTime;
+						userRace.raceResult.firstPlace = raceInfo.racer4.name;
+						userRace.raceResult.firstPlaceTime = elapsedTime;
 					} else if (secondPlace == null) {
-						secondPlace = raceInfo.racer4.name;
-						document.getElementById("secondPlaceTimeForm").value = elapsedTime;
+						userRace.raceResult.secondPlace = raceInfo.racer4.name;
+						userRace.raceResult.secondPlaceTime = elapsedTime;
 					} else if (thirdPlace == null) {
-						thirdPlace = raceInfo.racer4.name;
-						document.getElementById("thirdPlaceTimeForm").value = elapsedTime;
+						userRace.raceResult.thirdPlace = raceInfo.racer4.name;
+						userRace.raceResult.thirdPlaceTime = elapsedTime;
 						finishedRace = true;
 					}
 				} else {
@@ -188,14 +194,14 @@ angular.module('indexApp').controller('racingCtrl', ['$rootScope', '$window', 'c
 
 				if (car5Location >= distance) {
 					if (firstPlace == null) {
-						firstPlace = raceInfo.racer5.name;
-						document.getElementById("firstPlaceTimeForm").value = elapsedTime;
+						userRace.raceResult.firstPlace = raceInfo.racer5.name;
+						userRace.raceResult.firstPlaceTime = elapsedTime;
 					} else if (secondPlace == null) {
-						secondPlace = raceInfo.racer5.name;
-						document.getElementById("secondPlaceTimeForm").value = elapsedTime;
+						userRace.raceResult.secondPlace = raceInfo.racer5.name;
+						userRace.raceResult.secondPlaceTime = elapsedTime;
 					} else if (thirdPlace == null) {
-						thirdPlace = raceInfo.racer5.name;
-						document.getElementById("thirdPlaceTimeForm").value = elapsedTime;
+						userRace.raceResult.thirdPlace = raceInfo.racer5.name;
+						userRace.raceResult.thirdPlaceTime = elapsedTime;
 						finishedRace = true;
 					}
 				} else {
@@ -221,13 +227,13 @@ angular.module('indexApp').controller('racingCtrl', ['$rootScope', '$window', 'c
 				if (car6Location >= distance) {
 					if (firstPlace == null) {
 						firstPlace = raceInfo.racer6.name;
-						document.getElementById("firstPlaceTimeForm").value = elapsedTime;
+						userRace.raceResult.firstPlaceTime = elapsedTime;
 					} else if (secondPlace == null) {
 						secondPlace = raceInfo.racer6.name;
-						document.getElementById("secondPlaceTimeForm").value = elapsedTime;
+						userRace.raceResult.secondPlaceTime = elapsedTime;
 					} else if (thirdPlace == null) {
 						thirdPlace = raceInfo.racer6.name;
-						document.getElementById("thirdPlaceTimeForm").value = elapsedTime;
+						userRace.raceResult.thirdPlaceTime = elapsedTime;
 						finishedRace = true;
 					}
 				} else {
@@ -245,10 +251,10 @@ angular.module('indexApp').controller('racingCtrl', ['$rootScope', '$window', 'c
 
 			if (finishedRace) {
 				clearInterval(raceid);
-				document.getElementById("firstPlaceForm").value = firstPlace;
-				document.getElementById("secondPlaceForm").value = secondPlace;
-				document.getElementById("thirdPlaceForm").value = thirdPlace;
-				resultForm.submit();
+				racingService.endRace(userRace.raceResult).then(function(data){
+					userRace.ended = true;
+					//TODO update racing game?
+				});
 			}
 		}
 

@@ -1,7 +1,30 @@
 <div class="row">
-	<div class="col-xs-12">
+	<div class="col-xs-12" data-ng-if="userRace.raceInfo">
 		<div style="border-bottom:1px solid black" class="row">
-		Class: {{userRace.raceInfo.racingClass}}  Lap Length: {{userRace.raceInfo.lapDistance}}  Number of Laps: {{userRace.raceInfo.noLaps}}
+			Class: {{userRace.raceInfo.racingClass}}  Lap Length: {{userRace.raceInfo.lapDistance}}  Number of Laps: {{userRace.raceInfo.noLaps}}
+		</div>
+		<div class="tracklap1" id="track1">
+			<img class="car" id="car1" data-ng-src="{{'img/cars/'+userRace.raceInfo.racer1.model}}" width="100px" height="50px">
+		</div>
+		<div class="trackboundary"></div>
+		<div class="tracklap1" id="track2">
+			<img class="car" id="car2" data-ng-src="img/cars/{{userRace.racer2.model}}" width="100px" height="50px">
+		</div>
+		<div class="trackboundary"></div>
+		<div class="tracklap1" id="track3">
+			<img class="car" id="car3" data-ng-src="img/cars/{{userRace.racer3.model}}" width="100px" height="50px">
+		</div>
+		<div class="trackboundary"></div>
+		<div class="tracklap1" id="track4">
+			<img class="car" id="car4" data-ng-src="img/cars/{{userRace.racer4.model}}" width="100px" height="50px">
+		</div>
+		<div class="trackboundary"></div>
+		<div class="tracklap1" id="track5">
+			<img class="car" id="car5" data-ng-src="img/cars/{{userRace.racer5.model}}" width="100px" height="50px">
+		</div>
+		<div class="trackboundary"></div>
+		<div class="tracklap1" id="track6">
+			<img class="car" id="car6" data-ng-src="img/cars/{{userRace.racer6.model}}" width="100px" height="50px">
 		</div>
 	</div>
 </div>

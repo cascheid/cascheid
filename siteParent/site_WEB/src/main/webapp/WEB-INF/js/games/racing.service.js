@@ -51,6 +51,30 @@ angular.module('indexApp').factory('racingService', ['$http', '$q', '$uibModal',
 				}
 			);
             return deferred.promise;	
+		},
+		startRace : function(raceSetup) {
+			var deferred = $q.defer();
+			var raceConfig = {
+					params: {
+						racingClass : raceSetup.racingClass,
+						courseType : 'long',
+						raceType : raceSetup.raceType,
+						racingFee : 0,
+						lapDistance : 0,
+						noLaps : 0,
+						carID : raceSetup.carID
+					}
+			}
+			$http.get('startRace', raceConfig).then(
+				function onSuccess(response){
+			        deferred.resolve(response.data);
+				},
+				function onError(response){
+		        	$log.error('Error in racingService.startRace', response);
+		        	deferred.reject(response);
+				}
+			);
+            return deferred.promise;
 		}
 	}
 }]);
