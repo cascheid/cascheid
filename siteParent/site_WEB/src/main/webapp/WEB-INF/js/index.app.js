@@ -54,6 +54,13 @@ angular.module('indexApp').config(function($stateProvider, $urlRouterProvider) {
 		controller:"userRaceCtrl",
 		controllerAs:"userRace"
 	});
+	$stateProvider.state({
+		name : 'racing.spectateRace',
+		url : '/spectateRace',
+		templateUrl : 'views/racing/spectateRace.html',
+		controller:"spectateRaceCtrl",
+		controllerAs:"spectateRace"
+	});
 	$stateProvider.state(racingState);
 	$stateProvider.state(snakeState);
 	$stateProvider.state(racingStoreState);
