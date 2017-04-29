@@ -1,29 +1,32 @@
-angular.module('indexApp').controller('racingCtrl', ['$rootScope', '$window', '$state', 'commonService', 'racingService', function($rootScope, $window, $state, commonService, racingService){
+angular.module('indexApp').controller('racingCtrl', ['$scope', '$window', '$state', 'commonService', 'racingService', function($scope, $window, $state, commonService, racingService){
 	var racingVM = this;
 
-	$rootScope.$on('loadUser', function(e){
+	$scope.$on('loadUser', function(e){
+		racingVM.racingGame = undefined;
+		racingVM.initController();
+	});
+	
+	$scope.$on('updateRacingGame', function(e){
 		racingVM.initController();
 	});
 	
 	racingVM.initController = function(){
-		racingVM.racingGame = undefined;
 		racingService.getRacingGame().then(function onSuccess(data){
 			racingVM.racingGame = data;
-			racingVM.racingGame.purchaseableClasses=Object.keys(racingVM.racingGame.purchaseableCars);
 			racingVM.racingGame.raceableClasses=['E'];
-			if (['D','C','B','A','S'].indexOf(racingVM.racingGame.racingClass)>=0){
+			if (['D','C','B','A','S','SS'].indexOf(racingVM.racingGame.racingClass)>=0){
 				racingVM.racingGame.raceableClasses.push('D');
 			}
-			if (['C','B','A','S'].indexOf(racingVM.racingGame.racingClass)>=0){
+			if (['C','B','A','S','SS'].indexOf(racingVM.racingGame.racingClass)>=0){
 				racingVM.racingGame.raceableClasses.push('C');
 			}
-			if (['B','A','S'].indexOf(racingVM.racingGame.racingClass)>=0){
+			if (['B','A','S','SS'].indexOf(racingVM.racingGame.racingClass)>=0){
 				racingVM.racingGame.raceableClasses.push('B');
 			}
-			if (['A','S'].indexOf(racingVM.racingGame.racingClass)>=0){
+			if (['A','S','SS'].indexOf(racingVM.racingGame.racingClass)>=0){
 				racingVM.racingGame.raceableClasses.push('A');
 			}
-			if (['S'].indexOf(racingVM.racingGame.racingClass)>=0){
+			if (['S','SS'].indexOf(racingVM.racingGame.racingClass)>=0){
 				racingVM.racingGame.raceableClasses.push('S');
 			}
 			racingVM.initUpgradeFrame();
@@ -69,11 +72,11 @@ angular.module('indexApp').controller('racingCtrl', ['$rootScope', '$window', '$
 		//TODO service call to update DB
 	};
 	
-	$rootScope.$on('loadRacingUpgrade', function(e){
+	$scope.$on('loadRacingUpgrade', function(e){
 		racingVM.initUpgradeFrame();
 	});
 	
-	$rootScope.$on('loadRacingGarage', function(e){
+	$scope.$on('loadRacingGarage', function(e){
 		racingVM.initGarageFrame();
 	});
 	
@@ -92,7 +95,7 @@ angular.module('indexApp').controller('racingCtrl', ['$rootScope', '$window', '$
 	
 	racingVM.submitRaceSetup = function(){
 		racingService.startRace(racingVM.raceSetup).then(function(data){
-			$rootScope.$broadcast('userRaceStart', data);
+			$scope.$broadcast('userRaceStart', data);
 		});
 		if (racingVM.raceSetup.raceType==='user'){
 			$state.go('racing.userRace');

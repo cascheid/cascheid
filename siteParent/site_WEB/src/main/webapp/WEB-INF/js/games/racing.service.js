@@ -75,6 +75,21 @@ angular.module('indexApp').factory('racingService', ['$http', '$q', '$uibModal',
 				}
 			);
             return deferred.promise;
+		},
+		endRace : function(raceResult){
+			var deferred = $q.defer();
+			var resultConfig = {};
+			resultConfig.params = raceResult;
+			$http.post('racingResults', raceResult).then(
+				function onSuccess(response){
+					deferred.resolve(response.data);
+				},
+				function onError(response){
+					$log.error('Error in racingService.endRace', response);
+			        deferred.reject(response);
+				}
+			);
+	        return deferred.promise;
 		}
 	}
 }]);

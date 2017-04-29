@@ -7,6 +7,13 @@ import site.dao.IdentityDaoImpl;
 
 public class IdentityUtils {
 	
+	public static String getDisplayedUser(Identity identity){
+		if (identity!=null&&identity.getUsername()!=null){
+			return identity.getUsername();
+		}
+		return "Anonymous";
+	}
+	
 	public static Identity getIdentityByIdentifier(Long identifier){
 		Identity identity=null;
 		if (identifier!=null&&identifier>0){
