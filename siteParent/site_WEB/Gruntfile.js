@@ -33,14 +33,16 @@ module.exports = function(grunt) {
 		},
 		concat: {
 			vendorcss: {
-				src: ['<%= paths.node %>bootstrap/dist/css/bootstrap.min.css', '<%= paths.node %>angular-bootstrap-toggle/dist/angular-bootstrap-toggle.min.css'],
+				src: ['<%= paths.node %>bootstrap/dist/css/bootstrap.min.css', '<%= paths.node %>angular-bootstrap-toggle/dist/angular-bootstrap-toggle.min.css',
+				      '<%= paths.node %>angular-material/angular-material.min.css'],
 				dest: '<%= paths.build %>vendor.css'
 			},
 			vendorjs: {
 				src: ['<%= paths.node %>jquery/dist/jquery.min.js', '<%= paths.node %>angular/angular.min.js', 
 				      '<%= paths.node %>angular-ui-bootstrap/dist/ui-bootstrap.js', '<%= paths.node %>angular-ui-bootstrap/dist/ui-bootstrap-tpls.js', 
 				      '<%= paths.node %>bootstrap/dist/js/bootstrap.min.js', '<%= paths.node %>angular-bootstrap-toggle/dist/angular-bootstrap-toggle.min.js',
-				      '<%= paths.node %>angular-animate/angular-animate.min.js', '<%= paths.node %>angular-ui-router/release/angular-ui-router.min.js'],
+				      '<%= paths.node %>angular-animate/angular-animate.min.js', '<%= paths.node %>angular-ui-router/release/angular-ui-router.min.js', 
+				      '<%= paths.node %>angular-material/angular-material.min.js', '<%= paths.node %>angular-aria/angular-aria.min.js'],
 				dest: '<%= paths.build %>vendor.js'
 			}
 		},
