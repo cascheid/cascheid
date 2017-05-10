@@ -23,6 +23,16 @@
 		<iframe id="displayFrame" name="displayFrame" style="width:78%; visibility:hidden" frameborder=0 src="displayframe?identifier=${identifier}" onload="this.style.visibility='visible';"></iframe> -->
 	</div>
 	<script type="text/ng-template" id="gamesList.html">
+		<md-grid-list md-cols="1" md-cols-sm="2" md-cols-md="3" md-cols-gt-md="6" md-row-height-gt-md="1:1" md-row-height="4:3" md-gutter="8px" md-gutter-gt-sm="4px">
+			<md-grid-tile ui-sref="racing.store" ui-sref-active="active" md-rowspan="2" md-colspan="2" md-colspan-sm="1" md-colspan-xs="1" ng-class="tile.background">
+				<!--<md-icon md-svg-icon="{{tile.icon}}"></md-icon>-->
+				<md-grid-tile-footer><h3>Racing!</h3></md-grid-tile-footer>
+			</md-grid-tile>
+			<md-grid-tile ui-sref="snake" ui-sref-active="active" md-rowspan="2" md-colspan="2" md-colspan-sm="1" md-colspan-xs="1" ng-class="tile.background">
+				<!--<md-icon md-svg-icon="{{tile.icon}}"></md-icon>-->
+				<md-grid-tile-footer><h3>Snake</h3></md-grid-tile-footer>
+			</md-grid-tile>
+		</md-grid-list>
 		<a ui-sref="racing.store" ui-sref-active="active">Racing</a>
 		<a ui-sref="snake" ui-sref-active="active">Snake</a>
 	</script>

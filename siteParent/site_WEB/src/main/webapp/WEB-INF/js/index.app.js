@@ -1,4 +1,4 @@
-angular.module('indexApp', ['ui.bootstrap', 'ui.toggle', 'ngAnimate', 'ui.router']);
+angular.module('indexApp', ['ui.bootstrap', 'ui.toggle', 'ngAnimate', 'ui.router', 'ngMaterial']);
 
 angular.module('indexApp').config(function($stateProvider, $urlRouterProvider) {
 	var racingState = {

@@ -26,4 +26,5 @@ angular.module('indexApp').controller('gamesCtrl', ['$rootScope', '$window', 'co
 			}
 		);
 	};
+	
 }]);
