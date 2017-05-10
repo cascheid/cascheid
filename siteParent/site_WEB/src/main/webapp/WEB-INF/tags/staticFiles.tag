@@ -20,6 +20,7 @@
 		<script type="text/javascript" src="js/games/racing.controller.js"></script>
 		<script type="text/javascript" src="js/games/racing.service.js"></script>
 		<script type="text/javascript" src="js/games/racing.user.controller.js"></script>
+		<script type="text/javascript" src="js/games/racing.spectate.controller.js"></script>
 		</div>
 	</c:when>
 	<c:otherwise>

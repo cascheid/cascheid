@@ -95,7 +95,11 @@ angular.module('indexApp').controller('racingCtrl', ['$scope', '$window', '$stat
 	
 	racingVM.submitRaceSetup = function(){
 		racingService.startRace(racingVM.raceSetup).then(function(data){
-			$scope.$broadcast('userRaceStart', data);
+			if (data.raceType==='user'){
+				$scope.$broadcast('userRaceStart', data);
+			} else if (data.raceType==='spectate'){
+				$scope.$broadcast('spectateRaceStart', data);
+			}
 		});
 		if (racingVM.raceSetup.raceType==='user'){
 			$state.go('racing.userRace');
