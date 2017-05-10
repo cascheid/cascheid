@@ -56,6 +56,7 @@ public class RacingGameController {
 			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		}
 		RacingGameUtils.purchaseCar(identity.getRacingGame(), raceCar);
+		RacingGameUtils.updateRacingGame(identity.getRacingGame());
 		return new ResponseEntity<>(identity.getRacingGame(), HttpStatus.OK);
 	}
 	
@@ -73,10 +74,31 @@ public class RacingGameController {
 		return new ResponseEntity<>(upgradeOptions, HttpStatus.OK);
 	}
 	
+	@RequestMapping(value="selectCar", method=RequestMethod.GET)
+	@ResponseBody
+	public ResponseEntity<?> selectCar(@RequestParam Integer carID){
+		if (carID!=identity.getRacingGame().getSelectedCar().getCarID()){
+			for (UserRacecar car : identity.getRacingGame().getCarList()){
+				if (car.getCarID()==carID){
+					identity.getRacingGame().setSelectedCar(car);
+					//RacingGameUtils.updateRacingGame(identity.getRacingGame());
+					return new ResponseEntity<>(HttpStatus.OK);
+				}
+			}
+		}
+		return new ResponseEntity<>("Invalid car selected.", HttpStatus.BAD_REQUEST);
+	}
+	
 	@RequestMapping(value="purchaseUpgrade", method=RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<?> purchaseUpgrade(@RequestParam Integer upgradeID){
 		Upgrade upgrade = RacingGameUtils.getUpgradeByID(upgradeID);
+		if (upgrade==null || !upgrade.getRacingClass().equals(identity.getRacingGame().getSelectedCar().getRacingClass())){
+			ResultMessage result = new ResultMessage();
+			result.setError(true);
+			result.setResultMessage("Invalid Upgrade");
+			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+		}
 		BigDecimal price = upgrade.getPrice();
 		for (Upgrade existing : identity.getRacingGame().getSelectedCar().getUpgradeList()){
 			if (existing.getUpgradeID()==upgradeID){
@@ -93,7 +115,7 @@ public class RacingGameController {
 		identity.getRacingGame().getSelectedCar().addUpgrade(upgrade);
 		if (identity.getRacingGame().getRacingIdentifier()!=null&&identity.getRacingGame().getRacingIdentifier()>0){
 			RacingGameUtils.addNewUpgrade(identity.getRacingGame().getSelectedCar(), upgrade);
-			//TODO save cash
+			RacingGameUtils.updateRacingGame(identity.getRacingGame());
 		}
 		return new ResponseEntity<>(identity.getRacingGame().getSelectedCar(), HttpStatus.OK);
 	}
@@ -120,6 +142,7 @@ public class RacingGameController {
 			identity.getRacingGame().setAvailableCash(identity.getRacingGame().getAvailableCash().subtract(new BigDecimal(feeMap.get(racingClass))));
 			opponents = new HashSet<Racecar>(RacingGameUtils.getRandomOpponentsByClass(racingClass));
 			raceInfo.setRacer1(identity.getRacingGame().getSelectedCar());
+			RacingGameUtils.updateRacingGame(identity.getRacingGame());
 		} else {
 			identity.getRacingGame().setSelectedMode("spectate");
 			opponents = new HashSet<Racecar>(RacingGameUtils.getSpectateCarsByCarID(carID));

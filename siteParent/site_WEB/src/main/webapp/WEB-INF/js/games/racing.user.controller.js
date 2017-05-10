@@ -11,6 +11,14 @@ angular.module('indexApp').controller('userRaceCtrl', ['$scope', '$window', 'com
 				racingClass: raceInfo.racingClass,
 				raceType: raceInfo.raceType
 		};
+		
+		userRace.track1Class = 'tracklap1';
+		userRace.track2Class = 'tracklap1';
+		userRace.track3Class = 'tracklap1';
+		userRace.track4Class = 'tracklap1';
+		userRace.track5Class = 'tracklap1';
+		userRace.track6Class = 'tracklap1';
+		
 		var finishedRace = false;
 		var distance = raceInfo.lapDistance * raceInfo.noLaps;
 		
@@ -86,7 +94,7 @@ angular.module('indexApp').controller('userRaceCtrl', ['$scope', '$window', 'com
 					if (car1Location / lapDistance > car1Lap) {
 						car1Lap += 1;
 						car1CurVelocity = car1CurVelocity * car1LapEfficiency;
-						track1.className = "tracklap" + car1Lap;
+						userRace.track1Class = "tracklap" + car1Lap;
 						car1TopSpeed = raceInfo.racer1.topSpeed * (1 - ((1 - raceInfo.racer1.reliability) * Math.random()));
 						car1Acceleration = raceInfo.racer1.acceleration * (1 - ((1 - raceInfo.racer1.reliability) * Math.random()));
 					}
@@ -117,7 +125,7 @@ angular.module('indexApp').controller('userRaceCtrl', ['$scope', '$window', 'com
 					if (car2Location / lapDistance > car2Lap) {
 						car2Lap += 1;
 						car2CurVelocity = car2CurVelocity * car2LapEfficiency;
-						track2.className = "tracklap" + car2Lap;
+						userRace.track2Class = "tracklap" + car2Lap;
 						car2TopSpeed = raceInfo.racer2.topSpeed * (1 - ((1 - raceInfo.racer2.reliability) * Math.random()));
 						car2Acceleration = raceInfo.racer2.acceleration * (1 - ((1 - raceInfo.racer2.reliability) * Math.random()));
 					}
@@ -148,7 +156,7 @@ angular.module('indexApp').controller('userRaceCtrl', ['$scope', '$window', 'com
 					if (car3Location / lapDistance > car3Lap) {
 						car3Lap += 1;
 						car3CurVelocity = car3CurVelocity * car3LapEfficiency;
-						track3.className = "tracklap" + car3Lap;
+						userRace.track3Class = "tracklap" + car3Lap;
 						car3TopSpeed = raceInfo.racer3.topSpeed * (1 - ((1 - raceInfo.racer3.reliability) * Math.random()));
 						car3Acceleration = raceInfo.racer3.acceleration * (1 - ((1 - raceInfo.racer3.reliability) * Math.random()));
 					}
@@ -179,7 +187,7 @@ angular.module('indexApp').controller('userRaceCtrl', ['$scope', '$window', 'com
 					if (car4Location / lapDistance > car4Lap) {
 						car4Lap += 1;
 						car4CurVelocity = car4CurVelocity * car4LapEfficiency;
-						track4.className = "tracklap" + car4Lap;
+						userRace.track4Class = "tracklap" + car4Lap;
 						car4TopSpeed = raceInfo.racer4.topSpeed * (1 - ((1 - raceInfo.racer4.reliability) * Math.random()));
 						car4Acceleration = raceInfo.racer4.acceleration * (1 - ((1 - raceInfo.racer4.reliability) * Math.random()));
 					}
@@ -210,7 +218,7 @@ angular.module('indexApp').controller('userRaceCtrl', ['$scope', '$window', 'com
 					if (car5Location / lapDistance > car5Lap) {
 						car5Lap += 1;
 						car5CurVelocity = car5CurVelocity * car5LapEfficiency;
-						track5.className = "tracklap" + car5Lap;
+						userRace.track5Class = "tracklap" + car5Lap;
 						car5TopSpeed = raceInfo.racer5.topSpeed * (1 - ((1 - raceInfo.racer5.reliability) * Math.random()));
 						car5Acceleration = raceInfo.racer5.acceleration * (1 - ((1 - raceInfo.racer5.reliability) * Math.random()));
 					}
@@ -241,7 +249,7 @@ angular.module('indexApp').controller('userRaceCtrl', ['$scope', '$window', 'com
 					if (car6Location / lapDistance > car6Lap) {
 						car6Lap += 1;
 						car6CurVelocity = car6CurVelocity * car6LapEfficiency;
-						track6.className = "tracklap" + car6Lap;
+						userRace.track6Class = "tracklap" + car6Lap;
 						car6TopSpeed = raceInfo.racer6.topSpeed * (1 - ((1 - raceInfo.racer6.reliability) * Math.random()));
 						car6Acceleration = raceInfo.racer6.acceleration * (1 - ((1 - raceInfo.racer6.reliability) * Math.random()));
 					}

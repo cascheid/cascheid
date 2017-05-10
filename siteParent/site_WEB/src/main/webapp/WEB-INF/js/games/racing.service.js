@@ -8,7 +8,7 @@ angular.module('indexApp').factory('racingService', ['$http', '$q', '$uibModal',
 				},
 				function onError(response){
 		        	$log.error('Error in racingService.getRacingGame', response);
-		        	deferred.reject(response);
+		        	deferred.reject(response.data);
 				}
 			);
             return deferred.promise;
@@ -21,10 +21,23 @@ angular.module('indexApp').factory('racingService', ['$http', '$q', '$uibModal',
 				},
 				function onError(response){
 		        	$log.error('Error in racingService.purchaseCar', response);
-		        	deferred.reject(response);
+		        	deferred.reject(response.data);
 				}
 			);
             return deferred.promise;	
+		},
+		changeSelectedCar : function(carID){
+			var deferred = $q.defer();
+			$http.get('selectCar?carID='+carID).then(
+				function onSuccess(response){
+			        deferred.resolve(response.data);
+				},
+				function onError(response){
+		        	$log.error('Error in racingService.purchaseCar', response);
+		        	deferred.reject(response.data);
+				}
+			);
+            return deferred.promise;
 		},
 		getUpgradeList : function (racingClass){
 			var deferred = $q.defer();
@@ -34,7 +47,7 @@ angular.module('indexApp').factory('racingService', ['$http', '$q', '$uibModal',
 				},
 				function onError(response){
 		        	$log.error('Error in racingService.getUpgradeList', response);
-		        	deferred.reject(response);
+		        	deferred.reject(response.data);
 				}
 			);
             return deferred.promise;
@@ -47,7 +60,7 @@ angular.module('indexApp').factory('racingService', ['$http', '$q', '$uibModal',
 				},
 				function onError(response){
 		        	$log.error('Error in racingService.purchaseUpgrade', response);
-		        	deferred.reject(response);
+		        	deferred.reject(response.data);
 				}
 			);
             return deferred.promise;	
@@ -71,7 +84,7 @@ angular.module('indexApp').factory('racingService', ['$http', '$q', '$uibModal',
 				},
 				function onError(response){
 		        	$log.error('Error in racingService.startRace', response);
-		        	deferred.reject(response);
+		        	deferred.reject(response.data);
 				}
 			);
             return deferred.promise;
@@ -86,7 +99,7 @@ angular.module('indexApp').factory('racingService', ['$http', '$q', '$uibModal',
 				},
 				function onError(response){
 					$log.error('Error in racingService.endRace', response);
-			        deferred.reject(response);
+			        deferred.reject(response.data);
 				}
 			);
 	        return deferred.promise;

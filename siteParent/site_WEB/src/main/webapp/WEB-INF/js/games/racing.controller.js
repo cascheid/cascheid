@@ -46,7 +46,8 @@ angular.module('indexApp').controller('racingCtrl', ['$scope', '$window', '$stat
 					function onSuccess(data){
 						racingVM.racingGame = data;
 						racingVM.racingGame.purchaseableClasses=Object.keys(racingVM.racingGame.purchaseableCars);
-					}
+					},
+					commonService.alertError
 				);
 			}
 		});
@@ -54,9 +55,12 @@ angular.module('indexApp').controller('racingCtrl', ['$scope', '$window', '$stat
 	
 	racingVM.initUpgradeFrame = function() {
 		racingVM.selectedUpgrade = null;
-		racingService.getUpgradeList(racingVM.racingGame.selectedCar.racingClass).then(function(data){
-			racingVM.purchaseableUpgrades = data;
-		});
+		racingService.getUpgradeList(racingVM.racingGame.selectedCar.racingClass).then(
+			function(data){
+				racingVM.purchaseableUpgrades = data;
+			},
+			commonService.alertError
+		);
 	};
 	
 	racingVM.initGarageFrame = function() {
@@ -69,7 +73,7 @@ angular.module('indexApp').controller('racingCtrl', ['$scope', '$window', '$stat
 	
 	racingVM.changeSelectedCar = function() {
 		racingVM.racingGame.selectedCar=racingVM.garageCar;
-		//TODO service call to update DB
+		racingService.changeSelectedCar(racingVM.racingGame.selectedCar.carID);
 	};
 	
 	$scope.$on('loadRacingUpgrade', function(e){
@@ -84,11 +88,14 @@ angular.module('indexApp').controller('racingCtrl', ['$scope', '$window', '$stat
 		var price = racingVM.selectedUpgrade.price;
 		commonService.openConfirmModal('Purchase Upgrade', 'Are you sure you would like to purchase this upgrade for '+price+'?').then(function(result){
 			if (result){
-				racingService.purchaseUpgrade(racingVM.selectedUpgrade.upgradeID).then(function(data){
-					racingVM.racingGame.selectedCar = data;
-					racingVM.racingGame.availableCash -= price;
-					racingVM.initUpgradeFrame();
-				});
+				racingService.purchaseUpgrade(racingVM.selectedUpgrade.upgradeID).then(
+					function(data){
+						racingVM.racingGame.selectedCar = data;
+						racingVM.racingGame.availableCash -= price;
+						racingVM.initUpgradeFrame();
+					},
+					commonService.alertError
+				);
 			}
 		});
 	};

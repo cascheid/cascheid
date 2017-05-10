@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import site.identity.Identity;
 import site.identity.IdentityUtils;
+import site.racinggame.RacingGameUtils;
 import site.view.ResultMessage;
 
 @Controller
@@ -76,6 +77,9 @@ public class IdentityController {
 			identity.setUsername(username);
 			Long newIdentifier=IdentityUtils.insertIdentity(identity);
 			identity.setIdentifier(newIdentifier);
+			if (identity.getRacingGame()!=null){
+				RacingGameUtils.insertRacingGameInfo(identity.getRacingGame(), newIdentifier);
+			}
 			Cookie cookie = new Cookie("identifier", newIdentifier.toString());
 			cookie.setMaxAge(60*60*24*7);
 	        response.addCookie(cookie);

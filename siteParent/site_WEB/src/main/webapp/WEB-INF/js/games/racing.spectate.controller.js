@@ -13,7 +13,7 @@ angular.module('indexApp').controller('spectateRaceCtrl', ['$scope', '$window', 
 		var lapDistance=spectateRace.raceInfo.lapDistance;
 
 		var scale=500*heightScale/lapDistance;//Setting 500 as average scale
-		var tracks=document.getElementsByClassName('tracklap1');
+		var tracks=document.getElementsByClassName('spectatelap1');
 		var trackHeight=Math.floor(heightScale*650);
 		var trackWidth=Math.floor(scale*100);
 		var carHeight=Math.floor(scale*50);
@@ -1225,7 +1225,7 @@ angular.module('indexApp').controller('spectateRaceCtrl', ['$scope', '$window', 
 					if (car1Location/lapDistance<(car1Lap-1)){
 						car1Lap=car1Lap-1;
 						car1CurVelocity=car1CurVelocity*car1LapEfficiency;
-						track1.className="tracklap"+car1Lap;
+						track1.className="spectatelap"+car1Lap;
 					} else if (car1Location/lapDistance>car1Lap){
 						car1Lap+=1;
 						car1CurVelocity=car1CurVelocity*car1LapEfficiency;
@@ -1234,7 +1234,7 @@ angular.module('indexApp').controller('spectateRaceCtrl', ['$scope', '$window', 
 						} else {
 							yoshiHatesCar1=false;
 						}
-						track1.className="tracklap"+car1Lap;;
+						track1.className="spectatelap"+car1Lap;;
 					}
 				}
 			}
@@ -1272,7 +1272,7 @@ angular.module('indexApp').controller('spectateRaceCtrl', ['$scope', '$window', 
 					if (car2Location/lapDistance<(car2Lap-1)){
 						car2Lap=car2Lap-1;
 						car2CurVelocity=car2CurVelocity*car2LapEfficiency;
-						track2.className="tracklap"+car2Lap;
+						track2.className="spectatelap"+car2Lap;
 					} else if (car2Location/lapDistance>car2Lap){
 						car2Lap+=1;
 						car2CurVelocity=car2CurVelocity*car2LapEfficiency;
@@ -1281,7 +1281,7 @@ angular.module('indexApp').controller('spectateRaceCtrl', ['$scope', '$window', 
 						} else {
 							yoshiHatesCar2=false;
 						}
-						track2.className="tracklap"+car2Lap;
+						track2.className="spectatelap"+car2Lap;
 					}
 				}
 			}
@@ -1319,7 +1319,7 @@ angular.module('indexApp').controller('spectateRaceCtrl', ['$scope', '$window', 
 					if (car3Location/lapDistance<(car3Lap-1)){
 						car3Lap=car3Lap-1;
 						car3CurVelocity=car3CurVelocity*car3LapEfficiency;
-						track3.className="tracklap"+car3Lap;
+						track3.className="spectatelap"+car3Lap;
 					} else if (car3Location/lapDistance>car3Lap){
 						car3Lap+=1;
 						car3CurVelocity=car3CurVelocity*car3LapEfficiency;
@@ -1328,7 +1328,7 @@ angular.module('indexApp').controller('spectateRaceCtrl', ['$scope', '$window', 
 						} else {
 							yoshiHatesCar3=false;
 						}
-						track3.className="tracklap"+car3Lap;
+						track3.className="spectatelap"+car3Lap;
 					}
 				}
 			}
@@ -1366,7 +1366,7 @@ angular.module('indexApp').controller('spectateRaceCtrl', ['$scope', '$window', 
 					if (car4Location/lapDistance<(car4Lap-1)){
 						car4Lap=car4Lap-1;
 						car4CurVelocity=car4CurVelocity*car4LapEfficiency;
-						track4.className="tracklap"+car4Lap;
+						track4.className="spectatelap"+car4Lap;
 					} else if (car4Location/lapDistance>car4Lap){
 						car4Lap+=1;
 						car4CurVelocity=car4CurVelocity*car4LapEfficiency;
@@ -1375,7 +1375,7 @@ angular.module('indexApp').controller('spectateRaceCtrl', ['$scope', '$window', 
 						} else {
 							yoshiHatesCar4=false;
 						}
-						track4.className="tracklap"+car4Lap;
+						track4.className="spectatelap"+car4Lap;
 					}
 				}
 			}
