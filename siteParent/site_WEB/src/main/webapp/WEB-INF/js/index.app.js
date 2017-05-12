@@ -7,12 +7,6 @@ angular.module('indexApp').config(function($stateProvider, $urlRouterProvider) {
 		templateUrl : 'views/racing/racing.html',
 		controller: 'racingCtrl as racing'
 	};
-
-	var snakeState = {
-		name : 'snake',
-		url : '/snake',
-		templateUrl : 'snakeGame'
-	};
 	
 	var racingStoreState = {
 		name : 'racing.store',
@@ -62,7 +56,13 @@ angular.module('indexApp').config(function($stateProvider, $urlRouterProvider) {
 		controllerAs:"spectateRace"
 	});
 	$stateProvider.state(racingState);
-	$stateProvider.state(snakeState);
+	$stateProvider.state({
+		name : 'snake',
+		url : '/snake',
+		templateUrl : 'views/snake/snake.html',
+		controller:"snakeCtrl",
+		controllerAs:"snakeVM"
+	});
 	$stateProvider.state(racingStoreState);
 	$stateProvider.state(racingUpgradeState);
 });

@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import site.identity.Identity;
 import site.identity.IdentityUtils;
+import site.identity.IdentityView;
 import site.racinggame.RacingGameUtils;
 import site.view.ResultMessage;
 
@@ -45,7 +47,7 @@ public class IdentityController {
 	@RequestMapping(value="/getIdentity", method=RequestMethod.GET)
 	@ResponseBody
 	public ResponseEntity<?> getIdentity(){
-		return new ResponseEntity<>(Collections.singletonMap("username",identity.getUsername()), HttpStatus.OK);
+		return new ResponseEntity<>(identity.getIdentityView(), HttpStatus.OK);
 	}
 	
 
@@ -60,7 +62,7 @@ public class IdentityController {
 			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 		} else {
 			identity.updateIdentity(newIdentity);
-			return new ResponseEntity<>(Collections.singletonMap("username",identity.getUsername()), HttpStatus.OK);
+			return new ResponseEntity<>(identity.getIdentityView(), HttpStatus.OK);
 		}
 	}
 	
@@ -83,7 +85,7 @@ public class IdentityController {
 			Cookie cookie = new Cookie("identifier", newIdentifier.toString());
 			cookie.setMaxAge(60*60*24*7);
 	        response.addCookie(cookie);
-			return new ResponseEntity<>(Collections.singletonMap("username",identity.getUsername()), HttpStatus.OK);
+			return new ResponseEntity<>(identity.getIdentityView(), HttpStatus.OK);
 		}
 	}
 	
@@ -117,20 +119,14 @@ public class IdentityController {
 		return mv;
 	}
 	
-	@RequestMapping("/snakeResult")
-	public ModelAndView showSnakeResult(
-			@RequestParam(value = "score", required = true, defaultValue="0") Integer score) {
-		if (identity==null){
-			return new ModelAndView("timeout");
+	@RequestMapping(value="/snakeResult", method=RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<?> showSnakeResult(@RequestBody IdentityView scoreObj) {
+		if (identity.getSnakeScore()==null||scoreObj.getSnakeScore()>identity.getSnakeScore()){
+			identity.setSnakeScore(scoreObj.getSnakeScore());
+			IdentityUtils.updateSnakeScore(identity.getIdentifier(), scoreObj.getSnakeScore());
 		}
-		ModelAndView mv = new ModelAndView("snakeResult");
-		mv.addObject("lastHighScore", identity.getSnakeScore());
-		mv.addObject("score", score);
-		if (identity.getSnakeScore()==null||score>identity.getSnakeScore()){
-			identity.setSnakeScore(score);
-			IdentityUtils.updateSnakeScore(identity.getIdentifier(), score);
-		}
-		return mv;
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
 	@RequestMapping(value = "/testFire")

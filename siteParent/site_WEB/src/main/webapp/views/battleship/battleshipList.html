@@ -1,0 +1,29 @@
+<div class="row">
+	<table class="table">
+		<tr>
+    		<th colspan="2">Create New Game</th>
+    	</tr>
+		<tr>
+    		<td>Opponent: <input data-ng-model="oppName" /></td>
+    		<td><button type="button" class="btn btn-primary" data-ng-click="battleshipList.createGame()">Create Game</button></td>
+    	</tr>
+	</table>
+	<table class="table">
+		<tr>
+			<th>Opponent</th>
+			<th>Status</th>
+			<th>Play</th>
+		</tr>
+		<tr data-ng-if="battleshipList.activeGames===undefined">
+			<td colspan="3">Loading...</td>
+		</tr>
+		<tr data-ng-if="battleshipList.activeGames.length=0">
+			<td colspan="3">No Active Matches.</td>
+		</tr>
+		<tr data-ng-if="battleshipList.activeGames.length>0" data-ng-repeat="game in battleshipList.activeGames">
+			<td>{{game.opponent}}</td>
+			<td>{{game.status}}</td>
+			<td><button type="button" class="btn btn-primary" data-ng-click="battleshipVM.loadGame(game)">Play/View</button></td>
+		</tr>
+	</table>
+</div>

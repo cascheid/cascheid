@@ -12,6 +12,34 @@
 	z-index:-2;
 }
 
+.gameTile {
+	border-radius:25px;
+	cursor:pointer;
+	text-align:center;
+	
+	.gameTileFooter {
+		figcaption {
+			width:100%;
+		}
+		
+		background:none;
+		font-size:1.5em;
+		font-weight:bold;
+	}
+	
+	.gameIcon {
+		height:90%;
+		width:90%;
+	}
+	
+	&:hover {
+		.gameIcon {
+			height:100%;
+			width:100%;
+		}
+	}
+}
+
 body.site-body{
 	background-image: url(../img/misc/timon.jpg); 
 	-moz-background-size: cover; 

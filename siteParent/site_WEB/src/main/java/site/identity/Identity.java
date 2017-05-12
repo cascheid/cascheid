@@ -65,4 +65,11 @@ public class Identity implements java.io.Serializable{
 	public void updateIdentity(Identity newIdentity){
 		BeanUtils.copyProperties(newIdentity, this, Identity.class);
 	}
+	
+	public IdentityView getIdentityView(){
+		IdentityView view = new IdentityView();
+		view.setSnakeScore(this.snakeScore);
+		view.setUsername(this.username);
+		return view;
+	}
 }

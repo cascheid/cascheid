@@ -1,15 +1,16 @@
 angular.module('indexApp').controller('gamesCtrl', ['$rootScope', '$window', 'commonService', 'identityService', function($rootScope, $window, commonService, identityService){
 	var gamesVM = this;
+	
 	gamesVM.loadUser = function(){
 		identityService.openLoadUserModal().then(function(data){
-			$rootScope.username=data.username;
+			$rootScope.identity=data;
 			$rootScope.$broadcast('loadUser');
 		});
 	};
 	
 	gamesVM.createUser = function(){
 		identityService.openCreateUserModal().then(function(data){
-			$rootScope.username=data.username;
+			$rootScope.identity=data;
 		});
 	};
 	
@@ -19,7 +20,7 @@ angular.module('indexApp').controller('gamesCtrl', ['$rootScope', '$window', 'co
 				if (confirmed){
 					identityService.logout().then(function(loggedOut){
 						if (loggedOut){
-							$rootScope.username = null;
+							$rootScope.identity = {};
 						}
 					});
 				}
