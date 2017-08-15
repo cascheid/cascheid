@@ -1,32 +1,19 @@
 angular.module('indexApp', ['ui.bootstrap', 'ui.toggle', 'ngAnimate', 'ui.router', 'ngMaterial']);
 
 angular.module('indexApp').config(function($stateProvider, $urlRouterProvider) {
-	var racingState = {
-		name : 'racing',
-		url : '/racing',
-		templateUrl : 'views/racing/racing.html',
-		controller: 'racingCtrl as racing'
-	};
 	
-	var racingStoreState = {
-		name : 'racing.store',
-		url : '/store',
-		templateUrl : 'views/racing/racingStore.html'
-	}
-	
-	var racingUpgradeState = {
-		name : 'racing.upgrades',
-		url : '/upgrades',
-		templateUrl : 'views/racing/racingUpgrades.html',
-		onEnter: function($rootScope){
-			$rootScope.$broadcast('loadRacingUpgrade');
-		}
-	}
 	$urlRouterProvider.otherwise('/');
+	
 	$stateProvider.state({
 		name : 'gamesIndex',
 		url : '/',
 		templateUrl : 'gamesList.html'
+	});
+	$stateProvider.state({
+		name : 'racing',
+		url : '/racing',
+		templateUrl : 'views/racing/racing.html',
+		controller: 'racingCtrl as racing'
 	});
 	$stateProvider.state({
 		name : 'racing.garage',
@@ -34,6 +21,19 @@ angular.module('indexApp').config(function($stateProvider, $urlRouterProvider) {
 		templateUrl : 'views/racing/racingGarage.html',
 		onEnter: function($rootScope){
 			$rootScope.$broadcast('loadRacingGarage');
+		}
+	});
+	$stateProvider.state({
+		name : 'racing.store',
+		url : '/store',
+		templateUrl : 'views/racing/racingStore.html'
+	});
+	$stateProvider.state({
+		name : 'racing.upgrades',
+		url : '/upgrades',
+		templateUrl : 'views/racing/racingUpgrades.html',
+		onEnter: function($rootScope){
+			$rootScope.$broadcast('loadRacingUpgrade');
 		}
 	});
 	$stateProvider.state({
@@ -55,7 +55,6 @@ angular.module('indexApp').config(function($stateProvider, $urlRouterProvider) {
 		controller:"spectateRaceCtrl",
 		controllerAs:"spectateRace"
 	});
-	$stateProvider.state(racingState);
 	$stateProvider.state({
 		name : 'snake',
 		url : '/snake',
@@ -63,6 +62,11 @@ angular.module('indexApp').config(function($stateProvider, $urlRouterProvider) {
 		controller:"snakeCtrl",
 		controllerAs:"snakeVM"
 	});
-	$stateProvider.state(racingStoreState);
-	$stateProvider.state(racingUpgradeState);
+	$stateProvider.state({
+		name : 'battleship',
+		url : '/battleship',
+		templateUrl : 'views/battleship/battleshipList.html',
+		controller:"battleshipListCtrl",
+		controllerAs:"battleshipList"
+	});
 });

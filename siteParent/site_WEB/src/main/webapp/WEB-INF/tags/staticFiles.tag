@@ -22,6 +22,8 @@
 		<script type="text/javascript" src="js/games/racing.user.controller.js"></script>
 		<script type="text/javascript" src="js/games/racing.spectate.controller.js"></script>
 		<script type="text/javascript" src="js/games/snake.controller.js"></script>
+		<script type="text/javascript" src="js/games/battleship.list.controller.js"></script>
+		<script type="text/javascript" src="js/games/battleship.service.js"></script>
 		</div>
 	</c:when>
 	<c:otherwise>

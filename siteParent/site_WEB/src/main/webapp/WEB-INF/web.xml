@@ -24,6 +24,11 @@
 		<param-name>contextConfigLocation</param-name>
 		<param-value>/WEB-INF/dispatcher-servlet.xml</param-value>
 	</context-param>
+	
+    <context-param>
+          <param-name>spring.profiles.default</param-name>
+          <param-value>production</param-value>
+    </context-param>
 
 	<resource-env-ref>
    		<resource-env-ref-name>jdbc/mysite</resource-env-ref-name>

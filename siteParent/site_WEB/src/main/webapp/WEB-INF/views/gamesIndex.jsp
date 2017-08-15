@@ -11,8 +11,8 @@
 			<button class="btn btn-primary" type="button" id="btnCreate" data-ng-show="!$root.identity.username" data-ng-click="games.createUser()">Save as New User</button>
 			<button class="btn btn-primary" type="button" id="btnChange" data-ng-show="$root.identity.username" data-ng-click="games.signout()">Sign Out</button>
 		</div>
-		<div class="col-xs-3 pull-right">
-			<a title="List of Games" ui-sref="gamesIndex" ui-sref-active="active">All Games</a>
+		<div class="col-xs-3">
+			<a class="pull-right" title="List of Games" ui-sref="gamesIndex" ui-sref-active="active">All Games</a>
 		</div>
 	</div>
 	<div class="borderedDiv row">
@@ -31,7 +31,7 @@
 		<div class="row">
 			<div class="col-xs-12">
 				<md-grid-list md-cols="4" d-cols-md="6" md-cols-gt-md="8" md-row-height="2:1">
-					<md-grid-tile style="background:red;" class="gameTile" ui-sref="racing.store" ui-sref-active="active" md-rowspan="2" md-colspan="2" ng-class="tile.background">
+					<md-grid-tile style="background:red;" class="gameTile" ui-sref="racing.garage" ui-sref-active="active" md-rowspan="2" md-colspan="2" ng-class="tile.background">
 						<md-icon class="gameIcon" md-svg-src="img/misc/racing.svg"></md-icon>
 						<md-grid-tile-footer class="gameTileFooter">Racing!</md-grid-tile-footer>
 					</md-grid-tile>

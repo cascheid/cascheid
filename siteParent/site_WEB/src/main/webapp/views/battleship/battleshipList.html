@@ -17,7 +17,7 @@
 		<tr data-ng-if="battleshipList.activeGames===undefined">
 			<td colspan="3">Loading...</td>
 		</tr>
-		<tr data-ng-if="battleshipList.activeGames.length=0">
+		<tr data-ng-if="battleshipList.activeGames.length==0">
 			<td colspan="3">No Active Matches.</td>
 		</tr>
 		<tr data-ng-if="battleshipList.activeGames.length>0" data-ng-repeat="game in battleshipList.activeGames">

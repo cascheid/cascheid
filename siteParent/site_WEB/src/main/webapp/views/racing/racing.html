@@ -11,18 +11,25 @@
 </div>
 <div class="row">
 	<div class="col-xs-3 col-lg-2">
-		<div>
-			<a ui-sref="racing.store" ui-sref-active="active">Buy New Cars</a>
-		</div>
-		<div>
-			<a ui-sref="racing.upgrades" ui-sref-active="active">Upgrade Car</a>
-		</div>
-		<div>
-			<a ui-sref="racing.garage" ui-sref-active="active">Garage</a>
-		</div>
-		<div>
-			<a ui-sref="racing.setup" ui-sref-active="active">Ready to Race!</a>
-		</div>
+		<md-list>
+  			<md-list-item ui-sref="racing.garage" ui-sref-active="active">
+    			<span class="glyphicon glyphicon-home"></span>
+    			<p style="padding-left:15px;">Garage</p>
+  			</md-list-item>
+  			<md-list-item ui-sref="racing.store" ui-sref-active="active">
+    			<span class="glyphicon glyphicon-shopping-cart"></span>
+    			<p style="padding-left:15px;">Buy New Cars</p>
+  			</md-list-item>
+  			<md-list-item ui-sref="racing.upgrades" ui-sref-active="active">
+    			<span class="glyphicon glyphicon-wrench"></span>
+    			<p style="padding-left:15px;">Upgrade Car</p>
+  			</md-list-item>
+  			<md-list-item ui-sref="racing.setup" ui-sref-active="active">
+<!--     			<md-icon md-svg-icon="cached"></md-icon> -->
+				<span class="glyphicon glyphicon-flag"></span>
+    			<p style="padding-left:15px;">Ready to Race!</p>
+  			</md-list-item>
+		</md-list>
 	</div>
 	<div class="col-xs-9 col-lg-10">
 		<ui-view></ui-view>
