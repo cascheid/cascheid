@@ -1,34 +1,50 @@
 <div class="row">
 	<div class="col-xs-12">
 		<div class="row" align="center">
-			<h2>Select Race Options</h2>
+			<h2 class="carHeader">Select Race Options</h2>
 		</div>
 	</div>
 	<div class="col-xs-8">
-		<div class="row">
-			<div class="form-inline">
+		<div class="row raceSetupGrid">
+			<div class="col-xs-6" align="right">
 				<label for="setupClass">Racing Class:</label>
+			</div>
+			<div class="col-xs-6">
 				<select class="form-control" id="setupClass" data-ng-options="raceClass for raceClass in racing.racingGame.raceableClasses" data-ng-model="racing.raceSetup.racingClass"></select>
 			</div>
-			<div class="form-inline">
+			<div class="col-xs-6" align="right">
 				<label for="setupType">Racing Type:</label>
+			</div>
+			<div class="col-xs-6">
 				<select class="form-control" id="setupType" data-ng-model="racing.raceSetup.raceType">
 					<option value="user">User</option>
 					<option value="spectate">Spectate</option>
 				</select>
 			</div>
-			<div class="form-inline">
+			<div class="col-xs-6" align="right">
 				<label for="setupCar">Selected Car:</label>
+			</div>
+			<div class="col-xs-6">
 				<select class="form-control" id="setupCar" data-ng-options="car.carID as car.name for car in racing.racingGame.carList" data-ng-model="racing.raceSetup.carID"></select>
 			</div>
 		</div>
 	</div>
 	<div class="col-xs-4">
-		<div class="row" data-ng-repeat="(key, value) in racing.feeMap">
-			Class {{key}} Fee:  {{value}}
+		<div class="raceFeeMap">
+			<table>
+				<tr data-ng-repeat="(key, value) in racing.feeMap">
+					<td>Class {{key}}</td>
+					<td style="padding-left:30px">Fee: {{value|currency:undefined:0}}</td>
+				</tr>
+			</table>
 		</div>
 	</div>
+	<div class="col-xs-6 col-xs-offset-3">
+		<p class="racingDisclaimer">Rewards and fees will only be assessed for User races. Spectate races will match all cars evenly and 
+			have no prizes.</p>
+	</div>
+	<div class="col-xs-3"></div>
 	<div class="col-xs-12" align="center">
-		<button class="btn btn-primary" data-ng-click="racing.submitRaceSetup()">Ready to Race!</button>
+		<button class="btn btn-primary raceStartButton" data-ng-click="racing.submitRaceSetup()">Ready to Race!</button>
 	</div>
 </div>

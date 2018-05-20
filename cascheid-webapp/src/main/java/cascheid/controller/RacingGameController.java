@@ -120,6 +120,13 @@ public class RacingGameController {
 		return new ResponseEntity<>(identity.getRacingGame().getSelectedCar(), HttpStatus.OK);
 	}
 	
+	@RequestMapping("/getRacingFees")
+	@ResponseBody
+	public ResponseEntity<?> getRacingFees(){
+		LinkedHashMap<String, Integer> feeMap = RacingGameUtils.getFeeMap();
+		return new ResponseEntity<>(feeMap, HttpStatus.OK);
+	}
+	
 	@RequestMapping("/startRace")
 	@ResponseBody
 	public ResponseEntity<?> openUserRaceFrame(@RequestParam String racingClass, @RequestParam String raceType, @RequestParam Integer carID){

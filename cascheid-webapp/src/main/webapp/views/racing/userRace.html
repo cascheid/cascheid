@@ -1,30 +1,40 @@
 <div class="row">
 	<div class="col-xs-12" data-ng-if="userRace.raceInfo && !userRace.ended">
-		<div style="border-bottom:1px solid black" class="row">
-			Class: {{userRace.raceInfo.racingClass}}  Lap Length: {{userRace.raceInfo.lapDistance}}  Number of Laps: {{userRace.raceInfo.noLaps}}
+		<div class="row userRaceInfo">
+			<div class="col-xs-4" align="center">
+				Class: {{userRace.raceInfo.racingClass}}
+			</div>
+			<div class="col-xs-4" align="center">
+				Lap Length: {{userRace.raceInfo.lapDistance}}
+			</div>
+			<div class="col-xs-4" align="center">
+				Number of Laps: {{userRace.raceInfo.noLaps}}
+			</div>
 		</div>
-		<div data-ng-class="userRace.track1Class" id="track1">
+		<div class="trackContainer">
+		<div data-ng-class="'tracklap'+userRace.car1lap" id="track1">
 			<img class="car" id="car1" data-ng-src="{{'img/cars/'+userRace.raceInfo.racer1.model}}" width="100px" height="50px">
 		</div>
 		<div class="trackboundary"></div>
-		<div data-ng-class="userRace.track2Class" id="track2">
+		<div data-ng-class="'tracklap'+userRace.car2lap" id="track2">
 			<img class="car" id="car2" data-ng-src="{{'img/cars/'+userRace.raceInfo.racer2.model}}" width="100px" height="50px">
 		</div>
 		<div class="trackboundary"></div>
-		<div data-ng-class="userRace.track3Class" id="track3">
+		<div data-ng-class="'tracklap'+userRace.car3lap" id="track3">
 			<img class="car" id="car3" data-ng-src="{{'img/cars/'+userRace.raceInfo.racer3.model}}" width="100px" height="50px">
 		</div>
 		<div class="trackboundary"></div>
-		<div data-ng-class="userRace.track4Class" id="track4">
+		<div data-ng-class="'tracklap'+userRace.car4lap" id="track4">
 			<img class="car" id="car4" data-ng-src="{{'img/cars/'+userRace.raceInfo.racer4.model}}" width="100px" height="50px">
 		</div>
 		<div class="trackboundary"></div>
-		<div data-ng-class="userRace.track5Class" id="track5">
+		<div data-ng-class="'tracklap'+userRace.car5lap" id="track5">
 			<img class="car" id="car5" data-ng-src="{{'img/cars/'+userRace.raceInfo.racer5.model}}" width="100px" height="50px">
 		</div>
 		<div class="trackboundary"></div>
-		<div data-ng-class="userRace.track6Class" id="track6">
+		<div data-ng-class="'tracklap'+userRace.car6lap" id="track6">
 			<img class="car" id="car6" data-ng-src="{{'img/cars/'+userRace.raceInfo.racer6.model}}" width="100px" height="50px">
+		</div>
 		</div>
 	</div>
 	<div class="col-xs-8 col-xs-offset-2" data-ng-if="userRace.ended">

@@ -3,7 +3,7 @@
 		<div class="row">
 			<div class="col-xs-12">
 				<div class="row" align="center">
-					<h2 data-ng-bind="racing.racingGame.selectedCar.name"></h2>
+					<h2 class="carHeader" data-ng-bind="racing.racingGame.selectedCar.name"></h2>
 				</div>
 				<div class="row" align="center">
 					<img data-ng-src="img/cars/{{racing.racingGame.selectedCar.model}}" width="400px" height="200px" />
@@ -50,6 +50,9 @@
 				<div class="btn-group">
         			<label data-ng-repeat="upgrade in racing.purchaseableUpgrades" class="btn btn-primary" data-ng-model="racing.selectedUpgrade" data-uib-btn-radio="upgrade">Upgrade {{$index+1}}</label>
     			</div>
+			</div>
+			<div class="row" data-ng-show="!racing.selectedUpgrade" align="center">
+				<h3>Select an Upgrade</h3>
 			</div>
 			<div class="row" data-ng-show="racing.selectedUpgrade" align="center">
 				<h3>Price: {{racing.selectedUpgrade.price|currency}}</h3>

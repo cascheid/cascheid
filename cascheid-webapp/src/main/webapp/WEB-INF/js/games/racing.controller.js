@@ -37,6 +37,10 @@ angular.module('indexApp').controller('racingCtrl', ['$scope', '$window', '$stat
 					carID: racingVM.racingGame.selectedCar.carID
 			}
 		});
+		
+		racingService.getRacingFees().then(function onSuccess(response){
+			racingVM.feeMap = response.data;
+		});
 	};
 	
 	racingVM.purchaseCar = function(car){

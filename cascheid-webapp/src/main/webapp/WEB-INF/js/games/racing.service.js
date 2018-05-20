@@ -52,6 +52,9 @@ angular.module('indexApp').factory('racingService', ['$http', '$q', '$uibModal',
 			);
             return deferred.promise;
 		},
+		getRacingFees : function () {
+			return $http.get('getRacingFees');
+		},
 		purchaseUpgrade : function(upgradeID) {
 			var deferred = $q.defer();
 			$http.get('purchaseUpgrade?upgradeID='+upgradeID).then(

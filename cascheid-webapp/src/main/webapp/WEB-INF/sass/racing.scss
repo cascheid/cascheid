@@ -1,3 +1,98 @@
+.raceLeftPanel {
+	.statsPanel {		
+		div {
+			padding-left: 5px;
+		}
+		td {
+			font-size:16px;
+		}
+		
+		.statsHeader {
+			text-decoration: underline;
+		}
+		.statsLabel {
+			font-weight:bold;
+			color: $primary-black;
+			padding-right:5px;
+		}
+		
+		.statsValue {
+			font-weight: bold;
+			color: $bootstrap-background-green;
+		}
+		
+	}
+	
+	.raceNavList {
+		font-size:18px;
+		padding-top:15px;
+		padding-bottom:30px;
+		
+		.raceNavItemText {
+			padding-left:15px;
+		}
+	}
+}
+
+.garageListing {
+	.garageLabel {
+		font-weight:bold;
+		font-size:24px;
+	}
+}
+
+.carHeader {
+		font-weight:bold;
+		font-size:34px;
+		text-decoration:underline;
+}
+
+.garageSelectionContainer {
+	padding-bottom:10px;
+
+	.garageClass {
+		font-weight:bold;
+		font-size:28px;
+	}
+}
+
+.storePurchaseRow {
+	padding-bottom:50px;
+	font-size:24px;
+	
+	.storePrice {
+		font-weight:bold;
+	}
+}
+
+.raceSetupGrid {
+	padding:30px 0px;
+	font-size:20px;
+}
+
+.raceFeeMap {
+	font-size:20px;
+	padding:0;
+}
+
+.raceStartButton {
+	font-size:24px;
+}
+
+.racingDisclaimer {
+	color:$primary-red;
+	padding: 15px 0;
+}
+
+.trackContainer {
+	padding:30px 0;
+}
+
+.userRaceInfo {
+	padding-top:15px;
+	font-size:18px;
+	border-bottom: 1px solid black;
+}
 
 div.tracklap1 {overflow-x:hidden; background-color: lightblue; background-image: url("../img/misc/one.png"); background-position:center; background-repeat: no-repeat; background-size:contain; border:1px solid black}
 div.tracklap2 {overflow-x:hidden; background-color: seagreen; background-image: url("../img/misc/two.png"); background-position:center; background-repeat: no-repeat; background-size:contain; border:1px solid black }

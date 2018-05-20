@@ -8,9 +8,9 @@
 					No purchaseable cars in Class {{racingClass}}
 				</div>
 			</div>
-			<div data-ng-repeat="car in racing.racingGame.purchaseableCars[racingClass]">
+			<div data-ng-repeat="car in racing.racingGame.purchaseableCars[racingClass]" class="col-xs-12">
 				<div class="row" align="center">
-					<h2 data-ng-bind="car.name"></h2>
+					<h2 class="carHeader" data-ng-bind="car.name"></h2>
 				</div>
 				<div class="row" align="center">
 					<img data-ng-src="img/cars/{{car.model}}" width="400px" height="200px" />
@@ -35,10 +35,12 @@
 						<div data-uib-progressbar data-animate="false" data-value="car.lapEfficiency*125" data-type="success"></div>
 					</div>
 				</div>
-				<div class="row">
+				<div class="row storePurchaseRow">
 					<div class="col-xs-6" align="right">
-						<h3>Price:&nbsp;&nbsp;&nbsp;{{car.price|currency}}</h3>
-					</div>
+						<div>
+						<span class="storePrice">Price:&nbsp;&nbsp;&nbsp;{{car.price|currency}}</span>
+						</div>
+					</div>	
 					<div class="col-xs-6">
 						<button type="button" class="btn btn-primary" data-ng-click="racing.purchaseCar(car)">Buy it Now!</button>
 					</div>
