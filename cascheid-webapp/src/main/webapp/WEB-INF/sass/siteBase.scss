@@ -1,0 +1,97 @@
+.background-image {
+	position:fixed; 
+	top:0; 
+	left:0;
+	z-index:-1;
+}
+
+.bodyCanvas{
+	position:fixed; 
+	top:0; 
+	left:0;
+	z-index:-2;
+}
+
+.gameTile {
+	border-radius:25px;
+	cursor:pointer;
+	text-align:center;
+	
+	.gameTileFooter {
+		figcaption {
+			width:100%;
+		}
+		
+		background:none;
+		font-size:1.5em;
+		font-weight:bold;
+	}
+	
+	.gameIcon {
+		height:90%;
+		width:90%;
+	}
+	
+	&:hover {
+		.gameIcon {
+			height:100%;
+			width:100%;
+		}
+	}
+}
+
+body.site-body{
+	background-image: url(../img/misc/timon.jpg); 
+	-moz-background-size: cover; 
+	-webkit-background-size: cover; 
+	background-size: cover; 
+	background-position: top center; 
+	background-repeat: no-repeat; 
+	background-attachment: fixed;
+}
+
+img.fish{ 
+	position:fixed; 
+	top:900px; 
+	left:500px;
+	z-index:1;
+}
+
+.tab-index>a {
+	background: rgba(255,255,255,.25);
+}
+
+.index-content-main {
+	background: $primary-white;
+    border-radius: 0 0 5px 5px;
+    padding:15px;
+    max-height: calc(100% - 50px);
+}
+
+.base-transparent {
+	background: transparent;
+}
+
+.tab-about {
+	color: black;
+	.nav-link {
+		background: $bootstrap-blue;
+		color: $primary-white;
+		
+		&:hover {
+			background: $bootstrap-blue;
+			color: $primary-white;
+		}
+		
+		.active {
+			background: $primary-white;
+			color: $primary-black;
+		}
+		
+	}
+	.tab-content {
+		background: $primary-white;
+		border: 1px solid $primary-white;
+		color: $primary-black;
+	}
+}

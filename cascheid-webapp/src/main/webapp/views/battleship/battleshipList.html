@@ -1,0 +1,43 @@
+<div data-ng-if="!$root.identity.username">
+	<h3>You must be logged in to play Battleship.</h3>
+</div>
+<div class="row" data-ng-if="$root.identity.username">
+	<div class="col-xs-12">
+		<h2>Create New Game</h2>
+	</div>
+	<div class="col-xs-12">
+		<form novalidate data-ng-submit="battleshipList.createGame()">
+		<div class="input-group">
+  			<input type="text" class="form-control" placeholder="Opponent Name" data-ng-model="battleshipList.oppName">
+  			<div class="input-group-btn">
+    			<button class="btn btn-outline-secondary" type="submit">Create Game</button>
+			</div>
+		</div>
+		<div data-uib-alert class="alert alert-danger" data-close="battleshipList.createGameError=undefined" data-ng-show="battleshipList.createGameError">{{battleshipList.createGameError.resultMessage}}</div>
+		</form>
+	</div>
+	<hr />
+	<div class="col-xs-12">
+		<h2>Current/Past Games</h2>
+	</div>
+	<div class="col-xs-12">
+	<table class="table">
+		<tr>
+			<th>Opponent</th>
+			<th>Status</th>
+			<th>Play</th>
+		</tr>
+		<tr data-ng-if="battleshipList.activeGames===undefined">
+			<td colspan="3">Loading...</td>
+		</tr>
+		<tr data-ng-if="battleshipList.activeGames.length==0">
+			<td colspan="3">No Active Matches.</td>
+		</tr>
+		<tr data-ng-if="battleshipList.activeGames.length>0" data-ng-repeat="game in battleshipList.activeGames">
+			<td>{{game.opponent}}</td>
+			<td>{{game.status}}</td>
+			<td><button type="button" class="btn btn-primary" data-ng-click="battleshipVM.loadGame(game)">Play/View</button></td>
+		</tr>
+	</table>
+	</div>
+</div>

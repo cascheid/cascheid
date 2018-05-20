@@ -1,0 +1,31 @@
+
+div.tracklap1 {overflow-x:hidden; background-color: lightblue; background-image: url("../img/misc/one.png"); background-position:center; background-repeat: no-repeat; background-size:contain; border:1px solid black}
+div.tracklap2 {overflow-x:hidden; background-color: seagreen; background-image: url("../img/misc/two.png"); background-position:center; background-repeat: no-repeat; background-size:contain; border:1px solid black }
+div.tracklap3 {overflow-x:hidden; background-color: royalblue; background-image: url("../img/misc/three.png"); background-position:center; background-repeat: no-repeat; background-size:contain; border:1px solid black }
+div.tracklap4 {overflow-x:hidden; background-color: lightsalmon; background-image: url("../img/misc/four.png"); background-position:center; background-repeat: no-repeat; background-size:contain; border:1px solid black }
+div.tracklap5 {overflow-x:hidden; background-color: darkcyan; background-image: url("../img/misc/five.png"); background-position:center; background-repeat: no-repeat; background-size:contain; border:1px solid black }
+div.tracklap6 {overflow-x:hidden; background-color: chocolate; background-image: url("../img/misc/six.png"); background-position:center; background-repeat: no-repeat; background-size:contain; border:1px solid black }
+div.tracklap7 {overflow-x:hidden; background-color: indianred; background-image: url("../img/misc/seven.png"); background-position:center; background-repeat: no-repeat; background-size:contain; border:1px solid black }
+div.tracklap8 {overflow-x:hidden; background-color: darkred; background-image: url("../img/misc/eight.png"); background-position:center; background-repeat: no-repeat; background-size:contain; border:1px solid black }
+
+div.spectatelap1 {z-index:-1; position:relative; overflow:hidden; float:left;}
+div.spectatelap2 {z-index:-1; position:relative; overflow:hidden; float:left;}
+div.spectatelap3 {z-index:-1; position:relative; overflow:hidden; float:left;}
+div.spectatelap4 {z-index:-1; position:relative; overflow:hidden; float:left;}
+div.spectatelap5 {z-index:-1; position:relative; overflow:hidden; float:left;}
+div.spectatelap6 {z-index:-1; position:relative; overflow:hidden; float:left;}
+div.spectatelap7 {z-index:-1; position:relative; overflow:hidden; float:left;}
+div.spectatelap8 {z-index:-1; position:relative; overflow:hidden; float:left;}
+
+div.splits {float:left; margin-left:0px; width:70px; height:650px; background-color: lightgreen;}
+div.middle {float:left; margin-left:0px; width:99px; height:650px; background-color: lightgreen;}
+
+img.car {position:relative;}
+img.spectatecar {position:absolute; bottom:-50px; -webkit-transform: rotate(270deg); -moz-transform: rotate(270deg); -o-transform: rotate(270deg); -ms-transform: rotate(270deg); transform: rotate(270deg); width:100px; height:50px; margin-left:0px;}
+img.lakitu {position:absolute; bottom:0px; width:60px; height:60px; margin-left:20px;}
+img.bowser{position:absolute; width:99px; height:69px; bottom:800px;}
+img.yoshi{position:absolute; width:108px; height:78px; bottom:350px; margin-left:-53px;}
+img.yoshiflip{position:absolute; width:108px; height:78px; bottom:350px; margin-left:25px; -moz-transform: scaleX(-1); -o-transform: scaleX(-1); -webkit-transform: scaleX(-1); transform: scaleX(-1); filter: FlipH; -ms-filter: "FlipH";}
+img.crab{position:absolute; width:48px; height:34px;}
+img.peach{position:absolute; width:60px; height:76px; bottom:400px; margin-left:-60px;}
+img.mario{position:absolute; width:62px; height:80px; bottom:0px;}

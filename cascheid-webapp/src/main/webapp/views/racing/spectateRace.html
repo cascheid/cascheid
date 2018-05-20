@@ -1,0 +1,42 @@
+<div class="row">
+	<div class="col-xs-12" data-ng-if="spectateRace.raceInfo && !spectateRace.ended" style="overflow:hidden;">
+		<div style="border-bottom:1px solid black" class="row">
+			Class: {{spectateRace.raceInfo.racingClass}}  Lap Length: {{spectateRace.raceInfo.lapDistance}}  Number of Laps: {{spectateRace.raceInfo.noLaps}}
+		</div>
+			<div class="splits">
+		<img class="peach" id="peach" src='img/sprites/peach-twirl-1.png'/>
+		</div>
+		<div class="spectatelap1" id="track1">
+			<img class="spectatecar" id="car1" data-ng-src="{{'img/cars/'+userRace.raceInfo.racer1.model}}"/>
+			<img class="lakitu" id="lakitu1" src="img/sprites/lakitu_start-1.png">
+		</div>
+		<div class="splits">
+			<img class="crab" id="crab1" src='img/sprites/crab-1.png'/>
+			<img class="yoshi" id="yoshi1" src='img/sprites/yoshi-eat-14.png'/>
+			<img class="crab" id="crab2" src='img/sprites/crab-1.png'/>
+		</div>
+		<div class="spectatelap1" id="track2">
+			<img class="spectatecar" id="car2" data-ng-src="{{'img/cars/'+userRace.raceInfo.racer1.model}}">
+			<img class="lakitu" id="lakitu2" src="img/sprites/lakitu_start-1.png">
+		</div>
+		<div class="middle">
+			<img class="bowser" id="bowser" src='img/sprites/bowser-falling-1.png'/>
+		</div>
+		<div class="spectatelap1" id="track3">
+			<img class="spectatecar" id="car3" data-ng-src="{{'img/cars/'+userRace.raceInfo.racer1.model}}">
+			<img class="lakitu" id="lakitu3" src="img/sprites/lakitu_start-1.png">
+		</div>
+		<div class="splits">
+			<img class="crab" id="crab3" src='img/sprites/crab-1.png'/>
+			<img class="yoshiflip" id="yoshi2" src='img/sprites/yoshi-eat-14.png'/>
+			<img class="crab" id="crab4" src='img/sprites/crab-1.png'/>
+		</div>
+		<div class="spectatelap1" id="track4">
+			<img class="spectatecar" id="car4" data-ng-src="{{'img/cars/'+userRace.raceInfo.racer1.model}}">
+			<img class="lakitu" id="lakitu4" src="img/sprites/lakitu_start-1.png">
+		</div>
+		<div class="splits">
+			<img class="mario" id="mario" src='img/sprites/mario_thumbsup-1.png'/>
+		</div>
+	</div>
+</div>

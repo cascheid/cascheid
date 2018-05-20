@@ -1,0 +1,133 @@
+MAIN MENU
+DONE-- Focus and keypress handling
+DONE-- Validation for number of players
+-- Final styling touchups
+
+BACKEND
+DONE--Game creation with team name
+DONE--Game reset
+--League Generation when when no active league
+--Tournament Generation
+--Saving game results
+--Saving simulated week
+--Simulate tech learns
+--Balance exp
+
+DB
+--Player stat setup
+--Player tech setup
+
+LEAGUE STANDINGS
+DONE-- Backend: generate standings
+DONE-- League Creation upon load (if needed) 
+DONE-- UI of standings
+-- Menu layout/links
+-- Final styling touchups
+
+LEAGUE SCHEDULE
+DONE-- Backend: generate schedule
+DONE-- UI of week selections (change page)
+DONE-- Load on current week
+-- Menu layout/links
+-- Final styling touchups
+
+LEAGUE STATISTICS
+DONE--Backend:populate statistics
+DONE--Sortable table
+--Week 1 no data to display
+--Selectable player with stat display
+--Tech toggle on stat display
+--Menu layout/links
+--Final styling touchups on stat display
+--Final styling touchups on schedule display
+
+LINEUP SELECTION
+DONE--General UI Design
+DONE--Keep track of selection order
+DONE--Backend: process adjusted lineup
+--Final styling touchups
+
+SET TECHS
+DONE--General UI design
+--Keep track of tech selection
+--Display main tech window and tech information
+--Backend: handle tech selection
+--final styling touchups
+
+SET MARKS
+DONE--General UI design
+--Keep track of mark selection
+--Display mark and tech information
+--Backend: handle mark selection
+--final styling touchups
+
+GAME INTERMISSION
+DONE--General UI Design
+DONE--Handle iterative adding of exp
+--Display learned techs and key techs
+--backend: persist exp, stats, and techs
+--final styling touchups
+
+EXPIRING CONTRACTS
+DONE--General UI Design
+DONE--Backend handle expired contracts
+--User expired contract: allow option to resign
+--Backend: handle resigning
+
+LEAGUE RESULTS
+--General UI design for weeks games
+--General UI design for scoring leaders
+--Display game info
+--Backend: handle prizes for league end
+--Final styling touchups
+
+TOURNAMENT STANDINGS
+--General UI Design
+--Backend: create tournament
+--Display game info
+--Final styling touchups
+
+TOURNAMENT RESULTS
+--General UI Design with animated ladder climbing
+--General UI design for scoring leaders
+--Backend: handle prizes for tournament end
+--Final styling touchups
+
+RECRUITING
+--General UI Design
+--Sortable all players, free agents, specific teams
+--Sortable stats table display
+--Show info at top of screen for highlighted player
+--Load player info and display techs
+--Final styling touchups
+--TODO: recruiting salaries vs wants?
+
+test-
+xPass method
+xShoot method
+xTackle method loop
+xBlocking method loop
+-sleep
+xBall travelling via pass/shot
+xgoalie save/fail
+xScore transition
+xFaceoff
+AI of resting positions/chasing
+AI of computer controlled ball
+xCamera controlling
+Techcopy
+
+graphical:
+All animations, new models
+xSphere with water/glyphs/goal logo
+Glyphs on playing field
+Goals
+effects on block/shot/faceoff
+final skybox
+
+
+Cleanup
+Make BBPlayer read from json
+-stats/model(scale?)
+Remove unnecessary test variables
+disable f12

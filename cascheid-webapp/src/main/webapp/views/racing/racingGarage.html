@@ -1,0 +1,39 @@
+<div class="row">
+	<div class="col-xs-6" align="right">
+		<label style="font-size:4vmin" for="garageList">Select Another Car</label>
+	</div>
+	<div class="col-xs-6">
+		<select id="garageList" class="form-control" data-ng-model="racing.garageCar" data-ng-options="car as car.name for car in racing.racingGame.carList"></select>
+	</div>
+	<div class="col-xs-12">
+		<div class="row" align="center">
+			<h2>Racing Class: <span data-ng-bind="racing.garageCar.racingClass"></span></h2>
+		</div>
+		<div class="row" align="center">
+			<img data-ng-src="img/cars/{{racing.garageCar.model}}" width="400px" height="200px" />
+		</div>
+		<div class="row">
+			<div class="col-xs-6 form-group">
+				<label class="stats">Top Speed: {{racing.garageCar.topSpeed}} mph</label>
+				<div data-uib-progressbar data-animate="false" data-value="racing.garageCar.topSpeed/4" data-type="success"></div>
+			</div>
+			<div class="col-xs-6 form-group">
+				<label class="stats">Acceleration: {{racing.garageCar.acceleration}} mph/s</label>
+				<div data-uib-progressbar data-animate="false" data-value="racing.garageCar.acceleration/0.8" data-type="success"></div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-xs-6 form-group">
+				<label class="stats">Reliability: {{racing.garageCar.reliability*100}}%</label>
+				<div data-uib-progressbar data-animate="false" data-value="racing.garageCar.reliability*100" data-type="success"></div>
+			</div>
+			<div class="col-xs-6 form-group">
+				<label class="stats">Lap Efficiency: {{racing.garageCar.lapEfficiency*100}}%</label>
+				<div data-uib-progressbar data-animate="false" data-value="racing.garageCar.lapEfficiency*125" data-type="success"></div>
+			</div>
+		</div>
+		<div class="row" align="center">
+			<button type="button" class="btn btn-primary" data-ng-click="racing.changeSelectedCar()" data-ng-disabled="racing.garageCar.carID==racing.racingGame.selectedCar.carID">{{racing.garageCar.carID==racing.racingGame.selectedCar.carID?'Selected':'Select Car'}}</button>
+		</div>
+	</div>
+</div>

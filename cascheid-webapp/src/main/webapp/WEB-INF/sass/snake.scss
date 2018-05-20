@@ -1,0 +1,53 @@
+.snakeBlock{
+    margin: 0px;
+    padding: 0px;
+    position: absolute;
+    left:16px;
+    top:16px;
+    background-color: #0000A8;
+    border: 0px solid #0000A8;
+    width: 16px;
+    height: 16px;
+    z-index:3;
+}
+
+.snakeBackgroundPicture{
+    margin: 0px;
+    padding: 0px;
+    position: absolute;
+    width:600px;
+    height:400px;
+    z-index:1;
+}
+
+.snakeBlankDiv{
+    margin: 0px;
+    padding: 0px;
+    position: absolute;
+    background-color: lightblue;
+    width:100px;
+    height:100px;
+    z-index:2;
+}
+
+
+#snakeMaster{
+	position:relative;
+    z-index:1;
+}
+
+#snakeContainer {
+    padding: 0px;
+    position: absolute;
+    background-color: lightblue;
+    border: 0px solid black;
+    width:600px;
+    height:400px;
+    margin:auto;
+}
+
+.snakeTopElem {
+    display: inline-block;
+    *display: inline;
+	margin-left:300px;
+}

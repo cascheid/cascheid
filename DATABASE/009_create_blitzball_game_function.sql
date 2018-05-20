@@ -16,6 +16,7 @@ BEGIN
     DECLARE curr_tech_playerid INT;
     DECLARE curr_tech_key INT;
     DECLARE curr_tech_id INT;
+	DECLARE techs_done BOOLEAN;
     DECLARE tech_cursor CURSOR FOR SELECT PLAYER_ID, KEY_TECH, LEARNABLE_TECH FROM BB_KEY_TECH_UNLOCKS;
     DECLARE CONTINUE HANDLER FOR NOT FOUND SET techs_done = TRUE;
     

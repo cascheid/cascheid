@@ -1,0 +1,88 @@
+<div class="row">
+	<div class="col-xs-12" data-ng-if="userRace.raceInfo && !userRace.ended">
+		<div style="border-bottom:1px solid black" class="row">
+			Class: {{userRace.raceInfo.racingClass}}  Lap Length: {{userRace.raceInfo.lapDistance}}  Number of Laps: {{userRace.raceInfo.noLaps}}
+		</div>
+		<div data-ng-class="userRace.track1Class" id="track1">
+			<img class="car" id="car1" data-ng-src="{{'img/cars/'+userRace.raceInfo.racer1.model}}" width="100px" height="50px">
+		</div>
+		<div class="trackboundary"></div>
+		<div data-ng-class="userRace.track2Class" id="track2">
+			<img class="car" id="car2" data-ng-src="{{'img/cars/'+userRace.raceInfo.racer2.model}}" width="100px" height="50px">
+		</div>
+		<div class="trackboundary"></div>
+		<div data-ng-class="userRace.track3Class" id="track3">
+			<img class="car" id="car3" data-ng-src="{{'img/cars/'+userRace.raceInfo.racer3.model}}" width="100px" height="50px">
+		</div>
+		<div class="trackboundary"></div>
+		<div data-ng-class="userRace.track4Class" id="track4">
+			<img class="car" id="car4" data-ng-src="{{'img/cars/'+userRace.raceInfo.racer4.model}}" width="100px" height="50px">
+		</div>
+		<div class="trackboundary"></div>
+		<div data-ng-class="userRace.track5Class" id="track5">
+			<img class="car" id="car5" data-ng-src="{{'img/cars/'+userRace.raceInfo.racer5.model}}" width="100px" height="50px">
+		</div>
+		<div class="trackboundary"></div>
+		<div data-ng-class="userRace.track6Class" id="track6">
+			<img class="car" id="car6" data-ng-src="{{'img/cars/'+userRace.raceInfo.racer6.model}}" width="100px" height="50px">
+		</div>
+	</div>
+	<div class="col-xs-8 col-xs-offset-2" data-ng-if="userRace.ended">
+		<div class="row" data-ng-switch="userRace.raceResult.userFinish">
+			<div class="row" data-ng-switch-when="1" align="center">
+				<div class="row" align="center">
+					<h2>You win!</h2>
+				</div>
+				<div class="row" align="center">
+					<img id="resultImg" src="img/misc/firstplace.png" width="150px" height="200px" />
+				</div>
+			</div>
+			<div class="row" data-ng-switch-when="2">
+				<div class="row" align="center">
+					<h2>Second Place!</h2>
+				</div>
+				<div class="row" align="center">
+					<img id="resultImg" src="img/misc/secondplace.png" width="150px" height="200px" />
+				</div>
+			</div>
+			<div class="row" data-ng-switch-when="3">
+				<div class="row" align="center">
+					<h2>Third Place!</h2>
+				</div>
+				<div class="row" align="center">
+					<img id="resultImg" src="img/misc/firstplace.png" width="150px" height="200px" />
+				</div>
+			</div>
+			<div class="row" data-ng-switch-default>
+				<div class="row" align="center">
+					<h2>You lose...</h2>
+				</div>
+				<div class="row" align="center">
+					<img id="resultImg" src="img/misc/youtried.png" width="150px" height="200px" />
+				</div>
+			</div>
+		</div>
+		<div class="row" align="center">
+			<h2>Class: {{userRace.raceResult.racingClass}}</h2>
+		</div>
+		<div class="row" data-ng-if="userRace.raceResult.newClass" align="center">
+			You are now eligible to race in Class {{userRace.raceResult.newClass}} races
+		</div>
+		<div class="row">
+			<table class="table">
+			  	<tr>
+    				<td>First Place: {{userRace.raceResult.firstPlace}}</td>
+    				<td>Time: {{userRace.raceResult.firstPlaceTime}}</td>	
+  				</tr>
+			  	<tr>
+    				<td>Second Place: {{userRace.raceResult.secondPlace}}</td>
+    				<td>Time: {{userRace.raceResult.secondPlaceTime}}</td>	
+  				</tr>
+			  	<tr >
+    				<td>Third Place: {{userRace.raceResult.thirdPlace}}</td>
+    				<td>Time: {{userRace.raceResult.thirdPlaceTime}}</td>	
+  				</tr>
+  			</table>
+		</div>
+	</div>
+</div>

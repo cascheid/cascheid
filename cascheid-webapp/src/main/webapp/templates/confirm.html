@@ -1,0 +1,14 @@
+<div class="modal-header">
+	<h3 class="modal-title" id="modal-title" data-ng-bind="modalCtrl.title"></h3>
+</div>
+<div class="modal-body" id="modal-body">
+	<div class="row">
+		<div class="col-xs-12">
+			<p data-ng-bind="modalCtrl.message"></p>
+		</div>
+	</div>
+</div>
+<div class="modal-footer">
+	<button class="btn btn-primary" type="button" ng-click="modalCtrl.ok()">OK</button>
+	<button class="btn btn-warning" type="button" ng-click="modalCtrl.cancel()">Cancel</button>
+</div>
